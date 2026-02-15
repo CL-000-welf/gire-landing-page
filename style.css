@@ -1,0 +1,71 @@
+<style>
+    /* Effetto selezione schede */
+    .card-selected {
+        border-color: #7C4DFF !important;
+        box-shadow: 0 10px 25px -5px rgba(124, 77, 255, 0.4);
+        transform: scale(1.05);
+        background-color: #f8faff;
+    }
+    .pricing-card {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    .pricing-card:hover {
+        transform: translateY(-10px);
+    }
+</style>
+
+<section class="bg-white text-gray-900 py-20">
+    <div class="container mx-auto px-6">
+        <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">Scegli il piano per la tua scuola</h2>
+        
+        <div class="grid md:grid-cols-3 gap-8 items-center">
+            
+            <div id="card-pilot" onclick="selectCard('card-pilot')" class="pricing-card border-2 border-gray-100 rounded-2xl p-8 flex flex-col h-full">
+                <h3 class="text-xl font-bold mb-4">PILOT</h3>
+                <p class="text-4xl font-extrabold mb-6">Gratis</p>
+                <ul class="text-gray-600 space-y-3 mb-8 flex-grow">
+                    <li>✓ Fino a 15 studenti</li>
+                    <li>✓ SOS Messaggi</li>
+                </ul>
+                <button class="w-full border border-purple-600 text-purple-600 py-3 rounded-lg font-bold">Inizia Ora</button>
+            </div>
+
+            <div id="card-pro" onclick="selectCard('card-pro')" class="pricing-card card-selected border-2 rounded-2xl p-8 flex flex-col h-full relative">
+                <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-1 rounded-full text-sm font-bold">CONSIGLIATO</div>
+                <h3 class="text-xl font-bold mb-4">PRO TRIP</h3>
+                <p class="text-4xl font-extrabold mb-2">€1.50</p>
+                <p class="text-sm text-gray-500 mb-6">per studente / gita</p>
+                <ul class="text-gray-600 space-y-3 mb-8 flex-grow">
+                    <li>✓ Geofencing illimitato</li>
+                    <li>✓ Wallet Biglietti</li>
+                    <li>✓ Mappe Offline</li>
+                </ul>
+                <button class="w-full bg-purple-600 text-white py-3 rounded-lg font-bold">Seleziona</button>
+            </div>
+
+            <div id="card-inst" onclick="selectCard('card-inst')" class="pricing-card border-2 border-gray-100 rounded-2xl p-8 flex flex-col h-full">
+                <h3 class="text-xl font-bold mb-4">INSTITUTIONAL</h3>
+                <p class="text-4xl font-extrabold mb-6 text-purple-600">SaaS</p>
+                <ul class="text-gray-600 space-y-3 mb-8 flex-grow">
+                    <li>✓ Tutte le gite illimitate</li>
+                    <li>✓ Admin Dashboard</li>
+                    <li>✓ Supporto 24/7</li>
+                </ul>
+                <button class="w-full bg-gray-900 text-white py-3 rounded-lg font-bold">Contattaci</button>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<script>
+    function selectCard(cardId) {
+        // Rimuove la classe 'card-selected' da tutte le schede
+        document.querySelectorAll('.pricing-card').forEach(card => {
+            card.classList.remove('card-selected');
+        });
+        // La aggiunge solo alla scheda cliccata
+        document.getElementById(cardId).classList.add('card-selected');
+    }
+</script>
