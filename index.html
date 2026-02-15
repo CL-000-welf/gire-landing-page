@@ -88,5 +88,54 @@
         </div>
     </section>
 
+<section class="container mx-auto px-6 py-10">
+    <div class="bg-amber-400 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between shadow-2xl">
+        <div class="md:w-1/2 mb-8 md:mb-0">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-black mb-4">
+                Quanto tempo risparmi con GIRE?
+            </h2>
+            <p class="text-amber-900 text-lg font-medium">
+                Inserisci il numero di studenti della tua prossima gita e scopri quante ore di burocrazia recuperi.
+            </p>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-inner w-full md:w-auto min-w-[320px]">
+            <label class="block text-gray-700 font-bold mb-2">N° Studenti per Gita</label>
+            <input 
+                type="number" 
+                id="studentCount" 
+                placeholder="Es. 50" 
+                class="w-full p-4 border-2 border-gray-200 rounded-xl text-black text-2xl font-bold mb-6 focus:border-purple-500 outline-none"
+                oninput="calculateTime()"
+            >
+            
+            <div class="text-center">
+                <p class="text-gray-500 uppercase text-sm font-bold tracking-widest">Risparmierai circa</p>
+                <p class="text-5xl font-black text-purple-600 my-2">~<span id="hoursSaved">0</span> ore</p>
+                <button class="mt-4 w-full bg-purple-600 text-white py-3 rounded-xl font-bold hover:bg-purple-700 transition">
+                    Inizia ora gratis
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function calculateTime() {
+        const students = document.getElementById('studentCount').value;
+        const hoursSavedElement = document.getElementById('hoursSaved');
+        
+        if (students > 0) {
+            // Logica: ogni studente risparmia circa 5 minuti (0.083 ore) tra appelli, documenti e messaggi
+            // Più un tempo fisso di 1 ora di coordinamento logistico eliminato
+            let time = (students * 0.083) + 1;
+            hoursSavedElement.innerText = Math.round(time);
+        } else {
+            hoursSavedElement.innerText = "0";
+        }
+    }
+</script>
+
+    
 </body>
 </html>
