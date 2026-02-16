@@ -239,34 +239,43 @@
     }
 
     // Funzione di chiusura centralizzata
-    function handleSOSAction(shouldScroll) {
-        stopSound();
-        const overlay = document.getElementById('sosOverlay');
-        overlay.classList.add('hidden');
-        overlay.style.display = 'none';
+   function handleSOSAction(shouldScroll) {
+    stopSound();
+    const overlay = document.getElementById('sosOverlay');
+    overlay.classList.add('hidden');
+    overlay.style.display = 'none';
+    
+    document.getElementById('sosBadge').innerText = "SOS ATTIVI: 0";
+    document.getElementById('sosBadge').classList.remove('animate-pulse');
+
+    if (shouldScroll) {
+        // AZIONE: LOCALIZZA
+        document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
         
-        document.getElementById('sosBadge').innerText = "SOS ATTIVI: 0";
-        document.getElementById('sosBadge').classList.remove('animate-pulse');
+        setTimeout(() => {
+            map.invalidateSize();
+            map.flyTo([41.9005, 12.4715], 18, { animate: true, duration: 1.5 });
+        }, 500);
 
-        if (shouldScroll) {
-            // 1. Scrolla fino al contenitore della mappa
-            document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => {
+            L.popup()
+            .setLatLng([41.9005, 12.4715])
+            .setContent("<div style='text-align:center; padding:5px;'><b>Marco Rossi</b><br><span style='color:red; font-weight:bold;'>RICHIESTA SOS</span></div>")
+            .openOn(map);
+        }, 2200);
+    } else {
+        // AZIONE: IGNORA/CHIUDI
+        // Facciamo comparire un popup sulla mappa che conferma l'annullamento
+        map.invalidateSize();
+        L.popup()
+            .setLatLng([41.9005, 12.4715])
+            .setContent("<div style='text-align:center; padding:5px;'><b>Marco Rossi</b><br><span style='color:gray; font-weight:bold;'>Segnalazione Annullata</span></div>")
+            .openOn(map);
             
-            // 2. Esegui il volo della mappa dopo lo scroll
-            setTimeout(() => {
-                map.invalidateSize();
-                map.flyTo([41.9005, 12.4715], 18, { animate: true, duration: 1.5 });
-            }, 500);
-
-            // 3. Apri il popup
-            setTimeout(() => {
-                L.popup()
-                .setLatLng([41.9005, 12.4715])
-                .setContent("<div style='text-align:center; padding:5px;'><b>Marco Rossi</b><br><span style='color:red; font-weight:bold;'>RICHIESTA SOS</span></div>")
-                .openOn(map);
-            }, 2200);
-        }
+        // Opzionale: scrolla comunque un po' verso la mappa per far vedere il popup
+        document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
+}
 
     // Inizializzazione Mappa (Ottimizzata Mobile)
     var map = L.map('map', { 
