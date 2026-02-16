@@ -86,4 +86,137 @@
             <div class="flex flex-col md:flex-row justify-center gap-12 py-12 border-y border-gray-100 items-center">
                 <div class="flex items-center gap-4 max-w-sm text-left">
                     <i class="fa-solid fa-user-shield text-3xl text-gray-300"></i>
-                    <p class="text-xs font-bold text-gray-400 uppercase leading-snug">Conformità
+                    <p class="text-xs font-bold text-gray-400 uppercase leading-snug">Conformità GDPR & Crittografia End-to-End per la protezione dei minori.</p>
+                </div>
+                <div class="flex items-center gap-4 max-w-sm text-left">
+                    <i class="fa-solid fa-building-shield text-3xl text-gray-300"></i>
+                    <p class="text-xs font-bold text-gray-400 uppercase leading-snug">Accesso Istituzionale Protetto con gestione separata dei dati per ogni plesso.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 text-gray-900 py-24">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-black mb-16 uppercase tracking-tight">Workflow Amministrativo</h2>
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="relative bg-white p-8 rounded-3xl shadow-sm border-b-4 border-purple-500 text-left">
+                    <div class="text-6xl font-black text-gray-100 absolute -top-4 -left-2">01</div>
+                    <h4 class="font-black mb-2 relative z-10 uppercase">Setup Segreteria</h4>
+                    <p class="text-sm text-gray-500 relative z-10 font-medium leading-relaxed">Configurazione istituto, caricamento docenti e anagrafiche classi.</p>
+                </div>
+                <div class="relative bg-white p-8 rounded-3xl shadow-sm border-b-4 border-purple-500 text-left">
+                    <div class="text-6xl font-black text-gray-100 absolute -top-4 -left-2">02</div>
+                    <h4 class="font-black mb-2 relative z-10 uppercase">Booking & Hub</h4>
+                    <p class="text-sm text-gray-500 relative z-10 font-medium leading-relaxed">Centralizzazione prenotazioni hotel e ristoranti. Generazione PDF autorizzazioni.</p>
+                </div>
+                <div class="relative bg-white p-8 rounded-3xl shadow-sm border-b-4 border-purple-500 text-left">
+                    <div class="text-6xl font-black text-gray-100 absolute -top-4 -left-2">03</div>
+                    <h4 class="font-black mb-2 relative z-10 uppercase">Live Operations</h4>
+                    <p class="text-sm text-gray-500 relative z-10 font-medium leading-relaxed">Tracking attivo del gruppo, wallet biglietti digitale e messaggi SOS.</p>
+                </div>
+                <div class="relative bg-white p-8 rounded-3xl shadow-sm border-b-4 border-purple-500 text-left">
+                    <div class="text-6xl font-black text-gray-100 absolute -top-4 -left-2">04</div>
+                    <h4 class="font-black mb-2 relative z-10 uppercase">Rendicontazione</h4>
+                    <p class="text-sm text-gray-500 relative z-10 font-medium leading-relaxed">Archiviazione automatica spese, foto e report per il consiglio di istituto.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="calcolatore" class="bg-amber-400 py-24 text-black">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row items-center gap-16">
+            <div class="md:w-1/2">
+                <h2 class="text-5xl font-black mb-6 uppercase leading-tight">Meno Burocrazia,<br>più cultura.</h2>
+                <p class="text-amber-900 font-bold text-xl">Riduci del 70% il tempo speso in telefonate a hotel e ristoranti. Automatizza la gita con GIRE.</p>
+            </div>
+            <div class="md:w-1/2 bg-white p-10 rounded-[2.5rem] shadow-2xl">
+                <div class="flex justify-between items-center mb-6 text-gray-400 font-black text-xs uppercase italic">
+                    <span>Studenti coinvolti</span>
+                    <span id="stVal" class="text-3xl font-black text-purple-600">50</span>
+                </div>
+                <input type="range" id="stSlider" min="1" max="250" value="50" oninput="upd()" class="mb-10">
+                <div class="text-center border-t pt-8">
+                    <p class="text-gray-400 font-black text-xs uppercase">Tempo recuperato (stima)</p>
+                    <p class="text-7xl font-black text-purple-600 tracking-tighter">+<span id="hrSav">6</span>h</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="bg-white text-gray-900 py-32">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-3 gap-10">
+                <div id="c1" onclick="sel('c1')" class="pricing-card p-10 rounded-[2.5rem] flex flex-col">
+                    <h3 class="text-gray-300 font-black text-xs mb-2 tracking-widest uppercase">Starter</h3>
+                    <p class="text-4xl font-black mb-8 uppercase">PILOT</p>
+                    <p class="text-5xl font-black mb-10">Gratis</p>
+                    <ul class="text-gray-500 space-y-4 mb-10 flex-grow text-sm font-medium">
+                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i> Fino a 15 studenti</li>
+                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i> Itinerario base</li>
+                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i> SOS Messaggi</li>
+                    </ul>
+                    <button class="w-full py-4 border-2 border-gray-100 rounded-2xl font-black uppercase text-xs">Prova ora</button>
+                </div>
+                <div id="c2" onclick="sel('c2')" class="pricing-card card-selected p-10 rounded-[2.5rem] flex flex-col relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-purple-600 text-white px-4 py-1 rounded-full text-[10px] font-black uppercase">Consigliato</div>
+                    <h3 class="text-purple-600 font-black text-xs mb-2 tracking-widest uppercase">Per Gite</h3>
+                    <p class="text-4xl font-black mb-8 uppercase">PRO TRIP</p>
+                    <p class="text-5xl font-black mb-8">€2.00 <span class="text-sm text-gray-400 font-bold">/studente</span></p>
+                    <ul class="text-gray-600 space-y-4 mb-10 flex-grow text-sm font-bold">
+                        <li><i class="fa-solid fa-star text-purple-500 mr-2"></i> Geofencing Illimitato</li>
+                        <li><i class="fa-solid fa-star text-purple-500 mr-2"></i> Hub Booking Hotel & Ristoranti</li>
+                        <li><i class="fa-solid fa-star text-purple-500 mr-2"></i> Wallet Biglietti Cloud</li>
+                        <li><i class="fa-solid fa-star text-purple-500 mr-2"></i> Gallery Fotografica Classe</li>
+                    </ul>
+                    <button class="w-full py-4 bg-purple-600 text-white rounded-2xl font-black uppercase text-xs shadow-lg shadow-purple-200">Seleziona</button>
+                </div>
+                <div id="c3" onclick="sel('c3')" class="pricing-card p-10 rounded-[2.5rem] flex flex-col">
+                    <h3 class="text-gray-300 font-black text-xs mb-2 tracking-widest uppercase">Enterprise</h3>
+                    <p class="text-4xl font-black mb-8 uppercase text-gray-900">SCHOOL</p>
+                    <p class="text-3xl font-black mb-2 text-purple-600">da €500<span class="text-sm">/anno</span></p>
+                    <p class="text-xs text-gray-400 mb-8 uppercase font-bold">Abbonamento Istituzionale</p>
+                    <ul class="text-gray-500 space-y-4 mb-10 flex-grow text-sm font-medium">
+                        <li><i class="fa-solid fa-briefcase text-gray-400 mr-2"></i> Viaggi illimitati</li>
+                        <li><i class="fa-solid fa-briefcase text-gray-400 mr-2"></i> Dashboard Segreteria</li>
+                        <li><i class="fa-solid fa-briefcase text-gray-400 mr-2"></i> Integrazione Registro</li>
+                        <li><i class="fa-solid fa-briefcase text-gray-400 mr-2"></i> Supporto 24/7</li>
+                    </ul>
+                    <button class="w-full py-4 bg-black text-white rounded-2xl font-black uppercase text-xs">Contattaci</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white py-16 border-t border-gray-100 text-gray-400">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-10">
+            <div class="flex items-center space-x-3">
+                <img src="assets/logo.png" class="h-8 grayscale opacity-50">
+                <span class="font-black text-gray-300 tracking-tighter">GIRE</span>
+            </div>
+            
+            <div class="flex space-x-12 text-2xl">
+                <a href="#" class="hover:text-black transition"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#" class="hover:text-pink-500 transition"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="hover:text-blue-700 transition"><i class="fa-brands fa-linkedin"></i></a>
+            </div>
+
+            <div class="text-[10px] font-black text-gray-300 uppercase tracking-widest">
+                © 2026 GIRE Worldwide. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function upd() {
+            const v = document.getElementById('stSlider').value;
+            document.getElementById('stVal').innerText = v;
+            document.getElementById('hrSav').innerText = Math.round(1 + (v * 0.1));
+        }
+        function sel(id) {
+            document.querySelectorAll('.pricing-card').forEach(c => c.classList.remove('card-selected'));
+            document.getElementById(id).classList.add('card-selected');
+        }
+    </script>
+</body>
+</html>
