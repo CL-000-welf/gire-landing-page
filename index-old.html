@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.gire.app/">
+    <meta property="og:title" content="GIRE - Il futuro dei viaggi di istruzione">
+    <meta property="og:description" content="Sicurezza, logistica e didattica in un'unica piattaforma globale per scuole.">
+    <meta property="og:image" content="assets/social-preview.png">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="GIRE - Safe & Smart School Trips">
+    <meta property="twitter:image" content="assets/social-preview.png">
+    <title>GIRE - Safe & Smart School Trips</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        
+        .bg-gire-dark { background-color: #1A1C2E; }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, #FF5252, #7C4DFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Effetti Pricing Card */
+        .pricing-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-12px);
+        }
+
+        .card-selected {
+            border-color: #7C4DFF !important;
+            box-shadow: 0 20px 25px -5px rgba(124, 77, 255, 0.2);
+            background-color: #f8faff;
+            transform: scale(1.03);
+        }
+
+        /* Animazione per il numero del calcolatore */
+        #hoursSaved {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gire-dark text-white">
+
+    <nav class="container mx-auto px-6 py-8 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <img src="assets/logo.png" alt="GIRE Logo" class="h-10 w-auto">
+            <span class="text-2xl font-black tracking-tighter">GIRE</span>
+        </div>
+        <div class="hidden md:flex space-x-8 font-medium text-sm uppercase tracking-widest text-gray-400">
+            <a href="#sicurezza" class="hover:text-white transition">Sicurezza</a>
+            <a href="#calcolatore" class="hover:text-white transition">Risparmio</a>
+            <a href="#pricing" class="hover:text-white transition">Pricing</a>
+        </div>
+        <button class="bg-white text-black px-6 py-2 rounded-full font-bold hover:bg-purple-500 hover:text-white transition">
+            Area Scuole
+        </button>
+    </nav>
+
+    <header class="container mx-auto px-6 py-20 text-center">
+        <h1 class="text-5xl md:text-8xl font-black mb-8 leading-tight">
+            Il futuro dei viaggi di <br>istruzione è <span class="gradient-text">movimento.</span>
+        </h1>
+        <p class="text-gray-400 text-xl md:text-2xl max-w-3xl mx-auto mb-12">
+            La piattaforma SaaS globale che digitalizza la sicurezza e la logistica delle gite scolastiche. Sicura, etica, senza carta.
+        </p>
+        <div class="flex flex-col md:flex-row justify-center gap-6">
+            <a href="#pricing" class="bg-green-500 text-black px-10 py-5 rounded-2xl font-black text-xl hover:bg-green-400 transition shadow-lg shadow-green-500/20">
+                Inizia ora gratis
+            </a>
+            <button class="border border-gray-700 px-10 py-5 rounded-2xl font-bold text-xl hover:bg-gray-800 transition">
+                Guarda la Demo
+            </button>
+        </div>
+    </header>
+
+    <section id="calcolatore" class="container mx-auto px-6 py-20">
+        <div class="bg-amber-400 rounded-[3rem] p-10 md:p-16 flex flex-col md:flex-row items-center justify-between shadow-2xl">
+            <div class="md:w-1/2 mb-10 md:mb-0">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-black mb-6">
+                    Meno burocrazia,<br>più cultura.
+                </h2>
+                <p class="text-amber-900 text-xl font-semibold opacity-80">
+                    Seleziona il numero di studenti e scopri quante ore di gestione logistica risparmierai con l'automazione di GIRE.
+                </p>
+            </div>
+
+            <div class="bg-white p-10 rounded-[2rem] shadow-xl w-full md:w-[400px]">
+                <label class="block text-gray-500 uppercase font-bold text-xs tracking-widest mb-4">Studenti previsti</label>
+                
+                <select id="studentCount" onchange="calculateTime()" class="w-full p-5 border-2 border-gray-100 rounded-2xl text-black text-3xl font-black mb-8 appearance-none bg-gray-50 focus:border-purple-500 outline-none cursor-pointer">
+                    <option value="0">Seleziona...</option>
+                    <option value="20">20 Studenti</option>
+                    <option value="30">30 Studenti</option>
+                    <option value="50">50 Studenti</option>
+                    <option value="80">80 Studenti</option>
+                    <option value="100">100+ Studenti</option>
+                </select>
+                
+                <div class="text-center">
+                    <p class="text-gray-400 font-bold">TEMPO RECUPERATO</p>
+                    <p class="text-6xl font-black text-purple-600 my-4 uppercase tracking-tighter">
+                        +<span id="hoursSaved">0</span>h
+                    </p>
+                    <p class="text-gray-400 text-sm">di stress eliminato per gita</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="bg-white text-gray-900 py-32 rounded-t-[4rem]">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl md:text-6xl font-black mb-4">Piani flessibili per ogni scuola</h2>
+                <p class="text-gray-500 text-xl">Dalla singola classe all'intero istituto.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-10">
+                <div id="card-pilot" onclick="selectCard('card-pilot')" class="pricing-card border-2 border-gray-100 rounded-[2.5rem] p-10 flex flex-col">
+                    <h3 class="text-gray-400 font-bold tracking-widest mb-2">STARTER</h3>
+                    <p class="text-4xl font-black mb-8 uppercase">Pilot</p>
+                    <p class="text-5xl font-black mb-10">Gratis</p>
+                    <ul class="text-gray-500 space-y-4 mb-12 flex-grow font-medium text-lg">
+                        <li>• Fino a 15 studenti</li>
+                        <li>• Timeline giornaliera</li>
+                        <li>• SOS d'emergenza</li>
+                    </ul>
+                    <button class="w-full border-2 border-gray-200 py-4 rounded-2xl font-black hover:bg-gray-100 transition">ATTIVA GRATIS</button>
+                </div>
+
+                <div id="card-pro" onclick="selectCard('card-pro')" class="pricing-card card-selected border-2 rounded-[2.5rem] p-10 flex flex-col relative bg-gray-50">
+                    <div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-6 py-2 rounded-full text-sm font-black tracking-widest uppercase shadow-lg">Consigliato</div>
+                    <h3 class="text-purple-600 font-bold tracking-widest mb-2">TOP SELLER</h3>
+                    <p class="text-4xl font-black mb-8 uppercase text-gray-900">Pro Trip</p>
+                    <p class="text-5xl font-black mb-2">€1.50</p>
+                    <p class="text-gray-400 font-bold mb-10">studente / gita</p>
+                    <ul class="text-gray-600 space-y-4 mb-12 flex-grow font-medium text-lg">
+                        <li>• Geofencing illimitato</li>
+                        <li>• Wallet Biglietti Cloud</li>
+                        <li>• Mappe offline globali</li>
+                        <li>• Gallery condivisa</li>
+                    </ul>
+                    <button class="w-full bg-purple-600 text-white py-4 rounded-2xl font-black shadow-xl shadow-purple-500/40 hover:bg-purple-700 transition">SELEZIONA</button>
+                </div>
+
+                <div id="card-inst" onclick="selectCard('card-inst')" class="pricing-card border-2 border-gray-100 rounded-[2.5rem] p-10 flex flex-col">
+                    <h3 class="text-gray-400 font-bold tracking-widest mb-2">ENTERPRISE</h3>
+                    <p class="text-4xl font-black mb-8 uppercase">School</p>
+                    <p class="text-5xl font-black mb-10 text-purple-600 italic">SaaS</p>
+                    <ul class="text-gray-500 space-y-4 mb-12 flex-grow font-medium text-lg">
+                        <li>• Gite illimitate</li>
+                        <li>• Dashboard Segreteria</li>
+                        <li>• Supporto 24/7 dedicato</li>
+                    </ul>
+                    <button class="w-full bg-gray-900 text-white py-4 rounded-2xl font-black hover:bg-black transition">CONTATTACI</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white text-gray-400 py-10 text-center border-t border-gray-100">
+        <p class="text-sm font-bold uppercase tracking-widest">© 2026 GIRE - Redefining School Trips Worldwide</p>
+    </footer>
+
+    <script>
+        // Logica del calcolatore
+        function calculateTime() {
+            const students = document.getElementById('studentCount').value;
+            const hoursSavedElement = document.getElementById('hoursSaved');
+            
+            if (students > 0) {
+                // Algoritmo: Tempo fisso di base (1h) + 6 min per studente
+                let time = (students * 0.1) + 1;
+                hoursSavedElement.innerText = Math.round(time);
+            } else {
+                hoursSavedElement.innerText = "0";
+            }
+        }
+
+        // Selezione Card Pricing
+        function selectCard(cardId) {
+            document.querySelectorAll('.pricing-card').forEach(card => {
+                card.classList.remove('card-selected');
+            });
+            document.getElementById(cardId).classList.add('card-selected');
+        }
+    </script>
+</body>
+</html>
