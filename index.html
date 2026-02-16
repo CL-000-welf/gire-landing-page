@@ -3,20 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <title>GIRE - Safe & Smart School Trips</title>
-    <meta name="description" content="La piattaforma SaaS globale che digitalizza la sicurezza e la logistica delle gite scolastiche. Sicura, etica, senza carta.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://cl-000-welf.github.io/gire-landing-page/">
-    <meta property="og:title" content="GIRE - Il futuro dei viaggi di istruzione">
-    <meta property="og:description" content="Sicurezza, logistica e didattica in un'unica piattaforma globale per scuole.">
-    <meta property="og:image" content="assets/social-preview.png">
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="GIRE - Safe & Smart School Trips">
-    <meta property="twitter:image" content="assets/social-preview.png">
-
+    
+    <meta name="description" content="La piattaforma SaaS globale per la sicurezza e la logistica delle gite scolastiche.">
     <link rel="icon" type="image/png" href="assets/favicon.png">
-    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -29,140 +19,125 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
-        /* Effetti Pricing Card */
-        .pricing-card {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
-        .pricing-card:hover { transform: translateY(-12px); }
-        .card-selected {
-            border-color: #7C4DFF !important;
-            box-shadow: 0 20px 25px -5px rgba(124, 77, 255, 0.2);
-            background-color: #f8faff;
-            transform: scale(1.03);
-        }
-
-        /* Custom Range Slider */
+        .pricing-card { transition: all 0.4s ease; border: 2px solid #F3F4F6; }
+        .card-selected { border-color: #7C4DFF !important; background-color: #F9FAFB; transform: scale(1.03); }
+        
+        /* Custom Slider */
         input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
-        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 8px; cursor: pointer; background: #E5E7EB; border-radius: 4px; }
-        input[type=range]::-webkit-slider-thumb { height: 26px; width: 26px; border-radius: 50%; background: #7C4DFF; cursor: pointer; -webkit-appearance: none; margin-top: -9px; box-shadow: 0 0 15px rgba(124,77,255,0.4); border: 2px solid white; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 8px; background: #E5E7EB; border-radius: 4px; }
+        input[type=range]::-webkit-slider-thumb { height: 24px; width: 24px; border-radius: 50%; background: #7C4DFF; -webkit-appearance: none; margin-top: -8px; cursor: pointer; }
     </style>
 </head>
 <body class="bg-gire-dark text-white">
 
-    <nav class="container mx-auto px-6 py-8 flex justify-between items-center">
+    <div class="bg-purple-700 py-2 text-center overflow-hidden">
+        <p class="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] animate-pulse">
+            Safe & Smart School Trips — Global Standard for Education
+        </p>
+    </div>
+
+    <nav class="container mx-auto px-6 py-6 flex justify-between items-center">
         <div class="flex items-center space-x-3">
-            <img src="assets/logo.png" alt="GIRE Logo" class="h-10 w-auto">
-            <div>
-                <span class="text-2xl font-black block leading-none tracking-tighter">GIRE</span>
-                <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Safe & Smart School Trips</span>
-            </div>
+            <img src="assets/logo.png" alt="Logo Gire" class="h-10">
+            <span class="text-2xl font-black tracking-tighter">GIRE</span>
         </div>
-        <div class="hidden md:flex space-x-8 font-medium text-sm uppercase tracking-widest text-gray-400">
+        <div class="hidden md:flex space-x-8 text-sm font-bold uppercase tracking-widest text-gray-400">
             <a href="#pilastri" class="hover:text-white transition">Mission</a>
             <a href="#calcolatore" class="hover:text-white transition">Risparmio</a>
             <a href="#pricing" class="hover:text-white transition">Pricing</a>
         </div>
-        <button class="bg-white text-black px-6 py-2 rounded-full font-bold hover:bg-purple-500 hover:text-white transition shadow-lg">
-            Area Scuole
-        </button>
+        <button class="bg-white text-black px-6 py-2 rounded-full font-bold hover:bg-purple-600 hover:text-white transition">Area Scuole</button>
     </nav>
 
     <header class="container mx-auto px-6 py-20 text-center">
         <h1 class="text-5xl md:text-8xl font-black mb-8 leading-tight">
             Il futuro dei viaggi di <br>istruzione è <span class="gradient-text">movimento.</span>
         </h1>
-        <p class="text-gray-400 text-xl md:text-2xl max-w-3xl mx-auto mb-12">
-            La nostra <strong>Mission</strong> è eliminare il caos logistico per rimettere al centro l'esperienza didattica. Sicura, etica, senza carta.
+        <p class="text-gray-400 text-xl max-w-2xl mx-auto mb-12">
+            Riduciamo il carico amministrativo e aumentiamo la sicurezza. GIRE è l'ecosistema digitale che connette scuole, docenti e fornitori.
         </p>
         <div class="flex flex-col md:flex-row justify-center gap-6">
-            <a href="#pricing" class="bg-green-500 text-black px-10 py-5 rounded-2xl font-black text-xl hover:bg-green-400 transition shadow-lg shadow-green-500/20">
-                Inizia ora gratis
-            </a>
-            <button class="border border-gray-700 px-10 py-5 rounded-2xl font-bold text-xl hover:bg-gray-800 transition">
-                Guarda la Demo
-            </button>
+            <a href="#pricing" class="bg-green-500 text-black px-10 py-5 rounded-2xl font-black text-xl hover:bg-green-400 shadow-lg shadow-green-500/20 transition">Inizia ora gratis</a>
+            <button class="border border-gray-700 px-10 py-5 rounded-2xl font-bold text-xl hover:bg-gray-800 transition">Guarda la Demo</button>
         </div>
     </header>
 
-    <section id="pilastri" class="bg-white text-gray-900 py-20 rounded-t-[3rem] md:rounded-t-[5rem]">
+    <section id="pilastri" class="bg-white text-gray-900 py-24 rounded-t-[4rem]">
         <div class="container mx-auto px-6">
-            <div class="grid md:grid-cols-3 gap-12 text-center mb-20">
-                <div class="p-4">
-                    <div class="text-5xl mb-6">🛡️</div>
-                    <h3 class="text-xl font-black mb-3 uppercase tracking-tight">Sicurezza Totale</h3>
-                    <p class="text-gray-500 leading-relaxed">Geofencing intelligente e monitoraggio real-time per non perdere mai di vista il gruppo durante la gita.</p>
+            <div class="grid md:grid-cols-3 gap-16 text-center mb-24">
+                <div>
+                    <img src="assets/icon-map.png" alt="Sicurezza" class="h-16 mx-auto mb-6">
+                    <h3 class="text-xl font-black uppercase mb-4">Monitoraggio Etico</h3>
+                    <p class="text-gray-500 leading-relaxed font-medium">Localizzazione real-time attiva solo durante l'itinerario. Sicurezza per i ragazzi, privacy garantita per tutti.</p>
                 </div>
-                <div class="p-4">
-                    <div class="text-5xl mb-6">🎫</div>
-                    <h3 class="text-xl font-black mb-3 uppercase tracking-tight">Logistica Integrata</h3>
-                    <p class="text-gray-500 leading-relaxed">Documenti, biglietti e scadenze in un unico wallet digitale protetto e condiviso tra i docenti.</p>
+                <div>
+                    <img src="assets/icon-wallet.png" alt="Logistica" class="h-16 mx-auto mb-6">
+                    <h3 class="text-xl font-black uppercase mb-4">Smart Logistics</h3>
+                    <p class="text-gray-500 leading-relaxed font-medium">Gestione centralizzata di hotel, ristoranti e trasporti. Conferme istantanee e documenti sempre a portata di mano.</p>
                 </div>
-                <div class="p-4">
-                    <div class="text-5xl mb-6">📚</div>
-                    <h3 class="text-xl font-black mb-3 uppercase tracking-tight">Didattica Aumentata</h3>
-                    <p class="text-gray-500 leading-relaxed">Timeline interattiva e contenuti multimediali per trasformare ogni tappa in un momento di apprendimento unico.</p>
+                <div>
+                    <img src="assets/icon-book.png" alt="Didattica" class="h-16 mx-auto mb-6">
+                    <h3 class="text-xl font-black uppercase mb-4">Didattica Attiva</h3>
+                    <p class="text-gray-500 leading-relaxed font-medium">Trasforma ogni tappa in una sfida interattiva. Gallery condivise e report didattici generati automaticamente.</p>
                 </div>
             </div>
 
-            <div class="flex flex-wrap justify-center gap-8 md:gap-16 py-10 border-y border-gray-100 items-center opacity-60 grayscale hover:grayscale-0 transition duration-500">
-                <div class="flex items-center gap-2 font-bold text-sm text-gray-400">🛡️ GDPR COMPLIANT</div>
-                <div class="flex items-center gap-2 font-bold text-sm text-gray-400">🔒 SSL ENCRYPTED</div>
-                <div class="flex items-center gap-2 font-bold text-sm text-gray-400">👨‍🏫 DOCENTI APPROPRIATED</div>
-                <div class="flex items-center gap-2 font-bold text-sm text-gray-400">🌍 GLOBAL APP</div>
+            <div class="flex flex-col md:flex-row justify-center gap-12 py-12 border-y border-gray-100 items-center">
+                <div class="flex items-center gap-4 max-w-sm">
+                    <img src="assets/icon-shield.png" alt="Sicurezza" class="h-12">
+                    <p class="text-xs font-bold text-gray-400 uppercase leading-snug">Conformità Globale GDPR & Protezione Minori con crittografia end-to-end.</p>
+                </div>
+                <div class="flex items-center gap-4 max-w-sm">
+                    <img src="assets/icon-lock.png" alt="Privacy" class="h-12">
+                    <p class="text-xs font-bold text-gray-400 uppercase leading-snug">Accesso Istituzionale Protetto e gestione separata dei dati per ogni scuola.</p>
+                </div>
             </div>
         </div>
     </section>
 
     <section class="bg-gray-50 text-gray-900 py-24">
         <div class="container mx-auto px-6">
-            <h2 class="text-3xl font-black text-center mb-16 uppercase tracking-tighter">Come Funziona GIRE</h2>
-            <div class="grid md:grid-cols-4 gap-6">
-                <div class="bg-white p-8 rounded-3xl shadow-sm relative border-t-8 border-purple-500">
-                    <span class="text-6xl font-black text-gray-50 absolute top-4 right-6">1</span>
-                    <h4 class="text-xl font-black mb-3">Iscrizione</h4>
-                    <p class="text-gray-500 text-sm">La scuola attiva il profilo istituzionale e configura le classi in pochi click.</p>
+            <h2 class="text-3xl font-black text-center mb-16 uppercase">Il Workflow di GIRE</h2>
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="relative bg-white p-8 rounded-3xl shadow-sm border-b-4 border-purple-500">
+                    <div class="text-6xl font-black text-gray-100 absolute -top-4 -left-2">01</div>
+                    <h4 class="font-black mb-2 relative z-10">SETUP SCUOLA</h4>
+                    <p class="text-sm text-gray-500 relative z-10 font-medium">L'amministrazione configura l'anno scolastico e i docenti abilitati.</p>
                 </div>
-                <div class="bg-white p-8 rounded-3xl shadow-sm relative border-t-8 border-purple-500">
-                    <span class="text-6xl font-black text-gray-50 absolute top-4 right-6">2</span>
-                    <h4 class="text-xl font-black mb-3">Pianifica</h4>
-                    <p class="text-gray-500 text-sm">Inserisci l'itinerario, carica i biglietti e invita gli studenti tramite QR Code.</p>
+                <div class="relative bg-white p-8 rounded-3xl shadow-sm border-b-4 border-purple-500">
+                    <div class="text-6xl font-black text-gray-100 absolute -top-4 -left-2">02</div>
+                    <h4 class="font-black mb-2 relative z-10">BOOKING & DOCS</h4>
+                    <p class="text-sm text-gray-500 relative z-10 font-medium">Carica prenotazioni hotel, ristoranti e biglietti museali nel wallet.</p>
                 </div>
-                <div class="bg-white p-8 rounded-3xl shadow-sm relative border-t-8 border-purple-500">
-                    <span class="text-6xl font-black text-gray-50 absolute top-4 right-6">3</span>
-                    <h4 class="text-xl font-black mb-3">In Viaggio</h4>
-                    <p class="text-gray-500 text-sm">Attiva il monitoraggio live e gestisci gli ingressi ai musei direttamente dall'app.</p>
+                <div class="relative bg-white p-8 rounded-3xl shadow-sm border-b-4 border-purple-500">
+                    <div class="text-6xl font-black text-gray-100 absolute -top-4 -left-2">03</div>
+                    <h4 class="font-black mb-2 relative z-10">LIVE TRIP</h4>
+                    <p class="text-sm text-gray-500 relative z-10 font-medium">Monitoraggio live del gruppo e messaggistica SOS immediata.</p>
                 </div>
-                <div class="bg-white p-8 rounded-3xl shadow-sm relative border-t-8 border-purple-500">
-                    <span class="text-6xl font-black text-gray-50 absolute top-4 right-6">4</span>
-                    <h4 class="text-xl font-black mb-3">Archivia</h4>
-                    <p class="text-gray-500 text-sm">A fine gita, scarica i report e conserva la gallery fotografica della classe.</p>
+                <div class="relative bg-white p-8 rounded-3xl shadow-sm border-b-4 border-purple-500">
+                    <div class="text-6xl font-black text-gray-100 absolute -top-4 -left-2">04</div>
+                    <h4 class="font-black mb-2 relative z-10">REPORT FINALE</h4>
+                    <p class="text-sm text-gray-500 relative z-10 font-medium">Archiviazione automatica di foto e documenti per la rendicontazione.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="calcolatore" class="bg-amber-400 py-24">
-        <div class="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-12">
+    <section id="calcolatore" class="bg-amber-400 py-24 text-black">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row items-center gap-16">
             <div class="md:w-1/2">
-                <h2 class="text-4xl md:text-6xl font-black text-black mb-6 leading-none">Meno burocrazia,<br>più cultura.</h2>
-                <p class="text-amber-900 text-xl font-bold opacity-80">Muovi lo slider per scoprire quanto tempo risparmierai con l'automazione di GIRE.</p>
+                <h2 class="text-5xl font-black mb-6 uppercase leading-tight">Meno Burocrazia,<br>più cultura.</h2>
+                <p class="text-amber-900 font-bold text-xl">Gestire hotel e ristoranti non deve più essere un peso per la segreteria.</p>
             </div>
-
-            <div class="bg-white p-10 rounded-[3rem] shadow-2xl w-full md:w-[450px]">
-                <div class="flex justify-between items-center mb-6">
-                    <span class="text-gray-400 font-bold uppercase text-xs tracking-widest">N° Studenti</span>
-                    <span id="studentValue" class="text-3xl font-black text-purple-600">50</span>
+            <div class="md:w-1/2 bg-white p-10 rounded-[2.5rem] shadow-2xl">
+                <div class="flex justify-between items-center mb-6 text-gray-400 font-black text-xs uppercase">
+                    <span>Studenti in gita</span>
+                    <span id="stVal" class="text-2xl text-purple-600">50</span>
                 </div>
-                
-                <input type="range" id="studentSlider" min="1" max="200" value="50" class="mb-10" oninput="updateSim()">
-                
-                <div class="text-center bg-gray-50 p-8 rounded-[2rem]">
-                    <p class="text-gray-400 font-bold text-xs uppercase tracking-widest">Tempo recuperato</p>
-                    <p class="text-7xl font-black text-purple-600 my-2 tracking-tighter">+<span id="hoursSaved">5</span>h</p>
-                    <p class="text-gray-400 text-sm font-medium italic">di stress eliminato per gita</p>
+                <input type="range" id="stSlider" min="1" max="250" value="50" oninput="upd()" class="mb-10">
+                <div class="text-center border-t pt-8">
+                    <p class="text-gray-400 font-black text-xs uppercase">Tempo Amministrativo Recuperato</p>
+                    <p class="text-7xl font-black text-purple-600 tracking-tighter">+<span id="hrSav">5</span>h</p>
                 </div>
             </div>
         </div>
@@ -170,79 +145,72 @@
 
     <section id="pricing" class="bg-white text-gray-900 py-32">
         <div class="container mx-auto px-6">
-            <div class="text-center mb-20">
-                <h2 class="text-4xl md:text-6xl font-black mb-4">Piani flessibili</h2>
-                <p class="text-gray-500 text-xl">Soluzioni pensate per ogni esigenza scolastica.</p>
-            </div>
-            
             <div class="grid md:grid-cols-3 gap-10">
-                <div id="card-pilot" onclick="selectCard('card-pilot')" class="pricing-card border-2 border-gray-100 rounded-[2.5rem] p-10 flex flex-col">
-                    <h3 class="text-gray-300 font-bold tracking-widest mb-2 uppercase">Starter</h3>
-                    <p class="text-4xl font-black mb-8">PILOT</p>
-                    <p class="text-5xl font-black mb-10">Gratis</p>
-                    <button class="w-full border-2 border-gray-100 py-4 rounded-2xl font-black hover:bg-gray-50 transition">ATTIVA GRATIS</button>
+                <div id="c1" onclick="sel('c1')" class="pricing-card p-10 rounded-[2.5rem] flex flex-col">
+                    <p class="text-gray-400 font-black text-xs mb-2 tracking-widest">TEST DRIVE</p>
+                    <h3 class="text-4xl font-black mb-6 uppercase">PILOT</h3>
+                    <p class="text-5xl font-black mb-8">Gratis</p>
+                    <ul class="text-gray-500 space-y-4 mb-10 flex-grow text-sm font-medium">
+                        <li>• Max 15 studenti</li>
+                        <li>• Itinerario base</li>
+                        <li>• Messaggi SOS</li>
+                    </ul>
+                    <button class="w-full py-4 border-2 border-gray-100 rounded-2xl font-black uppercase text-xs">Prova ora</button>
                 </div>
-
-                <div id="card-pro" onclick="selectCard('card-pro')" class="pricing-card card-selected border-2 rounded-[2.5rem] p-10 flex flex-col relative bg-gray-50">
-                    <div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-6 py-2 rounded-full text-xs font-black tracking-widest uppercase shadow-lg">Più Scelto</div>
-                    <h3 class="text-purple-600 font-bold tracking-widest mb-2 uppercase">Pro Trip</h3>
-                    <p class="text-4xl font-black mb-8 text-gray-900 uppercase">Per Studente</p>
-                    <p class="text-5xl font-black mb-10">€1.50</p>
-                    <button class="w-full bg-purple-600 text-white py-4 rounded-2xl font-black shadow-xl shadow-purple-500/40 hover:bg-purple-700 transition uppercase tracking-widest">Seleziona</button>
+                <div id="c2" onclick="sel('c2')" class="pricing-card card-selected p-10 rounded-[2.5rem] flex flex-col relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-purple-600 text-white px-4 py-1 rounded-full text-[10px] font-black uppercase">Consigliato</div>
+                    <p class="text-purple-600 font-black text-xs mb-2 tracking-widest">TOP SELLER</p>
+                    <h3 class="text-4xl font-black mb-6 uppercase">PRO TRIP</h3>
+                    <p class="text-5xl font-black mb-8">€2.00 <span class="text-sm text-gray-400">/studente</span></p>
+                    <ul class="text-gray-600 space-y-4 mb-10 flex-grow text-sm font-bold">
+                        <li>• Geofencing Illimitato</li>
+                        <li>• Wallet Hotel & Ristoranti</li>
+                        <li>• Mappe Offline Globali</li>
+                        <li>• Gallery di classe</li>
+                    </ul>
+                    <button class="w-full py-4 bg-purple-600 text-white rounded-2xl font-black uppercase text-xs shadow-lg shadow-purple-200">Seleziona</button>
                 </div>
-
-                <div id="card-inst" onclick="selectCard('card-inst')" class="pricing-card border-2 border-gray-100 rounded-[2.5rem] p-10 flex flex-col">
-                    <h3 class="text-gray-300 font-bold tracking-widest mb-2 uppercase">Enterprise</h3>
-                    <p class="text-4xl font-black mb-8 italic">SCHOOL</p>
-                    <p class="text-5xl font-black mb-10 text-purple-600 italic uppercase tracking-tighter">SaaS</p>
-                    <button class="w-full bg-black text-white py-4 rounded-2xl font-black hover:opacity-80 transition">CONTATTACI</button>
+                <div id="c3" onclick="sel('c3')" class="pricing-card p-10 rounded-[2.5rem] flex flex-col">
+                    <p class="text-gray-400 font-black text-xs mb-2 tracking-widest">ENTERPRISE</p>
+                    <h3 class="text-4xl font-black mb-6 uppercase text-gray-900">SCHOOL</h3>
+                    <p class="text-4xl font-black mb-8 text-purple-600 underline">€500/anno</p>
+                    <ul class="text-gray-500 space-y-4 mb-10 flex-grow text-sm font-medium">
+                        <li>• Gite illimitate</li>
+                        <li>• Dashboard Segreteria</li>
+                        <li>• Integrazione Registro</li>
+                        <li>• Supporto Prioritario</li>
+                    </ul>
+                    <button class="w-full py-4 bg-black text-white rounded-2xl font-black uppercase text-xs">Contattaci</button>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="bg-white py-16 border-t border-gray-100 text-gray-400">
-        <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-10">
-            <div class="flex items-center space-x-3">
-                <img src="assets/logo.png" alt="GIRE Logo" class="h-8 grayscale opacity-50">
-                <span class="font-black text-xl tracking-tighter text-gray-300 uppercase">GIRE</span>
+    <footer class="bg-white py-12 border-t border-gray-100">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="flex items-center space-x-2">
+                <img src="assets/logo.png" class="h-8 grayscale opacity-50">
+                <span class="font-black text-gray-300">GIRE</span>
             </div>
-            
-            <div class="flex space-x-10">
-                <a href="#" class="hover:text-purple-500 transition text-2xl" aria-label="X (Twitter)">𝕏</a>
-                <a href="#" class="hover:text-purple-500 transition text-2xl" aria-label="Instagram">📸</a>
-                <a href="#" class="hover:text-purple-500 transition text-2xl" aria-label="LinkedIn">💼</a>
-                <a href="#" class="hover:text-purple-500 transition text-2xl" aria-label="Facebook">🔵</a>
+            <div class="flex space-x-8">
+                <img src="assets/social-x.png" class="h-5 cursor-pointer hover:opacity-50 transition">
+                <img src="assets/social-ig.png" class="h-5 cursor-pointer hover:opacity-50 transition">
+                <img src="assets/social-in.png" class="h-5 cursor-pointer hover:opacity-50 transition">
             </div>
-
-            <div class="text-sm font-bold uppercase tracking-widest">
-                © 2026 GIRE - Redefining School Trips
-            </div>
+            <p class="text-[10px] font-black text-gray-300 uppercase">© 2026 GIRE Worldwide. Privacy & Terms.</p>
         </div>
     </footer>
 
     <script>
-        // Simulatore Fluido (Slider)
-        function updateSim() {
-            const val = document.getElementById('studentSlider').value;
-            document.getElementById('studentValue').innerText = val;
-            const hoursSavedElement = document.getElementById('hoursSaved');
-            
-            // Algoritmo: Tempo fisso base (1h) + 5 min (0.083 ore) per studente
-            let time = (val * 0.083) + 1;
-            hoursSavedElement.innerText = Math.round(time);
+        function upd() {
+            const v = document.getElementById('stSlider').value;
+            document.getElementById('stVal').innerText = v;
+            document.getElementById('hrSav').innerText = Math.round(1 + (v * 0.1));
         }
-
-        // Selezione Card Pricing
-        function selectCard(cardId) {
-            document.querySelectorAll('.pricing-card').forEach(card => {
-                card.classList.remove('card-selected');
-            });
-            document.getElementById(cardId).classList.add('card-selected');
+        function sel(id) {
+            document.querySelectorAll('.pricing-card').forEach(c => c.classList.remove('card-selected'));
+            document.getElementById(id).classList.add('card-selected');
         }
-
-        // Inizializza simulatore
-        updateSim();
     </script>
 </body>
 </html>
