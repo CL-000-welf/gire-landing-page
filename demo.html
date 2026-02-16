@@ -249,19 +249,17 @@
         document.getElementById('sosBadge').innerText = "SOS ATTIVI: 0";
         document.getElementById('sosBadge').classList.remove('animate-pulse');
 
-        if (shouldScroll) {
-            // Fix per mobile: scrolla l'elemento mappa ma lascia spazio per l'header sticky
-            const mapEl = document.getElementById('map');
-            const offset = 100; // Spazio per l'header
-            const bodyRect = document.body.getBoundingClientRect().top;
-            const elementRect = mapEl.getBoundingClientRect().top;
-            const elementPosition = elementRect - bodyRect;
-            const offsetPosition = elementPosition - offset;
+        // Calcolo posizione mappa per lo scroll (mantenendo spazio per header)
+        const mapEl = document.getElementById('map');
+        const offset = 100; 
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = mapEl.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
 
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: 'smooth'
-            });
+        if (shouldScroll) {
+            // AZIONE: LOCALIZZA (Bottone Rosso)
+            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
             
             setTimeout(() => {
                 map.invalidateSize();
@@ -271,9 +269,20 @@
             setTimeout(() => {
                 L.popup()
                 .setLatLng([41.9005, 12.4715])
-                .setContent("<div style='text-align:center; padding:5px;'><b>Marco Rossi</b><br><span style='color:red; font-weight:bold;'>RICHIESTA SOS</span></div>")
+                .setContent("<div style='text-align:center; padding:5px;'><b style='color:#e11d48 uppercase'>Marco Rossi</b><br><span style='color:#e11d48; font-weight:900;'>RICHIESTA SOS ATTIVA</span></div>")
                 .openOn(map);
             }, 2200);
+        } else {
+            // AZIONE: IGNORA (Bottone Grigio)
+            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+            
+            setTimeout(() => {
+                map.invalidateSize();
+                L.popup()
+                .setLatLng([41.9005, 12.4715])
+                .setContent("<div style='text-align:center; padding:5px;'><b style='text-transform:uppercase italic'>Segnalazione Archiviata</b><br><span style='color:#64748b; font-weight:bold;'>Marco Rossi (OK)</span></div>")
+                .openOn(map);
+            }, 500);
         }
     }
 
