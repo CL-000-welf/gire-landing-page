@@ -6,41 +6,116 @@
     <title>GIRE - Appello Classe</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .student-row.checked { background-color: #f0fdf4; border-color: #bbf7d0; }
+        .sidebar-active { background-color: rgba(124, 77, 255, 0.1); color: #7C4DFF; border-left: 4px solid #7C4DFF; }
+    </style>
 </head>
-<body class="bg-gray-50 p-6">
-    <div class="max-w-2xl mx-auto">
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-black italic uppercase tracking-tighter">Appello Digitale</h1>
-            <a href="demo.html" class="text-gray-400 hover:text-black transition text-2xl"><i class="fa-solid fa-circle-xmark"></i></a>
-        </div>
+<body class="bg-gray-50 flex flex-col lg:flex-row min-h-screen">
 
-        <div class="bg-blue-600 rounded-3xl p-6 text-white mb-8 shadow-xl shadow-blue-200">
-            <h3 class="text-[10px] font-black uppercase tracking-widest mb-4 opacity-80">Supporto Speciale (L. 104)</h3>
-            <div class="bg-white/10 p-4 rounded-2xl flex items-center justify-between border border-white/20">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-white text-blue-600 rounded-full flex items-center justify-center font-black">MR</div>
-                    <div>
-                        <p class="font-black">Marco Rossi</p>
-                        <p class="text-[10px] font-bold opacity-70">Sostegno: Prof.ssa Bianchi</p>
-                    </div>
-                </div>
-                <i class="fa-solid fa-check-double text-green-300"></i>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-            <h3 class="text-[10px] font-black uppercase text-gray-400 mb-6">Studenti Presenti (23/24)</h3>
-            <div class="space-y-4">
-                <div class="flex items-center justify-between border-b pb-3">
-                    <span class="font-bold text-gray-700">Andrea B.</span>
-                    <i class="fa-solid fa-circle-check text-green-500"></i>
-                </div>
-                <div class="flex items-center justify-between border-b pb-3">
-                    <span class="font-bold text-gray-700">Lucia M.</span>
-                    <i class="fa-solid fa-circle-check text-green-500"></i>
-                </div>
-            </div>
-        </div>
+    <div class="lg:hidden bg-gray-900 text-white p-4 flex justify-between items-center shadow-lg">
+        <span class="text-xl font-black tracking-tighter text-purple-400">GIRE</span>
+        <button onclick="toggleSidebar()" class="text-2xl"><i class="fa-solid fa-bars"></i></button>
     </div>
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col p-6 shadow-2xl lg:static">
+        <div class="flex items-center justify-between mb-10">
+            <div class="flex items-center space-x-3">
+                <span class="text-2xl font-black tracking-tighter text-purple-400">GIRE</span>
+                <span class="text-[10px] font-bold uppercase tracking-widest text-gray-500 italic">Smart Trip</span>
+            </div>
+            <button onclick="toggleSidebar()" class="lg:hidden text-gray-400"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <nav class="flex-grow space-y-2 text-sm font-bold uppercase tracking-widest">
+            <a href="demo.html" class="flex items-center p-3 text-gray-400 hover:text-white transition"><i class="fa-solid fa-house mr-3 w-5"></i> Dashboard</a>
+            <a href="mappa.html" class="flex items-center p-3 text-gray-400 hover:text-white transition"><i class="fa-solid fa-map-location-dot mr-3 w-5"></i> Live Map</a>
+            <a href="appello.html" class="flex items-center p-3 sidebar-active transition"><i class="fa-solid fa-users mr-3 w-5"></i> Appello</a>
+            <a href="inclusione.html" class="flex items-center p-3 text-gray-400 hover:text-white transition"><i class="fa-solid fa-handshake-angle mr-3 w-5"></i> Inclusione</a>
+            <a href="admin.html" class="flex items-center p-3 text-gray-400 hover:text-white transition"><i class="fa-solid fa-file-invoice-dollar mr-3 w-5"></i> Admin</a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 p-4 md:p-8 lg:ml-0 overflow-y-auto">
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+                <h1 class="text-3xl font-black text-gray-900 uppercase italic tracking-tighter">Registro Presenze</h1>
+                <p class="text-gray-500 font-bold">Classe 5ª B • <span id="present-count">0</span> / 12 Presenti</p>
+            </div>
+            <button onclick="resetAppello()" class="text-xs font-black text-red-500 uppercase border-2 border-red-500 px-4 py-2 rounded-xl hover:bg-red-50 transition">Reset Appello</button>
+        </header>
+
+        <div class="mb-8">
+            <h3 class="text-[10px] font-black text-purple-600 uppercase mb-4 tracking-widest italic">Studenti con Supporto Speciale</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div onclick="toggleStudent(this)" class="student-row cursor-pointer bg-white p-6 rounded-[2rem] shadow-sm border-2 border-purple-100 flex justify-between items-center transition-all hover:scale-[1.02]">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center font-black">MR</div>
+                        <div>
+                            <p class="font-black text-gray-900">Marco Rossi</p>
+                            <p class="text-[10px] font-bold text-purple-400">SOSTEGNO: Prof.ssa Bianchi</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-circle-check text-gray-200 text-3xl check-icon"></i>
+                </div>
+                <div onclick="toggleStudent(this)" class="student-row cursor-pointer bg-white p-6 rounded-[2rem] shadow-sm border-2 border-purple-100 flex justify-between items-center transition-all hover:scale-[1.02]">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center font-black">SG</div>
+                        <div>
+                            <p class="font-black text-gray-900">Sara Gialli</p>
+                            <p class="text-[10px] font-bold text-purple-400">SOSTEGNO: Prof. Neri</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-circle-check text-gray-200 text-3xl check-icon"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-[2.5rem] p-6 shadow-sm border border-gray-100">
+            <h3 class="text-[10px] font-black text-gray-400 uppercase mb-6 tracking-widest italic">Elenco Alunni</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="student-list">
+                </div>
+        </div>
+    </main>
+
+    <script>
+        const nomi = ["Andrea B.", "Beatrice C.", "Claudio D.", "Dario E.", "Elena F.", "Federico G.", "Giorgia H.", "Ilaria I.", "Luca L.", "Mattia M."];
+        const list = document.getElementById('student-list');
+
+        nomi.forEach(nome => {
+            list.innerHTML += `
+                <div onclick="toggleStudent(this)" class="student-row cursor-pointer flex items-center justify-between p-4 border border-gray-100 rounded-2xl hover:bg-gray-50 transition-all">
+                    <span class="font-bold text-gray-700 uppercase text-sm">${nome}</span>
+                    <i class="fa-solid fa-circle-check text-gray-200 text-2xl check-icon"></i>
+                </div>
+            `;
+        });
+
+        function toggleStudent(el) {
+            el.classList.toggle('checked');
+            const icon = el.querySelector('.check-icon');
+            if(el.classList.contains('checked')) {
+                icon.classList.replace('text-gray-200', 'text-green-500');
+            } else {
+                icon.classList.replace('text-green-500', 'text-gray-200');
+            }
+            updateCount();
+        }
+
+        function updateCount() {
+            const count = document.querySelectorAll('.student-row.checked').length;
+            document.getElementById('present-count').innerText = count;
+        }
+
+        function resetAppello() {
+            document.querySelectorAll('.student-row').forEach(el => {
+                el.classList.remove('checked');
+                el.querySelector('.check-icon').classList.replace('text-green-500', 'text-gray-200');
+            });
+            updateCount();
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        }
+    </script>
 </body>
 </html>
