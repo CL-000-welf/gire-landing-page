@@ -35,6 +35,9 @@
             40% { transform: translate(1px, -1px) rotate(1deg); }
             50% { transform: translate(-1px, 2px) rotate(-1deg); }
         }
+
+        /* Fix per Header Mobile che non sparisce */
+        header { top: 0; position: -webkit-sticky; position: sticky; }
     </style>
 </head>
 <body class="flex flex-col md:flex-row h-screen overflow-hidden">
@@ -54,14 +57,17 @@
         </div>
         
         <nav class="flex-grow space-y-2">
-            <a href="#" class="flex items-center p-3 bg-purple-600 rounded-xl font-bold">
+            <a href="mappa.html" class="flex items-center p-3 bg-purple-600 rounded-xl font-bold">
                 <i class="fa-solid fa-map-location-dot mr-3 w-5"></i> Live Map
             </a>
-            <a href="#" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition">
+            <a href="admin.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition">
                 <i class="fa-solid fa-hotel mr-3 w-5"></i> Booking Hub
             </a>
-            <a href="#" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition">
+            <a href="appello.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition">
                 <i class="fa-solid fa-users mr-3 w-5"></i> Appello Classe
+            </a>
+            <a href="inclusione.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition text-blue-300">
+                <i class="fa-solid fa-hand-holding-heart mr-3 w-5"></i> Area Inclusione
             </a>
         </nav>
 
@@ -79,7 +85,7 @@
         <header class="bg-white border-b p-4 md:p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 sticky top-0 z-30">
             <div>
                 <h1 class="text-xl md:text-2xl font-black text-gray-900 leading-tight">Gita a Roma: 5ª B</h1>
-                <p class="text-gray-500 text-xs font-medium uppercase tracking-tighter">Centro Storico • Pantheon • Trastevere</p>
+                <p class="text-gray-500 text-xs font-medium uppercase tracking-tighter center">Centro Storico • Pantheon • Trastevere</p>
             </div>
             <div class="flex items-center gap-3 w-full md:w-auto">
                 <div id="liveStatus" class="flex-1 md:flex-none text-center bg-green-100 text-green-700 px-4 py-2 rounded-full text-[10px] font-black">
@@ -176,10 +182,10 @@
             <p class="text-gray-500 font-medium mb-8 leading-relaxed">Lo studente <span class="text-red-600 font-black underline">Marco Rossi</span> ha inviato una segnalazione di emergenza.</p>
             
             <div class="space-y-3">
-                <button onclick="closeSOS()" class="w-full bg-red-600 text-white py-5 rounded-[1.5rem] font-black uppercase text-xs shadow-lg shadow-red-200 hover:bg-red-700 transition-all">
+                <button onclick="handleSOSAction(true)" class="w-full bg-red-600 text-white py-5 rounded-[1.5rem] font-black uppercase text-xs shadow-lg shadow-red-200 hover:bg-red-700 transition-all">
                     Localizza sulla mappa
                 </button>
-                <button onclick="stopSound(); document.getElementById('sosOverlay').classList.add('hidden')" class="w-full bg-gray-100 text-gray-400 py-4 rounded-[1.5rem] font-black uppercase text-[10px] tracking-widest">
+                <button onclick="handleSOSAction(false)" class="w-full bg-gray-100 text-gray-400 py-4 rounded-[1.5rem] font-black uppercase text-[10px] tracking-widest">
                     Ignora Segnalazione
                 </button>
             </div>
@@ -191,7 +197,6 @@
     let audioCtx;
     let beepInterval;
 
-    // Sblocca audio su mobile al primo tocco
     const unlockAudio = () => {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         document.removeEventListener('touchstart', unlockAudio);
@@ -235,48 +240,46 @@
         if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
     }
 
-    // Funzione di chiusura centralizzata
     function handleSOSAction(shouldScroll) {
-    stopSound();
-    const overlay = document.getElementById('sosOverlay');
-    overlay.classList.add('hidden');
-    overlay.style.display = 'none';
-    
-    document.getElementById('sosBadge').innerText = "SOS ATTIVI: 0";
-    document.getElementById('sosBadge').classList.remove('animate-pulse');
-
-    if (shouldScroll) {
-        // AZIONE: LOCALIZZA
-        document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        stopSound();
+        const overlay = document.getElementById('sosOverlay');
+        overlay.classList.add('hidden');
+        overlay.style.display = 'none';
         
-        setTimeout(() => {
-            map.invalidateSize();
-            map.flyTo([41.9005, 12.4715], 18, { animate: true, duration: 1.5 });
-        }, 500);
+        document.getElementById('sosBadge').innerText = "SOS ATTIVI: 0";
+        document.getElementById('sosBadge').classList.remove('animate-pulse');
 
-        setTimeout(() => {
-            L.popup()
-            .setLatLng([41.9005, 12.4715])
-            .setContent("<div style='text-align:center; padding:5px;'><b>Marco Rossi</b><br><span style='color:red; font-weight:bold;'>RICHIESTA SOS</span></div>")
-            .openOn(map);
-        }, 2200);
-    } else {
-        // AZIONE: IGNORA/CHIUDI
-        // Facciamo comparire un popup sulla mappa che conferma l'annullamento
-        map.invalidateSize();
-        L.popup()
-            .setLatLng([41.9005, 12.4715])
-            .setContent("<div style='text-align:center; padding:5px;'><b>Marco Rossi</b><br><span style='color:gray; font-weight:bold;'>Segnalazione Annullata</span></div>")
-            .openOn(map);
+        if (shouldScroll) {
+            // Fix per mobile: scrolla l'elemento mappa ma lascia spazio per l'header sticky
+            const mapEl = document.getElementById('map');
+            const offset = 100; // Spazio per l'header
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const elementRect = mapEl.getBoundingClientRect().top;
+            const elementPosition = elementRect - bodyRect;
+            const offsetPosition = elementPosition - offset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
             
-        // Opzionale: scrolla comunque un po' verso la mappa per far vedere il popup
-        document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => {
+                map.invalidateSize();
+                map.flyTo([41.9005, 12.4715], 18, { animate: true, duration: 1.5 });
+            }, 500);
+
+            setTimeout(() => {
+                L.popup()
+                .setLatLng([41.9005, 12.4715])
+                .setContent("<div style='text-align:center; padding:5px;'><b>Marco Rossi</b><br><span style='color:red; font-weight:bold;'>RICHIESTA SOS</span></div>")
+                .openOn(map);
+            }, 2200);
+        }
     }
-}
-    // Inizializzazione Mappa (Ottimizzata Mobile)
+
     var map = L.map('map', { 
         zoomControl: false, 
-        tap: false, // Fix fondamentale per i bottoni su mobile
+        tap: false, 
         touchZoom: true 
     }).setView([41.8992, 12.4731], 16);
     
