@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIRE - Admin</title>
+    <title>GIRE - Booking Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -28,18 +28,10 @@
             <span class="text-xl font-black tracking-tighter italic">GIRE</span>
         </div>
         <nav class="flex-grow space-y-2">
-            <a href="mappa.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition">
-                <i class="fa-solid fa-map-location-dot mr-3 w-5"></i> Live Map
-            </a>
-            <a href="admin.html" class="flex items-center p-3 bg-purple-600 rounded-xl font-bold">
-                <i class="fa-solid fa-hotel mr-3 w-5"></i> Booking Hub
-            </a>
-            <a href="appello.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition">
-                <i class="fa-solid fa-users mr-3 w-5"></i> Appello Classe
-            </a>
-            <a href="inclusione.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition text-blue-300">
-                <i class="fa-solid fa-hand-holding-heart mr-3 w-5"></i> Area Inclusione
-            </a>
+            <a href="mappa.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition"><i class="fa-solid fa-map-location-dot mr-3 w-5"></i> Live Map</a>
+            <a href="admin.html" class="flex items-center p-3 bg-purple-600 rounded-xl font-bold"><i class="fa-solid fa-hotel mr-3 w-5"></i> Booking Hub</a>
+            <a href="appello.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition"><i class="fa-solid fa-users mr-3 w-5"></i> Appello Classe</a>
+            <a href="inclusione.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition text-blue-300"><i class="fa-solid fa-hand-holding-heart mr-3 w-5"></i> Area Inclusione</a>
         </nav>
         <div class="mt-auto pt-6 border-t border-white/10">
             <a href="demo.html" class="block p-3 bg-white/5 rounded-xl text-white font-black uppercase tracking-widest text-[10px] hover:bg-white/10 transition text-center">
@@ -50,9 +42,20 @@
 
     <main class="flex-1 overflow-y-auto pt-[88px] md:pt-8 px-4 md:px-8">
         <h1 class="text-3xl font-black text-gray-900 uppercase italic tracking-tighter mb-8">Amministrazione</h1>
-        <div class="bg-white p-6 rounded-[2rem] shadow-sm max-w-2xl">
-            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest italic italic italic">Stato Preventivi</p>
-            <div class="mt-4 italic italic italic italic">Piattaforma MEPA collegata: **Attiva**</div>
+        
+        <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-gray-100 max-w-2xl mb-6">
+            <div class="flex justify-between items-start mb-6">
+                <h3 class="font-black text-[11px] uppercase text-gray-400 italic">Documentazione e MEPA</h3>
+                <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-[9px] font-black italic">CONNESSO</span>
+            </div>
+            
+            <div class="p-4 bg-green-50 rounded-2xl border border-green-100 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-shield-check text-green-500"></i>
+                    <span class="text-green-800 font-black text-[10px] uppercase italic">Piattaforma MEPA Attiva</span>
+                </div>
+                <button class="text-[9px] font-black text-white bg-green-500 px-3 py-1 rounded-lg uppercase">Sincronizza</button>
+            </div>
         </div>
     </main>
 
