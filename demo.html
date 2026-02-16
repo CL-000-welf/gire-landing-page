@@ -3,379 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIRE - Dashboard Demo Interattiva</title>
-    
+    <title>GIRE - Dashboard Demo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #F3F4F6; }
-        #map { height: 350px; border-radius: 1.5rem; z-index: 1; transition: all 0.5s ease; }
-        @media (min-width: 768px) { #map { height: 500px; } }
-        
+        #map { height: 350px; border-radius: 1.5rem; z-index: 1; }
         .sidebar { background-color: #1A1C2E; }
-        
         .status-pulse { animation: pulse 2s infinite; }
         @keyframes pulse {
             0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
             70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
         }
-
-        /* Effetto scuotimento per SOS */
         .shake { animation: shake 0.5s infinite; }
         @keyframes shake {
             0% { transform: translate(1px, 1px) rotate(0deg); }
             10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
             30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
             50% { transform: translate(-1px, 2px) rotate(-1deg); }
         }
     </style>
 </head>
 <body class="flex flex-col md:flex-row h-screen overflow-hidden">
 
-    <div class="md:hidden bg-[#1A1C2E] text-white p-4 flex justify-between items-center shadow-lg z-[60]">
+    <div class="md:hidden bg-[#1A1C2E] text-white p-4 flex justify-between items-center shadow-lg fixed top-0 left-0 right-0 z-[100]">
         <div class="flex items-center space-x-2">
             <img src="assets/logo.png" alt="Logo" class="h-6">
             <span class="font-black tracking-tighter">GIRE</span>
         </div>
-        <button onclick="toggleMenu()" class="text-2xl p-2"><i class="fa-solid fa-bars"></i></button>
+        <button onclick="toggleMenu()" class="text-2xl p-2 bg-white/10 rounded-lg"><i class="fa-solid fa-bars"></i></button>
     </div>
 
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 sidebar text-white transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 flex flex-col p-6">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-[110] w-64 sidebar text-white transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 flex flex-col p-6">
         <div class="hidden md:flex items-center space-x-3 mb-10">
             <img src="assets/logo.png" alt="Logo" class="h-8">
             <span class="text-xl font-black tracking-tighter">GIRE</span>
         </div>
-        
         <nav class="flex-grow space-y-2">
-            <a href="mappa.html" class="flex items-center p-3 bg-purple-600 rounded-xl font-bold">
-                <i class="fa-solid fa-map-location-dot mr-3 w-5"></i> Live Map
-            </a>
-            <a href="admin.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition">
-                <i class="fa-solid fa-hotel mr-3 w-5"></i> Booking Hub
-            </a>
-            <a href="appello.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition">
-                <i class="fa-solid fa-users mr-3 w-5"></i> Appello Classe
-            </a>
-            <a href="inclusione.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition text-blue-300">
-                <i class="fa-solid fa-hand-holding-heart mr-3 w-5"></i> Area Inclusione
-            </a>
+            <a href="mappa.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition font-bold"><i class="fa-solid fa-map-location-dot mr-3 w-5"></i> Live Map</a>
+            <a href="admin.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition"><i class="fa-solid fa-hotel mr-3 w-5"></i> Booking Hub</a>
+            <a href="appello.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition"><i class="fa-solid fa-users mr-3 w-5"></i> Appello Classe</a>
+            <a href="inclusione.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition text-blue-300"><i class="fa-solid fa-hand-holding-heart mr-3 w-5"></i> Area Inclusione</a>
         </nav>
-
-        <div class="mt-auto pt-6 border-t border-white/10 text-[10px] text-gray-400">
-            <p class="font-bold">Prof. Mario Rossi</p>
-            <p>ID: IT-99234</p>
-            <a href="./" class="block mt-4 text-purple-400 font-bold uppercase tracking-widest hover:text-white transition">
-                <i class="fa-solid fa-arrow-left mr-1"></i> Esci dalla Demo
-            </a>
+        <div class="mt-auto pt-6 border-t border-white/10">
+            <p class="text-[10px] text-gray-400 font-bold mb-2">Prof. Mario Rossi • IT-99234</p>
+            <a href="./" class="block text-purple-400 font-bold uppercase tracking-widest hover:text-white transition text-xs"><i class="fa-solid fa-arrow-left mr-1"></i> Esci dalla Demo</a>
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col overflow-y-auto">
-        
-        <header class="bg-white border-b p-4 md:p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 sticky top-0 z-30">
+    <main class="flex-1 flex flex-col overflow-y-auto pt-[72px] md:pt-0">
+        <header class="bg-white border-b p-6 flex flex-col md:flex-row justify-between items-center gap-4 sticky top-0 z-30">
             <div>
-                <h1 class="text-xl md:text-2xl font-black text-gray-900 leading-tight">Gita a Roma: 5ª B</h1>
-                <p class="text-gray-500 text-xs font-medium uppercase tracking-tighter">Centro Storico • Pantheon • Trastevere</p>
+                <h1 class="text-2xl font-black text-gray-900 leading-tight">Gita a Roma: 5ª B</h1>
+                <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest italic">Pantheon • Trastevere</p>
             </div>
-            <div class="flex items-center gap-3 w-full md:w-auto">
-                <div id="liveStatus" class="flex-1 md:flex-none text-center bg-green-100 text-green-700 px-4 py-2 rounded-full text-[10px] font-black">
-                    <i class="fa-solid fa-signal mr-1"></i> LIVE ORA
-                </div>
-                <button id="sosBadge" class="flex-1 md:flex-none bg-red-500 text-white px-5 py-2 rounded-xl font-black text-[10px] shadow-lg shadow-red-100">
-                    SOS ATTIVI: 0
-                </button>
+            <div class="flex items-center gap-3">
+                <div id="liveStatus" class="bg-green-100 text-green-700 px-4 py-2 rounded-full text-[10px] font-black italic">LIVE ORA</div>
+                <button id="sosBadge" class="bg-red-500 text-white px-5 py-2 rounded-xl font-black text-[10px]">SOS ATTIVI: 0</button>
             </div>
         </header>
 
         <div class="p-4 md:p-8 space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                
                 <div class="lg:col-span-2 bg-white rounded-[2rem] p-4 shadow-sm border border-gray-100">
-                    <div class="flex justify-between items-center mb-4 px-2">
-                        <h3 class="font-black uppercase text-[10px] tracking-widest text-gray-400 italic">Posizioni in tempo reale</h3>
-                        <span class="text-[10px] font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded-lg">24 Dispositivi collegati</span>
-                    </div>
                     <div id="map"></div>
                 </div>
-
                 <div class="space-y-6">
                     <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-100">
-                        <h3 class="font-black uppercase text-[10px] tracking-widest text-gray-400 mb-4 italic">Prossima Tappa</h3>
-                        <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-2xl mb-6">
-                            <p class="text-[10px] font-black text-amber-700 uppercase">Dalle ore 13:00</p>
-                            <p class="font-black text-lg text-gray-900">Trattoria "Da Giggi"</p>
-                            <p class="text-gray-500 text-[11px] mt-1 font-medium"><i class="fa-solid fa-utensils mr-1"></i> Pranzo Gruppo (Menu fisso)</p>
-                        </div>
-                        <div class="grid grid-cols-2 lg:grid-cols-1 gap-3">
-                            <button class="bg-gray-900 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-purple-600 transition shadow-md">
-                                <i class="fa-solid fa-qrcode mr-2"></i> Voucher Hub
-                            </button>
-                            <button class="bg-gray-100 text-gray-600 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-gray-200 transition">
-                                <i class="fa-solid fa-bus mr-2"></i> Autista
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="bg-gray-900 rounded-[2rem] p-6 text-white text-center">
-                        <p class="text-[10px] font-bold text-gray-400 uppercase mb-4 tracking-tighter italic">Area Stress Test</p>
-                        <button onclick="triggerSOS()" class="w-full bg-red-600 hover:bg-red-500 text-white py-4 rounded-2xl font-black text-xs uppercase transition-all transform hover:scale-105 shadow-xl shadow-red-900/20">
-                            <i class="fa-solid fa-bell-slash mr-2"></i> Simula SOS Studente
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="area-inclusione" class="bg-blue-50 rounded-[2rem] p-6 md:p-8 border border-blue-100 shadow-sm mb-6">
-    <div class="flex items-center gap-3 mb-6">
-        <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center">
-            <i class="fa-solid fa-wheelchair"></i>
-        </div>
-        <div>
-            <h3 class="font-black uppercase text-[10px] tracking-widest text-blue-600 italic">Gestione Inclusione (Legge 104)</h3>
-            <p class="text-xs text-blue-800 font-bold">2 Studenti con supporto dedicato</p>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-white p-4 rounded-2xl flex items-center justify-between shadow-sm border border-blue-100">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center font-black text-gray-500">MR</div>
-                <div>
-                    <p class="text-[11px] font-black text-gray-900">Marco Rossi</p>
-                    <p class="text-[9px] font-bold text-blue-500 uppercase">Sostegno: Prof.ssa Bianchi</p>
-                </div>
-            </div>
-            <div class="flex gap-2">
-                <span title="Dispositivo Sostegno Connesso" class="text-blue-500 bg-blue-50 w-7 h-7 flex items-center justify-center rounded-lg text-[10px]">
-                    <i class="fa-solid fa-link"></i>
-                </span>
-                <span title="Accompagnatore Presente" class="text-green-500 bg-green-50 w-7 h-7 flex items-center justify-center rounded-lg text-[10px]">
-                    <i class="fa-solid fa-user-plus"></i>
-                </span>
-            </div>
-        </div>
-
-<div id="area-inclusione" class="bg-blue-50 rounded-[2rem] p-6 md:p-8 border border-blue-100 shadow-sm mb-6">
-    <div class="flex items-center gap-3 mb-6">
-        <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center">
-            <i class="fa-solid fa-wheelchair"></i>
-        </div>
-        <div>
-            <h3 class="font-black uppercase text-[10px] tracking-widest text-blue-600 italic">Gestione Inclusione (Legge 104)</h3>
-            <p class="text-xs text-blue-800 font-bold">2 Studenti con supporto dedicato</p>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-white p-4 rounded-2xl flex items-center justify-between shadow-sm border border-blue-100">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center font-black text-gray-500">MR</div>
-                <div>
-                    <p class="text-[11px] font-black text-gray-900">Marco Rossi</p>
-                    <p class="text-[9px] font-bold text-blue-500 uppercase">Sostegno: Prof.ssa Bianchi</p>
-                </div>
-            </div>
-            <div class="flex gap-2">
-                <span title="Dispositivo Sostegno Connesso" class="text-blue-500 bg-blue-50 w-7 h-7 flex items-center justify-center rounded-lg text-[10px]">
-                    <i class="fa-solid fa-link"></i>
-                </span>
-                <span title="Accompagnatore Presente" class="text-green-500 bg-green-50 w-7 h-7 flex items-center justify-center rounded-lg text-[10px]">
-                    <i class="fa-solid fa-user-plus"></i>
-                </span>
-            </div>
-        </div>
-
-        <div class="bg-white p-4 rounded-2xl flex items-center justify-between shadow-sm border border-blue-100">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center font-black text-gray-500">SG</div>
-                <div>
-                    <p class="text-[11px] font-black text-gray-900">Sara Gialli</p>
-                    <p class="text-[9px] font-bold text-blue-500 uppercase">Sostegno: Prof. Neri</p>
-                </div>
-            </div>
-            <div class="flex gap-2">
-                <span title="Piano di evacuazione personalizzato" class="text-amber-500 bg-amber-50 w-7 h-7 flex items-center justify-center rounded-lg text-[10px]">
-                    <i class="fa-solid fa-file-medical"></i>
-                </span>
-                <span class="text-blue-500 bg-blue-50 w-7 h-7 flex items-center justify-center rounded-lg text-[10px]">
-                    <i class="fa-solid fa-link"></i>
-                </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-            <div class="bg-white rounded-[2rem] p-6 md:p-8 shadow-sm border border-gray-100 mb-10">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-black uppercase text-[10px] tracking-widest text-gray-400 italic">Lista Appello Rapido</h3>
-                    <div class="flex gap-2 text-[10px] font-bold">
-                        <span class="text-green-500 bg-green-50 px-2 py-1 rounded">23 Sicuri</span>
-                        <span class="text-amber-500 bg-amber-50 px-2 py-1 rounded">1 Dubbio</span>
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                    <div class="flex items-center p-3 border rounded-2xl bg-gray-50">
-                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center font-bold text-purple-600 mr-2 text-[10px]">AB</div>
-                        <span class="font-black text-[10px] uppercase truncate">Andrea B.</span>
-                    </div>
-                    <div class="flex items-center p-3 border rounded-2xl bg-gray-50">
-                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center font-bold text-purple-600 mr-2 text-[10px]">LM</div>
-                        <span class="font-black text-[10px] uppercase truncate">Lucia M.</span>
-                    </div>
-                    <div id="studentMarco" class="flex items-center p-3 border border-amber-300 rounded-2xl bg-amber-50">
-                        <div class="w-8 h-8 bg-amber-200 rounded-full flex items-center justify-center font-bold text-amber-700 mr-2 text-[10px]">MR</div>
-                        <span class="font-black text-[10px] uppercase truncate">Marco R.</span>
-                    </div>
-                    <div class="flex items-center p-3 border rounded-2xl bg-gray-50">
-                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center font-bold text-purple-600 mr-2 text-[10px]">SF</div>
-                        <span class="font-black text-[10px] uppercase truncate">Sofia F.</span>
-                    </div>
-                    <div class="flex items-center p-3 border rounded-2xl bg-gray-50">
-                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center font-bold text-purple-600 mr-2 text-[10px]">GT</div>
-                        <span class="font-black text-[10px] uppercase truncate">Giulia T.</span>
-                    </div>
-                    <div class="flex items-center p-3 border rounded-2xl bg-gray-50">
-                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center font-bold text-purple-600 mr-2 text-[10px]">VP</div>
-                        <span class="font-black text-[10px] uppercase truncate">Valerio P.</span>
+                        <h3 class="font-black uppercase text-[10px] text-gray-400 mb-4 italic">Stress Test</h3>
+                        <button onclick="triggerSOS()" class="w-full bg-red-600 hover:bg-red-500 text-white py-4 rounded-2xl font-black text-xs uppercase transition-all shadow-xl shadow-red-900/20 italic">Simula SOS Studente</button>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <div id="sosOverlay" class="fixed inset-0 z-[100] bg-red-600/95 backdrop-blur-md flex items-center justify-center p-6 hidden">
-    <div class="bg-white rounded-[3rem] p-8 max-w-sm w-full text-center shadow-2xl shake">
-        <div class="w-24 h-24 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6 status-pulse">
-            <i class="fa-solid fa-triangle-exclamation text-5xl"></i>
-        </div>
-        
-        <h2 class="text-3xl font-black text-gray-900 mb-2 uppercase tracking-tighter italic">Allerta SOS</h2>
-        <p class="text-gray-500 font-medium mb-8 leading-relaxed">
-            Lo studente <span class="text-red-600 font-black underline">Marco Rossi</span> ha inviato una segnalazione di emergenza.
-        </p>
-        
-        <div class="space-y-3">
-            <button onclick="handleSOSAction(true)" class="w-full bg-red-600 text-white py-5 rounded-[1.5rem] font-black uppercase text-xs shadow-lg shadow-red-200 hover:bg-red-700 transition-all">
-                Localizza sulla mappa
-            </button>
-            <button onclick="handleSOSAction(false)" class="w-full bg-gray-100 text-gray-400 py-4 rounded-[1.5rem] font-black uppercase text-[10px] tracking-widest">
-                Ignora Segnalazione
-            </button>
+    <div id="sosOverlay" class="fixed inset-0 z-[200] bg-red-600/95 backdrop-blur-md flex items-center justify-center p-6 hidden">
+        <div class="bg-white rounded-[3rem] p-8 max-w-sm w-full text-center shake">
+            <div class="w-20 h-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6 status-pulse"><i class="fa-solid fa-triangle-exclamation text-4xl"></i></div>
+            <h2 class="text-2xl font-black mb-2 italic">Allerta SOS</h2>
+            <p class="text-gray-500 text-sm mb-8 font-bold">Marco Rossi ha inviato una segnalazione!</p>
+            <button onclick="handleSOSAction(true)" class="w-full bg-red-600 text-white py-4 rounded-2xl font-black uppercase text-xs mb-3 shadow-lg">Localizza sulla mappa</button>
+            <button onclick="handleSOSAction(false)" class="w-full bg-gray-100 text-gray-400 py-3 rounded-2xl font-black uppercase text-[10px]">Chiudi</button>
         </div>
     </div>
-</div>
 
- <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-    let audioCtx;
-    let beepInterval;
-
-    // Sblocca audio su mobile al primo tocco
-    const unlockAudio = () => {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        document.removeEventListener('touchstart', unlockAudio);
-        document.removeEventListener('click', unlockAudio);
-    };
-    document.addEventListener('touchstart', unlockAudio);
-    document.addEventListener('click', unlockAudio);
-
-    function startSound() {
-        if (!audioCtx) return;
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        beepInterval = setInterval(() => {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'square';
-            osc.frequency.setValueAtTime(880, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.4);
-        }, 600);
-    }
-
-    function stopSound() {
-        clearInterval(beepInterval);
-    }
-
-    function toggleMenu() {
-        document.getElementById('sidebar').classList.toggle('-translate-x-full');
-    }
-
-    function triggerSOS() {
-        const overlay = document.getElementById('sosOverlay');
-        overlay.classList.remove('hidden');
-        overlay.style.display = 'flex';
-        document.getElementById('sosBadge').innerText = "SOS ATTIVI: 1";
-        document.getElementById('sosBadge').classList.add('animate-pulse');
-        startSound();
-        if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
-    }
-
-    // Funzione di chiusura centralizzata
-   function handleSOSAction(shouldScroll) {
-    stopSound();
-    const overlay = document.getElementById('sosOverlay');
-    overlay.classList.add('hidden');
-    overlay.style.display = 'none';
-    
-    document.getElementById('sosBadge').innerText = "SOS ATTIVI: 0";
-    document.getElementById('sosBadge').classList.remove('animate-pulse');
-
-    if (shouldScroll) {
-        // AZIONE: LOCALIZZA
-        document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        function toggleMenu() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
+        var map = L.map('map', { zoomControl: false }).setView([41.8992, 12.4731], 16);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         
-        setTimeout(() => {
-            map.invalidateSize();
-            map.flyTo([41.9005, 12.4715], 18, { animate: true, duration: 1.5 });
-        }, 500);
+        function triggerSOS() {
+            document.getElementById('sosOverlay').classList.remove('hidden');
+            document.getElementById('sosOverlay').style.display = 'flex';
+        }
 
-        setTimeout(() => {
-            L.popup()
-            .setLatLng([41.9005, 12.4715])
-            .setContent("<div style='text-align:center; padding:5px;'><b>Marco Rossi</b><br><span style='color:red; font-weight:bold;'>RICHIESTA SOS</span></div>")
-            .openOn(map);
-        }, 2200);
-    } else {
-        // AZIONE: IGNORA/CHIUDI
-        // Facciamo comparire un popup sulla mappa che conferma l'annullamento
-        map.invalidateSize();
-        L.popup()
-            .setLatLng([41.9005, 12.4715])
-            .setContent("<div style='text-align:center; padding:5px;'><b>Marco Rossi</b><br><span style='color:gray; font-weight:bold;'>Segnalazione Annullata</span></div>")
-            .openOn(map);
-            
-        // Opzionale: scrolla comunque un po' verso la mappa per far vedere il popup
-        document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-}
-
-    // Inizializzazione Mappa (Ottimizzata Mobile)
-    var map = L.map('map', { 
-        zoomControl: false, 
-        tap: false, // Fix fondamentale per i bottoni su mobile
-        touchZoom: true 
-    }).setView([41.8992, 12.4731], 16);
-    
-    L.control.zoom({ position: 'bottomright' }).addTo(map);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-    L.circle([41.8992, 12.4731], { color: '#7C4DFF', weight: 2, fillOpacity: 0.1, radius: 200 }).addTo(map);
-    L.marker([41.8992, 12.4731]).addTo(map).bindPopup('Gruppo 5ª B');
-    
-    L.circleMarker([41.9005, 12.4715], {
-        radius: 8, fillColor: "#F59E0B", color: "white", weight: 2, opacity: 1, fillOpacity: 0.9
-    }).addTo(map);
-</script>
+        function handleSOSAction(shouldScroll) {
+            document.getElementById('sosOverlay').classList.add('hidden');
+            document.getElementById('sosOverlay').style.display = 'none';
+            if (shouldScroll) {
+                const headerOffset = 90; // Spazio per l'header mobile
+                const element = document.getElementById('map');
+                const offsetPosition = element.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+            }
+        }
+    </script>
 </body>
 </html>
