@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIRE - Live Map</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        #map { height: 100vh; width: 100%; }
+        .back-btn { position: absolute; top: 20px; left: 20px; z-index: 1000; }
+    </style>
+</head>
+<body>
+    <a href="demo.html" class="back-btn bg-white text-black px-4 py-2 rounded-xl font-black shadow-2xl flex items-center gap-2 border-2 border-gray-100">
+        <i class="fa-solid fa-arrow-left"></i> Dashboard
+    </a>
+    
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map', { zoomControl: false }).setView([41.8992, 12.4731], 16);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        L.marker([41.8992, 12.4731]).addTo(map).bindPopup('<b>Gruppo 5ª B</b>').openPopup();
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
+    </script>
+</body>
+</html>
