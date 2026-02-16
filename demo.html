@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+x<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -240,51 +240,43 @@
         if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
     }
 
-    function handleSOSAction(shouldScroll) {
-        stopSound();
-        const overlay = document.getElementById('sosOverlay');
-        overlay.classList.add('hidden');
-        overlay.style.display = 'none';
+   function handleSOSAction(shouldScroll) {
+    stopSound();
+    const overlay = document.getElementById('sosOverlay');
+    overlay.classList.add('hidden');
+    overlay.style.display = 'none';
+    
+    document.getElementById('sosBadge').innerText = "SOS ATTIVI: 0";
+    document.getElementById('sosBadge').classList.remove('animate-pulse');
+
+    if (shouldScroll) {
+        // AZIONE: LOCALIZZA
+        document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
         
-        document.getElementById('sosBadge').innerText = "SOS ATTIVI: 0";
-        document.getElementById('sosBadge').classList.remove('animate-pulse');
+        setTimeout(() => {
+            map.invalidateSize();
+            map.flyTo([41.9005, 12.4715], 18, { animate: true, duration: 1.5 });
+        }, 500);
 
-        // Calcolo posizione mappa per lo scroll (mantenendo spazio per header)
-        const mapEl = document.getElementById('map');
-        const offset = 100; 
-        const bodyRect = document.body.getBoundingClientRect().top;
-        const elementRect = mapEl.getBoundingClientRect().top;
-        const elementPosition = elementRect - bodyRect;
-        const offsetPosition = elementPosition - offset;
-
-        if (shouldScroll) {
-            // AZIONE: LOCALIZZA (Bottone Rosso)
-            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+        setTimeout(() => {
+            L.popup()
+            .setLatLng([41.9005, 12.4715])
+            .setContent("<div style='text-align:center; padding:5px;'><b>Marco Rossi</b><br><span style='color:red; font-weight:bold;'>RICHIESTA SOS</span></div>")
+            .openOn(map);
+        }, 2200);
+    } else {
+        // AZIONE: IGNORA/CHIUDI
+        // Facciamo comparire un popup sulla mappa che conferma l'annullamento
+        map.invalidateSize();
+        L.popup()
+            .setLatLng([41.9005, 12.4715])
+            .setContent("<div style='text-align:center; padding:5px;'><b>Marco Rossi</b><br><span style='color:gray; font-weight:bold;'>Segnalazione Annullata</span></div>")
+            .openOn(map);
             
-            setTimeout(() => {
-                map.invalidateSize();
-                map.flyTo([41.9005, 12.4715], 18, { animate: true, duration: 1.5 });
-            }, 500);
-
-            setTimeout(() => {
-                L.popup()
-                .setLatLng([41.9005, 12.4715])
-                .setContent("<div style='text-align:center; padding:5px;'><b style='color:#e11d48 uppercase'>Marco Rossi</b><br><span style='color:#e11d48; font-weight:900;'>RICHIESTA SOS ATTIVA</span></div>")
-                .openOn(map);
-            }, 2200);
-        } else {
-            // AZIONE: IGNORA (Bottone Grigio)
-            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-            
-            setTimeout(() => {
-                map.invalidateSize();
-                L.popup()
-                .setLatLng([41.9005, 12.4715])
-                .setContent("<div style='text-align:center; padding:5px;'><b style='text-transform:uppercase italic'>Segnalazione Archiviata</b><br><span style='color:#64748b; font-weight:bold;'>Marco Rossi (OK)</span></div>")
-                .openOn(map);
-            }, 500);
-        }
+        // Opzionale: scrolla comunque un po' verso la mappa per far vedere il popup
+        document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
+}
 
     var map = L.map('map', { 
         zoomControl: false, 
