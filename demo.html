@@ -168,52 +168,55 @@
     </main>
 
     <div id="sosOverlay" class="fixed inset-0 z-[100] bg-red-600/95 backdrop-blur-md flex items-center justify-center p-6 hidden">
-        <div class="bg-white rounded-[3rem] p-8 max-w-sm w-full text-center shadow-2xl shake">
-            <div class="w-24 h-24 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6 status-pulse">
-                <i class="fa-solid fa-triangle-exclamation text-5xl"></i>
-            </div>
-            <h2 class="text-3xl font-black text-gray-900 mb-2 uppercase tracking-tighter italic">Allerta SOS</h2>
-            <p class="text-gray-500 font-medium mb-8 leading-relaxed">Lo studente <span class="text-red-600 font-black underline">Marco Rossi</span> ha inviato una segnalazione di emergenza.</p>
-            
-            <div class="space-y-3">
-                <button onclick="closeSOS()" class="w-full bg-red-600 text-white py-5 rounded-[1.5rem] font-black uppercase text-xs shadow-lg shadow-red-200 hover:bg-red-700 transition-all">
-                    Localizza sulla mappa
-                </button>
-                <button onclick="stopSound(); document.getElementById('sosOverlay').classList.add('hidden')" class="w-full bg-gray-100 text-gray-400 py-4 rounded-[1.5rem] font-black uppercase text-[10px] tracking-widest">
-                    Ignora Segnalazione
-                </button>
-            </div>
+    <div class="bg-white rounded-[3rem] p-8 max-w-sm w-full text-center shadow-2xl shake">
+        <div class="w-24 h-24 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6 status-pulse">
+            <i class="fa-solid fa-triangle-exclamation text-5xl"></i>
+        </div>
+        
+        <h2 class="text-3xl font-black text-gray-900 mb-2 uppercase tracking-tighter italic">Allerta SOS</h2>
+        <p class="text-gray-500 font-medium mb-8 leading-relaxed">
+            Lo studente <span class="text-red-600 font-black underline">Marco Rossi</span> ha inviato una segnalazione di emergenza.
+        </p>
+        
+        <div class="space-y-3">
+            <button onclick="handleSOSAction(true)" class="w-full bg-red-600 text-white py-5 rounded-[1.5rem] font-black uppercase text-xs shadow-lg shadow-red-200 hover:bg-red-700 transition-all">
+                Localizza sulla mappa
+            </button>
+            <button onclick="handleSOSAction(false)" class="w-full bg-gray-100 text-gray-400 py-4 rounded-[1.5rem] font-black uppercase text-[10px] tracking-widest">
+                Ignora Segnalazione
+            </button>
         </div>
     </div>
+</div>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    // Audio Context & State
     let audioCtx;
     let beepInterval;
 
-    // Inizializza l'audio al primo tocco ovunque sulla pagina (richiesto da Mobile)
-    document.addEventListener('click', function() {
-        if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-    }, { once: true });
+    // Sblocca audio su mobile al primo tocco
+    const unlockAudio = () => {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        document.removeEventListener('touchstart', unlockAudio);
+        document.removeEventListener('click', unlockAudio);
+    };
+    document.addEventListener('touchstart', unlockAudio);
+    document.addEventListener('click', unlockAudio);
 
     function startSound() {
         if (!audioCtx) return;
         if (audioCtx.state === 'suspended') audioCtx.resume();
-        
         beepInterval = setInterval(() => {
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            oscillator.type = 'square';
-            oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
-            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            oscillator.start();
-            oscillator.stop(audioCtx.currentTime + 0.5);
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.4);
         }, 600);
     }
 
@@ -221,63 +224,64 @@
         clearInterval(beepInterval);
     }
 
-    // Navigazione Mobile
     function toggleMenu() {
-        const sidebar = document.getElementById('sidebar');
-        sidebar.classList.toggle('-translate-x-full');
+        document.getElementById('sidebar').classList.toggle('-translate-x-full');
     }
 
-    // SOS LOGIC
     function triggerSOS() {
         const overlay = document.getElementById('sosOverlay');
         overlay.classList.remove('hidden');
-        overlay.style.display = 'flex'; // Forza la visualizzazione su alcuni browser mobile
-        
+        overlay.style.display = 'flex';
         document.getElementById('sosBadge').innerText = "SOS ATTIVI: 1";
         document.getElementById('sosBadge').classList.add('animate-pulse');
-        
         startSound();
-        
-        if (navigator.vibrate) {
-            navigator.vibrate([300, 100, 300, 100, 300]);
-        }
+        if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
     }
 
-    function closeSOS() {
+    // Funzione di chiusura centralizzata
+    function handleSOSAction(shouldScroll) {
         stopSound();
-        document.getElementById('sosOverlay').classList.add('hidden');
-        document.getElementById('sosOverlay').style.display = 'none';
+        const overlay = document.getElementById('sosOverlay');
+        overlay.classList.add('hidden');
+        overlay.style.display = 'none';
         
         document.getElementById('sosBadge').innerText = "SOS ATTIVI: 0";
         document.getElementById('sosBadge').classList.remove('animate-pulse');
-        
-        // Fix per il "FlyTo" su mobile
-        setTimeout(() => {
-            map.invalidateSize(); // Forza la mappa a ricalcolare le dimensioni
-            map.flyTo([41.9005, 12.4715], 18, {
-                animate: true,
-                duration: 2.0
-            });
-        }, 300);
 
-        setTimeout(() => {
-            L.popup()
-            .setLatLng([41.9005, 12.4715])
-            .setContent("<div style='text-align:center'><b>Marco Rossi</b><br><span style='color:red; font-weight:bold;'>SOS ATTIVO</span></div>")
-            .openOn(map);
-        }, 2500);
+        if (shouldScroll) {
+            // 1. Scrolla fino al contenitore della mappa
+            document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // 2. Esegui il volo della mappa dopo lo scroll
+            setTimeout(() => {
+                map.invalidateSize();
+                map.flyTo([41.9005, 12.4715], 18, { animate: true, duration: 1.5 });
+            }, 500);
+
+            // 3. Apri il popup
+            setTimeout(() => {
+                L.popup()
+                .setLatLng([41.9005, 12.4715])
+                .setContent("<div style='text-align:center; padding:5px;'><b>Marco Rossi</b><br><span style='color:red; font-weight:bold;'>RICHIESTA SOS</span></div>")
+                .openOn(map);
+            }, 2200);
+        }
     }
 
-    // Inizializzazione Mappa
-    var map = L.map('map', { zoomControl: false, tap: false }).setView([41.8992, 12.4731], 16);
-    L.control.zoom({ position: 'bottomright' }).addTo(map);
+    // Inizializzazione Mappa (Ottimizzata Mobile)
+    var map = L.map('map', { 
+        zoomControl: false, 
+        tap: false, // Fix fondamentale per i bottoni su mobile
+        touchZoom: true 
+    }).setView([41.8992, 12.4731], 16);
     
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
     L.circle([41.8992, 12.4731], { color: '#7C4DFF', weight: 2, fillOpacity: 0.1, radius: 200 }).addTo(map);
     L.marker([41.8992, 12.4731]).addTo(map).bindPopup('Gruppo 5ª B');
     
-    var marcoMarker = L.circleMarker([41.9005, 12.4715], {
+    L.circleMarker([41.9005, 12.4715], {
         radius: 8, fillColor: "#F59E0B", color: "white", weight: 2, opacity: 1, fillOpacity: 0.9
     }).addTo(map);
 </script>
