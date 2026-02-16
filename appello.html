@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIRE - Appello Digitale</title>
+    <title>GIRE - Appello</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -11,23 +11,22 @@
         body { font-family: 'Inter', sans-serif; background-color: #F3F4F6; }
         .sidebar { background-color: #1A1C2E; }
         .student-card.present { border-color: #10B981; background-color: #ECFDF5; }
-        .student-card.absent { border-color: #EF4444; background-color: #FEF2F2; }
     </style>
 </head>
 <body class="flex flex-col md:flex-row h-screen overflow-hidden">
 
-    <div class="md:hidden bg-[#1A1C2E] text-white p-4 flex justify-between items-center shadow-lg z-[60]">
+    <div class="md:hidden bg-[#1A1C2E] text-white p-4 flex justify-between items-center shadow-lg fixed top-0 left-0 right-0 z-[100]">
         <div class="flex items-center space-x-2">
             <img src="assets/logo.png" alt="Logo" class="h-6">
-            <span class="font-black tracking-tighter">GIRE</span>
+            <span class="font-black tracking-tighter italic">GIRE</span>
         </div>
-        <button onclick="toggleMenu()" class="text-2xl p-2"><i class="fa-solid fa-bars"></i></button>
+        <button onclick="toggleMenu()" class="text-2xl p-2 bg-white/10 rounded-lg"><i class="fa-solid fa-bars"></i></button>
     </div>
 
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 sidebar text-white transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 flex flex-col p-6">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-[110] w-64 sidebar text-white transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 flex flex-col p-6">
         <div class="hidden md:flex items-center space-x-3 mb-10">
             <img src="assets/logo.png" alt="Logo" class="h-8">
-            <span class="text-xl font-black tracking-tighter">GIRE</span>
+            <span class="text-xl font-black tracking-tighter italic">GIRE</span>
         </div>
         <nav class="flex-grow space-y-2">
             <a href="mappa.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition">
@@ -50,40 +49,22 @@
         </div>
     </aside>
 
-    <main class="flex-1 overflow-y-auto p-4 md:p-8">
-        <div class="max-w-4xl mx-auto">
-            <div class="flex justify-between items-end mb-8">
-                <div>
-                    <h1 class="text-3xl font-black text-gray-900 uppercase italic tracking-tighter leading-none">Appello Classe</h1>
-                    <p class="text-gray-500 font-bold mt-2">5ª B - 24 Studenti totali</p>
-                </div>
-                <div class="text-right">
-                    <span id="counter" class="text-4xl font-black text-purple-600">0</span>
-                    <span class="text-gray-400 font-black">/24</span>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4" id="studentGrid">
-                </div>
+    <main class="flex-1 overflow-y-auto pt-[88px] md:pt-8 px-4 md:px-8">
+        <div class="max-w-4xl mx-auto pb-10">
+            <h1 class="text-3xl font-black text-gray-900 uppercase italic tracking-tighter mb-2">Appello</h1>
+            <div id="studentGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-8"></div>
         </div>
     </main>
 
     <script>
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
-        
         const students = ["Andrea B.", "Lucia M.", "Marco R.", "Sofia F.", "Giulia T.", "Valerio P.", "Elena S.", "Matteo L.", "Chiara G.", "Davide M.", "Sara V.", "Simone R.", "Alice P.", "Federico B.", "Marta C.", "Gabriele F.", "Noemi D.", "Luca S.", "Francesca E.", "Paolo N.", "Greta K.", "Antonio W.", "Beatrice Q.", "Lorenzo X."];
         const grid = document.getElementById('studentGrid');
-        let presentCount = 0;
-
-        students.forEach((s, i) => {
+        students.forEach(s => {
             const card = document.createElement('div');
-            card.className = "student-card bg-white border-2 border-gray-100 p-4 rounded-[1.5rem] cursor-pointer transition-all hover:shadow-md text-center";
-            card.innerHTML = `<div class='w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2 font-black text-gray-400 text-xs'>${s.split(' ')[0][0]}${s.split(' ')[1][0]}</div><p class='text-[10px] font-black uppercase truncate'>${s}</p>`;
-            card.onclick = () => {
-                card.classList.toggle('present');
-                presentCount = document.querySelectorAll('.present').length;
-                document.getElementById('counter').innerText = presentCount;
-            };
+            card.className = "bg-white border-2 border-gray-100 p-4 rounded-2xl cursor-pointer text-center";
+            card.innerHTML = `<p class='text-[10px] font-black uppercase'>${s}</p>`;
+            card.onclick = () => card.classList.toggle('present');
             grid.appendChild(card);
         });
     </script>
