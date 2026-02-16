@@ -32,49 +32,63 @@
     <div class="md:hidden bg-[#1A1C2E] text-white p-4 flex justify-between items-center shadow-lg fixed top-0 left-0 right-0 z-[100]">
         <div class="flex items-center space-x-2">
             <img src="assets/logo.png" alt="Logo" class="h-6">
-            <span class="font-black tracking-tighter">GIRE</span>
+            <span class="font-black tracking-tighter italic">GIRE</span>
         </div>
-        <button onclick="toggleMenu()" class="text-2xl p-2 bg-white/10 rounded-lg"><i class="fa-solid fa-bars"></i></button>
+        <button onclick="toggleMenu()" class="text-2xl p-2 bg-white/10 rounded-lg">
+            <i class="fa-solid fa-bars"></i>
+        </button>
     </div>
 
     <aside id="sidebar" class="fixed inset-y-0 left-0 z-[110] w-64 sidebar text-white transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 flex flex-col p-6">
         <div class="hidden md:flex items-center space-x-3 mb-10">
             <img src="assets/logo.png" alt="Logo" class="h-8">
-            <span class="text-xl font-black tracking-tighter">GIRE</span>
+            <span class="text-xl font-black tracking-tighter italic">GIRE</span>
         </div>
         <nav class="flex-grow space-y-2">
-            <a href="mappa.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition font-bold"><i class="fa-solid fa-map-location-dot mr-3 w-5"></i> Live Map</a>
-            <a href="admin.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition"><i class="fa-solid fa-hotel mr-3 w-5"></i> Booking Hub</a>
-            <a href="appello.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition"><i class="fa-solid fa-users mr-3 w-5"></i> Appello Classe</a>
-            <a href="inclusione.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition text-blue-300"><i class="fa-solid fa-hand-holding-heart mr-3 w-5"></i> Area Inclusione</a>
+            <a href="mappa.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition font-bold text-gray-400">
+                <i class="fa-solid fa-map-location-dot mr-3 w-5"></i> Live Map
+            </a>
+            <a href="admin.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition font-bold text-gray-400">
+                <i class="fa-solid fa-hotel mr-3 w-5"></i> Booking Hub
+            </a>
+            <a href="appello.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition font-bold text-gray-400">
+                <i class="fa-solid fa-users mr-3 w-5"></i> Appello Classe
+            </a>
+            <a href="inclusione.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition text-blue-300 font-bold">
+                <i class="fa-solid fa-hand-holding-heart mr-3 w-5"></i> Area Inclusione
+            </a>
         </nav>
         <div class="mt-auto pt-6 border-t border-white/10">
-            <p class="text-[10px] text-gray-400 font-bold mb-2">Prof. Mario Rossi • IT-99234</p>
-            <a href="./" class="block text-purple-400 font-bold uppercase tracking-widest hover:text-white transition text-xs"><i class="fa-solid fa-arrow-left mr-1"></i> Esci dalla Demo</a>
+            <p class="text-[10px] text-gray-400 font-bold mb-2 uppercase tracking-widest italic">Docente: Mario Rossi</p>
+            <div class="flex items-center justify-between text-[10px] font-black uppercase text-purple-400">
+                <span>ID: IT-99234</span>
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
         </div>
     </aside>
 
     <main class="flex-1 flex flex-col overflow-y-auto pt-[72px] md:pt-0">
         <header class="bg-white border-b p-6 flex flex-col md:flex-row justify-between items-center gap-4 sticky top-0 z-30">
             <div>
-                <h1 class="text-2xl font-black text-gray-900 leading-tight">Gita a Roma: 5ª B</h1>
-                <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest italic">Pantheon • Trastevere</p>
+                <h1 class="text-2xl font-black text-gray-900 leading-tight uppercase italic tracking-tighter">Gita a Roma: 5ª B</h1>
+                <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest italic">Itinerario: Pantheon • Trastevere • Gianicolo</p>
             </div>
             <div class="flex items-center gap-3">
                 <div id="liveStatus" class="bg-green-100 text-green-700 px-4 py-2 rounded-full text-[10px] font-black italic">LIVE ORA</div>
-                <button id="sosBadge" class="bg-red-500 text-white px-5 py-2 rounded-xl font-black text-[10px]">SOS ATTIVI: 0</button>
+                <button id="sosBadge" class="bg-red-500 text-white px-5 py-2 rounded-xl font-black text-[10px] uppercase tracking-tighter">SOS ATTIVI: 0</button>
             </div>
         </header>
 
         <div class="p-4 md:p-8 space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-2 bg-white rounded-[2rem] p-4 shadow-sm border border-gray-100">
+                <div class="lg:col-span-2 bg-white rounded-[2.5rem] p-4 shadow-sm border border-gray-100">
                     <div id="map"></div>
                 </div>
                 <div class="space-y-6">
-                    <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-100">
-                        <h3 class="font-black uppercase text-[10px] text-gray-400 mb-4 italic">Stress Test</h3>
+                    <div class="bg-[#1A1C2E] rounded-[2.5rem] p-6 text-white shadow-xl">
+                        <h3 class="font-black uppercase text-[10px] text-gray-400 mb-4 tracking-widest italic">Stress Test Simulazione</h3>
                         <button onclick="triggerSOS()" class="w-full bg-red-600 hover:bg-red-500 text-white py-4 rounded-2xl font-black text-xs uppercase transition-all shadow-xl shadow-red-900/20 italic">Simula SOS Studente</button>
+                        <p class="text-[9px] text-gray-500 mt-4 leading-relaxed font-bold italic">L'invio simula una richiesta di aiuto geolocalizzata da uno studente.</p>
                     </div>
                 </div>
             </div>
@@ -82,19 +96,24 @@
     </main>
 
     <div id="sosOverlay" class="fixed inset-0 z-[200] bg-red-600/95 backdrop-blur-md flex items-center justify-center p-6 hidden">
-        <div class="bg-white rounded-[3rem] p-8 max-w-sm w-full text-center shake">
-            <div class="w-20 h-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6 status-pulse"><i class="fa-solid fa-triangle-exclamation text-4xl"></i></div>
-            <h2 class="text-2xl font-black mb-2 italic">Allerta SOS</h2>
-            <p class="text-gray-500 text-sm mb-8 font-bold">Marco Rossi ha inviato una segnalazione!</p>
-            <button onclick="handleSOSAction(true)" class="w-full bg-red-600 text-white py-4 rounded-2xl font-black uppercase text-xs mb-3 shadow-lg">Localizza sulla mappa</button>
-            <button onclick="handleSOSAction(false)" class="w-full bg-gray-100 text-gray-400 py-3 rounded-2xl font-black uppercase text-[10px]">Chiudi</button>
+        <div class="bg-white rounded-[3rem] p-8 max-w-sm w-full text-center shake shadow-2xl">
+            <div class="w-20 h-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6 status-pulse">
+                <i class="fa-solid fa-triangle-exclamation text-4xl"></i>
+            </div>
+            <h2 class="text-2xl font-black text-gray-900 mb-2 uppercase italic tracking-tighter">Allerta SOS</h2>
+            <p class="text-gray-500 text-sm mb-8 font-bold leading-tight">Marco Rossi ha inviato una segnalazione di emergenza!</p>
+            <button onclick="handleSOSAction(true)" class="w-full bg-red-600 text-white py-4 rounded-2xl font-black uppercase text-xs mb-3 shadow-lg hover:bg-red-700 transition-colors italic">Visualizza sulla mappa</button>
+            <button onclick="handleSOSAction(false)" class="w-full bg-gray-100 text-gray-400 py-3 rounded-2xl font-black uppercase text-[10px] hover:bg-gray-200 transition-colors">Ignora Allerta</button>
         </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        function toggleMenu() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
-        var map = L.map('map', { zoomControl: false }).setView([41.8992, 12.4731], 16);
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        }
+
+        var map = L.map('map', { zoomControl: false, scrollWheelZoom: false }).setView([41.8992, 12.4731], 16);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         
         function triggerSOS() {
@@ -105,11 +124,18 @@
         function handleSOSAction(shouldScroll) {
             document.getElementById('sosOverlay').classList.add('hidden');
             document.getElementById('sosOverlay').style.display = 'none';
+            
             if (shouldScroll) {
-                const headerOffset = 90; // Spazio per l'header mobile
+                // FIX: Calcola l'offset per non finire sotto l'header mobile
+                const headerOffset = 90;
                 const element = document.getElementById('map');
-                const offsetPosition = element.getBoundingClientRect().top + window.pageYOffset - headerOffset;
-                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                const elementPosition = element.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
             }
         }
     </script>
