@@ -8,23 +8,38 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        #map { height: 100vh; width: 100%; }
-        .back-btn { position: absolute; top: 20px; left: 20px; z-index: 1000; }
+        #map { height: 100vh; width: 100%; z-index: 1; }
+        .sidebar-active { background-color: rgba(124, 77, 255, 0.1); color: #7C4DFF; border-left: 4px solid #7C4DFF; }
+        .menu-trigger { position: absolute; top: 20px; left: 20px; z-index: 1000; }
     </style>
 </head>
-<body>
-    <a href="demo.html" class="back-btn bg-white text-black px-4 py-2 rounded-xl font-black shadow-2xl flex items-center gap-2 border-2 border-gray-100">
-        <i class="fa-solid fa-arrow-left"></i> Dashboard
-    </a>
-    
+<body class="flex overflow-hidden">
+
+    <button onclick="toggleSidebar()" class="menu-trigger bg-gray-900 text-white p-4 rounded-2xl shadow-2xl lg:hidden">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-[2000] w-64 bg-gray-900 text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col p-6 shadow-2xl lg:static">
+        <div class="flex items-center justify-between mb-10">
+            <span class="text-2xl font-black text-purple-400">GIRE</span>
+            <button onclick="toggleSidebar()" class="lg:hidden text-gray-400"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <nav class="flex-grow space-y-2 text-sm font-bold uppercase tracking-widest">
+            <a href="demo.html" class="flex items-center p-3 text-gray-400 hover:text-white transition"><i class="fa-solid fa-house mr-3 w-5"></i> Dashboard</a>
+            <a href="mappa.html" class="flex items-center p-3 sidebar-active transition"><i class="fa-solid fa-map-location-dot mr-3 w-5"></i> Live Map</a>
+            <a href="appello.html" class="flex items-center p-3 text-gray-400 hover:text-white transition"><i class="fa-solid fa-users mr-3 w-5"></i> Appello</a>
+            <a href="inclusione.html" class="flex items-center p-3 text-gray-400 hover:text-white transition"><i class="fa-solid fa-handshake-angle mr-3 w-5"></i> Inclusione</a>
+        </nav>
+    </aside>
+
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         var map = L.map('map', { zoomControl: false }).setView([41.8992, 12.4731], 16);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-        L.marker([41.8992, 12.4731]).addTo(map).bindPopup('<b>Gruppo 5ª B</b>').openPopup();
-        L.control.zoom({ position: 'bottomright' }).addTo(map);
+        L.marker([41.8992, 12.4731]).addTo(map).bindPopup('<b>5ª B - In Movimento</b>');
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
     </script>
 </body>
 </html>
