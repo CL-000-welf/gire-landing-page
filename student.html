@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
         body { 
@@ -17,16 +18,22 @@
             overscroll-behavior: none;
         }
         
+        /* Stile Mappa Dark */
+        #map-student { 
+            height: 180px; 
+            border-radius: 1.5rem; 
+            margin-top: 1rem;
+            z-index: 10;
+        }
+        .leaflet-tile { filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3); }
+
         .sos-button {
             background: radial-gradient(circle, #ef4444 0%, #b91c1c 100%);
             box-shadow: 0 0 40px rgba(239, 68, 68, 0.3);
             transition: all 0.2s ease;
         }
         
-        .sos-button:active {
-            transform: scale(0.9);
-            box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
-        }
+        .sos-button:active { transform: scale(0.9); }
 
         .safe-card { 
             background: rgba(30, 41, 59, 0.5); 
@@ -34,143 +41,120 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .ticket-dashed {
-            border-left: 2px dashed rgba(255,255,255,0.2);
-        }
+        .ticket-dashed { border-left: 2px dashed rgba(255,255,255,0.2); }
     </style>
 </head>
 <body class="flex flex-col min-h-screen p-5 pb-10">
 
-    <header class="flex justify-between items-center mb-8">
+    <header class="flex justify-between items-center mb-6">
         <div class="flex items-center gap-3">
             <div class="relative">
-                <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                <div class="absolute inset-0 w-3 h-3 bg-green-500 rounded-full animate-ping opacity-75"></div>
+                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
             </div>
             <div>
-                <p class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Gita a Roma</p>
-                <p class="text-xs font-bold text-purple-400">Live Connection</p>
+                <p class="text-[10px] font-black uppercase tracking-widest text-gray-500">GIRE • LIVE</p>
+                <p class="text-[10px] text-purple-400 font-bold uppercase">Roma, 5ª B</p>
             </div>
         </div>
         <div class="text-right">
             <p class="text-sm font-black italic tracking-tighter">Marco Rossi</p>
-            <p class="text-[10px] text-gray-400 uppercase font-bold">Classe 5ª B</p>
         </div>
     </header>
 
-    <div class="safe-card rounded-[2.5rem] p-6 mb-5">
-        <div class="flex items-center gap-2 mb-3">
-            <i class="fa-solid fa-location-dot text-purple-400 text-xs"></i>
-            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Punto di Ritrovo</p>
-        </div>
-        <h2 class="text-2xl font-black mb-2 italic tracking-tighter leading-tight">Trattoria "Da Giggi"</h2>
-        <div class="flex items-center gap-3 text-amber-400 mb-6">
-            <div class="bg-amber-400/10 px-3 py-1 rounded-full flex items-center gap-2">
-                <i class="fa-solid fa-clock text-xs"></i>
-                <span class="font-black text-lg tracking-tighter">13:00</span>
+    <div class="safe-card rounded-[2.5rem] p-5 mb-5">
+        <div class="flex justify-between items-start mb-2">
+            <div>
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 italic">Prossima Tappa</p>
+                <h2 class="text-xl font-black italic tracking-tighter leading-tight">Trattoria "Da Giggi"</h2>
             </div>
-            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Inizio Pranzo</span>
+            <div class="bg-amber-400/20 px-3 py-1 rounded-full text-amber-400">
+                <span class="font-black text-sm tracking-tighter">13:00</span>
+            </div>
         </div>
+
+        <div id="map-student"></div>
         
-        <button class="w-full bg-white text-slate-900 py-4 rounded-2xl font-black uppercase text-xs flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-all">
-            <i class="fa-solid fa-route text-lg"></i> Portami dal Gruppo
+        <button class="w-full mt-4 bg-white text-slate-900 py-4 rounded-2xl font-black uppercase text-[10px] flex items-center justify-center gap-2 shadow-lg active:scale-95">
+            <i class="fa-solid fa-location-arrow"></i> Ottieni indicazioni
         </button>
     </div>
 
-    <div class="bg-indigo-600 rounded-[2.5rem] p-6 mb-5 shadow-xl shadow-indigo-900/40 border border-indigo-400/30">
-        <div class="flex items-start justify-between">
-            <div class="max-w-[70%]">
-                <h3 class="font-black text-xl italic leading-tight mb-2">Sei arrivato?</h3>
-                <p class="text-indigo-100 text-xs font-medium opacity-80 leading-relaxed">Il docente sta verificando le presenze. Conferma la tua posizione.</p>
-            </div>
-            <div class="bg-white/20 p-3 rounded-2xl">
-                <i class="fa-solid fa-street-view text-2xl text-white"></i>
-            </div>
-        </div>
-        <button onclick="confirmPresence(this)" class="w-full mt-6 bg-white text-indigo-600 py-4 rounded-2xl font-black uppercase text-xs shadow-inner active:scale-95 transition-all">
-            Sì, sono qui! <i class="fa-solid fa-check ml-1"></i>
-        </button>
-    </div>
-
-    <div class="safe-card rounded-[2.5rem] p-6 mb-10">
-        <div class="flex justify-between items-center mb-5">
-            <h3 class="font-black text-[10px] uppercase tracking-[0.2em] text-gray-500">I tuoi Biglietti</h3>
-            <span class="bg-purple-500/20 text-purple-400 text-[10px] px-3 py-1 rounded-full font-black uppercase">2 Ticket</span>
-        </div>
-        
-        <div class="space-y-4">
-            <div class="flex bg-white/5 rounded-2xl overflow-hidden border border-white/5">
-                <div class="p-4 flex-grow">
-                    <p class="text-[10px] font-black text-amber-500 uppercase mb-1">Oggi - 15:30</p>
-                    <p class="text-sm font-black italic tracking-tighter">Colosseo + Fori</p>
-                </div>
-                <button class="ticket-dashed px-4 bg-white/5 flex items-center justify-center text-xs font-black uppercase text-gray-400">
-                    QR
-                </button>
-            </div>
-            
-            <div class="flex bg-white/5 rounded-2xl overflow-hidden border border-white/5 opacity-50">
-                <div class="p-4 flex-grow">
-                    <p class="text-[10px] font-black text-gray-500 uppercase mb-1">Domani - 10:00</p>
-                    <p class="text-sm font-black italic tracking-tighter text-gray-400">Musei Vaticani</p>
-                </div>
-                <div class="ticket-dashed px-4 bg-white/5 flex items-center justify-center">
-                    <i class="fa-solid fa-lock text-xs"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="mt-auto pt-5 border-t border-white/5">
-        <p class="text-center text-[10px] font-black text-red-500/50 uppercase tracking-[0.3em] mb-6">Procedura di Emergenza</p>
-        
-        <div class="relative flex justify-center">
-            <button onclick="sendSOS()" class="sos-button w-32 h-32 rounded-full flex flex-col items-center justify-center border-[6px] border-white/10 z-10">
-                <i class="fa-solid fa-bell-on text-3xl mb-1 animate-bounce"></i>
-                <span class="font-black text-xl italic tracking-tighter uppercase">SOS</span>
+    <div class="bg-indigo-600 rounded-[2.5rem] p-6 mb-5 shadow-xl border border-indigo-400/30">
+        <div class="flex items-center justify-between gap-4">
+            <h3 class="font-black text-lg italic tracking-tighter">Sei con il gruppo?</h3>
+            <button onclick="confirmPresence(this)" class="bg-white text-indigo-600 px-6 py-3 rounded-xl font-black uppercase text-[10px] shadow-lg active:scale-95">
+                Sì, Confermo
             </button>
-            
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-red-600/20 rounded-full animate-ping"></div>
         </div>
-        
-        <p class="text-center text-[10px] font-medium text-gray-500 mt-6 leading-relaxed px-10 italic">
-            Premendo il tasto, la tua posizione esatta verrà inviata immediatamente a tutti i docenti accompagnatori.
+    </div>
+
+    <div class="safe-card rounded-[2.5rem] p-5 mb-8">
+        <p class="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-4 italic">I tuoi Biglietti</p>
+        <div class="flex bg-white/5 rounded-2xl overflow-hidden border border-white/5">
+            <div class="p-4 flex-grow">
+                <p class="text-[10px] font-black text-amber-500 uppercase">Oggi - 15:30</p>
+                <p class="text-sm font-black italic tracking-tighter leading-none">Colosseo + Fori</p>
+            </div>
+            <button class="ticket-dashed px-4 bg-white/10 flex items-center justify-center text-[10px] font-black uppercase">
+                QR
+            </button>
+        </div>
+    </div>
+
+    <div class="mt-auto flex flex-col items-center">
+        <div class="relative flex justify-center mb-4">
+            <button onclick="sendSOS()" class="sos-button w-28 h-28 rounded-full flex flex-col items-center justify-center border-4 border-white/10 z-10">
+                <span class="font-black text-2xl italic tracking-tighter uppercase leading-none">SOS</span>
+            </button>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-red-600/20 rounded-full animate-ping"></div>
+        </div>
+        <p class="text-center text-[9px] font-bold text-gray-500 uppercase tracking-widest px-10">
+            Segnalazione di emergenza immediata
         </p>
     </div>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Funzione Ponte per inviare l'SOS alla Dashboard Docente
+        // Inizializza Mappa Studente
+        // Centro sulla posizione fittizia di Marco (vicino al Pantheon)
+        var mapStudent = L.map('map-student', { zoomControl: false }).setView([41.9005, 12.4715], 17);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapStudent);
+
+        // Icona personalizzata per Marco (Studente)
+        var iconStudent = L.divIcon({
+            className: 'custom-div-icon',
+            html: "<div style='background-color:#7C4DFF; width:12px; height:12px; border:2px solid white; border-radius:50%; box-shadow:0 0 10px #7C4DFF;'></div>",
+            iconSize: [12, 12],
+            iconAnchor: [6, 6]
+        });
+
+        // Icona per il punto di ritrovo
+        var iconTarget = L.divIcon({
+            className: 'custom-div-icon',
+            html: "<div style='color:#F59E0B; font-size:20px;'><i class='fa-solid fa-location-dot'></i></div>",
+            iconSize: [20, 20],
+            iconAnchor: [10, 20]
+        });
+
+        L.marker([41.9005, 12.4715], {icon: iconStudent}).addTo(mapStudent).bindPopup('Tu');
+        L.marker([41.8992, 12.4731], {icon: iconTarget}).addTo(mapStudent).bindPopup('Ristorante');
+
+        // Funzione SOS (Ponte con Admin)
         function sendSOS() {
-            const confirmSOS = confirm("STAI PER INVIARE UN SOS.\nI docenti riceveranno la tua posizione e un allarme sonoro. Confermi?");
-            
-            if(confirmSOS) {
-                // Scrittura nel LocalStorage per la demo
+            if(confirm("Inviare SOS ai docenti?")) {
                 localStorage.setItem('gire_sos_status', 'active');
                 localStorage.setItem('gire_sos_student', 'Marco Rossi');
-                
-                // Feedback visivo immediato sullo smartphone dello studente
-                const btn = document.querySelector('.sos-button');
-                btn.classList.remove('sos-button');
-                btn.style.background = '#1e293b';
-                btn.innerHTML = '<i class="fa-solid fa-check text-green-500 text-3xl"></i><span class="text-[10px] font-black mt-1 uppercase">Inviato</span>';
-                
-                alert("ALLERTA INVIATA! Rimani fermo nel punto in cui ti trovi. I soccorsi/docenti sono stati notificati.");
+                alert("Allerta inviata. Rimani dove sei.");
             }
         }
 
-        // Funzione per confermare la presenza durante l'appello
         function confirmPresence(btn) {
-            btn.innerHTML = 'Presenza Confermata <i class="fa-solid fa-check-double ml-1"></i>';
-            btn.classList.remove('bg-white', 'text-indigo-600');
-            btn.classList.add('bg-green-500', 'text-white');
+            btn.innerText = "PRESENTE";
+            btn.classList.replace('bg-white', 'bg-green-500');
+            btn.classList.replace('text-indigo-600', 'text-white');
             btn.disabled = true;
-            
-            // Qui si potrebbe aggiungere un log per il docente:
-            // localStorage.setItem('marco_rossi_status', 'present');
         }
-
-        // Reset dello stato SOS al caricamento (opzionale per la demo)
-        // localStorage.removeItem('gire_sos_status');
     </script>
 </body>
 </html>
