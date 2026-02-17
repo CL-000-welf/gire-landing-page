@@ -25,6 +25,7 @@
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
         }
 
+        /* Effetto scuotimento per SOS */
         .shake { animation: shake 0.5s infinite; }
         @keyframes shake {
             0% { transform: translate(1px, 1px) rotate(0deg); }
@@ -35,6 +36,7 @@
             50% { transform: translate(-1px, 2px) rotate(-1deg); }
         }
 
+        /* Fix per Header Mobile che non sparisce */
         header { top: 0; position: -webkit-sticky; position: sticky; }
     </style>
 </head>
@@ -43,7 +45,7 @@
     <div class="md:hidden bg-[#1A1C2E] text-white p-4 flex justify-between items-center shadow-lg z-[60]">
         <div class="flex items-center space-x-2">
             <img src="assets/logo.png" alt="Logo" class="h-6">
-            <span class="font-black tracking-tighter italic">GIRE</span>
+            <span class="font-black tracking-tighter">GIRE</span>
         </div>
         <button onclick="toggleMenu()" class="text-2xl p-2"><i class="fa-solid fa-bars"></i></button>
     </div>
@@ -51,11 +53,11 @@
     <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 sidebar text-white transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 flex flex-col p-6">
         <div class="hidden md:flex items-center space-x-3 mb-10">
             <img src="assets/logo.png" alt="Logo" class="h-8">
-            <span class="text-xl font-black tracking-tighter italic">GIRE</span>
+            <span class="text-xl font-black tracking-tighter">GIRE</span>
         </div>
         
         <nav class="flex-grow space-y-2">
-            <a href="mappa.html" class="flex items-center p-3 bg-purple-600 rounded-xl font-bold shadow-lg shadow-purple-900/20">
+            <a href="mappa.html" class="flex items-center p-3 bg-purple-600 rounded-xl font-bold">
                 <i class="fa-solid fa-map-location-dot mr-3 w-5"></i> Live Map
             </a>
             <a href="admin.html" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition">
@@ -83,10 +85,10 @@
         <header class="bg-white border-b p-4 md:p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 sticky top-0 z-30">
             <div>
                 <h1 class="text-xl md:text-2xl font-black text-gray-900 leading-tight">Gita a Roma: 5ª B</h1>
-                <p class="text-gray-500 text-xs font-medium uppercase tracking-tighter">Centro Storico • Pantheon • Trastevere</p>
+                <p class="text-gray-500 text-xs font-medium uppercase tracking-tighter center">Centro Storico • Pantheon • Trastevere</p>
             </div>
             <div class="flex items-center gap-3 w-full md:w-auto">
-                <div id="liveStatus" class="flex-1 md:flex-none text-center bg-green-100 text-green-700 px-4 py-2 rounded-full text-[10px] font-black italic">
+                <div id="liveStatus" class="flex-1 md:flex-none text-center bg-green-100 text-green-700 px-4 py-2 rounded-full text-[10px] font-black">
                     <i class="fa-solid fa-signal mr-1"></i> LIVE ORA
                 </div>
                 <button id="sosBadge" class="flex-1 md:flex-none bg-red-500 text-white px-5 py-2 rounded-xl font-black text-[10px] shadow-lg shadow-red-100">
@@ -95,7 +97,7 @@
             </div>
         </header>
 
-        <div class="p-4 md:p-8 space-y-6 pb-32"> 
+        <div class="p-4 md:p-8 space-y-6 pb-32">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
                 <div id="map-container" class="lg:col-span-2 bg-white rounded-[2rem] p-4 shadow-sm border border-gray-100">
@@ -126,14 +128,14 @@
 
                     <div class="bg-gray-900 rounded-[2rem] p-6 text-white text-center">
                         <p class="text-[10px] font-bold text-gray-400 uppercase mb-4 tracking-tighter italic">Area Stress Test</p>
-                        <button onclick="triggerSOS()" class="w-full bg-red-600 hover:bg-red-500 text-white py-4 rounded-2xl font-black text-xs uppercase transition-all shadow-xl shadow-red-900/20">
+                        <button onclick="triggerSOS()" class="w-full bg-red-600 hover:bg-red-500 text-white py-4 rounded-2xl font-black text-xs uppercase transition-all transform hover:scale-105 shadow-xl shadow-red-900/20">
                             <i class="fa-solid fa-bell-slash mr-2"></i> Simula SOS Studente
                         </button>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-[2rem] p-6 md:p-8 shadow-sm border border-gray-100">
+            <div class="bg-white rounded-[2rem] p-6 md:p-8 shadow-sm border border-gray-100 mb-10">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="font-black uppercase text-[10px] tracking-widest text-gray-400 italic">Lista Appello Rapido</h3>
                     <div class="flex gap-2 text-[10px] font-bold">
@@ -146,11 +148,27 @@
                         <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center font-bold text-purple-600 mr-2 text-[10px]">AB</div>
                         <span class="font-black text-[10px] uppercase truncate">Andrea B.</span>
                     </div>
+                    <div class="flex items-center p-3 border rounded-2xl bg-gray-50">
+                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center font-bold text-purple-600 mr-2 text-[10px]">LM</div>
+                        <span class="font-black text-[10px] uppercase truncate">Lucia M.</span>
+                    </div>
                     <div id="studentMarco" class="flex items-center p-3 border border-amber-300 rounded-2xl bg-amber-50">
                         <div class="w-8 h-8 bg-amber-200 rounded-full flex items-center justify-center font-bold text-amber-700 mr-2 text-[10px]">MR</div>
                         <span class="font-black text-[10px] uppercase truncate">Marco R.</span>
                     </div>
+                    <div class="flex items-center p-3 border rounded-2xl bg-gray-50">
+                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center font-bold text-purple-600 mr-2 text-[10px]">SF</div>
+                        <span class="font-black text-[10px] uppercase truncate">Sofia F.</span>
                     </div>
+                    <div class="flex items-center p-3 border rounded-2xl bg-gray-50">
+                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center font-bold text-purple-600 mr-2 text-[10px]">GT</div>
+                        <span class="font-black text-[10px] uppercase truncate">Giulia T.</span>
+                    </div>
+                    <div class="flex items-center p-3 border rounded-2xl bg-gray-50">
+                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center font-bold text-purple-600 mr-2 text-[10px]">VP</div>
+                        <span class="font-black text-[10px] uppercase truncate">Valerio P.</span>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -162,6 +180,7 @@
             </div>
             <h2 class="text-3xl font-black text-gray-900 mb-2 uppercase tracking-tighter italic">Allerta SOS</h2>
             <p class="text-gray-500 font-medium mb-8 leading-relaxed">Lo studente <span class="text-red-600 font-black underline">Marco Rossi</span> ha inviato una segnalazione di emergenza.</p>
+            
             <div class="space-y-3">
                 <button onclick="handleSOSAction(true)" class="w-full bg-red-600 text-white py-5 rounded-[1.5rem] font-black uppercase text-xs shadow-lg shadow-red-200 hover:bg-red-700 transition-all">
                     Localizza sulla mappa
@@ -174,70 +193,114 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        /* Tutta la logica audio, simulatore e mappa rimane intatta come richiesto */
-        let audioCtx;
-        let beepInterval;
+<script>
+    let audioCtx;
+    let beepInterval;
 
-        const unlockAudio = () => {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            document.removeEventListener('touchstart', unlockAudio);
-            document.removeEventListener('click', unlockAudio);
-        };
-        document.addEventListener('touchstart', unlockAudio);
-        document.addEventListener('click', unlockAudio);
+    const unlockAudio = () => {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        document.removeEventListener('touchstart', unlockAudio);
+        document.removeEventListener('click', unlockAudio);
+    };
+    document.addEventListener('touchstart', unlockAudio);
+    document.addEventListener('click', unlockAudio);
 
-        function startSound() {
-            if (!audioCtx) return;
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            beepInterval = setInterval(() => {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(880, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.4);
-            }, 600);
+    function startSound() {
+        if (!audioCtx) return;
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        beepInterval = setInterval(() => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.4);
+        }, 600);
+    }
+
+    function stopSound() {
+        clearInterval(beepInterval);
+    }
+
+    function toggleMenu() {
+        document.getElementById('sidebar').classList.toggle('-translate-x-full');
+    }
+
+    function triggerSOS() {
+        const overlay = document.getElementById('sosOverlay');
+        overlay.classList.remove('hidden');
+        overlay.style.display = 'flex';
+        document.getElementById('sosBadge').innerText = "SOS ATTIVI: 1";
+        document.getElementById('sosBadge').classList.add('animate-pulse');
+        startSound();
+        if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
+    }
+
+    function handleSOSAction(shouldScroll) {
+        stopSound();
+        const overlay = document.getElementById('sosOverlay');
+        overlay.classList.add('hidden');
+        overlay.style.display = 'none';
+        
+        document.getElementById('sosBadge').innerText = "SOS ATTIVI: 0";
+        document.getElementById('sosBadge').classList.remove('animate-pulse');
+
+        if (shouldScroll) {
+            // Fix per mobile: scrolla al container della mappa sottraendo l'altezza dell'header
+            const main = document.getElementById('main-content');
+            const target = document.getElementById('map-container');
+            main.scrollTo({
+                top: target.offsetTop - 20, 
+                behavior: 'smooth'
+            });
+            
+            setTimeout(() => {
+                map.invalidateSize();
+                map.flyTo([41.9005, 12.4715], 18, { animate: true, duration: 1.5 });
+            }, 500);
+
+            setTimeout(() => {
+                L.popup()
+                .setLatLng([41.9005, 12.4715])
+                .setContent("<div style='text-align:center; padding:5px;'><b>Marco Rossi</b><br><span style='color:red; font-weight:bold;'>RICHIESTA SOS</span></div>")
+                .openOn(map);
+            }, 2200);
+        } else {
+            // Azione Ignora con popup
+            const main = document.getElementById('main-content');
+            const target = document.getElementById('map-container');
+            main.scrollTo({
+                top: target.offsetTop - 20, 
+                behavior: 'smooth'
+            });
+
+            map.invalidateSize();
+            L.popup()
+                .setLatLng([41.9005, 12.4715])
+                .setContent("<div style='text-align:center; padding:5px;'><b>Marco Rossi</b><br><span style='color:gray; font-weight:bold;'>Segnalazione Annullata</span></div>")
+                .openOn(map);
         }
+    }
 
-        function stopSound() { clearInterval(beepInterval); }
-        function toggleMenu() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
+    var map = L.map('map', { 
+        zoomControl: false, 
+        tap: false, 
+        touchZoom: true 
+    }).setView([41.8992, 12.4731], 16);
+    
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-        function triggerSOS() {
-            const overlay = document.getElementById('sosOverlay');
-            overlay.classList.remove('hidden');
-            overlay.style.display = 'flex';
-            document.getElementById('sosBadge').innerText = "SOS ATTIVI: 1";
-            document.getElementById('sosBadge').classList.add('animate-pulse');
-            startSound();
-        }
-
-        function handleSOSAction(shouldScroll) {
-            stopSound();
-            const overlay = document.getElementById('sosOverlay');
-            overlay.classList.add('hidden');
-            overlay.style.display = 'none';
-            document.getElementById('sosBadge').innerText = "SOS ATTIVI: 0";
-            document.getElementById('sosBadge').classList.remove('animate-pulse');
-            if (shouldScroll) {
-                const main = document.getElementById('main-content');
-                const target = document.getElementById('map-container');
-                main.scrollTo({ top: target.offsetTop - 20, behavior: 'smooth' });
-                setTimeout(() => {
-                    map.invalidateSize();
-                    map.flyTo([41.9005, 12.4715], 18, { animate: true, duration: 1.5 });
-                }, 500);
-            }
-        }
-
-        var map = L.map('map', { zoomControl: false, tap: false, touchZoom: true }).setView([41.8992, 12.4731], 16);
-        L.control.zoom({ position: 'bottomright' }).addTo(map);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-        L.marker([41.8992, 12.4731]).addTo(map).bindPopup('Gruppo 5ª B');
-    </script>
+    L.circle([41.8992, 12.4731], { color: '#7C4DFF', weight: 2, fillOpacity: 0.1, radius: 200 }).addTo(map);
+    L.marker([41.8992, 12.4731]).addTo(map).bindPopup('Gruppo 5ª B');
+    
+    L.circleMarker([41.9005, 12.4715], {
+        radius: 8, fillColor: "#F59E0B", color: "white", weight: 2, opacity: 1, fillOpacity: 0.9
+    }).addTo(map);
+</script>
 </body>
 </html>
