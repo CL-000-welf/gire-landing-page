@@ -15,14 +15,12 @@
         #map-student { height: 260px; border-radius: 2rem; z-index: 10; border: 4px solid white; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
         .safe-card { background: white; border-radius: 2.2rem; border: 1px solid #E2E8F0; overflow: hidden; }
         
-        /* Notifica Push */
         #push-alert { 
             position: fixed; top: 20px; left: 20px; right: 20px; 
             z-index: 9999; transform: translateY(-150%); transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         #push-alert.show { transform: translateY(0); }
 
-        /* Scomparsa Appello */
         #appello-box { transition: all 0.6s ease; max-height: 300px; opacity: 1; margin-bottom: 1.5rem; }
         #appello-box.hidden-appello { max-height: 0; opacity: 0; margin-bottom: 0; padding: 0; transform: scale(0.9); pointer-events: none; }
 
@@ -44,7 +42,7 @@
         </div>
     </div>
 
-    <header class="flex justify-between items-center mb-6">
+    <header class="flex justify-between items-center mb-6 px-1">
         <div>
             <p class="text-[10px] font-black uppercase tracking-widest text-indigo-600 italic">Gita a Roma</p>
             <h1 class="text-2xl font-black italic tracking-tighter uppercase leading-none">Area Studente</h1>
@@ -91,50 +89,35 @@
                 </div>
                 <button onclick="openQR('TICKET COLOSSEO')" class="bg-gray-100 text-gray-300 h-10 w-10 rounded-xl flex items-center justify-center"><i class="fa-solid fa-qrcode opacity-30"></i></button>
             </div>
-            <div class="relative flex items-center gap-4">
-                <div class="z-10 w-7 h-7 bg-gray-200 rounded-full flex items-center justify-center text-gray-400 text-[10px] border-4 border-white shadow-sm"><i class="fa-solid fa-lock text-[8px]"></i></div>
-                <div class="flex-grow">
-                    <p class="text-xs font-black italic text-gray-400">Rientro in Hotel</p>
-                    <p class="text-[9px] text-gray-400 font-bold uppercase">Ore 19:30</p>
-                </div>
-                <i class="fa-solid fa-hotel text-gray-200 text-lg"></i>
-            </div>
         </div>
     </div>
 
     <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic">I Diari di Viaggio</h3>
     <div class="space-y-6 mb-12">
         <div class="safe-card shadow-sm">
-            <img src="https://images.unsplash.com/photo-1552832230-c0197eb3ae19?auto=format&fit=crop&w=800&q=80" class="h-44 w-full object-cover">
+            <img src="assets/img-1.jpg" class="h-44 w-full object-cover">
             <div class="p-5">
                 <div class="flex justify-between items-start mb-2">
                     <h4 class="font-black italic uppercase text-indigo-600 text-sm">1. Il Pantheon</h4>
-                    <i class="fa-solid fa-headphones text-indigo-300 text-xs"></i>
+                    <button onclick="speak('Il Pantheon è la cupola in calcestruzzo non armato più grande del mondo. Un miracolo dell\'ingegneria romana.')" class="bg-indigo-50 text-indigo-600 h-8 w-8 rounded-full flex items-center justify-center active:scale-90 transition-all">
+                        <i class="fa-solid fa-volume-high text-[10px]"></i>
+                    </button>
                 </div>
                 <p class="text-xs text-gray-600 mb-4 leading-relaxed font-medium">Scopri il segreto della cupola più grande dell'antichità.</p>
                 <button onclick="openInfo('Il Pantheon', 'La cupola è fatta di calcestruzzo alleggerito. L\'oculo centrale di 9 metri crea un effetto camino unico al mondo.')" class="text-[10px] font-black uppercase text-indigo-600 border-b-2 border-indigo-100 pb-0.5">Leggi di più <i class="fa-solid fa-arrow-right ml-1"></i></button>
             </div>
         </div>
         <div class="safe-card shadow-sm">
-            <img src="https://images.unsplash.com/photo-1555992828-ca4dbe893e55?auto=format&fit=crop&w=800&q=80" class="h-44 w-full object-cover">
+            <img src="assets/img-2.jpg" class="h-44 w-full object-cover">
             <div class="p-5">
                 <div class="flex justify-between items-start mb-2">
                     <h4 class="font-black italic uppercase text-indigo-600 text-sm">2. Il Colosseo</h4>
-                    <i class="fa-solid fa-headphones text-indigo-300 text-xs"></i>
+                    <button onclick="speak('Il Colosseo poteva ospitare fino a ottantamila spettatori. Veniva usato anche per simulare battaglie navali allagando l\'arena.')" class="bg-indigo-50 text-indigo-600 h-8 w-8 rounded-full flex items-center justify-center active:scale-90 transition-all">
+                        <i class="fa-solid fa-volume-high text-[10px]"></i>
+                    </button>
                 </div>
                 <p class="text-xs text-gray-600 mb-4 leading-relaxed font-medium">Navi vere dentro uno stadio? Ecco come facevano i Romani.</p>
                 <button onclick="openInfo('Il Colosseo', 'L\'arena poteva ospitare le Naumachie, vere battaglie navali, grazie a un sistema di allagamento rapido.')" class="text-[10px] font-black uppercase text-indigo-600 border-b-2 border-indigo-100 pb-0.5">Leggi di più <i class="fa-solid fa-arrow-right ml-1"></i></button>
-            </div>
-        </div>
-        <div class="safe-card shadow-sm">
-            <img src="https://images.unsplash.com/photo-1525874684015-58379d421a52?auto=format&fit=crop&w=800&q=80" class="h-44 w-full object-cover">
-            <div class="p-5">
-                <div class="flex justify-between items-start mb-2">
-                    <h4 class="font-black italic uppercase text-indigo-600 text-sm">3. Trastevere</h4>
-                    <i class="fa-solid fa-headphones text-indigo-300 text-xs"></i>
-                </div>
-                <p class="text-xs text-gray-600 mb-4 leading-relaxed font-medium">Il cuore medievale e popolare della capitale.</p>
-                <button onclick="openInfo('Trastevere', 'È l\'unico rione che conserva il fascino del medioevo romano, tra vicoli stretti e basiliche antiche.')" class="text-[10px] font-black uppercase text-indigo-600 border-b-2 border-indigo-100 pb-0.5">Leggi di più <i class="fa-solid fa-arrow-right ml-1"></i></button>
             </div>
         </div>
     </div>
@@ -184,7 +167,16 @@
 
         L.marker([41.9005, 12.4715], {icon: createGiantIcon('#3b82f6', 'fa-user', true)}).addTo(map);
         L.marker([41.9002, 12.4722], {icon: createGiantIcon('#ef4444', 'fa-user-tie')}).addTo(map);
-        L.marker([41.8992, 12.4731], {icon: createGiantIcon('#f59e0b', 'fa-utensils')}).addTo(map);
+
+        // FUNZIONE AUDIO SMART
+        function speak(text) {
+            window.speechSynthesis.cancel(); // Ferma eventuali letture precedenti
+            const msg = new SpeechSynthesisUtterance();
+            msg.text = text;
+            msg.lang = 'it-IT';
+            msg.rate = 0.9; // Leggermente più lento per chiarezza didattica
+            window.speechSynthesis.speak(msg);
+        }
 
         function confermaPresenza() { document.getElementById('appello-box').classList.add('hidden-appello'); }
         function openQR(title) { document.getElementById('qrTitle').innerText = title; document.getElementById('qrModal').style.display = 'flex'; }
@@ -196,7 +188,7 @@
             btn.innerText = "INVIATO...";
             btn.classList.replace('bg-red-600', 'bg-slate-900');
             setTimeout(() => {
-                alert("SOS INVIATO! I docenti hanno ricevuto la tua posizione GPS e stanno arrivando.");
+                alert("SOS INVIATO! Posizione GPS condivisa con i docenti.");
                 btn.innerText = "SOS";
                 btn.classList.replace('bg-slate-900', 'bg-red-600');
             }, 1500);
