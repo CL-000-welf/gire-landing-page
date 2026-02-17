@@ -20,7 +20,6 @@
         .support-card.present { border-color: #7C4DFF; background-color: #F5F3FF; transform: scale(0.98); }
         .support-card.present i.check-icon { color: #7C4DFF; }
 
-        /* Custom Scrollbar per estetica */
         main::-webkit-scrollbar { width: 6px; }
         main::-webkit-scrollbar-track { background: #f1f1f1; }
         main::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
@@ -55,7 +54,9 @@
     </aside>
 
     <main class="flex-1 overflow-y-auto pt-[88px] md:pt-8 px-4 md:px-8">
-        <div class="max-w-5xl mx-auto pb-32"> <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 gap-4">
+        <div class="max-w-5xl mx-auto pb-32">
+            
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 gap-4">
                 <div>
                     <h1 class="text-3xl font-black text-gray-900 uppercase italic tracking-tighter leading-none">Appello Digitale</h1>
                     <p class="text-gray-400 font-bold text-xs uppercase italic mt-2">Gita a Roma • 5ª B</p>
@@ -64,9 +65,9 @@
                     <button onclick="resetAppello()" class="text-[10px] font-black text-red-500 uppercase tracking-widest border-2 border-red-100 px-5 py-3 rounded-xl hover:bg-red-50 active:scale-95 transition-all">
                         <i class="fa-solid fa-rotate-left mr-1"></i> Reset
                     </button>
-                    <div class="text-right">
+                    <div class="text-right leading-none">
                         <span id="counter" class="text-4xl font-black text-purple-600">0</span>
-                        <span class="text-gray-300 font-black text-xl">/18</span>
+                        <span id="total-denominator" class="text-gray-300 font-black text-xl">/26</span>
                     </div>
                 </div>
             </div>
@@ -103,7 +104,7 @@
                 <h3 class="text-[10px] font-black text-gray-400 uppercase mb-4 tracking-widest italic flex items-center">
                     <i class="fa-solid fa-list mr-2"></i> Elenco Alunni
                 </h3>
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3" id="studentGrid"></div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3" id="studentGrid"></div>
             </div>
 
         </div>
@@ -112,22 +113,32 @@
     <script>
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
         
-        // Aggiunti più studenti per creare più file e testare lo scroll
+        // LISTA AGGIORNATA CON COGNOMI COLORATI
         const students = [
-            "Andrea B.", "Lucia M.", "Sofia F.", "Giulia T.", "Valerio P.", 
-            "Elena S.", "Matteo L.", "Chiara G.", "Davide M.", "Simone R.",
-            "Alice V.", "Riccardo D.", "Marta P.", "Gabriele N.", "Noemi Z.", "Luca F."
+            "Andrea Blu", "Lucia Magenta", "Sofia Fucsia", "Giulia Terra di Siena", 
+            "Valerio Paglierino", "Elena Sabbia", "Matteo Lilla", "Chiara Grigio",
+            "Davide Amaranto", "Simone Rubino", "Alice Verde", "Riccardo Dorato",
+            "Marta Porpora", "Gabriele Nero", "Noemi Zaffiro", "Luca Fosforescente",
+            "Beatrice Bianca", "Paolo Piombo", "Greta Granata", "Antonio Arancio",
+            "Monica Marrone", "Vincenzo Viola", "Clara Celeste", "Roberto Rosso"
         ];
         
         const grid = document.getElementById('studentGrid');
+        
+        // Imposta il totale automaticamente (N. studenti + i 2 speciali)
+        document.getElementById('total-denominator').innerText = "/" + (students.length + 2);
         
         // Generazione Card Standard
         students.forEach(s => {
             const card = document.createElement('div');
             card.className = "student-card bg-white border-2 border-transparent p-4 rounded-2xl cursor-pointer transition-all hover:border-gray-200 text-center flex flex-col items-center gap-2 shadow-sm";
+            
+            // Estrae le iniziali (es: "Andrea Blu" -> "AB")
+            const initials = s.split(' ').map(n => n[0]).join('').toUpperCase();
+            
             card.innerHTML = `
-                <div class='avatar w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center font-black text-gray-400 text-[10px] transition-all'>${s[0]}</div>
-                <span class='font-black text-[10px] uppercase truncate w-full'>${s}</span>
+                <div class='avatar w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center font-black text-gray-400 text-[10px] transition-all'>${initials}</div>
+                <span class='font-black text-[9px] leading-tight uppercase truncate w-full h-8 flex items-center justify-center'>${s}</span>
                 <i class="fa-solid fa-circle-check text-gray-100 transition-colors"></i>
             `;
             card.onclick = () => {
