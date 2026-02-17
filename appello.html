@@ -10,6 +10,7 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #F3F4F6; }
         .sidebar { background-color: #1A1C2E; }
+        
         /* Stile card quando selezionata */
         .student-card.present { border-color: #10B981; background-color: #ECFDF5; transform: scale(0.96); }
         .student-card.present i { color: #10B981; }
@@ -18,6 +19,11 @@
         /* Stile speciale per supporto */
         .support-card.present { border-color: #7C4DFF; background-color: #F5F3FF; transform: scale(0.98); }
         .support-card.present i.check-icon { color: #7C4DFF; }
+
+        /* Custom Scrollbar per estetica */
+        main::-webkit-scrollbar { width: 6px; }
+        main::-webkit-scrollbar-track { background: #f1f1f1; }
+        main::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
     </style>
 </head>
 <body class="flex flex-col md:flex-row h-screen overflow-hidden">
@@ -25,7 +31,7 @@
     <div class="md:hidden bg-[#1A1C2E] text-white p-4 flex justify-between items-center shadow-lg fixed top-0 left-0 right-0 z-[100]">
         <div class="flex items-center space-x-2">
             <img src="assets/logo.png" alt="Logo" class="h-6">
-            <span class="font-black tracking-tighter italic">GIRE</span>
+            <span class="font-black tracking-tighter italic text-purple-400">GIRE</span>
         </div>
         <button onclick="toggleMenu()" class="text-2xl p-2 bg-white/10 rounded-lg"><i class="fa-solid fa-bars"></i></button>
     </div>
@@ -49,20 +55,18 @@
     </aside>
 
     <main class="flex-1 overflow-y-auto pt-[88px] md:pt-8 px-4 md:px-8">
-        <div class="max-w-5xl mx-auto pb-20">
-            
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 gap-4">
+        <div class="max-w-5xl mx-auto pb-32"> <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 gap-4">
                 <div>
                     <h1 class="text-3xl font-black text-gray-900 uppercase italic tracking-tighter leading-none">Appello Digitale</h1>
                     <p class="text-gray-400 font-bold text-xs uppercase italic mt-2">Gita a Roma • 5ª B</p>
                 </div>
-                <div class="flex items-center gap-6">
-                    <button onclick="resetAppello()" class="text-[10px] font-black text-red-500 uppercase tracking-widest border-2 border-red-100 px-4 py-2 rounded-xl hover:bg-red-50 transition">
+                <div class="flex items-center justify-between w-full sm:w-auto gap-6">
+                    <button onclick="resetAppello()" class="text-[10px] font-black text-red-500 uppercase tracking-widest border-2 border-red-100 px-5 py-3 rounded-xl hover:bg-red-50 active:scale-95 transition-all">
                         <i class="fa-solid fa-rotate-left mr-1"></i> Reset
                     </button>
                     <div class="text-right">
                         <span id="counter" class="text-4xl font-black text-purple-600">0</span>
-                        <span class="text-gray-300 font-black text-xl">/12</span>
+                        <span class="text-gray-300 font-black text-xl">/18</span>
                     </div>
                 </div>
             </div>
@@ -76,8 +80,8 @@
                         <div class="flex items-center gap-4">
                             <div class="avatar w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center font-black">MR</div>
                             <div>
-                                <p class="font-black text-gray-900 text-sm uppercase">Marco Rossi</p>
-                                <p class="text-[9px] font-bold text-purple-400 uppercase tracking-tighter">Sostegno: Prof.ssa Bianchi</p>
+                                <p class="font-black text-gray-900 text-sm uppercase leading-none">Marco Rossi</p>
+                                <p class="text-[9px] font-bold text-purple-400 uppercase tracking-tighter mt-1">Sostegno: Prof.ssa Bianchi</p>
                             </div>
                         </div>
                         <i class="fa-solid fa-circle-check text-gray-100 text-3xl check-icon transition-colors"></i>
@@ -86,8 +90,8 @@
                         <div class="flex items-center gap-4">
                             <div class="avatar w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center font-black">SG</div>
                             <div>
-                                <p class="font-black text-gray-900 text-sm uppercase">Sara Gialli</p>
-                                <p class="text-[9px] font-bold text-purple-400 uppercase tracking-tighter">Sostegno: Prof. Neri</p>
+                                <p class="font-black text-gray-900 text-sm uppercase leading-none">Sara Gialli</p>
+                                <p class="text-[9px] font-bold text-purple-400 uppercase tracking-tighter mt-1">Sostegno: Prof. Neri</p>
                             </div>
                         </div>
                         <i class="fa-solid fa-circle-check text-gray-100 text-3xl check-icon transition-colors"></i>
@@ -108,7 +112,13 @@
     <script>
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
         
-        const students = ["Andrea B.", "Lucia M.", "Sofia F.", "Giulia T.", "Valerio P.", "Elena S.", "Matteo L.", "Chiara G.", "Davide M.", "Simone R."];
+        // Aggiunti più studenti per creare più file e testare lo scroll
+        const students = [
+            "Andrea B.", "Lucia M.", "Sofia F.", "Giulia T.", "Valerio P.", 
+            "Elena S.", "Matteo L.", "Chiara G.", "Davide M.", "Simone R.",
+            "Alice V.", "Riccardo D.", "Marta P.", "Gabriele N.", "Noemi Z.", "Luca F."
+        ];
+        
         const grid = document.getElementById('studentGrid');
         
         // Generazione Card Standard
@@ -127,19 +137,16 @@
             grid.appendChild(card);
         });
 
-        // Funzione per i due studenti speciali
         function toggleSupport(el) {
             el.classList.toggle('present');
             updateTotal();
         }
 
-        // Calcolo totale dinamico
         function updateTotal() {
             const total = document.querySelectorAll('.present').length;
             document.getElementById('counter').innerText = total;
         }
 
-        // Funzione Reset
         function resetAppello() {
             document.querySelectorAll('.present').forEach(el => {
                 el.classList.remove('present');
