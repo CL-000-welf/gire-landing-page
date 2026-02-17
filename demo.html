@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIRE - Dashboard Live</title>
+    <title>GIRE - Dashboard Demo Interattiva</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -31,20 +31,24 @@
             10% { transform: translate(-1px, -2px) rotate(-1deg); }
             20% { transform: translate(-3px, 0px) rotate(1deg); }
             30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
         }
+
+        header { top: 0; position: -webkit-sticky; position: sticky; }
     </style>
 </head>
 <body class="flex flex-col md:flex-row h-screen overflow-hidden">
 
-    <div class="md:hidden bg-[#1A1C2E] text-white p-4 flex justify-between items-center shadow-lg fixed top-0 left-0 right-0 z-[100]">
+    <div class="md:hidden bg-[#1A1C2E] text-white p-4 flex justify-between items-center shadow-lg z-[60]">
         <div class="flex items-center space-x-2">
             <img src="assets/logo.png" alt="Logo" class="h-6">
-            <span class="font-black tracking-tighter italic text-purple-400">GIRE</span>
+            <span class="font-black tracking-tighter italic">GIRE</span>
         </div>
-        <button onclick="toggleMenu()" class="text-2xl p-2 bg-white/10 rounded-lg"><i class="fa-solid fa-bars"></i></button>
+        <button onclick="toggleMenu()" class="text-2xl p-2"><i class="fa-solid fa-bars"></i></button>
     </div>
 
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-[110] w-64 sidebar text-white transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 flex flex-col p-6">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 sidebar text-white transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 flex flex-col p-6">
         <div class="hidden md:flex items-center space-x-3 mb-10">
             <img src="assets/logo.png" alt="Logo" class="h-8">
             <span class="text-xl font-black tracking-tighter italic">GIRE</span>
@@ -74,12 +78,12 @@
         </div>
     </aside>
 
-    <main id="main-content" class="flex-1 flex flex-col overflow-y-auto pt-[72px] md:pt-0">
+    <main id="main-content" class="flex-1 flex flex-col overflow-y-auto">
         
         <header class="bg-white border-b p-4 md:p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 sticky top-0 z-30">
             <div>
-                <h1 class="text-xl md:text-2xl font-black text-gray-900 leading-tight italic tracking-tighter">Gita a Roma: 5ª B</h1>
-                <p class="text-gray-400 text-[10px] font-black uppercase tracking-widest mt-1">Centro Storico • Pantheon • Trastevere</p>
+                <h1 class="text-xl md:text-2xl font-black text-gray-900 leading-tight">Gita a Roma: 5ª B</h1>
+                <p class="text-gray-500 text-xs font-medium uppercase tracking-tighter">Centro Storico • Pantheon • Trastevere</p>
             </div>
             <div class="flex items-center gap-3 w-full md:w-auto">
                 <div id="liveStatus" class="flex-1 md:flex-none text-center bg-green-100 text-green-700 px-4 py-2 rounded-full text-[10px] font-black italic">
@@ -91,7 +95,8 @@
             </div>
         </header>
 
-        <div class="p-4 md:p-8 space-y-6 pb-32"> <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="p-4 md:p-8 space-y-6 pb-32"> 
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
                 <div id="map-container" class="lg:col-span-2 bg-white rounded-[2rem] p-4 shadow-sm border border-gray-100">
                     <div class="flex justify-between items-center mb-4 px-2">
@@ -106,23 +111,23 @@
                         <h3 class="font-black uppercase text-[10px] tracking-widest text-gray-400 mb-4 italic">Prossima Tappa</h3>
                         <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-2xl mb-6">
                             <p class="text-[10px] font-black text-amber-700 uppercase">Dalle ore 13:00</p>
-                            <p class="font-black text-lg text-gray-900 tracking-tighter italic">Trattoria "Da Giggi"</p>
+                            <p class="font-black text-lg text-gray-900">Trattoria "Da Giggi"</p>
                             <p class="text-gray-500 text-[11px] mt-1 font-medium"><i class="fa-solid fa-utensils mr-1"></i> Pranzo Gruppo (Menu fisso)</p>
                         </div>
                         <div class="grid grid-cols-2 lg:grid-cols-1 gap-3">
-                            <button class="bg-gray-900 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-purple-600 transition shadow-md active:scale-95">
+                            <button class="bg-gray-900 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-purple-600 transition shadow-md">
                                 <i class="fa-solid fa-qrcode mr-2"></i> Voucher Hub
                             </button>
-                            <button class="bg-gray-100 text-gray-600 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-gray-200 transition active:scale-95">
+                            <button class="bg-gray-100 text-gray-600 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-gray-200 transition">
                                 <i class="fa-solid fa-bus mr-2"></i> Autista
                             </button>
                         </div>
                     </div>
 
-                    <div class="bg-gray-900 rounded-[2rem] p-6 text-white text-center shadow-xl">
-                        <p class="text-[10px] font-bold text-gray-500 uppercase mb-4 tracking-tighter italic">Simulatore Emergenze</p>
-                        <button onclick="triggerSOS()" class="w-full bg-red-600 hover:bg-red-500 text-white py-4 rounded-2xl font-black text-xs uppercase transition-all transform active:scale-95 shadow-lg shadow-red-900/20">
-                            <i class="fa-solid fa-bell-slash mr-2"></i> SOS Studente
+                    <div class="bg-gray-900 rounded-[2rem] p-6 text-white text-center">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase mb-4 tracking-tighter italic">Area Stress Test</p>
+                        <button onclick="triggerSOS()" class="w-full bg-red-600 hover:bg-red-500 text-white py-4 rounded-2xl font-black text-xs uppercase transition-all shadow-xl shadow-red-900/20">
+                            <i class="fa-solid fa-bell-slash mr-2"></i> Simula SOS Studente
                         </button>
                     </div>
                 </div>
@@ -141,32 +146,28 @@
                         <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center font-bold text-purple-600 mr-2 text-[10px]">AB</div>
                         <span class="font-black text-[10px] uppercase truncate">Andrea B.</span>
                     </div>
-                    <div class="flex items-center p-3 border rounded-2xl bg-gray-50">
-                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center font-bold text-purple-600 mr-2 text-[10px]">LM</div>
-                        <span class="font-black text-[10px] uppercase truncate">Lucia M.</span>
-                    </div>
                     <div id="studentMarco" class="flex items-center p-3 border border-amber-300 rounded-2xl bg-amber-50">
                         <div class="w-8 h-8 bg-amber-200 rounded-full flex items-center justify-center font-bold text-amber-700 mr-2 text-[10px]">MR</div>
-                        <span class="font-black text-[10px] uppercase truncate font-black">Marco R.</span>
+                        <span class="font-black text-[10px] uppercase truncate">Marco R.</span>
                     </div>
                     </div>
             </div>
         </div>
     </main>
 
-    <div id="sosOverlay" class="fixed inset-0 z-[150] bg-red-600/95 backdrop-blur-md flex items-center justify-center p-6 hidden">
+    <div id="sosOverlay" class="fixed inset-0 z-[100] bg-red-600/95 backdrop-blur-md flex items-center justify-center p-6 hidden">
         <div class="bg-white rounded-[3rem] p-8 max-w-sm w-full text-center shadow-2xl shake">
-            <div class="w-20 h-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6 status-pulse">
-                <i class="fa-solid fa-triangle-exclamation text-4xl"></i>
+            <div class="w-24 h-24 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6 status-pulse">
+                <i class="fa-solid fa-triangle-exclamation text-5xl"></i>
             </div>
-            <h2 class="text-2xl font-black text-gray-900 mb-2 uppercase tracking-tighter italic">Allerta SOS</h2>
-            <p class="text-gray-500 text-sm font-medium mb-8">Lo studente <span class="text-red-600 font-black underline">Marco Rossi</span> ha lanciato un SOS.</p>
+            <h2 class="text-3xl font-black text-gray-900 mb-2 uppercase tracking-tighter italic">Allerta SOS</h2>
+            <p class="text-gray-500 font-medium mb-8 leading-relaxed">Lo studente <span class="text-red-600 font-black underline">Marco Rossi</span> ha inviato una segnalazione di emergenza.</p>
             <div class="space-y-3">
-                <button onclick="handleSOSAction(true)" class="w-full bg-red-600 text-white py-5 rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all">
-                    Localizza Marco
+                <button onclick="handleSOSAction(true)" class="w-full bg-red-600 text-white py-5 rounded-[1.5rem] font-black uppercase text-xs shadow-lg shadow-red-200 hover:bg-red-700 transition-all">
+                    Localizza sulla mappa
                 </button>
-                <button onclick="handleSOSAction(false)" class="w-full bg-gray-100 text-gray-400 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95">
-                    Ignora
+                <button onclick="handleSOSAction(false)" class="w-full bg-gray-100 text-gray-400 py-4 rounded-[1.5rem] font-black uppercase text-[10px] tracking-widest">
+                    Ignora Segnalazione
                 </button>
             </div>
         </div>
@@ -174,6 +175,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        /* Tutta la logica audio, simulatore e mappa rimane intatta come richiesto */
         let audioCtx;
         let beepInterval;
 
@@ -203,7 +205,6 @@
         }
 
         function stopSound() { clearInterval(beepInterval); }
-
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
 
         function triggerSOS() {
@@ -222,12 +223,10 @@
             overlay.style.display = 'none';
             document.getElementById('sosBadge').innerText = "SOS ATTIVI: 0";
             document.getElementById('sosBadge').classList.remove('animate-pulse');
-
             if (shouldScroll) {
                 const main = document.getElementById('main-content');
                 const target = document.getElementById('map-container');
-                main.scrollTo({ top: target.offsetTop - 100, behavior: 'smooth' });
-                
+                main.scrollTo({ top: target.offsetTop - 20, behavior: 'smooth' });
                 setTimeout(() => {
                     map.invalidateSize();
                     map.flyTo([41.9005, 12.4715], 18, { animate: true, duration: 1.5 });
