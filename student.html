@@ -1,149 +1,15 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GIRE - Area Studente</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; overflow-x: hidden; }
-        #map-student { height: 260px; border-radius: 2rem; z-index: 10; border: 4px solid white; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .safe-card { background: white; border-radius: 2.2rem; border: 1px solid #E2E8F0; overflow: hidden; }
-        
-        /* Notifica Push */
-        #push-alert { 
-            position: fixed; top: 20px; left: 20px; right: 20px; 
-            z-index: 9999; transform: translateY(-150%); transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        #push-alert.show { transform: translateY(0); }
-
-        /* Scomparsa Appello */
-        #appello-box { transition: all 0.6s ease; max-height: 300px; opacity: 1; margin-bottom: 1.5rem; }
-        #appello-box.hidden-appello { max-height: 0; opacity: 0; margin-bottom: 0; padding: 0; transform: scale(0.9); pointer-events: none; }
-
-        /* SOS Originale */
-        .sos-button { 
-            background: radial-gradient(circle, #ef4444 0%, #b91c1c 100%); 
-            box-shadow: 0 0 40px rgba(239, 68, 68, 0.4); 
-        }
-
-        .pulse-me { animation: pulse-blue 2s infinite; border-radius: 50%; }
-        @keyframes pulse-blue { 0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.6); } 70% { box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); } 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); } }
-
-        #qrModal, #infoModal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.95); z-index: 10000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
-    </style>
-</head>
-<body class="flex flex-col min-h-screen p-5 pb-10">
-
-    <div id="push-alert" class="bg-slate-900 text-white p-5 rounded-[2rem] shadow-2xl flex items-center gap-4 border border-white/20">
-        <div class="bg-indigo-500 h-10 w-10 rounded-full flex items-center justify-center shrink-0">
-            <i class="fa-solid fa-paper-plane text-white"></i>
-        </div>
-        <div>
-            <p class="text-[9px] font-black uppercase tracking-widest text-indigo-300">Docente</p>
-            <p class="text-xs font-bold leading-tight">Ragazzi, ci vediamo al bus tra 15 minuti!</p>
-        </div>
-    </div>
-
-    <header class="flex justify-between items-center mb-6">
-        <div>
-            <p class="text-[10px] font-black uppercase tracking-widest text-indigo-600 italic">Gita a Roma</p>
-            <h1 class="text-2xl font-black italic tracking-tighter uppercase leading-none">Area Studente</h1>
-        </div>
-        <div class="text-right">
-            <p class="text-sm font-black italic">Marco Rossi</p>
-            <span class="text-[9px] bg-green-500 text-white px-2 py-0.5 rounded-full font-bold uppercase">LIVE</span>
-        </div>
-    </header>
-
-    <div id="appello-box" class="bg-indigo-600 rounded-[2.5rem] p-6 text-white shadow-xl flex items-center justify-between">
-        <div>
-            <p class="text-[9px] font-black uppercase text-indigo-200 mb-1 tracking-widest">Presenza</p>
-            <h3 class="font-black text-lg italic tracking-tighter uppercase leading-tight">Sei con noi?</h3>
-        </div>
-        <button onclick="confermaPresenza()" class="bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all">CONFERMA</button>
-    </div>
-
-    <div class="safe-card p-4 mb-8">
-        <div id="map-student"></div>
-    </div>
-
-    <div class="safe-card p-6 mb-8">
-        <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6 italic text-center">Programma Giornata</h3>
-        <div class="space-y-8 relative">
-            <div class="absolute left-[13px] top-2 bottom-2 w-0.5 bg-gray-100"></div>
-            <div class="relative flex items-center gap-4 opacity-40">
-                <div class="z-10 w-7 h-7 bg-green-500 rounded-full flex items-center justify-center text-white text-[10px] border-4 border-white shadow-sm"><i class="fa-solid fa-check"></i></div>
-                <p class="text-xs font-bold text-gray-500 line-through">Pantheon & Piazza Navona</p>
+<div class="mt-auto pt-4 border-t border-slate-200">
+        <div class="bg-red-50 rounded-[2.5rem] p-6 border border-red-100 flex items-center justify-between shadow-sm">
+            <div>
+                <p class="text-[9px] font-black uppercase text-red-600 mb-1 tracking-widest">Sicurezza</p>
+                <h3 class="font-black text-sm italic tracking-tighter uppercase leading-tight text-slate-900">Hai bisogno di aiuto?</h3>
+                <p class="text-[8px] font-bold text-red-400 uppercase mt-1">Invia posizione ai docenti</p>
             </div>
-            <div class="relative flex items-center gap-4">
-                <div class="z-10 w-7 h-7 bg-amber-500 rounded-full flex items-center justify-center text-white text-[10px] border-4 border-white shadow-sm"><i class="fa-solid fa-utensils"></i></div>
-                <div class="flex-grow">
-                    <p class="text-xs font-black italic">Pranzo: Da Giggi</p>
-                    <p class="text-[9px] text-amber-600 font-bold uppercase">Attivo</p>
-                </div>
-                <button onclick="openQR('TICKET PRANZO')" class="bg-amber-100 text-amber-600 h-10 w-10 rounded-xl flex items-center justify-center"><i class="fa-solid fa-qrcode"></i></button>
-            </div>
-            <div class="relative flex items-center gap-4">
-                <div class="z-10 w-7 h-7 bg-gray-200 rounded-full flex items-center justify-center text-gray-400 text-[10px] border-4 border-white shadow-sm"><i class="fa-solid fa-lock"></i></div>
-                <div class="flex-grow">
-                    <p class="text-xs font-black italic text-gray-400">Colosseo & Fori</p>
-                    <p class="text-[9px] text-gray-400 font-bold uppercase">Ore 15:30</p>
-                </div>
-                <button onclick="openQR('TICKET COLOSSEO')" class="bg-gray-100 text-gray-300 h-10 w-10 rounded-xl flex items-center justify-center"><i class="fa-solid fa-qrcode opacity-30"></i></button>
-            </div>
-            <div class="relative flex items-center gap-4">
-                <div class="z-10 w-7 h-7 bg-gray-200 rounded-full flex items-center justify-center text-gray-400 text-[10px] border-4 border-white shadow-sm"><i class="fa-solid fa-lock text-[8px]"></i></div>
-                <div class="flex-grow">
-                    <p class="text-xs font-black italic text-gray-400">Rientro in Hotel</p>
-                    <p class="text-[9px] text-gray-400 font-bold uppercase">Ore 19:30</p>
-                </div>
-                <i class="fa-solid fa-hotel text-gray-200 text-lg"></i>
-            </div>
-        </div>
-    </div>
-
-    <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic">I Diari di Viaggio</h3>
-    <div class="space-y-6 mb-12">
-        <div class="safe-card shadow-sm">
-            <img src="assets/img-1.jpg?auto=format&fit=crop&w=800&q=80" class="h-44 w-full object-cover">
-            <div class="p-5">
-                <h4 class="font-black italic uppercase text-indigo-600 text-sm mb-2">1. Il Pantheon</h4>
-                <p class="text-xs text-gray-600 mb-4 leading-relaxed font-medium">Scopri il segreto della cupola più grande dell'antichità.</p>
-                <button onclick="openInfo('Il Pantheon', 'La cupola è fatta di calcestruzzo alleggerito. L\'oculo centrale di 9 metri crea un effetto camino unico al mondo.')" class="text-[10px] font-black uppercase text-indigo-600 border-b-2 border-indigo-100 pb-0.5">Leggi di più <i class="fa-solid fa-arrow-right ml-1"></i></button>
-            </div>
-        </div>
-        <div class="safe-card shadow-sm">
-            <img src="assets/img-2.jpg?auto=format&fit=crop&w=800&q=80" class="h-44 w-full object-cover">
-            <div class="p-5">
-                <h4 class="font-black italic uppercase text-indigo-600 text-sm mb-2">2. Il Colosseo</h4>
-                <p class="text-xs text-gray-600 mb-4 leading-relaxed font-medium">Navi vere dentro uno stadio? Ecco come facevano i Romani.</p>
-                <button onclick="openInfo('Il Colosseo', 'L\'arena poteva ospitare le Naumachie, vere battaglie navali, grazie a un sistema di allagamento rapido.')" class="text-[10px] font-black uppercase text-indigo-600 border-b-2 border-indigo-100 pb-0.5">Leggi di più <i class="fa-solid fa-arrow-right ml-1"></i></button>
-            </div>
-        </div>
-        <div class="safe-card shadow-sm">
-            <img src="assets/img-3.jpg?auto=format&fit=crop&w=800&q=80" class="h-44 w-full object-cover">
-            <div class="p-5">
-                <h4 class="font-black italic uppercase text-indigo-600 text-sm mb-2">3. Trastevere</h4>
-                <p class="text-xs text-gray-600 mb-4 leading-relaxed font-medium">Il cuore medievale e popolare della capitale.</p>
-                <button onclick="openInfo('Trastevere', 'È l\'unico rione che conserva il fascino del medioevo romano, tra vicoli stretti e basiliche antiche.')" class="text-[10px] font-black uppercase text-indigo-600 border-b-2 border-indigo-100 pb-0.5">Leggi di più <i class="fa-solid fa-arrow-right ml-1"></i></button>
-            </div>
-        </div>
-    </div>
-
-    <div class="mt-auto flex flex-col items-center pb-8">
-        <div class="relative mb-3">
-            <button onclick="sendSOS()" class="sos-button w-32 h-32 rounded-full flex flex-col items-center justify-center border-4 border-white z-10 relative active:scale-90 transition-all shadow-2xl">
-                <span class="font-black text-3xl italic uppercase text-white leading-none">SOS</span>
+            <button onclick="sendSOS()" class="bg-red-600 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg shadow-red-200 active:scale-95 transition-all">
+                SOS
             </button>
-            <div class="absolute inset-0 bg-red-500/30 rounded-full animate-ping"></div>
         </div>
-        <p class="text-[10px] font-black text-red-600 uppercase tracking-tighter italic">Premere solo in caso di vera emergenza</p>
+        <p class="text-center text-[8px] font-black text-gray-400 uppercase mt-4 tracking-widest">Gire Safe & Smart System — v.2.0</p>
     </div>
 
     <div id="qrModal" onclick="closeModal('qrModal')">
@@ -164,29 +30,20 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        var map = L.map('map-student', { zoomControl: false }).setView([41.9000, 12.4720], 17);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        // ... (Mantenere tutto lo script della mappa e icone invariato fino a sendSOS) ...
 
-        function createGiantIcon(color, iconClass, isMe = false) {
-            return L.divIcon({
-                className: 'custom-icon',
-                html: `<div class="${isMe ? 'pulse-me' : ''}" style="background-color:${color}; width:46px; height:46px; border:4px solid white; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:18px; box-shadow:0 8px 15px rgba(0,0,0,0.15);"><i class="fa-solid ${iconClass}"></i></div>`,
-                iconSize: [46, 46], iconAnchor: [23, 23]
-            });
+        function sendSOS() { 
+            const btn = event.target;
+            btn.innerText = "INVIATO...";
+            btn.classList.replace('bg-red-600', 'bg-slate-900');
+            setTimeout(() => {
+                alert("Richiesta SOS inviata con successo. La tua posizione GPS è ora visibile ai docenti.");
+                btn.innerText = "SOS";
+                btn.classList.replace('bg-slate-900', 'bg-red-600');
+            }, 1000);
         }
 
-        L.marker([41.9005, 12.4715], {icon: createGiantIcon('#3b82f6', 'fa-user', true)}).addTo(map);
-        L.marker([41.9002, 12.4722], {icon: createGiantIcon('#ef4444', 'fa-user-tie')}).addTo(map);
-        L.marker([41.8992, 12.4731], {icon: createGiantIcon('#f59e0b', 'fa-utensils')}).addTo(map);
-
-        function confermaPresenza() { document.getElementById('appello-box').classList.add('hidden-appello'); }
-        function openQR(title) { document.getElementById('qrTitle').innerText = title; document.getElementById('qrModal').style.display = 'flex'; }
-        function openInfo(title, text) { document.getElementById('infoTitle').innerText = title; document.getElementById('infoContent').innerText = text; document.getElementById('infoModal').style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        function sendSOS() { alert("SOS Inviato!"); }
-
+        // Timer notifiche (Invariati)
         setTimeout(() => { document.getElementById('push-alert').classList.add('show'); }, 4000);
         setTimeout(() => { document.getElementById('push-alert').classList.remove('show'); }, 10000);
     </script>
-</body>
-</html>
