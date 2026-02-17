@@ -10,6 +10,7 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #F3F4F6; }
         .sidebar { background-color: #1A1C2E; }
+        .card-shadow { box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body class="flex flex-col md:flex-row h-screen overflow-hidden">
@@ -17,7 +18,7 @@
     <div class="md:hidden bg-[#1A1C2E] text-white p-4 flex justify-between items-center shadow-lg fixed top-0 left-0 right-0 z-[100]">
         <div class="flex items-center space-x-2">
             <img src="assets/logo.png" alt="Logo" class="h-6">
-            <span class="font-black tracking-tighter italic">GIRE</span>
+            <span class="font-black tracking-tighter italic text-purple-400">GIRE</span>
         </div>
         <button onclick="toggleMenu()" class="text-2xl p-2 bg-white/10 rounded-lg"><i class="fa-solid fa-bars"></i></button>
     </div>
@@ -41,21 +42,107 @@
     </aside>
 
     <main class="flex-1 overflow-y-auto pt-[88px] md:pt-8 px-4 md:px-8">
-        <h1 class="text-3xl font-black text-gray-900 uppercase italic tracking-tighter mb-8">Amministrazione</h1>
-        
-        <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-gray-100 max-w-2xl mb-6">
-            <div class="flex justify-between items-start mb-6">
-                <h3 class="font-black text-[11px] uppercase text-gray-400 italic">Documentazione e MEPA</h3>
-                <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-[9px] font-black italic">CONNESSO</span>
-            </div>
-            
-            <div class="p-4 bg-green-50 rounded-2xl border border-green-100 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <i class="fa-solid fa-shield-check text-green-500"></i>
-                    <span class="text-green-800 font-black text-[10px] uppercase italic">Piattaforma MEPA Attiva</span>
+        <div class="max-w-5xl mx-auto pb-32"> <header class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 class="text-3xl font-black text-gray-900 uppercase italic tracking-tighter leading-none">Booking Hub</h1>
+                    <p class="text-gray-400 font-bold text-xs uppercase italic mt-2 tracking-widest">Amministrazione I.C. "G. Rodari"</p>
                 </div>
-                <button class="text-[9px] font-black text-white bg-green-500 px-3 py-1 rounded-lg uppercase">Sincronizza</button>
+                <button class="bg-gray-900 text-white px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl active:scale-95 transition">
+                    Esporta per Consiglio
+                </button>
+            </header>
+
+            <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-gray-100 mb-8">
+                <div class="flex justify-between items-start mb-6">
+                    <h3 class="font-black text-[11px] uppercase text-gray-400 italic tracking-widest">Documentazione e MEPA</h3>
+                    <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-[9px] font-black italic">CONNESSO</span>
+                </div>
+                <div class="p-4 bg-green-50 rounded-2xl border border-green-100 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-shield-check text-green-500"></i>
+                        <span class="text-green-800 font-black text-[10px] uppercase italic">Sincronizzazione Piattaforma Attiva</span>
+                    </div>
+                    <button class="text-[9px] font-black text-white bg-green-500 px-3 py-1 rounded-lg uppercase hover:bg-green-600 transition">Sincronizza</button>
+                </div>
             </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <div class="bg-white rounded-[2rem] p-8 border border-gray-100 card-shadow">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i class="fa-solid fa-wheelchair text-purple-600 text-xl"></i>
+                        <h4 class="font-black text-xs uppercase text-gray-900 tracking-widest italic">Staff Inclusione Abbinato</h4>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-black text-xs">MR</div>
+                                <div>
+                                    <p class="font-black text-gray-900 text-sm">Marco Rossi</p>
+                                    <p class="text-[9px] text-gray-400 uppercase font-black">L. 104 - Motoria</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[10px] font-black text-purple-600 uppercase">Prof.ssa Bianchi</p>
+                                <p class="text-[9px] text-green-500 font-bold">Assegnata</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center font-black text-xs">SG</div>
+                                <div>
+                                    <p class="font-black text-gray-900 text-sm">Sara Gialli</p>
+                                    <p class="text-[9px] text-gray-400 uppercase font-black">Ipovedente</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[10px] font-black text-purple-600 uppercase">Prof. Neri</p>
+                                <p class="text-[9px] text-green-500 font-bold">Assegnato</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-[2rem] p-8 border border-gray-100 card-shadow">
+                    <div class="flex justify-between items-center mb-6">
+                        <h4 class="font-black text-xs uppercase text-gray-900 tracking-widest italic">Preventivi Logistica</h4>
+                        <span class="text-[9px] font-black bg-amber-100 text-amber-600 px-3 py-1 rounded-full uppercase">3 Nuovi</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="group cursor-pointer border-2 border-purple-500 p-4 rounded-2xl bg-purple-50 transition">
+                            <div class="flex justify-between items-center">
+                                <p class="font-black text-gray-900 italic text-sm">Hotel Imperial Roma</p>
+                                <p class="font-black text-purple-600 text-lg">€2.100</p>
+                            </div>
+                            <div class="flex gap-4 mt-2">
+                                <span class="text-[9px] font-bold text-gray-500"><i class="fa-solid fa-elevator mr-1"></i> Ascensore XL</span>
+                                <span class="text-[9px] font-bold text-green-600"><i class="fa-solid fa-check mr-1"></i> Miglior Scelta Inclusiva</span>
+                            </div>
+                        </div>
+                        <div class="group cursor-pointer border border-gray-100 p-4 rounded-2xl hover:border-purple-200 transition">
+                            <div class="flex justify-between items-center">
+                                <p class="font-black text-gray-900 italic text-sm">B&B Domus Aurea</p>
+                                <p class="font-black text-gray-400 text-lg">€1.850</p>
+                            </div>
+                            <div class="flex gap-4 mt-2 text-red-400">
+                                <span class="text-[9px] font-bold"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Barriere Architettoniche</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="mt-8 bg-blue-600 rounded-[2.5rem] p-8 text-white card-shadow relative overflow-hidden">
+                <div class="relative z-10">
+                    <h3 class="text-xl font-black mb-2 uppercase italic tracking-tighter">Verifica Accessibilità</h3>
+                    <p class="text-blue-100 text-xs font-medium max-w-lg leading-relaxed">
+                        GIRE ha verificato automaticamente le tappe del viaggio. Le strutture selezionate garantiscono l'accesso ai bus turistici e la conformità alle necessità degli studenti BES rilevati.
+                    </p>
+                </div>
+                <i class="fa-solid fa-clipboard-check absolute -right-10 -bottom-10 text-[10rem] text-blue-500/20"></i>
+            </div>
+
         </div>
     </main>
 
