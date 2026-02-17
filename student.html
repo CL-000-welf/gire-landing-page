@@ -12,133 +12,149 @@
     
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; }
-        #map-student { height: 250px; border-radius: 1.5rem; z-index: 10; border: 2px solid white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
-        .safe-card { background: white; border-radius: 2rem; border: 1px solid #E2E8F0; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05); }
-        .sos-button { background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3); }
-        .ticket-dashed { border-left: 2px dashed #E2E8F0; }
+        #map-student { height: 280px; border-radius: 2rem; z-index: 10; border: 4px solid white; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+        .safe-card { background: white; border-radius: 2rem; border: 1px solid #E2E8F0; }
         
+        /* Animazione Pulsante per il PIN "TU" */
+        @keyframes pulse-blue {
+            0% { shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+        .pulse-me { animation: pulse-blue 2s infinite; border-radius: 50%; }
+
         /* Modal QR */
-        #qrModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+        #qrModal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); z-index: 100; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
     </style>
 </head>
 <body class="flex flex-col min-h-screen p-5 pb-10">
 
     <header class="flex justify-between items-center mb-6 px-2">
         <div>
-            <p class="text-[10px] font-black uppercase tracking-widest text-purple-600">Gita a Roma</p>
-            <h1 class="text-xl font-black italic tracking-tighter">Area Studente</h1>
+            <p class="text-[10px] font-black uppercase tracking-widest text-purple-600 italic">Gita a Roma</p>
+            <h1 class="text-2xl font-black italic tracking-tighter uppercase">Live Hub</h1>
         </div>
-        <div class="text-right bg-white px-4 py-2 rounded-2xl shadow-sm border border-gray-100">
-            <p class="text-xs font-black italic">Marco Rossi</p>
-            <p class="text-[9px] text-gray-400 font-bold uppercase">5ª B • IT-99234</p>
+        <div class="text-right">
+            <p class="text-sm font-black italic">Marco Rossi</p>
+            <span class="text-[9px] bg-green-100 text-green-700 px-2 py-1 rounded-full font-bold">● ONLINE</span>
         </div>
     </header>
 
     <div class="safe-card p-4 mb-6">
-        <div class="flex justify-between items-center mb-3 px-1">
-            <h3 class="text-[10px] font-black uppercase text-gray-400 tracking-widest italic">La tua posizione</h3>
-            <span class="text-[9px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded-lg italic">GPS Attivo</span>
-        </div>
-        
         <div id="map-student"></div>
         
-        <div class="grid grid-cols-2 gap-2 mt-4 px-1">
-            <div class="flex items-center gap-2 text-[9px] font-bold uppercase">
-                <span class="w-2 h-2 rounded-full bg-blue-500"></span> Tu (Marco)
+        <div class="grid grid-cols-2 gap-3 mt-4 px-2">
+            <div class="flex items-center gap-2 text-[10px] font-black uppercase">
+                <i class="fa-solid fa-circle-dot text-blue-500"></i> Tu ora
             </div>
-            <div class="flex items-center gap-2 text-[9px] font-bold uppercase">
-                <span class="w-2 h-2 rounded-full bg-red-500"></span> Docente Rossi
+            <div class="flex items-center gap-2 text-[10px] font-black uppercase">
+                <i class="fa-solid fa-user-tie text-red-500"></i> Prof. Rossi
             </div>
-            <div class="flex items-center gap-2 text-[9px] font-bold uppercase">
-                <span class="w-2 h-2 rounded-full bg-purple-500"></span> Gruppo Classe
-            </div>
-            <div class="flex items-center gap-2 text-[9px] font-bold uppercase">
-                <span class="w-2 h-2 rounded-full bg-amber-500"></span> Prossima Tappa
+            <div class="flex items-center gap-2 text-[10px] font-black uppercase">
+                <i class="fa-solid fa-flag-checkered text-amber-500"></i> Destinazione
             </div>
         </div>
     </div>
 
-    <div class="bg-indigo-600 rounded-[2rem] p-5 mb-6 text-white shadow-lg shadow-indigo-200">
-        <div class="flex items-center justify-between">
-            <div class="max-w-[60%]">
-                <p class="text-[9px] font-black uppercase text-indigo-200 mb-1">Verifica Presenze</p>
-                <h3 class="font-black text-lg italic leading-tight uppercase tracking-tighter italic">Sei con noi?</h3>
+    <div class="safe-card p-6 mb-6">
+        <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-5 italic">Programma Giornata</h3>
+        <div class="space-y-6 relative">
+            <div class="absolute left-[11px] top-2 bottom-2 w-0.5 bg-gray-100"></div>
+
+            <div class="relative flex items-center gap-4">
+                <div class="z-10 w-6 h-6 bg-amber-500 rounded-full border-4 border-white shadow-sm flex items-center justify-center text-[8px] text-white font-bold">1</div>
+                <div class="flex-grow">
+                    <p class="text-xs font-black italic leading-none">Pranzo: Da Giggi</p>
+                    <p class="text-[10px] text-amber-600 font-bold uppercase mt-1">In corso • Ore 13:00</p>
+                </div>
+                <i class="fa-solid fa-utensils text-amber-200 text-xl"></i>
             </div>
-            <button onclick="confirmPresence(this)" class="bg-white text-indigo-600 px-6 py-3 rounded-xl font-black uppercase text-[10px] shadow-sm active:scale-95 transition-all">
-                Conferma
-            </button>
+
+            <div class="relative flex items-center gap-4 opacity-50">
+                <div class="z-10 w-6 h-6 bg-gray-300 rounded-full border-4 border-white shadow-sm flex items-center justify-center">
+                    <i class="fa-solid fa-lock text-[8px] text-white"></i>
+                </div>
+                <div class="flex-grow">
+                    <p class="text-xs font-black italic leading-none text-gray-500">Colosseo & Fori</p>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase mt-1 italic">Ore 15:30</p>
+                </div>
+                <i class="fa-solid fa-ticket text-gray-200 text-xl"></i>
+            </div>
+
+            <div class="relative flex items-center gap-4 opacity-50">
+                <div class="z-10 w-6 h-6 bg-gray-300 rounded-full border-4 border-white shadow-sm flex items-center justify-center">
+                    <i class="fa-solid fa-lock text-[8px] text-white"></i>
+                </div>
+                <div class="flex-grow">
+                    <p class="text-xs font-black italic leading-none text-gray-500">Rientro in Hotel</p>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase mt-1 italic">Ore 19:30</p>
+                </div>
+                <i class="fa-solid fa-hotel text-gray-200 text-xl"></i>
+            </div>
         </div>
     </div>
 
-    <div class="safe-card p-5 mb-8">
-        <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 italic">I tuoi Biglietti</h3>
-        <div class="flex bg-slate-50 rounded-2xl overflow-hidden border border-gray-100">
-            <div class="p-4 flex-grow">
-                <p class="text-[9px] font-black text-amber-600 uppercase mb-1 italic">Oggi • 15:30</p>
-                <p class="text-sm font-black italic tracking-tighter">Colosseo + Fori Romani</p>
-            </div>
-            <button onclick="openQR()" class="ticket-dashed px-6 bg-slate-100 flex flex-col items-center justify-center gap-1 active:bg-slate-200 transition-colors">
-                <i class="fa-solid fa-qrcode text-xl text-slate-800"></i>
-                <span class="text-[8px] font-black uppercase">Vedi</span>
-            </button>
+    <div class="bg-slate-900 rounded-[2rem] p-5 mb-10 text-white flex items-center justify-between shadow-xl shadow-slate-200">
+        <div>
+            <p class="text-[9px] font-black text-slate-400 uppercase italic">Il tuo ticket attivo</p>
+            <p class="text-sm font-black italic tracking-tighter">PRANZO GRUPPO 5B</p>
         </div>
-    </div>
-
-    <div class="mt-auto flex flex-col items-center">
-        <button onclick="sendSOS()" class="sos-button w-24 h-24 rounded-full flex flex-col items-center justify-center border-4 border-white active:scale-90 transition-all">
-            <span class="font-black text-xl italic tracking-tighter text-white uppercase">SOS</span>
+        <button onclick="openQR()" class="bg-white text-slate-900 h-14 w-14 rounded-2xl flex items-center justify-center text-xl shadow-lg active:scale-90 transition-all">
+            <i class="fa-solid fa-qrcode"></i>
         </button>
-        <p class="text-[9px] font-black text-red-600 uppercase tracking-widest mt-4 animate-pulse">Invia allarme emergenza</p>
+    </div>
+
+    <div class="mt-auto">
+        <button onclick="sendSOS()" class="sos-button w-full py-5 rounded-[2rem] flex items-center justify-center gap-4 text-white shadow-2xl active:scale-95 transition-all">
+            <i class="fa-solid fa-bell-on animate-bounce"></i>
+            <span class="font-black text-lg italic tracking-tighter uppercase">Invia SOS Emergenza</span>
+        </button>
     </div>
 
     <div id="qrModal" onclick="closeQR()">
-        <div class="bg-white p-8 rounded-[3rem] text-center max-w-xs w-full" onclick="event.stopPropagation()">
-            <h3 class="text-slate-900 font-black italic text-xl mb-2">Il tuo Ticket</h3>
-            <p class="text-gray-400 text-[10px] font-bold uppercase mb-6 italic tracking-widest">Mostra all'ingresso</p>
-            <div class="bg-slate-50 p-6 rounded-3xl mb-6">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=GIRE-STUDENT-MARCO-COLOSSEO-2024" alt="QR Code" class="w-full">
+        <div class="bg-white p-8 rounded-[3rem] text-center max-w-xs w-full shadow-2xl" onclick="event.stopPropagation()">
+            <div class="w-16 h-1 w-12 bg-gray-100 mx-auto mb-6 rounded-full"></div>
+            <h3 class="text-slate-900 font-black italic text-xl mb-6">Scannerizza Ticket</h3>
+            <div class="bg-gray-50 p-6 rounded-3xl mb-8 border-2 border-dashed border-gray-200">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=GIRE-PRANZO-MARCO" alt="QR" class="w-full mix-blend-multiply">
             </div>
-            <button onclick="closeQR()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs">Chiudi</button>
+            <button onclick="closeQR()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs tracking-widest">Chiudi</button>
         </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Mappa chiara e leggibile
+        // Mappa leggibile
         var mapStudent = L.map('map-student', { zoomControl: false, tap: false }).setView([41.9000, 12.4720], 17);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapStudent);
 
-        // Marker personalizzati
-        function createIcon(color) {
+        // PIN SUPER VISIBILI
+        function createLargeIcon(color, iconClass, isMe = false) {
+            const pulseClass = isMe ? 'pulse-me' : '';
             return L.divIcon({
                 className: 'custom-icon',
-                html: `<div style="background-color:${color}; width:14px; height:14px; border:3px solid white; border-radius:50%; box-shadow:0 4px 6px rgba(0,0,0,0.2);"></div>`,
-                iconSize: [14, 14], iconAnchor: [7, 7]
+                html: `
+                    <div class="${pulseClass}" style="background-color:${color}; width:40px; height:40px; border:4px solid white; border-radius:50%; display:flex; items-center; justify-content:center; color:white; font-size:16px; box-shadow:0 10px 15px -3px rgba(0,0,0,0.3);">
+                        <i class="fa-solid ${iconClass}"></i>
+                    </div>`,
+                iconSize: [40, 40], iconAnchor: [20, 20]
             });
         }
 
-        // 1. Tu (Blu)
-        L.marker([41.9005, 12.4715], {icon: createIcon('#3b82f6')}).addTo(mapStudent).bindPopup('<b>Tu (Marco)</b>');
-        // 2. Docente (Rosso)
-        L.marker([41.9002, 12.4722], {icon: createIcon('#ef4444')}).addTo(mapStudent).bindPopup('<b>Prof. Rossi</b>');
-        // 3. Tappa (Ambra)
-        L.marker([41.8992, 12.4731], {icon: createIcon('#f59e0b')}).addTo(mapStudent).bindPopup('<b>Ristorante</b>');
+        // Aggiunta PIN
+        L.marker([41.9005, 12.4715], {icon: createLargeIcon('#3b82f6', 'fa-user', true)}).addTo(mapStudent);
+        L.marker([41.9002, 12.4722], {icon: createLargeIcon('#ef4444', 'fa-user-tie')}).addTo(mapStudent);
+        L.marker([41.8992, 12.4731], {icon: createLargeIcon('#f59e0b', 'fa-utensils')}).addTo(mapStudent);
 
-        // Funzioni QR
+        // Logica UI
         function openQR() { document.getElementById('qrModal').style.display = 'flex'; }
         function closeQR() { document.getElementById('qrModal').style.display = 'none'; }
-
-        // SOS e Appello
+        
         function sendSOS() {
-            if(confirm("Inviare SOS ai docenti?")) {
+            if(confirm("Vuoi inviare una richiesta d'aiuto immediata ai prof?")) {
                 localStorage.setItem('gire_sos_status', 'active');
-                alert("Allerta inviata. I professori sono stati notificati.");
+                alert("SOS Inviato. Rimani dove sei.");
             }
-        }
-        function confirmPresence(btn) {
-            btn.innerText = "CONFERMATO";
-            btn.className = "bg-green-500 text-white px-4 py-3 rounded-xl font-black text-[10px]";
-            btn.disabled = true;
         }
     </script>
 </body>
