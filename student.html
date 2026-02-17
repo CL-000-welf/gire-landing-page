@@ -11,10 +11,18 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #F1F5F9; color: #1E293B; }
-        #map-student { height: 260px; border-radius: 2rem; z-index: 10; border: 4px solid white; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
-        .safe-card { background: white; border-radius: 2.2rem; border: 1px solid #E2E8F0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        #map-student { height: 260px; border-radius: 2rem; z-index: 10; border: 4px solid white; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .safe-card { background: white; border-radius: 2.2rem; border: 1px solid #E2E8F0; overflow: hidden; }
         
+        /* SOS Originale Circolare */
+        .sos-button {
+            background: radial-gradient(circle, #ef4444 0%, #b91c1c 100%);
+            box-shadow: 0 0 40px rgba(239, 68, 68, 0.3);
+            transition: all 0.2s ease;
+        }
+        .sos-button:active { transform: scale(0.9); }
+
         /* Animazione Notifica Push */
         @keyframes slide-down { 0% { transform: translateY(-100%); opacity: 0; } 10% { transform: translateY(0); opacity: 1; } 90% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100%); opacity: 0; } }
         .push-notification { animation: slide-down 6s forwards; }
@@ -25,7 +33,7 @@
         #qrModal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); z-index: 100; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
     </style>
 </head>
-<body class="flex flex-col min-h-screen p-5 pb-8 overflow-x-hidden">
+<body class="flex flex-col min-h-screen p-5 pb-12">
 
     <div id="push-alert" class="hidden fixed top-4 left-4 right-4 bg-indigo-900 text-white p-4 rounded-3xl shadow-2xl z-[100] flex items-center gap-4 border border-indigo-400/30 push-notification">
         <div class="bg-indigo-500 h-10 w-10 rounded-full flex items-center justify-center shrink-0">
@@ -33,40 +41,33 @@
         </div>
         <div>
             <p class="text-[10px] font-black uppercase tracking-widest text-indigo-300">Messaggio dal Prof</p>
-            <p id="push-text" class="text-xs font-bold leading-tight">Ragazzi, tra 10 minuti tutti al punto di ritrovo!</p>
+            <p class="text-xs font-bold leading-tight">Ritrovo al bus tra 15 minuti! Non tardate.</p>
         </div>
     </div>
 
     <header class="flex justify-between items-center mb-6 px-1">
         <div>
-            <p class="text-[10px] font-black uppercase tracking-widest text-indigo-600">Gita a Roma</p>
+            <p class="text-[10px] font-black uppercase tracking-widest text-indigo-600 italic">Gita a Roma</p>
             <h1 class="text-2xl font-black italic tracking-tighter uppercase leading-none">Smart Student</h1>
         </div>
-        <div class="text-right flex flex-col items-end">
+        <div class="text-right">
             <p class="text-sm font-black italic">Marco Rossi</p>
-            <div class="flex items-center gap-1.5">
-                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                <span class="text-[9px] font-bold text-gray-500 uppercase">Live GPS</span>
-            </div>
+            <span class="text-[9px] bg-green-100 text-green-700 px-2 py-1 rounded-full font-bold">● ONLINE</span>
         </div>
     </header>
 
-    <div id="appello-box" class="bg-gradient-to-r from-indigo-600 to-blue-700 rounded-[2rem] p-5 mb-6 text-white shadow-xl shadow-indigo-200 relative overflow-hidden">
-        <div class="relative z-10 flex items-center justify-between">
-            <div class="max-w-[60%]">
-                <p class="text-[9px] font-black uppercase text-indigo-200 mb-1 italic">Check-in Istantaneo</p>
-                <h3 class="font-black text-lg italic leading-tight tracking-tighter">MARCO, SEI CON IL GRUPPO?</h3>
-            </div>
-            <button onclick="confermaPresenza(this)" class="bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all">
-                SÌ, SONO QUI <i class="fa-solid fa-check ml-1"></i>
-            </button>
+    <div id="appello-box" class="bg-indigo-600 rounded-[2.5rem] p-6 mb-6 text-white shadow-xl shadow-indigo-100 flex items-center justify-between relative overflow-hidden">
+        <div class="z-10">
+            <p class="text-[10px] font-black uppercase text-indigo-200 mb-1">Check-in</p>
+            <h3 class="font-black text-lg italic tracking-tighter leading-tight">SEI CON IL GRUPPO?</h3>
         </div>
-        <div class="absolute -right-4 -bottom-4 opacity-10">
-            <i class="fa-solid fa-street-view text-7xl"></i>
-        </div>
+        <button onclick="confermaPresenza(this)" class="z-10 bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all">
+            CONFERMA <i class="fa-solid fa-check ml-1"></i>
+        </button>
+        <i class="fa-solid fa-users absolute -right-2 -bottom-2 text-6xl opacity-10"></i>
     </div>
 
-    <div class="safe-card p-4 mb-6">
+    <div class="safe-card p-4 mb-8">
         <div id="map-student"></div>
         <div class="flex justify-around mt-4">
             <div class="flex items-center gap-1.5 text-[9px] font-black uppercase text-gray-400">
@@ -81,67 +82,79 @@
         </div>
     </div>
 
-    <div class="safe-card overflow-hidden mb-6">
-        <div class="h-32 w-full overflow-hidden relative">
-            <img src="https://images.unsplash.com/photo-1552832230-c0197eb3ae19?auto=format&fit=crop&w=600&q=80" alt="Roma" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-            <p class="absolute bottom-3 left-5 text-white font-black italic uppercase tracking-tighter text-lg">Curiosità: Il Pantheon</p>
-        </div>
-        <div class="p-5">
-            <p class="text-xs text-gray-600 leading-relaxed font-medium">
-                Lo sapevi? Il Pantheon ha la cupola in calcestruzzo non armato più grande del mondo. Al centro c'è un buco (l'oculo): quando piove, l'acqua non entra "a cascata" grazie a un particolare gioco di correnti d'aria!
-            </p>
-        </div>
-    </div>
-
-    <div class="safe-card p-6 mb-10">
-        <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-6 italic">La tua Timeline</h3>
-        <div class="space-y-6 relative">
+    <div class="safe-card p-6 mb-8">
+        <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-6 italic">Programma della Giornata</h3>
+        <div class="space-y-8 relative">
             <div class="absolute left-[13px] top-2 bottom-2 w-0.5 bg-gray-100"></div>
 
             <div class="relative flex items-center gap-4 opacity-40">
-                <div class="z-10 w-7 h-7 bg-green-500 rounded-full border-4 border-white shadow-sm flex items-center justify-center text-white text-[10px]">
-                    <i class="fa-solid fa-check"></i>
-                </div>
-                <div class="flex-grow">
-                    <p class="text-xs font-bold text-gray-500 line-through leading-none">Tour Centro Storico</p>
-                    <p class="text-[9px] text-gray-400 font-bold uppercase mt-1 tracking-widest italic">Completato</p>
-                </div>
+                <div class="z-10 w-7 h-7 bg-green-500 rounded-full border-4 border-white shadow-sm flex items-center justify-center text-white text-[10px]"><i class="fa-solid fa-check"></i></div>
+                <div class="flex-grow"><p class="text-xs font-bold text-gray-500 line-through">Pantheon & Piazza Navona</p></div>
             </div>
 
             <div class="relative flex items-center gap-4">
-                <div class="z-10 w-7 h-7 bg-amber-500 rounded-full border-4 border-white shadow-sm flex items-center justify-center text-white text-[10px]">
-                    <i class="fa-solid fa-utensils"></i>
-                </div>
+                <div class="z-10 w-7 h-7 bg-amber-500 rounded-full border-4 border-white shadow-sm flex items-center justify-center text-white text-[10px]"><i class="fa-solid fa-utensils"></i></div>
                 <div class="flex-grow">
-                    <p class="text-xs font-black italic leading-none">Pranzo: Da Giggi</p>
-                    <p class="text-[10px] text-amber-600 font-black uppercase mt-1 tracking-widest italic">Attivo • QR Disponibile</p>
+                    <p class="text-xs font-black italic">Pranzo: Da Giggi</p>
+                    <p class="text-[10px] text-amber-600 font-black uppercase mt-1">In corso</p>
                 </div>
-                <button onclick="openQR('TICKET PRANZO', 'MARCO-PRANZO')" class="bg-amber-100 text-amber-600 h-10 w-10 rounded-2xl flex items-center justify-center text-lg active:scale-90 transition-all">
-                    <i class="fa-solid fa-qrcode"></i>
-                </button>
+                <button onclick="openQR('TICKET PRANZO', 'MARCO-PRANZO')" class="bg-amber-100 text-amber-600 h-10 w-10 rounded-xl flex items-center justify-center text-lg shadow-sm"><i class="fa-solid fa-qrcode"></i></button>
             </div>
 
             <div class="relative flex items-center gap-4">
-                <div class="z-10 w-7 h-7 bg-gray-200 rounded-full border-4 border-white shadow-sm flex items-center justify-center text-gray-400 text-[10px]">
-                    <i class="fa-solid fa-lock"></i>
-                </div>
+                <div class="z-10 w-7 h-7 bg-gray-200 rounded-full border-4 border-white shadow-sm flex items-center justify-center text-gray-400 text-[10px]"><i class="fa-solid fa-lock"></i></div>
                 <div class="flex-grow">
-                    <p class="text-xs font-black italic text-gray-400 leading-none">Colosseo e Fori</p>
-                    <p class="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-widest italic italic">Ingresso Ore 15:30</p>
+                    <p class="text-xs font-black italic text-gray-400">Colosseo & Fori Romani</p>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase mt-1 italic">Ore 15:30</p>
                 </div>
-                <button onclick="openQR('TICKET COLOSSEO', 'MARCO-COLOSSEO')" class="bg-gray-50 text-gray-300 h-10 w-10 rounded-2xl flex items-center justify-center text-lg">
-                    <i class="fa-solid fa-qrcode opacity-30"></i>
-                </button>
+                <button onclick="openQR('TICKET COLOSSEO', 'MARCO-COLOSSEO')" class="bg-gray-50 text-gray-300 h-10 w-10 rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-qrcode opacity-30"></i></button>
+            </div>
+
+            <div class="relative flex items-center gap-4">
+                <div class="z-10 w-7 h-7 bg-gray-200 rounded-full border-4 border-white shadow-sm flex items-center justify-center text-gray-400 text-[10px]"><i class="fa-solid fa-lock"></i></div>
+                <div class="flex-grow">
+                    <p class="text-xs font-black italic text-gray-400 leading-none">Rientro in Hotel & Cena</p>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase mt-1 italic italic">Ore 19:30</p>
+                </div>
+                <i class="fa-solid fa-hotel text-gray-100 text-2xl"></i>
             </div>
         </div>
     </div>
 
-    <div class="mt-auto">
-        <button onclick="sendSOS()" class="w-full bg-red-600 py-5 rounded-[2.2rem] flex items-center justify-center gap-4 text-white shadow-xl shadow-red-200 active:scale-95 transition-all">
-            <i class="fa-solid fa-triangle-exclamation animate-pulse text-xl"></i>
-            <span class="font-black text-lg italic tracking-tighter uppercase">SOS Emergenza</span>
-        </button>
+    <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-4 px-2 italic">Cosa stiamo visitando</h3>
+    <div class="space-y-6 mb-10">
+        <div class="safe-card">
+            <img src="https://images.unsplash.com/photo-1552832230-c0197eb3ae19?auto=format&fit=crop&w=600&q=80" class="h-32 w-full object-cover">
+            <div class="p-5">
+                <h4 class="font-black italic uppercase text-indigo-600 text-sm mb-1 tracking-tighter italic">1. Il Pantheon</h4>
+                <p class="text-xs text-gray-600 font-medium leading-relaxed">Sapevi che l'oculo sulla cupola serve anche da meridiana? La luce del sole segna le ore sulle pareti interne del tempio!</p>
+            </div>
+        </div>
+        <div class="safe-card">
+            <img src="https://images.unsplash.com/photo-1555992828-ca4dbe893e55?auto=format&fit=crop&w=600&q=80" class="h-32 w-full object-cover">
+            <div class="p-5">
+                <h4 class="font-black italic uppercase text-indigo-600 text-sm mb-1 tracking-tighter italic">2. Il Colosseo</h4>
+                <p class="text-xs text-gray-600 font-medium leading-relaxed">Originariamente era coperto da un enorme velario di tela, manovrato dai marinai della flotta imperiale per fare ombra al pubblico.</p>
+            </div>
+        </div>
+        <div class="safe-card">
+            <img src="https://images.unsplash.com/photo-1525874684015-58379d421a52?auto=format&fit=crop&w=600&q=80" class="h-32 w-full object-cover">
+            <div class="p-5">
+                <h4 class="font-black italic uppercase text-indigo-600 text-sm mb-1 tracking-tighter italic">3. Trastevere</h4>
+                <p class="text-xs text-gray-600 font-medium leading-relaxed">Il nome deriva dal latino "Trans Tiberim" (oltre il Tevere). È il cuore medievale di Roma, famoso per i suoi vicoli e la Basilica di S. Maria.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-auto flex flex-col items-center">
+        <div class="relative flex justify-center mb-4">
+            <button onclick="sendSOS()" class="sos-button w-32 h-32 rounded-full flex flex-col items-center justify-center border-[6px] border-white z-10">
+                <i class="fa-solid fa-bell-on text-3xl mb-1 text-white animate-bounce"></i>
+                <span class="font-black text-xl italic tracking-tighter uppercase text-white leading-none">SOS</span>
+            </button>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-red-600/20 rounded-full animate-ping"></div>
+        </div>
+        <p class="text-[9px] font-black text-red-600 uppercase tracking-widest text-center italic">Premere solo in caso di vera emergenza</p>
     </div>
 
     <div id="qrModal" onclick="closeQR()">
@@ -150,13 +163,12 @@
             <div class="bg-gray-100 p-6 rounded-3xl mb-8 border-2 border-dashed border-gray-200">
                 <img id="qrImage" src="" alt="QR" class="w-full mix-blend-multiply">
             </div>
-            <button onclick="closeQR()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs">Chiudi Biglietto</button>
+            <button onclick="closeQR()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest">Chiudi Biglietto</button>
         </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Mappa Chiara
         var mapStudent = L.map('map-student', { zoomControl: false, tap: false }).setView([41.9000, 12.4720], 17);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapStudent);
 
@@ -164,19 +176,15 @@
             const pulseClass = isMe ? 'pulse-me' : '';
             return L.divIcon({
                 className: 'custom-icon',
-                html: `
-                    <div class="${pulseClass}" style="background-color:${color}; width:46px; height:46px; border:4px solid white; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:20px; box-shadow:0 10px 20px rgba(0,0,0,0.15);">
-                        <i class="fa-solid ${iconClass}"></i>
-                    </div>`,
+                html: `<div class="${pulseClass}" style="background-color:${color}; width:46px; height:46px; border:4px solid white; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:20px; box-shadow:0 10px 20px rgba(0,0,0,0.15);"><i class="fa-solid ${iconClass}"></i></div>`,
                 iconSize: [46, 46], iconAnchor: [23, 23]
             });
         }
 
-        L.marker([41.9005, 12.4715], {icon: createGiantIcon('#3b82f6', 'fa-user', true)}).addTo(mapStudent); // Tu
-        L.marker([41.9002, 12.4722], {icon: createGiantIcon('#ef4444', 'fa-user-tie')}).addTo(mapStudent); // Prof
-        L.marker([41.8992, 12.4731], {icon: createGiantIcon('#f59e0b', 'fa-utensils')}).addTo(mapStudent); // Tappa
+        L.marker([41.9005, 12.4715], {icon: createGiantIcon('#3b82f6', 'fa-user', true)}).addTo(mapStudent);
+        L.marker([41.9002, 12.4722], {icon: createGiantIcon('#ef4444', 'fa-user-tie')}).addTo(mapStudent);
+        L.marker([41.8992, 12.4731], {icon: createGiantIcon('#f59e0b', 'fa-utensils')}).addTo(mapStudent);
 
-        // Funzioni
         function openQR(title, data) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${data}`;
@@ -189,21 +197,18 @@
             btn.classList.replace('bg-white', 'bg-green-500');
             btn.classList.replace('text-indigo-600', 'text-white');
             btn.disabled = true;
-            setTimeout(() => { document.getElementById('appello-box').style.display = 'none'; }, 2000);
+            setTimeout(() => { document.getElementById('appello-box').style.opacity = '0'; }, 2000);
         }
 
         function sendSOS() {
-            if(confirm("Inviare richiesta d'aiuto ai docenti?")) {
+            if(confirm("VUOI INVIARE UN SOS? I professori riceveranno la tua posizione immediata.")) {
                 localStorage.setItem('gire_sos_status', 'active');
-                alert("SOS INVIATO. I docenti hanno ricevuto la tua posizione.");
+                localStorage.setItem('gire_sos_student', 'Marco Rossi');
+                alert("SOS INVIATO! Rimani calmo e non muoverti.");
             }
         }
 
-        // Simulatore Push Notification dopo 4 secondi
-        setTimeout(() => {
-            const push = document.getElementById('push-alert');
-            push.classList.remove('hidden');
-        }, 4000);
+        setTimeout(() => { document.getElementById('push-alert').classList.remove('hidden'); }, 4000);
     </script>
 </body>
 </html>
