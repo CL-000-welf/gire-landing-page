@@ -11,84 +11,103 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; overflow-x: hidden; }
         #map-student { height: 260px; border-radius: 2rem; z-index: 10; border: 4px solid white; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .safe-card { background: white; border-radius: 2.2rem; border: 1px solid #E2E8F0; overflow: hidden; transition: all 0.4s ease; }
+        .safe-card { background: white; border-radius: 2.2rem; border: 1px solid #E2E8F0; overflow: hidden; }
         
-        /* Notifica Push ripristinata */
-        @keyframes slide-down { 
-            0% { transform: translateY(-120%); } 
-            10% { transform: translateY(0); } 
-            90% { transform: translateY(0); } 
-            100% { transform: translateY(-120%); } 
+        /* Notifica Push */
+        #push-alert { 
+            position: fixed; top: 20px; left: 20px; right: 20px; 
+            z-index: 9999; transform: translateY(-150%); transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .push-active { animation: slide-down 6s forwards; }
+        #push-alert.show { transform: translateY(0); }
 
-        /* SOS Circolare */
-        .sos-button { background: radial-gradient(circle, #ef4444 0%, #b91c1c 100%); box-shadow: 0 0 40px rgba(239, 68, 68, 0.3); }
+        /* Animazione Scomparsa Appello */
+        #appello-box { transition: all 0.6s ease; max-height: 300px; opacity: 1; margin-bottom: 1.5rem; }
+        #appello-box.hidden-appello { max-height: 0; opacity: 0; margin-bottom: 0; padding: 0; transform: scale(0.9); pointer-events: none; }
 
-        /* Animazione scomparsa appello */
-        #appello-box { transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); max-height: 200px; opacity: 1; margin-bottom: 1.5rem; }
-        #appello-box.hidden-appello { max-height: 0; opacity: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; transform: scale(0.95); pointer-events: none; }
+        .sos-button { background: radial-gradient(circle, #ef4444 0%, #b91c1c 100%); box-shadow: 0 0 40px rgba(239, 68, 68, 0.4); }
+        .pulse-me { animation: pulse-blue 2s infinite; border-radius: 50%; }
+        @keyframes pulse-blue { 0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.6); } 70% { box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); } 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); } }
 
-        #qrModal, #infoModal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
+        #qrModal, #infoModal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.95); z-index: 10000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
     </style>
 </head>
-<body class="flex flex-col min-h-screen p-5 pb-12">
+<body class="flex flex-col min-h-screen p-5 pb-10">
 
-    <div id="push-alert" class="hidden fixed top-4 left-4 right-4 bg-slate-900 text-white p-4 rounded-3xl shadow-2xl z-[2000] flex items-center gap-4 border border-white/10">
+    <div id="push-alert" class="bg-slate-900 text-white p-5 rounded-[2rem] shadow-2xl flex items-center gap-4 border border-white/20">
         <div class="bg-indigo-500 h-10 w-10 rounded-full flex items-center justify-center shrink-0">
-            <i class="fa-solid fa-paper-plane text-sm"></i>
+            <i class="fa-solid fa-bell text-white animate-swing"></i>
         </div>
         <div>
-            <p class="text-[9px] font-black uppercase tracking-widest text-indigo-300">Messaggio dai Docenti</p>
-            <p class="text-xs font-bold leading-tight" id="push-message">Tutti al punto di ritrovo tra 10 minuti!</p>
+            <p class="text-[9px] font-black uppercase tracking-widest text-indigo-300">Messaggio Docenti</p>
+            <p class="text-xs font-bold leading-tight">Ritrovo al bus tra 10 minuti!</p>
         </div>
     </div>
 
-    <header class="flex justify-between items-center mb-6">
+    <header class="flex justify-between items-center mb-6 px-1">
         <div>
             <p class="text-[10px] font-black uppercase tracking-widest text-indigo-600 italic">Gita a Roma</p>
-            <h1 class="text-2xl font-black italic tracking-tighter uppercase text-slate-900">Area Studente</h1>
+            <h1 class="text-2xl font-black italic tracking-tighter uppercase leading-none">Area Studente</h1>
         </div>
         <div class="text-right">
             <p class="text-sm font-black italic">Marco Rossi</p>
-            <span class="text-[9px] bg-green-100 text-green-700 px-2 py-1 rounded-full font-bold uppercase">Live</span>
+            <span class="text-[9px] bg-green-500 text-white px-2 py-0.5 rounded-full font-bold">LIVE</span>
         </div>
     </header>
 
-    <div id="appello-box" class="bg-indigo-600 rounded-[2.5rem] p-6 text-white shadow-xl shadow-indigo-100 flex items-center justify-between relative">
+    <div id="appello-box" class="bg-indigo-600 rounded-[2.5rem] p-6 text-white shadow-xl shadow-indigo-100 flex items-center justify-between">
         <div class="z-10">
-            <p class="text-[9px] font-black uppercase text-indigo-200 mb-1">Presenze</p>
-            <h3 class="font-black text-lg italic leading-tight uppercase">Confermi la tua presenza?</h3>
+            <p class="text-[9px] font-black uppercase text-indigo-200 mb-1 tracking-widest">Presenze</p>
+            <h3 class="font-black text-lg italic tracking-tighter leading-tight uppercase">Sei con il gruppo?</h3>
         </div>
-        <button onclick="confermaPresenza()" class="z-10 bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all">
-            SONO QUI
-        </button>
+        <button onclick="confermaPresenza()" class="z-10 bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all">CONFERMA</button>
     </div>
 
     <div class="safe-card p-4 mb-8">
         <div id="map-student"></div>
+        <div class="flex justify-around mt-4 text-[9px] font-black uppercase text-gray-400">
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 bg-blue-500 rounded-full border-2 border-white"></span> Tu</div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span> Prof</div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 bg-amber-500 rounded-full border-2 border-white"></span> Tappa</div>
+        </div>
     </div>
 
     <div class="safe-card p-6 mb-8">
         <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6 italic">Il tuo Programma</h3>
-        <div class="space-y-6">
-            <div class="flex items-center gap-4 opacity-40">
-                <div class="w-7 h-7 bg-green-500 rounded-full flex items-center justify-center text-white text-[10px]"><i class="fa-solid fa-check"></i></div>
-                <p class="text-xs font-bold text-gray-500">Pantheon visitato</p>
+        <div class="space-y-8 relative">
+            <div class="absolute left-[13px] top-2 bottom-2 w-0.5 bg-gray-100"></div>
+
+            <div class="relative flex items-center gap-4 opacity-40">
+                <div class="z-10 w-7 h-7 bg-green-500 rounded-full flex items-center justify-center text-white text-[10px] border-4 border-white"><i class="fa-solid fa-check"></i></div>
+                <p class="text-xs font-bold text-gray-500 line-through">Pantheon & Piazza Navona</p>
             </div>
-            <div class="flex items-center gap-4">
-                <div class="w-7 h-7 bg-amber-500 rounded-full flex items-center justify-center text-white text-[10px]"><i class="fa-solid fa-utensils"></i></div>
+
+            <div class="relative flex items-center gap-4">
+                <div class="z-10 w-7 h-7 bg-amber-500 rounded-full flex items-center justify-center text-white text-[10px] border-4 border-white"><i class="fa-solid fa-utensils"></i></div>
                 <div class="flex-grow">
-                    <p class="text-xs font-black italic uppercase">Pranzo: Da Giggi</p>
-                    <p class="text-[10px] text-amber-600 font-bold">In corso</p>
+                    <p class="text-xs font-black italic">Pranzo: Da Giggi</p>
+                    <p class="text-[9px] text-amber-600 font-bold uppercase">Attivo</p>
                 </div>
-                <button onclick="openQR('TICKET PRANZO')" class="bg-amber-100 text-amber-600 h-10 w-10 rounded-xl flex items-center justify-center"><i class="fa-solid fa-qrcode"></i></button>
+                <button onclick="openQR('PRANZO 5B', 'QR-PRANZO')" class="bg-amber-100 text-amber-600 h-10 w-10 rounded-xl flex items-center justify-center"><i class="fa-solid fa-qrcode text-lg"></i></button>
             </div>
-            <div class="flex items-center gap-4">
-                <div class="w-7 h-7 bg-gray-200 rounded-full flex items-center justify-center text-gray-400 text-[10px]"><i class="fa-solid fa-lock"></i></div>
-                <p class="text-xs font-black italic text-gray-400">Colosseo (Ore 15:30)</p>
+
+            <div class="relative flex items-center gap-4">
+                <div class="z-10 w-7 h-7 bg-gray-200 rounded-full flex items-center justify-center text-gray-400 text-[10px] border-4 border-white"><i class="fa-solid fa-lock"></i></div>
+                <div class="flex-grow">
+                    <p class="text-xs font-black italic text-gray-400">Colosseo & Fori</p>
+                    <p class="text-[9px] text-gray-400 font-bold uppercase">Ore 15:30</p>
+                </div>
+                <button onclick="openQR('TICKET COLOSSEO', 'QR-COLOSSEO')" class="bg-gray-100 text-gray-300 h-10 w-10 rounded-xl flex items-center justify-center"><i class="fa-solid fa-qrcode text-lg"></i></button>
+            </div>
+
+            <div class="relative flex items-center gap-4 opacity-60">
+                <div class="z-10 w-7 h-7 bg-gray-200 rounded-full flex items-center justify-center text-gray-400 text-[10px] border-4 border-white"><i class="fa-solid fa-lock"></i></div>
+                <div class="flex-grow">
+                    <p class="text-xs font-black italic text-gray-400 italic">Rientro in Hotel</p>
+                    <p class="text-[9px] text-gray-400 font-bold uppercase">Ore 19:30</p>
+                </div>
+                <i class="fa-solid fa-hotel text-gray-200 text-xl"></i>
             </div>
         </div>
     </div>
@@ -98,35 +117,38 @@
         <div class="safe-card shadow-sm">
             <img src="https://images.unsplash.com/photo-1552832230-c0197eb3ae19?auto=format&fit=crop&w=800&q=80" class="h-44 w-full object-cover">
             <div class="p-5">
-                <h4 class="font-black italic uppercase text-indigo-600 text-sm mb-2 italic tracking-tighter">Il Pantheon e l'oculo</h4>
+                <h4 class="font-black italic uppercase text-indigo-600 text-sm mb-2 tracking-tighter">Il Pantheon</h4>
                 <p class="text-xs text-gray-600 mb-4 leading-relaxed font-medium">Scopri perché non piove dentro questa meraviglia ingegneristica...</p>
-                <button onclick="openInfo('Il Pantheon', 'La cupola è fatta di un calcestruzzo speciale inventato dai Romani. L\'oculo di 9 metri serve ad alleggerire la struttura e creare un camino d\'aria.')" class="text-[10px] font-black uppercase text-indigo-600">Leggi approfondimento <i class="fa-solid fa-chevron-right ml-1"></i></button>
+                <button onclick="openInfo('Il Pantheon', 'La cupola è fatta di un calcestruzzo speciale inventato dai Romani. L\'oculo di 9 metri serve ad alleggerire la struttura e creare un camino d\'aria.')" class="text-[10px] font-black uppercase text-indigo-600 border-b-2 border-indigo-100 pb-0.5">Approfondisci</button>
             </div>
         </div>
         <div class="safe-card shadow-sm">
             <img src="https://images.unsplash.com/photo-1555992828-ca4dbe893e55?auto=format&fit=crop&w=800&q=80" class="h-44 w-full object-cover">
             <div class="p-5">
-                <h4 class="font-black italic uppercase text-indigo-600 text-sm mb-2 italic tracking-tighter">Il Colosseo: Arena di Mare?</h4>
-                <p class="text-xs text-gray-600 mb-4 leading-relaxed font-medium">Navi vere dentro uno stadio? Ecco come facevano i Romani.</p>
-                <button onclick="openInfo('Il Colosseo', 'Potevano allagare l\'arena in poche ore grazie a un complesso sistema di chiuse e acquedotti per simulare battaglie navali.')" class="text-[10px] font-black uppercase text-indigo-600">Leggi approfondimento <i class="fa-solid fa-chevron-right ml-1"></i></button>
+                <h4 class="font-black italic uppercase text-indigo-600 text-sm mb-2 tracking-tighter">Il Colosseo</h4>
+                <p class="text-xs text-gray-600 mb-4 leading-relaxed font-medium">Potevano allagare l\'arena? Ecco come facevano i Romani.</p>
+                <button onclick="openInfo('Il Colosseo', 'Potevano allagare l\'arena in poche ore grazie a un complesso sistema di chiuse e acquedotti per simulare battaglie navali.')" class="text-[10px] font-black uppercase text-indigo-600 border-b-2 border-indigo-100 pb-0.5">Approfondisci</button>
             </div>
         </div>
     </div>
 
-    <div class="mt-auto flex justify-center">
-        <button onclick="sendSOS()" class="sos-button w-28 h-28 rounded-full flex flex-col items-center justify-center border-4 border-white shadow-2xl active:scale-90 transition-all">
-            <i class="fa-solid fa-bell-on text-2xl mb-1 text-white animate-bounce"></i>
-            <span class="font-black text-lg italic uppercase text-white leading-none">SOS</span>
-        </button>
+    <div class="mt-auto flex flex-col items-center">
+        <div class="relative">
+            <button onclick="sendSOS()" class="sos-button w-28 h-28 rounded-full flex flex-col items-center justify-center border-4 border-white z-10 relative">
+                <i class="fa-solid fa-bell text-2xl mb-1 text-white animate-bounce"></i>
+                <span class="font-black text-lg italic uppercase text-white leading-none">SOS</span>
+            </button>
+            <div class="absolute inset-0 bg-red-500/20 rounded-full animate-ping"></div>
+        </div>
     </div>
 
     <div id="qrModal" onclick="closeModal('qrModal')">
         <div class="bg-white p-8 rounded-[3rem] text-center max-w-xs w-full shadow-2xl" onclick="event.stopPropagation()">
             <h3 id="qrTitle" class="text-slate-900 font-black italic text-xl mb-6 uppercase"></h3>
             <div class="bg-gray-100 p-6 rounded-3xl mb-8 border-2 border-dashed border-gray-200">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=DEMO" class="w-full mix-blend-multiply">
+                <img id="qrImage" src="" class="w-full mix-blend-multiply">
             </div>
-            <button onclick="closeModal('qrModal')" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs">Chiudi</button>
+            <button onclick="closeModal('qrModal')" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs">Chiudi Biglietto</button>
         </div>
     </div>
 
@@ -134,7 +156,7 @@
         <div class="bg-white p-8 rounded-[3rem] max-w-sm w-full shadow-2xl" onclick="event.stopPropagation()">
             <h3 id="infoTitle" class="font-black italic text-2xl mb-4 text-indigo-600 uppercase"></h3>
             <p id="infoContent" class="text-sm font-medium leading-relaxed mb-8 text-gray-600"></p>
-            <button onclick="closeModal('infoModal')" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase text-xs">Fatto</button>
+            <button onclick="closeModal('infoModal')" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase text-xs">HO CAPITO!</button>
         </div>
     </div>
 
@@ -143,26 +165,36 @@
         var map = L.map('map-student', { zoomControl: false }).setView([41.9000, 12.4720], 17);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-        function confermaPresenza() {
-            document.getElementById('appello-box').classList.add('hidden-appello');
-            // Simula il push del docente dopo la conferma
-            setTimeout(() => {
-                showPush("Ottimo Marco! Sei stato registrato come presente.");
-            }, 1000);
+        function createIcon(color, isMe = false) {
+            return L.divIcon({
+                className: 'custom-icon',
+                html: `<div class="${isMe ? 'pulse-me' : ''}" style="background-color:${color}; width:40px; height:40px; border:4px solid white; border-radius:50%; box-shadow:0 8px 15px rgba(0,0,0,0.1);"></div>`,
+                iconSize: [40, 40], iconAnchor: [20, 20]
+            });
         }
 
-        function showPush(msg) {
-            const push = document.getElementById('push-alert');
-            document.getElementById('push-message').innerText = msg;
-            push.classList.remove('hidden');
-            push.classList.add('push-active');
-            setTimeout(() => { push.classList.add('hidden'); push.classList.remove('push-active'); }, 6000);
-        }
+        L.marker([41.9005, 12.4715], {icon: createIcon('#3b82f6', true)}).addTo(map);
+        L.marker([41.9002, 12.4722], {icon: createIcon('#ef4444')}).addTo(map);
+        L.marker([41.8992, 12.4731], {icon: createIcon('#f59e0b')}).addTo(map);
 
-        function openQR(title) { document.getElementById('qrTitle').innerText = title; document.getElementById('qrModal').style.display = 'flex'; }
-        function openInfo(title, text) { document.getElementById('infoTitle').innerText = title; document.getElementById('infoContent').innerText = text; document.getElementById('infoModal').style.display = 'flex'; }
+        function confermaPresenza() { document.getElementById('appello-box').classList.add('hidden-appello'); }
+        function openQR(title, data) {
+            document.getElementById('qrTitle').innerText = title;
+            document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${data}`;
+            document.getElementById('qrModal').style.display = 'flex';
+        }
+        function openInfo(title, text) {
+            document.getElementById('infoTitle').innerText = title;
+            document.getElementById('infoContent').innerText = text;
+            document.getElementById('infoModal').style.display = 'flex';
+        }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        function sendSOS() { if(confirm("Inviare SOS?")) alert("SOS Inviato!"); }
+        function sendSOS() { if(confirm("Inviare SOS ai docenti?")) alert("SOS Inviato!"); }
+
+        // Mostra notifica push dopo 4 secondi
+        setTimeout(() => { document.getElementById('push-alert').classList.add('show'); }, 4000);
+        // Nasconde notifica dopo 10 secondi totali
+        setTimeout(() => { document.getElementById('push-alert').classList.remove('show'); }, 10000);
     </script>
 </body>
 </html>
