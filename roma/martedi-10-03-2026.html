@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang='it'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+<title>Martedi 10.03.2026 - Gita a Roma</title>
+<script src='https://cdn.tailwindcss.com'></script>
+<link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap' rel='stylesheet'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css'>
+<link rel='stylesheet' href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css' />
+<style>
+body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; overflow-x: hidden; }
+.safe-card { background: white; border-radius: 2.2rem; border: 1px solid #E2E8F0; overflow: hidden; box-shadow: 0 10px 25px rgba(15,23,42,0.04); }
+#map-student { height: 260px; border-radius: 2rem; z-index: 10; border: 4px solid white; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+#push-alert { position: fixed; top: 20px; left: 20px; right: 20px; z-index: 9999; transform: translateY(-150%); transition: transform 0.6s cubic-bezier(0.175,0.885,0.32,1.275); }
+#push-alert.show { transform: translateY(0); }
+#appello-box { transition: all 0.6s ease; max-height: 300px; opacity: 1; margin-bottom: 1.5rem; }
+#appello-box.hidden-appello { max-height: 0; opacity: 0; margin-bottom: 0; padding: 0; transform: scale(0.9); pointer-events: none; }
+.pulse-me { animation: pulse-blue 2s infinite; border-radius: 50%; }
+@keyframes pulse-blue { 0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.6); } 70% { box-shadow: 0 0 0 15px rgba(59,130,246,0); } 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); } }
+#infoModal { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.92); z-index:10000; align-items:center; justify-content:center; padding:20px; backdrop-filter: blur(8px); }
+.modal-card { background:white; border-radius:2.5rem; max-width: 420px; width:100%; padding: 2rem; box-shadow:0 22px 60px rgba(0,0,0,.2); }
+.timeline-line { position:absolute; left:13px; top:12px; bottom:12px; width:2px; background:#edf0f3; }
+.timeline-row { position:relative; display:flex; gap:14px; align-items:center; }
+.timeline-row + .timeline-row { margin-top: 26px; }
+.dot { z-index:1; width:28px; height:28px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:4px solid white; box-shadow:0 2px 6px rgba(0,0,0,.08); font-size:10px; flex:0 0 auto; }
+.timeline-copy { min-width:0; }
+.timeline-title { font-size: .97rem; font-weight: 900; font-style: italic; line-height:1.1; color:#162038; }
+.timeline-time { font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .02em; color: #8a94a6; margin-top: 2px; }
+.timeline-row.active .timeline-time { color:#d97706; }
+.timeline-row.locked .timeline-title { color:#a4acb9; }
+.diary-card { overflow:hidden; }
+.diary-img { width:100%; height:176px; object-fit:cover; display:block; background:linear-gradient(135deg,#c7d2fe,#e2e8f0); }
+.diary-body { padding: 1.25rem; }
+.diary-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:.55rem; }
+.diary-head h4 { margin:0; font-weight:900; font-style:italic; text-transform:uppercase; color:#4f46e5; font-size:1.08rem; line-height:1.05; }
+.audio-btn { background:#eef2ff; color:#4f46e5; width:42px; height:42px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:none; cursor:pointer; flex:0 0 auto; transition:transform .15s ease, background .2s ease; }
+.audio-btn.playing { background:#4f46e5; color:white; }
+.audio-btn:active { transform:scale(.93); }
+.diary-short { font-size:1rem; line-height:1.7; color:#4b5563; margin: 0 0 1.2rem; }
+.more-link { border:none; background:none; color:#4f46e5; font-weight:900; text-transform:uppercase; font-size:.9rem; padding:0 0 .15rem; border-bottom:4px solid #dfe4ff; cursor:pointer; }
+.more-link i { margin-left: .35rem; }
+.nav-row { display:flex; justify-content:space-between; gap:12px; margin-top: 18px; }
+.nav-row a, .nav-row span { min-width: 110px; text-align:center; text-decoration:none; background:white; border:1px solid #E2E8F0; border-radius: 1rem; padding: .8rem 1rem; font-weight: 800; color:#334155; }
+@media (max-width: 420px) { .diary-head h4 { font-size: 1rem; } .diary-short { font-size:.95rem; } }
+</style>
+</head>
+<body class='flex flex-col min-h-screen p-5 pb-10'>
+<div id='push-alert' class='bg-slate-900 text-white p-5 rounded-[2rem] shadow-2xl flex items-center gap-4 border border-white/20'>
+  <div class='bg-indigo-500 h-10 w-10 rounded-full flex items-center justify-center shrink-0'><i class='fa-solid fa-paper-plane text-white'></i></div>
+  <div><p class='text-[9px] font-black uppercase tracking-widest text-indigo-300'>Docenti</p><p class='text-xs font-bold leading-tight'>Controllate la timeline del giorno e muovetevi sempre in gruppo.</p></div>
+</div>
+<header class='flex justify-between items-center mb-6 px-1 gap-3'>
+  <div>
+    <p class='text-[10px] font-black uppercase tracking-widest text-indigo-600 italic'>Gita a Roma</p>
+    <h1 class='text-2xl font-black italic tracking-tighter uppercase leading-none'>Area Studente</h1>
+  </div>
+  <div class='text-right'>
+    <p class='text-xs font-black italic uppercase text-slate-800'>Martedi 10.03.2026</p>
+    <span class='text-[9px] bg-green-500 text-white px-2 py-0.5 rounded-full font-bold uppercase'>Live</span>
+  </div>
+</header>
+<div id='appello-box' class='bg-indigo-600 rounded-[2.5rem] p-6 text-white shadow-xl flex items-center justify-between gap-4'>
+  <div>
+    <p class='text-[9px] font-black uppercase text-indigo-200 mb-1 tracking-widest'>Programma</p>
+    <h3 class='font-black text-lg italic tracking-tighter uppercase leading-tight'>Vaticano, Caravaggio e piazze del centro storico</h3>
+  </div>
+  <button onclick='confermaPresenza()' class='bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all'>OK</button>
+</div>
+<div class='safe-card p-4 mb-8'>
+  <div id='map-student'></div>
+</div>
+<div class='safe-card p-6 mb-8'>
+  <h3 class='text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6 italic text-center'>Programma giornata</h3>
+  <div class='relative'>
+    <div class='timeline-line'></div>
+    
+        <div class='timeline-row done'>
+          <div class='dot' style='background:#b7f0c7;color:#fff'><i class='fa-solid fa-check'></i></div>
+          <div class='timeline-copy'>
+            <div class='timeline-title'>Partenza da Trastevere</div>
+            <div class='timeline-time'>07:30-08:00</div>
+          </div>
+        </div>
+        <div class='timeline-row active'>
+          <div class='dot' style='background:#f6a623;color:#fff'><i class='fa-solid fa-location-dot'></i></div>
+          <div class='timeline-copy'>
+            <div class='timeline-title'>Musei Vaticani oppure Basilica di San Pietro</div>
+            <div class='timeline-time'>ATTIVO</div>
+          </div>
+        </div>
+        <div class='timeline-row locked'>
+          <div class='dot' style='background:#e5e7eb;color:#9ca3af'><i class='fa-solid fa-lock'></i></div>
+          <div class='timeline-copy' style="opacity:.45">
+            <div class='timeline-title'>Pranzo libero, possibilmente in zona Vaticano</div>
+            <div class='timeline-time'>12:00-13:45</div>
+          </div>
+        </div>
+        <div class='timeline-row locked'>
+          <div class='dot' style='background:#e5e7eb;color:#9ca3af'><i class='fa-solid fa-lock'></i></div>
+          <div class='timeline-copy' style="opacity:.45">
+            <div class='timeline-title'>Ritrovo in Piazza Vaticano</div>
+            <div class='timeline-time'>13:45</div>
+          </div>
+        </div>
+        <div class='timeline-row locked'>
+          <div class='dot' style='background:#e5e7eb;color:#9ca3af'><i class='fa-solid fa-lock'></i></div>
+          <div class='timeline-copy' style="opacity:.45">
+            <div class='timeline-title'>Castel Sant Angelo</div>
+            <div class='timeline-time'>14:00</div>
+          </div>
+        </div>
+        <div class='timeline-row locked'>
+          <div class='dot' style='background:#e5e7eb;color:#9ca3af'><i class='fa-solid fa-lock'></i></div>
+          <div class='timeline-copy' style="opacity:.45">
+            <div class='timeline-title'>San Luigi dei Francesi</div>
+            <div class='timeline-time'>14:30-15:00</div>
+          </div>
+        </div>
+        <div class='timeline-row locked'>
+          <div class='dot' style='background:#e5e7eb;color:#9ca3af'><i class='fa-solid fa-lock'></i></div>
+          <div class='timeline-copy' style="opacity:.45">
+            <div class='timeline-title'>Pantheon (tentativo di ingresso)</div>
+            <div class='timeline-time'>15:15-15:45</div>
+          </div>
+        </div>
+        <div class='timeline-row locked'>
+          <div class='dot' style='background:#e5e7eb;color:#9ca3af'><i class='fa-solid fa-lock'></i></div>
+          <div class='timeline-copy' style="opacity:.45">
+            <div class='timeline-title'>Piazza Navona</div>
+            <div class='timeline-time'>16:00-16:30</div>
+          </div>
+        </div>
+        <div class='timeline-row locked'>
+          <div class='dot' style='background:#e5e7eb;color:#9ca3af'><i class='fa-solid fa-lock'></i></div>
+          <div class='timeline-copy' style="opacity:.45">
+            <div class='timeline-title'>Largo di Torre Argentina</div>
+            <div class='timeline-time'>16:35-16:45</div>
+          </div>
+        </div>
+        <div class='timeline-row locked'>
+          <div class='dot' style='background:#e5e7eb;color:#9ca3af'><i class='fa-solid fa-lock'></i></div>
+          <div class='timeline-copy' style="opacity:.45">
+            <div class='timeline-title'>Fontana di Trevi</div>
+            <div class='timeline-time'>17:00-17:30</div>
+          </div>
+        </div>
+        <div class='timeline-row locked'>
+          <div class='dot' style='background:#e5e7eb;color:#9ca3af'><i class='fa-solid fa-lock'></i></div>
+          <div class='timeline-copy' style="opacity:.45">
+            <div class='timeline-title'>Rientro a Trastevere</div>
+            <div class='timeline-time'>18:00</div>
+          </div>
+        </div>
+  </div>
+</div>
+<h3 class='text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic'>I diari di viaggio</h3>
+<div class='space-y-6 mb-12'>
+  
+        <article class='diary-card safe-card'>
+          <img src='https://images.unsplash.com/photo-1531572753322-ad063cecc140?auto=format&amp;fit=crop&amp;w=1200&amp;q=80' alt='Musei Vaticani' class='diary-img'>
+          <div class='diary-body'>
+            <div class='diary-head'>
+              <h4>1. Musei Vaticani</h4>
+              <button class='audio-btn' data-audio-text="Le note richiamano il Laocoonte, l'Apollo del Belvedere, le Stanze di Raffaello, la Galleria delle Carte geografiche e la Cappella Sistina. La visita unisce archeologia, pittura e autorappresentazione del potere papale." aria-label='Ascolta Musei Vaticani'>
+                <i class='fa-solid fa-volume-high'></i>
+              </button>
+            </div>
+            <p class='diary-short'>Percorso tra cortili, sculture classiche, Stanze di Raffaello e Cappella Sistina.</p>
+            <button class='more-link' data-title="Musei Vaticani" data-text="Le note richiamano il Laocoonte, l'Apollo del Belvedere, le Stanze di Raffaello, la Galleria delle Carte geografiche e la Cappella Sistina. La visita unisce archeologia, pittura e autorappresentazione del potere papale.">Leggi di più <i class='fa-solid fa-arrow-right'></i></button>
+          </div>
+        </article>
+        <article class='diary-card safe-card'>
+          <img src='https://images.unsplash.com/photo-1529154036614-a60975f5c760?auto=format&amp;fit=crop&amp;w=1200&amp;q=80' alt='Basilica di San Pietro' class='diary-img'>
+          <div class='diary-body'>
+            <div class='diary-head'>
+              <h4>2. Basilica di San Pietro</h4>
+              <button class='audio-btn' data-audio-text="La basilica è insieme spazio liturgico, macchina simbolica e luogo di memoria. Da annotare la scala gigantesca dell'interno e la continuità tra devozione, arte e centralità politica del papato." aria-label='Ascolta Basilica di San Pietro'>
+                <i class='fa-solid fa-volume-high'></i>
+              </button>
+            </div>
+            <p class='diary-short'>Alternativa o integrazione alla visita dei musei, centro simbolico della Roma papale.</p>
+            <button class='more-link' data-title="Basilica di San Pietro" data-text="La basilica è insieme spazio liturgico, macchina simbolica e luogo di memoria. Da annotare la scala gigantesca dell'interno e la continuità tra devozione, arte e centralità politica del papato.">Leggi di più <i class='fa-solid fa-arrow-right'></i></button>
+          </div>
+        </article>
+        <article class='diary-card safe-card'>
+          <img src='https://images.unsplash.com/photo-1531572753322-ad063cecc140?auto=format&amp;fit=crop&amp;w=1200&amp;q=80' alt='Castel Sant Angelo' class='diary-img'>
+          <div class='diary-body'>
+            <div class='diary-head'>
+              <h4>3. Castel Sant Angelo</h4>
+              <button class='audio-btn' data-audio-text="Nato come mausoleo di Adriano, poi fortezza e rifugio dei papi, condensa molte epoche in un solo edificio. È una tappa perfetta per parlare di riuso e trasformazione della città antica." aria-label='Ascolta Castel Sant Angelo'>
+                <i class='fa-solid fa-volume-high'></i>
+              </button>
+            </div>
+            <p class='diary-short'>Da mausoleo di Adriano a fortezza pontificia, cerniera tra antichita e potere papale.</p>
+            <button class='more-link' data-title="Castel Sant Angelo" data-text="Nato come mausoleo di Adriano, poi fortezza e rifugio dei papi, condensa molte epoche in un solo edificio. È una tappa perfetta per parlare di riuso e trasformazione della città antica.">Leggi di più <i class='fa-solid fa-arrow-right'></i></button>
+          </div>
+        </article>
+        <article class='diary-card safe-card'>
+          <img src='https://images.unsplash.com/photo-1529154036614-a60975f5c760?auto=format&amp;fit=crop&amp;w=1200&amp;q=80' alt='San Luigi dei Francesi' class='diary-img'>
+          <div class='diary-body'>
+            <div class='diary-head'>
+              <h4>4. San Luigi dei Francesi</h4>
+              <button class='audio-btn' data-audio-text="La cappella Contarelli permette di vedere da vicino il linguaggio di Caravaggio: luce radente, gesti teatrali, corpi reali e improvvisa intensità narrativa." aria-label='Ascolta San Luigi dei Francesi'>
+                <i class='fa-solid fa-volume-high'></i>
+              </button>
+            </div>
+            <p class='diary-short'>Tappa chiave per il ciclo di Caravaggio dedicato a San Matteo.</p>
+            <button class='more-link' data-title="San Luigi dei Francesi" data-text="La cappella Contarelli permette di vedere da vicino il linguaggio di Caravaggio: luce radente, gesti teatrali, corpi reali e improvvisa intensità narrativa.">Leggi di più <i class='fa-solid fa-arrow-right'></i></button>
+          </div>
+        </article>
+</div>
+<div class='mt-auto pt-2'>
+  <div class='bg-red-50 rounded-[2.5rem] p-6 border border-red-100 flex items-center justify-between shadow-sm gap-4'>
+    <div>
+      <p class='text-[9px] font-black uppercase text-red-600 mb-1 tracking-widest'>Gire Safe Mode</p>
+      <h3 class='font-black text-sm italic tracking-tighter uppercase leading-tight text-slate-900'>Hai bisogno di aiuto?</h3>
+      <p class='text-[8px] font-bold text-red-400 uppercase mt-1 leading-none'>Invia posizione GPS ai docenti</p>
+    </div>
+    <button onclick='sendSOS(event)' class='bg-red-600 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg shadow-red-200 active:scale-95 transition-all'>SOS</button>
+  </div>
+  <p class='text-center text-[8px] font-black text-gray-400 uppercase mt-4 tracking-widest italic leading-none'>Premere solo in caso di vera emergenza</p>
+  <div class='nav-row'><a href='lunedi-09-03-2026.html'>&larr; Lun 09</a><a href='mercoledi-11-03-2026.html'>Mer 11 &rarr;</a></div>
+</div>
+<div id='infoModal' onclick='closeModal()'>
+  <div class='modal-card' onclick='event.stopPropagation()'>
+    <h3 id='infoTitle' class='font-black italic text-3xl mb-4 text-indigo-600 uppercase leading-none'></h3>
+    <p id='infoContent' class='text-lg font-medium leading-relaxed mb-8 text-gray-600'></p>
+    <button onclick='closeModal()' class='w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase text-xs'>Ho capito!</button>
+  </div>
+</div>
+<script src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'></script>
+<script>
+const hotel = {"name": "Casa San Giuseppe", "lat": 41.8877, "lng": 12.4667, "label": "Hotel / base a Trastevere"};
+const stops = [{"name": "Casa San Giuseppe", "lat": 41.8877, "lng": 12.4667, "kind": "hotel", "visit": "Partenza mattutina dal quartiere base."}, {"name": "Musei Vaticani", "lat": 41.9065, "lng": 12.4536, "visit": "Percorso tra cortili, sculture classiche, Stanze di Raffaello e Cappella Sistina."}, {"name": "Basilica di San Pietro", "lat": 41.9022, "lng": 12.4539, "visit": "Alternativa o integrazione alla visita dei musei, centro simbolico della Roma papale."}, {"name": "Castel Sant Angelo", "lat": 41.9031, "lng": 12.4663, "visit": "Da mausoleo di Adriano a fortezza pontificia, cerniera tra antichita e potere papale."}, {"name": "San Luigi dei Francesi", "lat": 41.8994, "lng": 12.4725, "visit": "Tappa chiave per il ciclo di Caravaggio dedicato a San Matteo."}, {"name": "Pantheon", "lat": 41.8986, "lng": 12.4769, "visit": "Tempio antico trasformato in chiesa, celebre per il pronao e per la cupola con oculo."}, {"name": "Piazza Navona", "lat": 41.8992, "lng": 12.4731, "visit": "Grande palcoscenico barocco impostato sullo stadio di Domiziano."}, {"name": "Largo di Torre Argentina", "lat": 41.8956, "lng": 12.4769, "visit": "Area archeologica repubblicana immersa nella citta contemporanea."}, {"name": "Fontana di Trevi", "lat": 41.9009, "lng": 12.4833, "visit": "Sintesi spettacolare tra facciata-palazzo, scultura e suono dell acqua."}];
+const map = L.map('map-student', { zoomControl: false, scrollWheelZoom:false }).setView([hotel.lat, hotel.lng], 15);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+function createGiantIcon(color, iconClass, isMe = false) {
+  return L.divIcon({ className: 'custom-icon', html: `<div class='${isMe ? 'pulse-me' : ''}' style='background-color:${color}; width:46px; height:46px; border:4px solid white; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:18px; box-shadow:0 8px 15px rgba(0,0,0,0.15);'><i class='fa-solid ${iconClass}'></i></div>`, iconSize:[46,46], iconAnchor:[23,23] });
+}
+const routePoints = stops.map(s => [s.lat, s.lng]);
+L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(map);
+const circle = L.circle([hotel.lat, hotel.lng], { radius: 2514, color:'#4f46e5', weight:2, fillColor:'#4f46e5', fillOpacity:.08, dashArray:'6 8' }).addTo(map);
+circle.bindPopup('Perimetro indicativo degli spostamenti della giornata');
+L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(map).bindPopup(`<strong>${hotel.name}</strong><br>Segnaposto della base a Trastevere`);
+stops.forEach((stop, idx) => {
+  if (idx === 0) return;
+  const marker = L.marker([stop.lat, stop.lng], { icon: createGiantIcon(idx === 1 ? '#3b82f6' : '#f59e0b', idx === 1 ? 'fa-location-dot' : 'fa-landmark') }).addTo(map);
+  marker.bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`);
+});
+map.fitBounds(L.latLngBounds(routePoints).pad(0.25));
+
+let currentUtterance = null;
+let currentButton = null;
+function stopSpeech() {
+  window.speechSynthesis.cancel();
+  if (currentButton) currentButton.classList.remove('playing');
+  currentUtterance = null;
+  currentButton = null;
+}
+document.querySelectorAll('.audio-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const text = btn.dataset.audioText;
+    if (currentButton === btn && window.speechSynthesis.speaking) {
+      stopSpeech();
+      return;
+    }
+    stopSpeech();
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = 'it-IT';
+    msg.rate = 0.95;
+    msg.onend = stopSpeech;
+    msg.onerror = stopSpeech;
+    currentUtterance = msg;
+    currentButton = btn;
+    btn.classList.add('playing');
+    window.speechSynthesis.speak(msg);
+  });
+});
+window.addEventListener('beforeunload', stopSpeech);
+
+document.querySelectorAll('.more-link').forEach(btn => {
+  btn.addEventListener('click', () => openInfo(btn.dataset.title, btn.dataset.text));
+});
+function confermaPresenza() { document.getElementById('appello-box').classList.add('hidden-appello'); }
+function openInfo(title, text) { document.getElementById('infoTitle').innerText = title; document.getElementById('infoContent').innerText = text; document.getElementById('infoModal').style.display = 'flex'; }
+function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
+function sendSOS(e) {
+  const btn = e.currentTarget;
+  btn.innerText = 'INVIATO...';
+  btn.classList.replace('bg-red-600', 'bg-slate-900');
+  setTimeout(() => {
+    alert('SOS inviato! I docenti hanno ricevuto la tua posizione GPS.');
+    btn.innerText = 'SOS';
+    btn.classList.replace('bg-slate-900', 'bg-red-600');
+  }, 1200);
+}
+setTimeout(() => document.getElementById('push-alert').classList.add('show'), 1200);
+setTimeout(() => document.getElementById('push-alert').classList.remove('show'), 7000);
+</script>
+</body>
+</html>
