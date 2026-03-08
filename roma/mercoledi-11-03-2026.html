@@ -1,302 +1,324 @@
 <!DOCTYPE html>
-<html lang='it'>
+<html lang="it">
 <head>
-<meta charset='UTF-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
-<title>Mercoledi 11.03.2026 - Gita a Roma</title>
-<script src='https://cdn.tailwindcss.com'></script>
-<link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap' rel='stylesheet'>
-<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css'>
-<link rel='stylesheet' href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css' />
-<style>
-body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; overflow-x: hidden; }
-.safe-card { background: white; border-radius: 2.2rem; border: 1px solid #E2E8F0; overflow: hidden; box-shadow: 0 10px 25px rgba(15,23,42,0.04); }
-#map-student { height: 260px; border-radius: 2rem; z-index: 10; border: 4px solid white; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-#push-alert { position: fixed; top: 20px; left: 20px; right: 20px; z-index: 9999; transform: translateY(-150%); transition: transform 0.6s cubic-bezier(0.175,0.885,0.32,1.275); }
-#push-alert.show { transform: translateY(0); }
-#appello-box { transition: all 0.6s ease; max-height: 300px; opacity: 1; margin-bottom: 1.5rem; }
-#appello-box.hidden-appello { max-height: 0; opacity: 0; margin-bottom: 0; padding: 0; transform: scale(0.9); pointer-events: none; }
-.pulse-me { animation: pulse-blue 2s infinite; border-radius: 50%; }
-@keyframes pulse-blue { 0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.6); } 70% { box-shadow: 0 0 0 15px rgba(59,130,246,0); } 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); } }
-#infoModal { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.92); z-index:10000; align-items:center; justify-content:center; padding:20px; backdrop-filter: blur(8px); }
-.modal-card { background:white; border-radius:2.5rem; max-width: 420px; width:100%; padding: 2rem; box-shadow:0 22px 60px rgba(0,0,0,.2); }
-.timeline-line { position:absolute; left:13px; top:12px; bottom:12px; width:2px; background:#edf0f3; }
-.timeline-row { position:relative; display:flex; gap:14px; align-items:center; }
-.timeline-row + .timeline-row { margin-top: 26px; }
-.dot { z-index:1; width:28px; height:28px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:4px solid white; box-shadow:0 2px 6px rgba(0,0,0,.08); font-size:10px; flex:0 0 auto; }
-.timeline-copy { min-width:0; }
-.timeline-title { font-size: .97rem; font-weight: 900; font-style: italic; line-height:1.1; color:#162038; }
-.timeline-time { font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .02em; color: #8a94a6; margin-top: 2px; }
-.timeline-row.active .timeline-time { color:#d97706; }
-.timeline-row.locked .timeline-title { color:#a4acb9; }
-.diary-card { overflow:hidden; }
-.diary-img { width:100%; height:176px; object-fit:cover; display:block; background:linear-gradient(135deg,#c7d2fe,#e2e8f0); }
-.diary-body { padding: 1.25rem; }
-.diary-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:.55rem; }
-.diary-head h4 { margin:0; font-weight:900; font-style:italic; text-transform:uppercase; color:#4f46e5; font-size:1.08rem; line-height:1.05; }
-.audio-btn { background:#eef2ff; color:#4f46e5; width:42px; height:42px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:none; cursor:pointer; flex:0 0 auto; transition:transform .15s ease, background .2s ease; }
-.audio-btn.playing { background:#4f46e5; color:white; }
-.audio-btn:active { transform:scale(.93); }
-.diary-short { font-size:1rem; line-height:1.7; color:#4b5563; margin: 0 0 1.2rem; }
-.more-link { border:none; background:none; color:#4f46e5; font-weight:900; text-transform:uppercase; font-size:.9rem; padding:0 0 .15rem; border-bottom:4px solid #dfe4ff; cursor:pointer; }
-.more-link i { margin-left: .35rem; }
-.nav-row { display:flex; justify-content:space-between; gap:12px; margin-top: 18px; }
-.nav-row a, .nav-row span { min-width: 110px; text-align:center; text-decoration:none; background:white; border:1px solid #E2E8F0; border-radius: 1rem; padding: .8rem 1rem; font-weight: 800; color:#334155; }
-@media (max-width: 420px) { .diary-head h4 { font-size: 1rem; } .diary-short { font-size:.95rem; } }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>GIRE - Area Studente - Mercoledì 11 marzo 2026</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    :root { --bg:#eef2f7; --card:#ffffff; --ink:#0f172a; --muted:#8b95a7; --brand:#5749ea; --brand-dark:#1e2946; }
+    * { -webkit-tap-highlight-color: transparent; box-sizing:border-box; }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--ink); overflow-x:hidden; }
+    .shell { max-width:430px; margin:0 auto; min-height:100vh; padding:1.2rem 1rem 2rem; }
+    .card { background:var(--card); border:1px solid #dde4ee; border-radius:2rem; box-shadow:0 10px 30px rgba(15,23,42,.05); }
+    .hero { background:linear-gradient(135deg,#4f46e5,#5a48ea 70%,#6d5df4); border-radius:2.3rem; color:white; box-shadow:0 18px 36px rgba(87,73,234,.25); }
+    .title-italic { font-style:italic; font-weight:900; letter-spacing:-0.04em; text-transform:uppercase; }
+    .map-box { height:310px; border-radius:1.9rem; overflow:hidden; border:4px solid white; box-shadow:0 8px 20px rgba(15,23,42,.08); }
+    .timeline-line { position:absolute; left:15px; top:10px; bottom:10px; width:3px; background:linear-gradient(#dce5f2,#cfd7e6); border-radius:999px; }
+    .timeline-node { width:32px; height:32px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:4px solid white; box-shadow:0 5px 15px rgba(15,23,42,.10); flex-shrink:0; }
+    .diary-card img { display:block; width:100%; height:220px; object-fit:cover; }
+    .audio-btn { width:48px; height:48px; border-radius:999px; display:flex; align-items:center; justify-content:center; background:#eef2ff; color:#5749ea; transition:.2s ease; }
+    .audio-btn.playing { background:#5749ea; color:white; box-shadow:0 8px 18px rgba(87,73,234,.22); }
+    .modal { position:fixed; inset:0; background:rgba(17,24,39,.72); backdrop-filter: blur(10px); display:none; align-items:center; justify-content:center; padding:1.2rem; z-index:9999; }
+    .modal.open { display:flex; }
+    .modal-panel { width:min(100%, 390px); background:white; border-radius:2.4rem; padding:1.8rem 1.6rem; box-shadow:0 24px 60px rgba(15,23,42,.35); transform:translateY(16px) scale(.98); opacity:0; transition:.25s ease; }
+    .modal.open .modal-panel { transform:translateY(0) scale(1); opacity:1; }
+    .overlay-fade { position:absolute; inset:0; background:linear-gradient(180deg,rgba(16,24,40,.05),rgba(16,24,40,.55)); pointer-events:none; }
+    .safe-btn { background:#ed2323; color:white; border-radius:1.7rem; padding:.95rem 2.1rem; font-weight:900; font-size:.82rem; box-shadow:0 12px 24px rgba(237,35,35,.18); }
+    .chip { font-size:.58rem; letter-spacing:.14em; font-weight:900; text-transform:uppercase; }
+  </style>
 </head>
-<body class='flex flex-col min-h-screen p-5 pb-10'>
-<div id='push-alert' class='bg-slate-900 text-white p-5 rounded-[2rem] shadow-2xl flex items-center gap-4 border border-white/20'>
-  <div class='bg-indigo-500 h-10 w-10 rounded-full flex items-center justify-center shrink-0'><i class='fa-solid fa-paper-plane text-white'></i></div>
-  <div><p class='text-[9px] font-black uppercase tracking-widest text-indigo-300'>Docenti</p><p class='text-xs font-bold leading-tight'>Controllate la timeline del giorno e muovetevi sempre in gruppo.</p></div>
-</div>
-<header class='flex justify-between items-center mb-6 px-1 gap-3'>
-  <div>
-    <p class='text-[10px] font-black uppercase tracking-widest text-indigo-600 italic'>Gita a Roma</p>
-    <h1 class='text-2xl font-black italic tracking-tighter uppercase leading-none'>Area Studente</h1>
-  </div>
-  <div class='text-right'>
-    <p class='text-xs font-black italic uppercase text-slate-800'>Mercoledi 11.03.2026</p>
-    <span class='text-[9px] bg-green-500 text-white px-2 py-0.5 rounded-full font-bold uppercase'>Live</span>
-  </div>
-</header>
-<div id='appello-box' class='bg-indigo-600 rounded-[2.5rem] p-6 text-white shadow-xl flex items-center justify-between gap-4'>
-  <div>
-    <p class='text-[9px] font-black uppercase text-indigo-200 mb-1 tracking-widest'>Programma</p>
-    <h3 class='font-black text-lg italic tracking-tighter uppercase leading-tight'>Fori, Colosseo e stratificazione della Roma imperiale</h3>
-  </div>
-  <button onclick='confermaPresenza()' class='bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all'>OK</button>
-</div>
-<div class='safe-card p-4 mb-8'>
-  <div id='map-student'></div>
-</div>
-<div class='safe-card p-6 mb-8'>
-  <h3 class='text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6 italic text-center'>Programma giornata</h3>
-  <div class='relative'>
-    <div class='timeline-line'></div>
-    
-        <div class='timeline-row done'>
-          <div class='dot' style='background:#b7f0c7;color:#fff'><i class='fa-solid fa-check'></i></div>
-          <div class='timeline-copy'>
-            <div class='timeline-title'>Partenza da Trastevere</div>
-            <div class='timeline-time'>08:30</div>
-          </div>
-        </div>
-        <div class='timeline-row active'>
-          <div class='dot' style='background:#f6a623;color:#fff'><i class='fa-solid fa-location-dot'></i></div>
-          <div class='timeline-copy'>
-            <div class='timeline-title'>Teatro Marcello</div>
-            <div class='timeline-time'>ATTIVO</div>
-          </div>
-        </div>
-        <div class='timeline-row locked'>
-          <div class='dot' style='background:#e5e7eb;color:#9ca3af'><i class='fa-solid fa-lock'></i></div>
-          <div class='timeline-copy' style="opacity:.45">
-            <div class='timeline-title'>Piazza Venezia</div>
-            <div class='timeline-time'>09:00-09:30</div>
-          </div>
-        </div>
-        <div class='timeline-row locked'>
-          <div class='dot' style='background:#e5e7eb;color:#9ca3af'><i class='fa-solid fa-lock'></i></div>
-          <div class='timeline-copy' style="opacity:.45">
-            <div class='timeline-title'>Fori Imperiali</div>
-            <div class='timeline-time'>09:35-10:00</div>
-          </div>
-        </div>
-        <div class='timeline-row locked'>
-          <div class='dot' style='background:#e5e7eb;color:#9ca3af'><i class='fa-solid fa-lock'></i></div>
-          <div class='timeline-copy' style="opacity:.45">
-            <div class='timeline-title'>Metro Colosseo - visita interna alla stazione Metro C</div>
-            <div class='timeline-time'>10:05</div>
-          </div>
-        </div>
-        <div class='timeline-row locked'>
-          <div class='dot' style='background:#e5e7eb;color:#9ca3af'><i class='fa-solid fa-lock'></i></div>
-          <div class='timeline-copy' style="opacity:.45">
-            <div class='timeline-title'>Colosseo, ingresso prenotato</div>
-            <div class='timeline-time'>10:45-11:15</div>
-          </div>
-        </div>
-        <div class='timeline-row locked'>
-          <div class='dot' style='background:#e5e7eb;color:#9ca3af'><i class='fa-solid fa-lock'></i></div>
-          <div class='timeline-copy' style="opacity:.45">
-            <div class='timeline-title'>Pranzo libero - Pasta Urbana</div>
-            <div class='timeline-time'>13:30-15:30</div>
-          </div>
-        </div>
-        <div class='timeline-row locked'>
-          <div class='dot' style='background:#e5e7eb;color:#9ca3af'><i class='fa-solid fa-lock'></i></div>
-          <div class='timeline-copy' style="opacity:.45">
-            <div class='timeline-title'>Ritrovo al Colosseo</div>
-            <div class='timeline-time'>15:30</div>
-          </div>
-        </div>
-        <div class='timeline-row locked'>
-          <div class='dot' style='background:#e5e7eb;color:#9ca3af'><i class='fa-solid fa-lock'></i></div>
-          <div class='timeline-copy' style="opacity:.45">
-            <div class='timeline-title'>Fori Romani e Palatino, ingresso prenotato</div>
-            <div class='timeline-time'>Pomeriggio</div>
-          </div>
-        </div>
-        <div class='timeline-row locked'>
-          <div class='dot' style='background:#e5e7eb;color:#9ca3af'><i class='fa-solid fa-lock'></i></div>
-          <div class='timeline-copy' style="opacity:.45">
-            <div class='timeline-title'>Santa Maria della Vittoria</div>
-            <div class='timeline-time'>Da definire</div>
-          </div>
-        </div>
-        <div class='timeline-row locked'>
-          <div class='dot' style='background:#e5e7eb;color:#9ca3af'><i class='fa-solid fa-lock'></i></div>
-          <div class='timeline-copy' style="opacity:.45">
-            <div class='timeline-title'>Rientro a Trastevere</div>
-            <div class='timeline-time'>Sera</div>
-          </div>
-        </div>
-  </div>
-</div>
-<h3 class='text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic'>I diari di viaggio</h3>
-<div class='space-y-6 mb-12'>
-  
-        <article class='diary-card safe-card'>
-          <img src='https://images.unsplash.com/photo-1525874684015-58379d421a52?auto=format&amp;fit=crop&amp;w=1200&amp;q=80' alt='Teatro Marcello' class='diary-img'>
-          <div class='diary-body'>
-            <div class='diary-head'>
-              <h4>1. Teatro Marcello</h4>
-              <button class='audio-btn' data-audio-text="Qui l'antico resta leggibile pur essendo inglobato nella città successiva. Il teatro aiuta a introdurre l'idea di continuità materiale tra Roma classica e Roma abitata." aria-label='Ascolta Teatro Marcello'>
-                <i class='fa-solid fa-volume-high'></i>
-              </button>
+<body>
+  <div class="shell">
+    <header class="flex justify-between items-start pt-1 mb-6">
+      <div>
+        <p class="chip text-indigo-500 italic mb-1">Gita a Roma</p>
+        <h1 class="title-italic text-[2.25rem] leading-[.92] text-slate-800">Area Studente</h1>
+        <p class="text-[11px] font-bold text-slate-400 mt-2 uppercase tracking-[.22em]">Mercoledì 11 marzo 2026</p>
+      </div>
+      <div class="text-right pt-1">
+        <span class="inline-block text-[10px] bg-green-500 text-white px-3 py-1 rounded-full font-black uppercase tracking-wide">Live</span>
+      </div>
+    </header>
+
+    <section class="hero p-6 flex items-center justify-between mb-7">
+      <div>
+        <p class="chip text-indigo-200 mb-2">giorno 3</p>
+        <h2 class="title-italic text-[2rem] leading-none">Programma<br>del giorno</h2>
+      </div>
+      <div class="bg-white/95 text-indigo-600 px-6 py-5 rounded-[1.8rem] text-center min-w-[142px]">
+        <div class="text-xs font-black uppercase tracking-widest">Tappe</div>
+        <div class="text-3xl font-black leading-none mt-1">9</div>
+      </div>
+    </section>
+
+    <section class="card p-4 mb-8">
+      <div id="map-mercoledi-11-03-2026" class="map-box"></div>
+      <div class="flex items-center justify-between pt-3 px-1">
+        <p class="text-[11px] font-bold uppercase tracking-[.18em] text-slate-400">Base: Casa San Giuseppe</p>
+        <p class="text-[11px] font-semibold text-slate-500">cerchio = area degli spostamenti</p>
+      </div>
+    </section>
+
+    <section class="card p-6 mb-8">
+      <h3 class="text-center text-[11px] font-black uppercase tracking-[.22em] text-slate-400 italic mb-7">Programma giornata</h3>
+      <div class="relative space-y-7">
+        <div class="timeline-line"></div>
+        <div class="relative flex items-start gap-4">
+          <div class="timeline-node" style="background:#86efac; color:white;"><i class="fa-solid fa-hotel text-[12px]"></i></div>
+          <div class="flex-1 pt-0.5">
+            <div class="flex items-center justify-between gap-3 mb-1">
+              <h4 class="font-black italic text-[1.05rem] text-slate-800 leading-tight">Partenza da Trastevere</h4>
+              <span class="text-[10px] font-black uppercase px-3 py-1 rounded-full" style="background:#dcfce7; color:#86efac;">08:30</span>
             </div>
-            <p class='diary-short'>Snodo di apertura per leggere la persistenza dell antico nel tessuto urbano.</p>
-            <button class='more-link' data-title="Teatro Marcello" data-text="Qui l'antico resta leggibile pur essendo inglobato nella città successiva. Il teatro aiuta a introdurre l'idea di continuità materiale tra Roma classica e Roma abitata.">Leggi di più <i class='fa-solid fa-arrow-right'></i></button>
+            <p class="text-[11px] font-black uppercase tracking-wide" style="color:#86efac;">Completata</p>
+            <p class="text-[13px] text-slate-500 leading-5 mt-1">Avvio verso area Campidoglio-Colosseo</p>
+          </div>
+        </div>
+<div class="relative flex items-start gap-4">
+          <div class="timeline-node" style="background:#86efac; color:white;"><i class="fa-solid fa-masks-theater text-[12px]"></i></div>
+          <div class="flex-1 pt-0.5">
+            <div class="flex items-center justify-between gap-3 mb-1">
+              <h4 class="font-black italic text-[1.05rem] text-slate-800 leading-tight">Teatro Marcello</h4>
+              <span class="text-[10px] font-black uppercase px-3 py-1 rounded-full" style="background:#dcfce7; color:#86efac;">08:45</span>
+            </div>
+            <p class="text-[11px] font-black uppercase tracking-wide" style="color:#86efac;">Completata</p>
+            <p class="text-[13px] text-slate-500 leading-5 mt-1">Primo confronto con gli edifici per spettacoli</p>
+          </div>
+        </div>
+<div class="relative flex items-start gap-4">
+          <div class="timeline-node" style="background:#f59e0b; color:white;"><i class="fa-solid fa-route text-[12px]"></i></div>
+          <div class="flex-1 pt-0.5">
+            <div class="flex items-center justify-between gap-3 mb-1">
+              <h4 class="font-black italic text-[1.05rem] text-slate-800 leading-tight">Piazza Venezia</h4>
+              <span class="text-[10px] font-black uppercase px-3 py-1 rounded-full" style="background:#fef3c7; color:#f59e0b;">09:00</span>
+            </div>
+            <p class="text-[11px] font-black uppercase tracking-wide" style="color:#f59e0b;">In corso</p>
+            <p class="text-[13px] text-slate-500 leading-5 mt-1">Lettura dei grandi assi urbani</p>
+          </div>
+        </div>
+<div class="relative flex items-start gap-4">
+          <div class="timeline-node" style="background:#6366f1; color:white;"><i class="fa-solid fa-building-columns text-[12px]"></i></div>
+          <div class="flex-1 pt-0.5">
+            <div class="flex items-center justify-between gap-3 mb-1">
+              <h4 class="font-black italic text-[1.05rem] text-slate-500 leading-tight">Fori Imperiali</h4>
+              <span class="text-[10px] font-black uppercase px-3 py-1 rounded-full" style="background:#e0e7ff; color:#6366f1;">09:35</span>
+            </div>
+            <p class="text-[11px] font-black uppercase tracking-wide" style="color:#6366f1;">In programma</p>
+            <p class="text-[13px] text-slate-500 leading-5 mt-1">Passeggiata tra resti e piazze monumentali</p>
+          </div>
+        </div>
+<div class="relative flex items-start gap-4">
+          <div class="timeline-node" style="background:#6366f1; color:white;"><i class="fa-solid fa-train-subway text-[12px]"></i></div>
+          <div class="flex-1 pt-0.5">
+            <div class="flex items-center justify-between gap-3 mb-1">
+              <h4 class="font-black italic text-[1.05rem] text-slate-500 leading-tight">Metro Colosseo</h4>
+              <span class="text-[10px] font-black uppercase px-3 py-1 rounded-full" style="background:#e0e7ff; color:#6366f1;">10:05</span>
+            </div>
+            <p class="text-[11px] font-black uppercase tracking-wide" style="color:#6366f1;">In programma</p>
+            <p class="text-[13px] text-slate-500 leading-5 mt-1">Visita all'interno della Metro C</p>
+          </div>
+        </div>
+<div class="relative flex items-start gap-4">
+          <div class="timeline-node" style="background:#6366f1; color:white;"><i class="fa-solid fa-ticket text-[12px]"></i></div>
+          <div class="flex-1 pt-0.5">
+            <div class="flex items-center justify-between gap-3 mb-1">
+              <h4 class="font-black italic text-[1.05rem] text-slate-500 leading-tight">Colosseo</h4>
+              <span class="text-[10px] font-black uppercase px-3 py-1 rounded-full" style="background:#e0e7ff; color:#6366f1;">10:45</span>
+            </div>
+            <p class="text-[11px] font-black uppercase tracking-wide" style="color:#6366f1;">In programma</p>
+            <p class="text-[13px] text-slate-500 leading-5 mt-1">Ingresso prenotato e visita guidata</p>
+          </div>
+        </div>
+<div class="relative flex items-start gap-4">
+          <div class="timeline-node" style="background:#6366f1; color:white;"><i class="fa-solid fa-utensils text-[12px]"></i></div>
+          <div class="flex-1 pt-0.5">
+            <div class="flex items-center justify-between gap-3 mb-1">
+              <h4 class="font-black italic text-[1.05rem] text-slate-500 leading-tight">Pranzo libero</h4>
+              <span class="text-[10px] font-black uppercase px-3 py-1 rounded-full" style="background:#e0e7ff; color:#6366f1;">13:30</span>
+            </div>
+            <p class="text-[11px] font-black uppercase tracking-wide" style="color:#6366f1;">In programma</p>
+            <p class="text-[13px] text-slate-500 leading-5 mt-1">Pausa fino al ritrovo delle 15:30</p>
+          </div>
+        </div>
+<div class="relative flex items-start gap-4">
+          <div class="timeline-node" style="background:#6366f1; color:white;"><i class="fa-solid fa-archway text-[12px]"></i></div>
+          <div class="flex-1 pt-0.5">
+            <div class="flex items-center justify-between gap-3 mb-1">
+              <h4 class="font-black italic text-[1.05rem] text-slate-500 leading-tight">Fori Romani e Palatino</h4>
+              <span class="text-[10px] font-black uppercase px-3 py-1 rounded-full" style="background:#e0e7ff; color:#6366f1;">15:30</span>
+            </div>
+            <p class="text-[11px] font-black uppercase tracking-wide" style="color:#6366f1;">In programma</p>
+            <p class="text-[13px] text-slate-500 leading-5 mt-1">Percorso archeologico del pomeriggio</p>
+          </div>
+        </div>
+<div class="relative flex items-start gap-4">
+          <div class="timeline-node" style="background:#6366f1; color:white;"><i class="fa-solid fa-hotel text-[12px]"></i></div>
+          <div class="flex-1 pt-0.5">
+            <div class="flex items-center justify-between gap-3 mb-1">
+              <h4 class="font-black italic text-[1.05rem] text-slate-500 leading-tight">Rientro verso Trastevere</h4>
+              <span class="text-[10px] font-black uppercase px-3 py-1 rounded-full" style="background:#e0e7ff; color:#6366f1;">17:30</span>
+            </div>
+            <p class="text-[11px] font-black uppercase tracking-wide" style="color:#6366f1;">In programma</p>
+            <p class="text-[13px] text-slate-500 leading-5 mt-1">Chiusura di giornata</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <h3 class="text-[11px] font-black uppercase tracking-[.22em] text-slate-400 italic mb-4 px-1">I diari di viaggio</h3>
+    <section class="space-y-7 mb-10">
+      <article class="card diary-card overflow-hidden">
+          <img src="assets/colosseo.jpg" alt="Colosseo">
+          <div class="p-5">
+            <div class="flex items-start justify-between gap-4 mb-3">
+              <h4 class="title-italic text-[1.45rem] text-indigo-600 leading-none">1. Colosseo</h4>
+              <button class="audio-btn" onclick="toggleSpeak(this, 'Per il diario annota la differenza tra vedere il Colosseo da fuori e percepirlo dall&#39;interno: corridoi, vomitoria, ordini di posti e gestione dei flussi dicono molto sulla società romana.')"><i class="fa-solid fa-volume-high"></i></button>
+            </div>
+            <p class="text-[15px] leading-7 text-slate-600 font-medium mb-5">L'anfiteatro dove Roma metteva in scena potere, tecnica e spettacolo.</p>
+            <button onclick="openInfo('Colosseo','Le note ricordano la capienza enorme e persino le naumachie, le battaglie navali simulate. Anche se il dibattito storico è complesso, l&#39;idea rende bene la scala dell&#39;edificio e la capacità romana di trasformare lo spazio in macchina scenica.')" class="text-[12px] font-black uppercase text-indigo-600 border-b-2 border-indigo-100 pb-1 tracking-wide">Leggi di più <i class="fa-solid fa-arrow-right ml-1"></i></button>
           </div>
         </article>
-        <article class='diary-card safe-card'>
-          <img src='https://images.unsplash.com/photo-1531572753322-ad063cecc140?auto=format&amp;fit=crop&amp;w=1200&amp;q=80' alt='Piazza Venezia' class='diary-img'>
-          <div class='diary-body'>
-            <div class='diary-head'>
-              <h4>2. Piazza Venezia</h4>
-              <button class='audio-btn' data-audio-text="È un punto di osservazione strategico per capire gli assi urbani che si aprono verso i Fori, il Campidoglio e via del Corso. Nel diario può diventare il luogo delle grandi prospettive monumentali." aria-label='Ascolta Piazza Venezia'>
-                <i class='fa-solid fa-volume-high'></i>
-              </button>
+<article class="card diary-card overflow-hidden">
+          <img src="assets/fori.jpg" alt="Fori Romani e Palatino">
+          <div class="p-5">
+            <div class="flex items-start justify-between gap-4 mb-3">
+              <h4 class="title-italic text-[1.45rem] text-indigo-600 leading-none">2. Fori Romani e Palatino</h4>
+              <button class="audio-btn" onclick="toggleSpeak(this, 'Un buon appunto di bordo può mettere in relazione la monumentalità del Foro con il controllo dello spazio e della memoria pubblica: qui la storia era anche propaganda.')"><i class="fa-solid fa-volume-high"></i></button>
             </div>
-            <p class='diary-short'>Punto di osservazione tra il Vittoriano e gli assi del centro monumentale.</p>
-            <button class='more-link' data-title="Piazza Venezia" data-text="È un punto di osservazione strategico per capire gli assi urbani che si aprono verso i Fori, il Campidoglio e via del Corso. Nel diario può diventare il luogo delle grandi prospettive monumentali.">Leggi di più <i class='fa-solid fa-arrow-right'></i></button>
+            <p class="text-[15px] leading-7 text-slate-600 font-medium mb-5">Il cuore politico e simbolico della città antica.</p>
+            <button onclick="openInfo('Fori Romani e Palatino','Tra basiliche civili, archi e colline, questa visita aiuta a ricostruire il funzionamento della Roma repubblicana e imperiale. Sul Palatino si percepisce invece la dimensione residenziale del potere.')" class="text-[12px] font-black uppercase text-indigo-600 border-b-2 border-indigo-100 pb-1 tracking-wide">Leggi di più <i class="fa-solid fa-arrow-right ml-1"></i></button>
           </div>
         </article>
-        <article class='diary-card safe-card'>
-          <img src='https://images.unsplash.com/photo-1552432552-06c0bfe94a94?auto=format&amp;fit=crop&amp;w=1200&amp;q=80' alt='Fori Imperiali' class='diary-img'>
-          <div class='diary-body'>
-            <div class='diary-head'>
-              <h4>3. Fori Imperiali</h4>
-              <button class='audio-btn' data-audio-text="Da Cesare a Traiano, questi complessi raccontano una politica che si esprime anche attraverso lo spazio. Camminandoli si vede come l'architettura organizzi memoria, autorità e rappresentazione." aria-label='Ascolta Fori Imperiali'>
-                <i class='fa-solid fa-volume-high'></i>
-              </button>
+<article class="card diary-card overflow-hidden">
+          <img src="assets/venezia.jpg" alt="Piazza Venezia e Teatro Marcello">
+          <div class="p-5">
+            <div class="flex items-start justify-between gap-4 mb-3">
+              <h4 class="title-italic text-[1.45rem] text-indigo-600 leading-none">3. Piazza Venezia e Teatro Marcello</h4>
+              <button class="audio-btn" onclick="toggleSpeak(this, 'Nel diario vale la pena scrivere come cambia il rumore della città: dai grandi assi stradali alle aree archeologiche, Roma alterna continuamente pieni, vuoti e tempi storici diversi.')"><i class="fa-solid fa-volume-high"></i></button>
             </div>
-            <p class='diary-short'>Sequenza di piazze e complessi costruiti dai grandi imperatori tra Cesare e Traiano.</p>
-            <button class='more-link' data-title="Fori Imperiali" data-text="Da Cesare a Traiano, questi complessi raccontano una politica che si esprime anche attraverso lo spazio. Camminandoli si vede come l'architettura organizzi memoria, autorità e rappresentazione.">Leggi di più <i class='fa-solid fa-arrow-right'></i></button>
+            <p class="text-[15px] leading-7 text-slate-600 font-medium mb-5">La città moderna si appoggia costantemente su quella antica.</p>
+            <button onclick="openInfo('Piazza Venezia e Teatro Marcello','Nella stessa mattina si passa da un teatro di età romana a uno dei nodi più trafficati della Roma contemporanea. Il contrasto è utile per riflettere su continuità, riuso e stratificazione urbana.')" class="text-[12px] font-black uppercase text-indigo-600 border-b-2 border-indigo-100 pb-1 tracking-wide">Leggi di più <i class="fa-solid fa-arrow-right ml-1"></i></button>
           </div>
         </article>
-        <article class='diary-card safe-card'>
-          <img src='https://images.unsplash.com/photo-1555992828-ca4dbe41d294?auto=format&amp;fit=crop&amp;w=1200&amp;q=80' alt='Stazione Metro Colosseo' class='diary-img'>
-          <div class='diary-body'>
-            <div class='diary-head'>
-              <h4>4. Stazione Metro Colosseo</h4>
-              <button class='audio-btn' data-audio-text="La visita alla stazione ricorda che a Roma l'archeologia non è confinata nei musei: emerge dentro le infrastrutture e modifica il modo di costruire e muoversi nella città contemporanea." aria-label='Ascolta Stazione Metro Colosseo'>
-                <i class='fa-solid fa-volume-high'></i>
-              </button>
-            </div>
-            <p class='diary-short'>Occasione per osservare come l archeologia emerga anche nelle infrastrutture contemporanee.</p>
-            <button class='more-link' data-title="Stazione Metro Colosseo" data-text="La visita alla stazione ricorda che a Roma l'archeologia non è confinata nei musei: emerge dentro le infrastrutture e modifica il modo di costruire e muoversi nella città contemporanea.">Leggi di più <i class='fa-solid fa-arrow-right'></i></button>
-          </div>
-        </article>
-</div>
-<div class='mt-auto pt-2'>
-  <div class='bg-red-50 rounded-[2.5rem] p-6 border border-red-100 flex items-center justify-between shadow-sm gap-4'>
-    <div>
-      <p class='text-[9px] font-black uppercase text-red-600 mb-1 tracking-widest'>Gire Safe Mode</p>
-      <h3 class='font-black text-sm italic tracking-tighter uppercase leading-tight text-slate-900'>Hai bisogno di aiuto?</h3>
-      <p class='text-[8px] font-bold text-red-400 uppercase mt-1 leading-none'>Invia posizione GPS ai docenti</p>
+    </section>
+
+    <footer class="pt-2 border-t border-slate-200/70">
+      <div class="card p-6 flex items-center justify-between bg-red-50 border-red-100">
+        <div>
+          <p class="chip text-red-500 mb-1">Gire safe mode</p>
+          <h3 class="title-italic text-[1.45rem] text-slate-900 leading-none">Hai bisogno di aiuto?</h3>
+          <p class="text-[10px] font-bold uppercase tracking-wide text-red-400 mt-2">Invia posizione GPS ai docenti</p>
+        </div>
+        <button class="safe-btn" onclick="sendSOS(this)">SOS</button>
+      </div>
+      <p class="text-center text-[10px] font-black text-slate-400 uppercase tracking-[.18em] italic mt-5">Premere solo in caso di vera emergenza</p>
+    </footer>
+  </div>
+
+  <div id="infoModal" class="modal" onclick="closeInfo()">
+    <div class="modal-panel" onclick="event.stopPropagation()">
+      <h3 id="infoTitle" class="title-italic text-[2rem] text-indigo-600 mb-5"></h3>
+      <p id="infoContent" class="text-[1.05rem] leading-9 text-slate-600 font-medium mb-8"></p>
+      <button onclick="closeInfo()" class="w-full rounded-[1.5rem] bg-indigo-600 text-white py-5 font-black uppercase text-lg">Ho capito!</button>
     </div>
-    <button onclick='sendSOS(event)' class='bg-red-600 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg shadow-red-200 active:scale-95 transition-all'>SOS</button>
   </div>
-  <p class='text-center text-[8px] font-black text-gray-400 uppercase mt-4 tracking-widest italic leading-none'>Premere solo in caso di vera emergenza</p>
-  <div class='nav-row'><a href='martedi-10-03-2026.html'>&larr; Mar 10</a><a href='giovedi-12-03-2026.html'>Gio 12 &rarr;</a></div>
-</div>
-<div id='infoModal' onclick='closeModal()'>
-  <div class='modal-card' onclick='event.stopPropagation()'>
-    <h3 id='infoTitle' class='font-black italic text-3xl mb-4 text-indigo-600 uppercase leading-none'></h3>
-    <p id='infoContent' class='text-lg font-medium leading-relaxed mb-8 text-gray-600'></p>
-    <button onclick='closeModal()' class='w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase text-xs'>Ho capito!</button>
-  </div>
-</div>
-<script src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'></script>
-<script>
-const hotel = {"name": "Casa San Giuseppe", "lat": 41.8877, "lng": 12.4667, "label": "Hotel / base a Trastevere"};
-const stops = [{"name": "Casa San Giuseppe", "lat": 41.8877, "lng": 12.4667, "kind": "hotel", "visit": "Partenza dal quartiere di Trastevere."}, {"name": "Teatro Marcello", "lat": 41.8923, "lng": 12.4799, "visit": "Snodo di apertura per leggere la persistenza dell antico nel tessuto urbano."}, {"name": "Piazza Venezia", "lat": 41.8958, "lng": 12.4831, "visit": "Punto di osservazione tra il Vittoriano e gli assi del centro monumentale."}, {"name": "Fori Imperiali", "lat": 41.8957, "lng": 12.4865, "visit": "Sequenza di piazze e complessi costruiti dai grandi imperatori tra Cesare e Traiano."}, {"name": "Stazione Metro Colosseo", "lat": 41.891, "lng": 12.4919, "visit": "Occasione per osservare come l archeologia emerga anche nelle infrastrutture contemporanee."}, {"name": "Colosseo", "lat": 41.8902, "lng": 12.4922, "visit": "Anfiteatro Flavio, macchina spettacolare della Roma imperiale."}, {"name": "Foro Romano", "lat": 41.8925, "lng": 12.4853, "visit": "Centro politico, religioso e giudiziario della citta antica."}, {"name": "Palatino", "lat": 41.8894, "lng": 12.488, "visit": "Collina della memoria originaria e delle residenze imperiali."}, {"name": "Santa Maria della Vittoria", "lat": 41.9049, "lng": 12.4937, "visit": "Eventuale tappa finale per la cappella Cornaro e l Estasi di santa Teresa di Bernini."}];
-const map = L.map('map-student', { zoomControl: false, scrollWheelZoom:false }).setView([hotel.lat, hotel.lng], 15);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
-function createGiantIcon(color, iconClass, isMe = false) {
-  return L.divIcon({ className: 'custom-icon', html: `<div class='${isMe ? 'pulse-me' : ''}' style='background-color:${color}; width:46px; height:46px; border:4px solid white; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:18px; box-shadow:0 8px 15px rgba(0,0,0,0.15);'><i class='fa-solid ${iconClass}'></i></div>`, iconSize:[46,46], iconAnchor:[23,23] });
-}
-const routePoints = stops.map(s => [s.lat, s.lng]);
-L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(map);
-const circle = L.circle([hotel.lat, hotel.lng], { radius: 3101, color:'#4f46e5', weight:2, fillColor:'#4f46e5', fillOpacity:.08, dashArray:'6 8' }).addTo(map);
-circle.bindPopup('Perimetro indicativo degli spostamenti della giornata');
-L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(map).bindPopup(`<strong>${hotel.name}</strong><br>Segnaposto della base a Trastevere`);
-stops.forEach((stop, idx) => {
-  if (idx === 0) return;
-  const marker = L.marker([stop.lat, stop.lng], { icon: createGiantIcon(idx === 1 ? '#3b82f6' : '#f59e0b', idx === 1 ? 'fa-location-dot' : 'fa-landmark') }).addTo(map);
-  marker.bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`);
-});
-map.fitBounds(L.latLngBounds(routePoints).pad(0.25));
 
-let currentUtterance = null;
-let currentButton = null;
-function stopSpeech() {
-  window.speechSynthesis.cancel();
-  if (currentButton) currentButton.classList.remove('playing');
-  currentUtterance = null;
-  currentButton = null;
-}
-document.querySelectorAll('.audio-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const text = btn.dataset.audioText;
-    if (currentButton === btn && window.speechSynthesis.speaking) {
-      stopSpeech();
-      return;
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const pageData = {"center": [41.8924, 12.4891], "zoom": 14, "hotel": [41.8859, 12.4678], "radius": 2327, "markers": [{"title": "Casa San Giuseppe", "lat": 41.8859, "lng": 12.4678, "type": "hotel"}, {"title": "Teatro Marcello", "lat": 41.8932, "lng": 12.4799, "type": "theater"}, {"title": "Piazza Venezia", "lat": 41.8958, "lng": 12.4825, "type": "route"}, {"title": "Fori Imperiali", "lat": 41.8934, "lng": 12.4861, "type": "column"}, {"title": "Metro Colosseo", "lat": 41.8917, "lng": 12.491, "type": "metro"}, {"title": "Colosseo", "lat": 41.8902, "lng": 12.4922, "type": "arena"}, {"title": "Fori Romani", "lat": 41.8925, "lng": 12.4853, "type": "ruins"}, {"title": "Palatino", "lat": 41.8894, "lng": 12.4882, "type": "ruins"}]};
+    const map = L.map('map-mercoledi-11-03-2026', { zoomControl: false, attributionControl: true }).setView(pageData.center, pageData.zoom);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+
+    function iconHTML(bg, icon) {
+      return `<div style="background:${bg};width:46px;height:46px;border-radius:999px;border:4px solid white;display:flex;align-items:center;justify-content:center;color:white;box-shadow:0 8px 18px rgba(15,23,42,.18)"><i class="fa-solid ${icon}"></i></div>`;
     }
-    stopSpeech();
-    const msg = new SpeechSynthesisUtterance(text);
-    msg.lang = 'it-IT';
-    msg.rate = 0.95;
-    msg.onend = stopSpeech;
-    msg.onerror = stopSpeech;
-    currentUtterance = msg;
-    currentButton = btn;
-    btn.classList.add('playing');
-    window.speechSynthesis.speak(msg);
-  });
-});
-window.addEventListener('beforeunload', stopSpeech);
 
-document.querySelectorAll('.more-link').forEach(btn => {
-  btn.addEventListener('click', () => openInfo(btn.dataset.title, btn.dataset.text));
-});
-function confermaPresenza() { document.getElementById('appello-box').classList.add('hidden-appello'); }
-function openInfo(title, text) { document.getElementById('infoTitle').innerText = title; document.getElementById('infoContent').innerText = text; document.getElementById('infoModal').style.display = 'flex'; }
-function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
-function sendSOS(e) {
-  const btn = e.currentTarget;
-  btn.innerText = 'INVIATO...';
-  btn.classList.replace('bg-red-600', 'bg-slate-900');
-  setTimeout(() => {
-    alert('SOS inviato! I docenti hanno ricevuto la tua posizione GPS.');
-    btn.innerText = 'SOS';
-    btn.classList.replace('bg-slate-900', 'bg-red-600');
-  }, 1200);
-}
-setTimeout(() => document.getElementById('push-alert').classList.add('show'), 1200);
-setTimeout(() => document.getElementById('push-alert').classList.remove('show'), 7000);
-</script>
+    function leafletIcon(bg, icon) {
+      return L.divIcon({
+        className:'',
+        html:iconHTML(bg,icon),
+        iconSize:[46,46], iconAnchor:[23,23]
+      });
+    }
+
+    const markerStyles = {
+      hotel:['#3b82f6','fa-hotel'], church:['#5749ea','fa-church'], meal:['#f59e0b','fa-utensils'], marker:['#ef4444','fa-location-dot'], walk:['#10b981','fa-person-walking'], eye:['#0ea5e9','fa-eye'], tree:['#16a34a','fa-tree'], route:['#6366f1','fa-route'], museum:['#334155','fa-landmark'], castle:['#475569','fa-fort-awesome'], dome:['#7c3aed','fa-monument'], water:['#0284c7','fa-water'], theater:['#7c2d12','fa-masks-theater'], column:['#a16207','fa-building-columns'], metro:['#0f766e','fa-train-subway'], arena:['#b45309','fa-ticket'], ruins:['#92400e','fa-archway'], steps:['#db2777','fa-stairs'], bath:['#ea580c','fa-spa'], view:['#2563eb','fa-binoculars'], train:['#111827','fa-train']
+    };
+
+    pageData.markers.forEach(m => {
+      const st = markerStyles[m.type] || ['#6366f1','fa-location-dot'];
+      L.marker([m.lat,m.lng], {icon: leafletIcon(st[0], st[1])}).addTo(map).bindPopup(`<strong>${m.title}</strong>`);
+    });
+
+    L.circle(pageData.hotel, {
+      radius: pageData.radius,
+      color:'#5749ea',
+      weight:2,
+      opacity:.9,
+      fillColor:'#a5b4fc',
+      fillOpacity:.12,
+      dashArray:'8 8'
+    }).addTo(map);
+
+    let speechUtterance = null;
+    let activeAudioBtn = null;
+
+    function toggleSpeak(button, text) {
+      const synth = window.speechSynthesis;
+      if (!synth) return;
+      if (activeAudioBtn === button && synth.speaking) {
+        synth.cancel();
+        button.classList.remove('playing');
+        button.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+        activeAudioBtn = null;
+        return;
+      }
+      synth.cancel();
+      document.querySelectorAll('.audio-btn.playing').forEach(btn => {
+        btn.classList.remove('playing');
+        btn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+      });
+      speechUtterance = new SpeechSynthesisUtterance(text);
+      speechUtterance.lang = 'it-IT';
+      speechUtterance.rate = 0.95;
+      speechUtterance.onend = () => {
+        if (activeAudioBtn) {
+          activeAudioBtn.classList.remove('playing');
+          activeAudioBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+          activeAudioBtn = null;
+        }
+      };
+      activeAudioBtn = button;
+      button.classList.add('playing');
+      button.innerHTML = '<i class="fa-solid fa-pause"></i>';
+      synth.speak(speechUtterance);
+    }
+
+    function openInfo(title, text) {
+      document.getElementById('infoTitle').textContent = title;
+      document.getElementById('infoContent').textContent = text;
+      document.getElementById('infoModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeInfo() {
+      document.getElementById('infoModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function sendSOS(btn) {
+      const prev = btn.textContent;
+      btn.textContent = 'INVIATO';
+      btn.style.background = '#0f172a';
+      setTimeout(() => {
+        alert('SOS inviato. I docenti hanno ricevuto la posizione del dispositivo.');
+        btn.textContent = prev;
+        btn.style.background = '#ed2323';
+      }, 900);
+    }
+  </script>
 </body>
 </html>
