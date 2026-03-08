@@ -59,9 +59,12 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 <p class="text-[10px] font-black uppercase tracking-widest text-indigo-600 italic">Gita a Roma</p>
 <h1 class="text-2xl font-black italic tracking-tighter uppercase leading-none">Area Studente</h1>
 </div>
-<div class="text-right">
+<div class="text-right flex items-center gap-2">
+<div>
 <p class="text-xs font-black italic uppercase text-slate-800">Venerdi 13.03.2026</p>
 <span class="text-[9px] bg-green-500 text-white px-2 py-0.5 rounded-full font-bold uppercase">Live</span>
+</div>
+<button class="text-[9px] bg-red-600 text-white px-2 py-0.5 rounded-full font-bold uppercase active:scale-95 transition-all" onclick="openSOSModal()">SOS</button>
 </div>
 </header>
 <div class="bg-indigo-600 rounded-[2.5rem] p-6 text-white shadow-xl flex items-center justify-between gap-4" id="appello-box">
@@ -361,9 +364,6 @@ stops.forEach((stop, idx) => {
   marker.bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`);
 });
 map.fitBounds(L.latLngBounds(routePoints).pad(0.25));
-setTimeout(() => map.invalidateSize(), 250);
-window.addEventListener('load', () => setTimeout(() => map.invalidateSize(), 150));
-document.addEventListener('visibilitychange', () => { if (!document.hidden) setTimeout(() => map.invalidateSize(), 150); });
 
 const liveMarker = L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#3b82f6', 'fa-location-dot', true) }).addTo(map).bindPopup('Posizione stimata della tappa attiva');
 function moveMapToActiveStop(activeTitle) {
@@ -458,40 +458,29 @@ function updateTimelineByClock() {
     const minutes = parseMinutesFromLabel(row.dataset.originalTime);
     return { row, idx, minutes };
   });
-  points.forEach((p) => {
+  points.forEach((p, idx) => {
     const timeNode = p.row.querySelector('.timeline-time');
     if (timeNode && p.row.dataset.originalTime) timeNode.innerText = p.row.dataset.originalTime;
   });
-
-  let activeIdx = 0;
-  if (todayStr < pageDate) {
-    activeIdx = 0;
-  } else if (todayStr > pageDate) {
-    points.forEach((p) => applyTimelineState(p.row, 'done'));
-    const lastTitle = points[points.length - 1]?.row?.querySelector('.timeline-title')?.innerText || '';
-    moveMapToActiveStop(lastTitle);
+  if (todayStr !== pageDate) {
+    // keep a sensible static progression when not viewed on the itinerary date
     return;
-  } else {
-    activeIdx = -1;
-    for (let i = 0; i < points.length; i++) {
-      const cur = points[i].minutes;
-      if (cur === null) continue;
-      const next = points.slice(i + 1).map(p => p.minutes).find(v => v !== null);
-      if (currentMinutes >= cur && (next === undefined || currentMinutes < next)) {
-        activeIdx = i;
-        break;
-      }
-    }
-    if (activeIdx === -1) {
-      const firstTimed = points.find(p => p.minutes !== null);
-      if (firstTimed && currentMinutes < firstTimed.minutes) activeIdx = firstTimed.idx;
-      else {
-        const timed = points.filter(p => p.minutes !== null);
-        activeIdx = timed.length ? timed[timed.length - 1].idx : points.length - 1;
-      }
+  }
+  let activeIdx = -1;
+  for (let i = 0; i < points.length; i++) {
+    const cur = points[i].minutes;
+    if (cur === null) continue;
+    const next = points.slice(i + 1).map(p => p.minutes).find(v => v !== null);
+    if (currentMinutes >= cur && (next === undefined || currentMinutes < next)) {
+      activeIdx = i;
+      break;
     }
   }
-
+  if (activeIdx === -1) {
+    const firstTimed = points.find(p => p.minutes !== null);
+    if (firstTimed && currentMinutes < firstTimed.minutes) activeIdx = firstTimed.idx;
+    else activeIdx = points.map(p => p.minutes).reduce((acc, v, idx) => v !== null ? idx : acc, points.length - 1);
+  }
   points.forEach((p, idx) => {
     const state = idx < activeIdx ? 'done' : idx === activeIdx ? 'active' : 'future';
     applyTimelineState(p.row, state);
@@ -501,6 +490,7 @@ function updateTimelineByClock() {
   moveMapToActiveStop(activeTitle);
 }
 
+
 document.querySelectorAll('.more-link').forEach(btn => {
   btn.addEventListener('click', () => openInfo(btn.dataset.title, btn.dataset.text));
 });
@@ -509,20 +499,6 @@ function openInfo(title, text) { document.getElementById('infoTitle').innerText 
 function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
 function openSOSModal() { document.getElementById('sosModal').style.display = 'flex'; }
 function closeSOSModal() { document.getElementById('sosModal').style.display = 'none'; }
-function sendLocationWhatsApp(phone) {
-  if (!navigator.geolocation) {
-    alert('Geolocalizzazione non supportata su questo dispositivo.');
-    return;
-  }
-  navigator.geolocation.getCurrentPosition(function(position) {
-    const lat = position.coords.latitude;
-    const lon = position.coords.longitude;
-    const message = encodeURIComponent('SOS STUDENTE\nLa mia posizione GPS:\nhttps://maps.google.com/?q=' + lat + ',' + lon);
-    window.location.href = 'https://wa.me/' + phone + '?text=' + message;
-  }, function() {
-    alert('Non riesco a leggere la posizione. Controlla i permessi GPS del browser.');
-  }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
-}
 setTimeout(() => document.getElementById('push-alert').classList.add('show'), 1200);
 setTimeout(() => document.getElementById('push-alert').classList.remove('show'), 7000);
 updateTimelineByClock();
@@ -532,14 +508,10 @@ setInterval(updateTimelineByClock, 60000);
 <div class="modal-card" onclick="event.stopPropagation()">
 <p class="text-[10px] font-black uppercase tracking-widest text-red-500 mb-2">Contatti emergenza</p>
 <h3 class="font-black italic text-2xl mb-6 text-slate-900 uppercase">Chi vuoi chiamare?</h3>
-<div class="space-y-3 mb-4">
+<div class="space-y-3 mb-6">
 <a class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4" href="tel:+393383915771"><div><p class="text-sm font-black text-slate-900">Carlo Ghelfi</p><p class="text-xs text-slate-500 font-bold">+39 338 391 5771</p></div><i class="fa-solid fa-phone text-red-600"></i></a>
-<button class="flex items-center justify-between w-full bg-emerald-50 hover:bg-emerald-100 transition rounded-2xl px-5 py-4" onclick="sendLocationWhatsApp('393383915771')"><div class="text-left"><p class="text-sm font-black text-slate-900">Invia posizione WhatsApp</p><p class="text-xs text-slate-500 font-bold">a Carlo Ghelfi</p></div><i class="fa-solid fa-location-dot text-emerald-600"></i></button>
 <a class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4" href="tel:+393343532067"><div><p class="text-sm font-black text-slate-900">Anna Maria Mozzanega</p><p class="text-xs text-slate-500 font-bold">+39 334 353 2067</p></div><i class="fa-solid fa-phone text-red-600"></i></a>
-<button class="flex items-center justify-between w-full bg-emerald-50 hover:bg-emerald-100 transition rounded-2xl px-5 py-4" onclick="sendLocationWhatsApp('393343532067')"><div class="text-left"><p class="text-sm font-black text-slate-900">Invia posizione WhatsApp</p><p class="text-xs text-slate-500 font-bold">a Anna Maria Mozzanega</p></div><i class="fa-solid fa-location-dot text-emerald-600"></i></button>
 <a class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4" href="tel:+393289158141"><div><p class="text-sm font-black text-slate-900">Angelo Carmisciano</p><p class="text-xs text-slate-500 font-bold">+39 328 915 8141</p></div><i class="fa-solid fa-phone text-red-600"></i></a>
-<button class="flex items-center justify-between w-full bg-emerald-50 hover:bg-emerald-100 transition rounded-2xl px-5 py-4" onclick="sendLocationWhatsApp('393289158141')"><div class="text-left"><p class="text-sm font-black text-slate-900">Invia posizione WhatsApp</p><p class="text-xs text-slate-500 font-bold">a Angelo Carmisciano</p></div><i class="fa-solid fa-location-dot text-emerald-600"></i></button>
-<a class="flex items-center justify-between w-full bg-red-50 hover:bg-red-100 transition rounded-2xl px-5 py-4" href="tel:112"><div><p class="text-sm font-black text-slate-900">Chiama emergenza 112</p><p class="text-xs text-slate-500 font-bold">Numero unico emergenze</p></div><i class="fa-solid fa-triangle-exclamation text-red-600"></i></a>
 </div>
 <button class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs" onclick="closeSOSModal()">Chiudi</button>
 </div></div></body>
