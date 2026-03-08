@@ -481,6 +481,27 @@ function openInfo(title, text) { document.getElementById('infoTitle').innerText 
 function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
 function openSOSModal() { document.getElementById('sosModal').style.display = 'flex'; }
 function closeSOSModal() { document.getElementById('sosModal').style.display = 'none'; }
+function sendLocationWhatsApp(phone) {
+  if (!navigator.geolocation) {
+    alert('Geolocalizzazione non supportata su questo dispositivo.');
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      const message = encodeURIComponent('SOS STUDENTE
+La mia posizione GPS:
+https://maps.google.com/?q=' + lat + ',' + lon);
+      closeSOSModal();
+      window.open('https://wa.me/' + phone + '?text=' + message, '_blank');
+    },
+    function() {
+      alert('Non sono riuscito a recuperare la posizione. Controlla i permessi GPS del browser.');
+    },
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+  );
+}
 setTimeout(() => document.getElementById('push-alert').classList.add('show'), 1200);
 setTimeout(() => document.getElementById('push-alert').classList.remove('show'), 7000);
 updateTimelineByClock();
@@ -491,9 +512,18 @@ setInterval(updateTimelineByClock, 60000);
 <p class="text-[10px] font-black uppercase tracking-widest text-red-500 mb-2">Contatti emergenza</p>
 <h3 class="font-black italic text-2xl mb-6 text-slate-900 uppercase">Chi vuoi chiamare?</h3>
 <div class="space-y-3 mb-6">
-<a class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4" href="tel:+393383915771"><div><p class="text-sm font-black text-slate-900">Carlo Ghelfi</p><p class="text-xs text-slate-500 font-bold">+39 338 391 5771</p></div><i class="fa-solid fa-phone text-red-600"></i></a>
-<a class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4" href="tel:+393343532067"><div><p class="text-sm font-black text-slate-900">Anna Maria Mozzanega</p><p class="text-xs text-slate-500 font-bold">+39 334 353 2067</p></div><i class="fa-solid fa-phone text-red-600"></i></a>
-<a class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4" href="tel:+393289158141"><div><p class="text-sm font-black text-slate-900">Angelo Carmisciano</p><p class="text-xs text-slate-500 font-bold">+39 328 915 8141</p></div><i class="fa-solid fa-phone text-red-600"></i></a>
+<div class="w-full bg-slate-50 rounded-2xl px-5 py-4">
+<div class="flex items-center justify-between gap-3 mb-3"><div><p class="text-sm font-black text-slate-900">Carlo Ghelfi</p><p class="text-xs text-slate-500 font-bold">+39 338 391 5771</p></div><a class="text-red-600 text-lg" href="tel:+393383915771"><i class="fa-solid fa-phone"></i></a></div>
+<button class="w-full bg-green-600 text-white py-3 rounded-2xl font-black uppercase text-[11px]" onclick="sendLocationWhatsApp('393383915771')">Invia posizione WhatsApp</button>
+</div>
+<div class="w-full bg-slate-50 rounded-2xl px-5 py-4">
+<div class="flex items-center justify-between gap-3 mb-3"><div><p class="text-sm font-black text-slate-900">Anna Maria Mozzanega</p><p class="text-xs text-slate-500 font-bold">+39 334 353 2067</p></div><a class="text-red-600 text-lg" href="tel:+393343532067"><i class="fa-solid fa-phone"></i></a></div>
+<button class="w-full bg-green-600 text-white py-3 rounded-2xl font-black uppercase text-[11px]" onclick="sendLocationWhatsApp('393343532067')">Invia posizione WhatsApp</button>
+</div>
+<div class="w-full bg-slate-50 rounded-2xl px-5 py-4">
+<div class="flex items-center justify-between gap-3 mb-3"><div><p class="text-sm font-black text-slate-900">Angelo Carmisciano</p><p class="text-xs text-slate-500 font-bold">+39 328 915 8141</p></div><a class="text-red-600 text-lg" href="tel:+393289158141"><i class="fa-solid fa-phone"></i></a></div>
+<button class="w-full bg-green-600 text-white py-3 rounded-2xl font-black uppercase text-[11px]" onclick="sendLocationWhatsApp('393289158141')">Invia posizione WhatsApp</button>
+</div>
 </div>
 <button class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs" onclick="closeSOSModal()">Chiudi</button>
 </div></div></body>
