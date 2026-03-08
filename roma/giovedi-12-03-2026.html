@@ -7,7 +7,12 @@
 <meta name="description" content="GIRE - Safe &amp; Smart School Trips"/>
 <link rel="icon" type="image/png" href="assets/favicon.png"/>
 <title>Giovedi 12.03.2026 - Gita a Roma</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com">
+function openSOSModal(){
+document.getElementById('sosModal').style.display='flex';
+}
+
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
 <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet">
@@ -213,7 +218,12 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 <button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase text-xs" onclick="closeModal()">Ho capito!</button>
 </div>
 </div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+function openSOSModal(){
+document.getElementById('sosModal').style.display='flex';
+}
+
+</script>
 <script>
 const hotel = {"name": "Casa San Giuseppe", "lat": 41.8877, "lng": 12.4667, "label": "Hotel / base a Trastevere"};
 const stops = [{"name": "Casa San Giuseppe", "lat": 41.8877, "lng": 12.4667, "kind": "hotel", "visit": "Partenza dal punto base."}, {"name": "San Pietro in Vincoli", "lat": 41.8928, "lng": 12.4933, "visit": "Celebre per il Mose di Michelangelo e per la memoria delle catene di San Pietro."}, {"name": "Santa Maria Maggiore", "lat": 41.8978, "lng": 12.4989, "visit": "Una delle quattro basiliche maggiori, con mosaici e spazialita monumentale."}, {"name": "San Giovanni in Laterano", "lat": 41.8859, "lng": 12.5053, "visit": "Cattedrale di Roma, cuore liturgico e istituzionale della Chiesa."}, {"name": "Scala Santa", "lat": 41.8863, "lng": 12.5056, "visit": "Luogo devozionale con la memoria della salita al Sancta Sanctorum."}, {"name": "Terme di Caracalla", "lat": 41.879, "lng": 12.4923, "visit": "Complesso monumentale dedicato a bagni, sport, studio e socialita."}];
@@ -378,6 +388,49 @@ setTimeout(() => document.getElementById('push-alert').classList.add('show'), 12
 setTimeout(() => document.getElementById('push-alert').classList.remove('show'), 7000);
 updateTimelineByClock();
 setInterval(updateTimelineByClock, 60000);
+
+function openSOSModal(){
+document.getElementById('sosModal').style.display='flex';
+}
+
 </script>
+
+<div id="sosModal" onclick="closeModal('sosModal')" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.92); z-index:10000; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(8px);">
+<div class="bg-white p-8 rounded-[3rem] max-w-sm w-full shadow-2xl" onclick="event.stopPropagation()">
+<p class="text-[10px] font-black uppercase tracking-widest text-red-500 mb-2">Contatti emergenza</p>
+<h3 class="font-black italic text-2xl mb-6 text-slate-900 uppercase">Chi vuoi chiamare?</h3>
+
+<div class="space-y-3 mb-6">
+<a href="tel:+393383915771" class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4">
+<div>
+<p class="text-sm font-black text-slate-900">Carlo Ghelfi</p>
+<p class="text-xs text-slate-500 font-bold">+39 338 391 5771</p>
+</div>
+<i class="fa-solid fa-phone text-red-600"></i>
+</a>
+
+<a href="tel:+393343532067" class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4">
+<div>
+<p class="text-sm font-black text-slate-900">Anna Maria Mozzanega</p>
+<p class="text-xs text-slate-500 font-bold">+39 334 353 2067</p>
+</div>
+<i class="fa-solid fa-phone text-red-600"></i>
+</a>
+
+<a href="tel:+393289158141" class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4">
+<div>
+<p class="text-sm font-black text-slate-900">Angelo Carmisciano</p>
+<p class="text-xs text-slate-500 font-bold">+39 328 915 8141</p>
+</div>
+<i class="fa-solid fa-phone text-red-600"></i>
+</a>
+</div>
+
+<button onclick="closeModal('sosModal')" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs">
+CHIUDI
+</button>
+</div>
+</div>
+
 </body>
 </html>
