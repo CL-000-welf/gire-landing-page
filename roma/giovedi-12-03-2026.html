@@ -4,18 +4,11 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-<meta name="description" content="GIRE - Safe &amp; Smart School Trips"/>
-<link rel="icon" type="image/png" href="assets/favicon.png"/>
 <title>Giovedi 12.03.2026 - Gita a Roma</title>
-<script src="https://cdn.tailwindcss.com">
-function openSOSModal(){
-document.getElementById('sosModal').style.display='flex';
-}
-
-</script>
+<script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
-<link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet">
+<link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
 <style>
 body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; overflow-x: hidden; }
 .safe-card { background: white; border-radius: 2.2rem; border: 1px solid #E2E8F0; overflow: hidden; box-shadow: 0 10px 25px rgba(15,23,42,0.04); }
@@ -55,7 +48,7 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 .nav-row a, .nav-row span { min-width: 110px; text-align:center; text-decoration:none; background:white; border:1px solid #E2E8F0; border-radius: 1rem; padding: .8rem 1rem; font-weight: 800; color:#334155; }
 @media (max-width: 420px) { .diary-head h4 { font-size: 1rem; } .diary-short { font-size:.95rem; } }
 </style>
-</link></head>
+<link href="assets/favicon.png" rel="icon" type="image/png"/><meta content="Itinerario giornaliero GIRE per la gita a Roma con timeline, mappa e contatti SOS." name="description"/></head>
 <body class="flex flex-col min-h-screen p-5 pb-10">
 <div class="bg-slate-900 text-white p-5 rounded-[2rem] shadow-2xl flex items-center gap-4 border border-white/20" id="push-alert">
 <div class="bg-indigo-500 h-10 w-10 rounded-full flex items-center justify-center shrink-0"><i class="fa-solid fa-paper-plane text-white"></i></div>
@@ -74,7 +67,7 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 <div class="bg-indigo-600 rounded-[2.5rem] p-6 text-white shadow-xl flex items-center justify-between gap-4" id="appello-box">
 <div>
 <p class="text-[9px] font-black uppercase text-indigo-200 mb-1 tracking-widest">Programma</p>
-<h3 class="font-black text-base sm:text-lg italic tracking-tighter uppercase leading-tight max-w-[15rem]">Basiliche, reliquie e terme tra Esquilino e Celio</h3>
+<h3 class="font-black text-base italic tracking-tighter uppercase leading-tight md:text-lg">Basiliche, reliquie e terme tra Esquilino e Celio</h3>
 </div>
 <button class="bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all" onclick="confermaPresenza()">OK</button>
 </div>
@@ -92,42 +85,42 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 <div class="timeline-time">08:30</div>
 </div>
 </div>
-<div class="timeline-row timeline-row active" data-time="ATTIVO">
+<div class="timeline-row timeline-row active" data-time="09:20">
 <div class="dot" style="background:#f6a623;color:#fff"><i class="fa-solid fa-location-dot"></i></div>
 <div class="timeline-copy">
 <div class="timeline-title">San Pietro in Vincoli</div>
-<div class="timeline-time">ATTIVO</div>
+<div class="timeline-time">09:20</div>
 </div>
 </div>
-<div class="timeline-row timeline-row future" data-time="10:10-10:40">
+<div class="timeline-row timeline-row future" data-time="10:10">
 <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
 <div class="timeline-copy">
 <div class="timeline-title">Santa Maria Maggiore</div>
 <div class="timeline-time">10:10-10:40</div>
 </div>
 </div>
-<div class="timeline-row timeline-row future" data-time="11:00-11:30">
+<div class="timeline-row timeline-row future" data-time="11:00">
 <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
 <div class="timeline-copy">
 <div class="timeline-title">San Giovanni in Laterano</div>
 <div class="timeline-time">11:00-11:30</div>
 </div>
 </div>
-<div class="timeline-row timeline-row future" data-time="11:35-11:50">
+<div class="timeline-row timeline-row future" data-time="11:35">
 <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
 <div class="timeline-copy">
 <div class="timeline-title">Scala Santa</div>
 <div class="timeline-time">11:35-11:50</div>
 </div>
 </div>
-<div class="timeline-row timeline-row future" data-time="11:50-14:00">
+<div class="timeline-row timeline-row future" data-time="11:50">
 <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
 <div class="timeline-copy">
 <div class="timeline-title">Pranzo libero - da Sonia</div>
 <div class="timeline-time">11:50-14:00</div>
 </div>
 </div>
-<div class="timeline-row timeline-row future" data-time="14:40-16:30">
+<div class="timeline-row timeline-row future" data-time="14:40">
 <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
 <div class="timeline-copy">
 <div class="timeline-title">Terme di Caracalla</div>
@@ -144,12 +137,21 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 </div>
 </div>
 <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic">I diari di viaggio</h3>
-<div class="space-y-6 mb-12">
-<article class="diary-card safe-card">
+<div class="space-y-6 mb-12"><article class="diary-card safe-card">
+<img alt="Partenza da Trastevere" class="diary-img" src="https://images.unsplash.com/photo-1531572753322-ad063cecc140?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"/>
+<div class="diary-body">
+<div class="diary-head">
+<h4>1. Partenza da Trastevere</h4>
+<button aria-label="Ascolta Partenza da Trastevere" class="audio-btn" data-audio-text="Questa tappa serve a ricostruire il punto di avvio della giornata, controllare il gruppo e impostare il percorso. Nel diario di bordo può diventare il momento in cui fissare obiettivi, quartieri e ritmo della visita."><i class="fa-solid fa-volume-high"></i></button>
+</div>
+<p class="diary-short">Momento di partenza e organizzazione del gruppo prima degli spostamenti.</p>
+<button class="more-link" data-text="Questa tappa serve a ricostruire il punto di avvio della giornata, controllare il gruppo e impostare il percorso. Nel diario di bordo può diventare il momento in cui fissare obiettivi, quartieri e ritmo della visita." data-title="Partenza da Trastevere">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
+</div>
+</article><article class="diary-card safe-card">
 <img alt="San Pietro in Vincoli" class="diary-img" src="https://images.unsplash.com/photo-1549893074-4bc47f1f1d73?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"/>
 <div class="diary-body">
 <div class="diary-head">
-<h4>1. San Pietro in Vincoli</h4>
+<h4>San Pietro in Vincoli</h4>
 <button aria-label="Ascolta San Pietro in Vincoli" class="audio-btn" data-audio-text="La basilica custodisce il Mosè di Michelangelo e la memoria delle catene di San Pietro. Nel diario si può lavorare sul confronto tra equilibrio architettonico e forza trattenuta della scultura.">
 <i class="fa-solid fa-volume-high"></i>
 </button>
@@ -157,12 +159,11 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 <p class="diary-short">Celebre per il Mose di Michelangelo e per la memoria delle catene di San Pietro.</p>
 <button class="more-link" data-text="La basilica custodisce il Mosè di Michelangelo e la memoria delle catene di San Pietro. Nel diario si può lavorare sul confronto tra equilibrio architettonico e forza trattenuta della scultura." data-title="San Pietro in Vincoli">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
 </div>
-</article>
-<article class="diary-card safe-card">
+</article><article class="diary-card safe-card">
 <img alt="Santa Maria Maggiore" class="diary-img" src="https://images.unsplash.com/photo-1529154036614-a60975f5c760?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"/>
 <div class="diary-body">
 <div class="diary-head">
-<h4>2. Santa Maria Maggiore</h4>
+<h4>Santa Maria Maggiore</h4>
 <button aria-label="Ascolta Santa Maria Maggiore" class="audio-btn" data-audio-text="Una delle basiliche maggiori di Roma, importante per la continuità del culto e per l'apparato musivo. Da osservare come monumentalità e devozione convivano nello stesso spazio.">
 <i class="fa-solid fa-volume-high"></i>
 </button>
@@ -170,12 +171,11 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 <p class="diary-short">Una delle quattro basiliche maggiori, con mosaici e spazialita monumentale.</p>
 <button class="more-link" data-text="Una delle basiliche maggiori di Roma, importante per la continuità del culto e per l'apparato musivo. Da osservare come monumentalità e devozione convivano nello stesso spazio." data-title="Santa Maria Maggiore">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
 </div>
-</article>
-<article class="diary-card safe-card">
+</article><article class="diary-card safe-card">
 <img alt="San Giovanni in Laterano" class="diary-img" src="https://images.unsplash.com/photo-1563714193017-5a5fb60bc02d?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"/>
 <div class="diary-body">
 <div class="diary-head">
-<h4>3. San Giovanni in Laterano</h4>
+<h4>San Giovanni in Laterano</h4>
 <button aria-label="Ascolta San Giovanni in Laterano" class="audio-btn" data-audio-text="È la cattedrale di Roma, quindi il cuore istituzionale della Chiesa. La visita aiuta a distinguere il primato simbolico del Laterano rispetto alla centralità più mediatica di San Pietro.">
 <i class="fa-solid fa-volume-high"></i>
 </button>
@@ -183,12 +183,11 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 <p class="diary-short">Cattedrale di Roma, cuore liturgico e istituzionale della Chiesa.</p>
 <button class="more-link" data-text="È la cattedrale di Roma, quindi il cuore istituzionale della Chiesa. La visita aiuta a distinguere il primato simbolico del Laterano rispetto alla centralità più mediatica di San Pietro." data-title="San Giovanni in Laterano">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
 </div>
-</article>
-<article class="diary-card safe-card">
+</article><article class="diary-card safe-card">
 <img alt="Scala Santa" class="diary-img" src="https://images.unsplash.com/photo-1552432552-06c0bfe94a94?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"/>
 <div class="diary-body">
 <div class="diary-head">
-<h4>4. Scala Santa</h4>
+<h4>Scala Santa</h4>
 <button aria-label="Ascolta Scala Santa" class="audio-btn" data-audio-text="Le note ricordano i 28 gradini e il collegamento con il Sancta Sanctorum e l'Acheropita. È una tappa in cui esperienza dello spazio e pratica devozionale coincidono in modo molto intenso.">
 <i class="fa-solid fa-volume-high"></i>
 </button>
@@ -196,9 +195,37 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 <p class="diary-short">Luogo devozionale con la memoria della salita al Sancta Sanctorum.</p>
 <button class="more-link" data-text="Le note ricordano i 28 gradini e il collegamento con il Sancta Sanctorum e l'Acheropita. È una tappa in cui esperienza dello spazio e pratica devozionale coincidono in modo molto intenso." data-title="Scala Santa">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
 </div>
-</article>
+</article><article class="diary-card safe-card">
+<img alt="Pranzo libero - da Sonia" class="diary-img" src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%271200%27%20height%3D%27700%27%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20x2%3D%271%27%20y1%3D%270%27%20y2%3D%271%27%3E%3Cstop%20stop-color%3D%27%23c7d2fe%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%23e2e8f0%27/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%27100%25%27%20height%3D%27100%25%27%20fill%3D%27url%28%23g%29%27/%3E%0A%20%20%20%20%3Ctext%20x%3D%2750%25%27%20y%3D%2750%25%27%20dominant-baseline%3D%27middle%27%20text-anchor%3D%27middle%27%20fill%3D%27%23312e81%27%20font-family%3D%27Arial%2C%20sans-serif%27%20font-size%3D%2752%27%20font-weight%3D%27700%27%3EPranzo%20libero%20-%20da%20Sonia%3C/text%3E%0A%20%20%20%20%3C/svg%3E"/>
+<div class="diary-body">
+<div class="diary-head">
+<h4>6. Pranzo libero - da Sonia</h4>
+<button aria-label="Ascolta Pranzo libero - da Sonia" class="audio-btn" data-audio-text="La pausa non è solo logistica: aiuta a leggere i tempi reali della giornata, a riorganizzare gli spostamenti e a preparare l attenzione per la visita successiva."><i class="fa-solid fa-volume-high"></i></button>
 </div>
-<div class="nav-row"><a href="mercoledi-11-03-2026.html">← Mer 11</a><a href="venerdi-13-03-2026.html">Ven 13 →</a></div>
+<p class="diary-short">Pausa per il pranzo e tempo di recupero prima della tappa successiva.</p>
+<button class="more-link" data-text="La pausa non è solo logistica: aiuta a leggere i tempi reali della giornata, a riorganizzare gli spostamenti e a preparare l attenzione per la visita successiva." data-title="Pranzo libero - da Sonia">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
+</div>
+</article><article class="diary-card safe-card">
+<img alt="Terme di Caracalla" class="diary-img" src="https://images.unsplash.com/photo-1555992828-ca4dbe41d294?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"/>
+<div class="diary-body">
+<div class="diary-head">
+<h4>7. Terme di Caracalla</h4>
+<button aria-label="Ascolta Terme di Caracalla" class="audio-btn" data-audio-text="Complesso monumentale per capire vita pubblica, architettura e socialita nel mondo romano. Questa scheda accompagna la tappa con un testo breve, utile per orientarsi, fissare i punti chiave e trasformare la visita in appunti di diario coerenti con la timeline."><i class="fa-solid fa-volume-high"></i></button>
+</div>
+<p class="diary-short">Complesso monumentale per capire vita pubblica, architettura e socialita nel mondo romano.</p>
+<button class="more-link" data-text="Complesso monumentale per capire vita pubblica, architettura e socialita nel mondo romano. Questa scheda accompagna la tappa con un testo breve, utile per orientarsi, fissare i punti chiave e trasformare la visita in appunti di diario coerenti con la timeline." data-title="Terme di Caracalla">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
+</div>
+</article><article class="diary-card safe-card">
+<img alt="Rientro a Trastevere" class="diary-img" src="https://images.unsplash.com/photo-1531572753322-ad063cecc140?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"/>
+<div class="diary-body">
+<div class="diary-head">
+<h4>8. Rientro a Trastevere</h4>
+<button aria-label="Ascolta Rientro a Trastevere" class="audio-btn" data-audio-text="Il rientro chiude il percorso e permette di collegare tra loro le tappe viste durante la giornata. È il momento utile per tirare le fila del diario di bordo."><i class="fa-solid fa-volume-high"></i></button>
+</div>
+<p class="diary-short">Rientro verso la base e chiusura della giornata con ricomposizione del gruppo.</p>
+<button class="more-link" data-text="Il rientro chiude il percorso e permette di collegare tra loro le tappe viste durante la giornata. È il momento utile per tirare le fila del diario di bordo." data-title="Rientro a Trastevere">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
+</div>
+</article></div>
 <div class="mt-auto pt-2">
 <div class="bg-red-50 rounded-[2.5rem] p-6 border border-red-100 flex items-center justify-between shadow-sm gap-4">
 <div>
@@ -206,10 +233,10 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 <h3 class="font-black text-sm italic tracking-tighter uppercase leading-tight text-slate-900">Hai bisogno di aiuto?</h3>
 <p class="text-[8px] font-bold text-red-400 uppercase mt-1 leading-none">Invia posizione GPS ai docenti</p>
 </div>
-<button class="bg-red-600 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg shadow-red-200 active:scale-95 transition-all" onclick="sendSOS(event)">SOS</button>
+<button class="bg-red-600 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg shadow-red-200 active:scale-95 transition-all" onclick="openSOSModal()">SOS</button>
 </div>
 <p class="text-center text-[8px] font-black text-gray-400 uppercase mt-4 tracking-widest italic leading-none">Premere solo in caso di vera emergenza</p>
-
+<div class="nav-row"><a href="mercoledi-11-03-2026.html">← Mer 11</a><a href="venerdi-13-03-2026.html">Ven 13 →</a></div>
 </div>
 <div id="infoModal" onclick="closeModal()">
 <div class="modal-card" onclick="event.stopPropagation()">
@@ -218,12 +245,7 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 <button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase text-xs" onclick="closeModal()">Ho capito!</button>
 </div>
 </div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-function openSOSModal(){
-document.getElementById('sosModal').style.display='flex';
-}
-
-</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const hotel = {"name": "Casa San Giuseppe", "lat": 41.8877, "lng": 12.4667, "label": "Hotel / base a Trastevere"};
 const stops = [{"name": "Casa San Giuseppe", "lat": 41.8877, "lng": 12.4667, "kind": "hotel", "visit": "Partenza dal punto base."}, {"name": "San Pietro in Vincoli", "lat": 41.8928, "lng": 12.4933, "visit": "Celebre per il Mose di Michelangelo e per la memoria delle catene di San Pietro."}, {"name": "Santa Maria Maggiore", "lat": 41.8978, "lng": 12.4989, "visit": "Una delle quattro basiliche maggiori, con mosaici e spazialita monumentale."}, {"name": "San Giovanni in Laterano", "lat": 41.8859, "lng": 12.5053, "visit": "Cattedrale di Roma, cuore liturgico e istituzionale della Chiesa."}, {"name": "Scala Santa", "lat": 41.8863, "lng": 12.5056, "visit": "Luogo devozionale con la memoria della salita al Sancta Sanctorum."}, {"name": "Terme di Caracalla", "lat": 41.879, "lng": 12.4923, "visit": "Complesso monumentale dedicato a bagni, sport, studio e socialita."}];
@@ -237,15 +259,23 @@ L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(map);
 const circle = L.circle([hotel.lat, hotel.lng], { radius: 3383, color:'#4f46e5', weight:2, fillColor:'#4f46e5', fillOpacity:.08, dashArray:'6 8' }).addTo(map);
 circle.bindPopup('Perimetro indicativo degli spostamenti della giornata');
 L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(map).bindPopup(`<strong>${hotel.name}</strong><br>Segnaposto della base a Trastevere`);
-const stopMarkers = [];
 stops.forEach((stop, idx) => {
   if (idx === 0) return;
-  const marker = L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#6d5efc', 'fa-landmark') }).addTo(map);
+  const marker = L.marker([stop.lat, stop.lng], { icon: createGiantIcon(idx === 1 ? '#3b82f6' : '#f59e0b', idx === 1 ? 'fa-location-dot' : 'fa-landmark') }).addTo(map);
   marker.bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`);
-  stopMarkers.push(marker);
 });
-const currentMarker = L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#3b82f6', 'fa-user', true) }).addTo(map).bindPopup('<strong>Sei qui</strong><br>Posizione stimata in base alla tappa attiva');
 map.fitBounds(L.latLngBounds(routePoints).pad(0.25));
+
+const liveMarker = L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#3b82f6', 'fa-location-dot', true) }).addTo(map).bindPopup('Posizione stimata della tappa attiva');
+function moveMapToActiveStop(activeTitle) {
+  if (!activeTitle) return;
+  const t = activeTitle.toLowerCase();
+  const match = stops.find(s => t.includes((s.name || '').toLowerCase()) || (s.name || '').toLowerCase().includes(t));
+  if (!match) return;
+  liveMarker.setLatLng([match.lat, match.lng]);
+  map.panTo([match.lat, match.lng], { animate:true, duration:0.8 });
+}
+
 
 let currentUtterance = null;
 let currentButton = null;
@@ -314,12 +344,6 @@ function applyTimelineState(row, state) {
     icon.className = 'fa-solid fa-clock';
   }
 }
-function setMapPositionForActiveStop(activeIdx) {
-  const routeIdx = Math.max(0, Math.min(stops.length - 1, activeIdx + 1));
-  const target = stops[routeIdx] || stops[0];
-  currentMarker.setLatLng([target.lat, target.lng]);
-}
-
 function updateTimelineByClock() {
   const rows = Array.from(document.querySelectorAll('.timeline-row'));
   if (!rows.length) return;
@@ -341,8 +365,6 @@ function updateTimelineByClock() {
   });
   if (todayStr !== pageDate) {
     // keep a sensible static progression when not viewed on the itinerary date
-    const presetIdx = Math.max(0, rows.findIndex(r => r.classList.contains('active')));
-    setMapPositionForActiveStop(presetIdx);
     return;
   }
   let activeIdx = -1;
@@ -364,7 +386,9 @@ function updateTimelineByClock() {
     const state = idx < activeIdx ? 'done' : idx === activeIdx ? 'active' : 'future';
     applyTimelineState(p.row, state);
   });
-  setMapPositionForActiveStop(activeIdx);
+  const activeRow = points[activeIdx]?.row;
+  const activeTitle = activeRow?.querySelector('.timeline-title')?.innerText || '';
+  moveMapToActiveStop(activeTitle);
 }
 
 
@@ -374,63 +398,22 @@ document.querySelectorAll('.more-link').forEach(btn => {
 function confermaPresenza() { document.getElementById('appello-box').classList.add('hidden-appello'); }
 function openInfo(title, text) { document.getElementById('infoTitle').innerText = title; document.getElementById('infoContent').innerText = text; document.getElementById('infoModal').style.display = 'flex'; }
 function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
-function sendSOS(e) {
-  const btn = e.currentTarget;
-  btn.innerText = 'INVIATO...';
-  btn.classList.replace('bg-red-600', 'bg-slate-900');
-  setTimeout(() => {
-    alert('SOS inviato! I docenti hanno ricevuto la tua posizione GPS.');
-    btn.innerText = 'SOS';
-    btn.classList.replace('bg-slate-900', 'bg-red-600');
-  }, 1200);
-}
+function openSOSModal() { document.getElementById('sosModal').style.display = 'flex'; }
+function closeSOSModal() { document.getElementById('sosModal').style.display = 'none'; }
 setTimeout(() => document.getElementById('push-alert').classList.add('show'), 1200);
 setTimeout(() => document.getElementById('push-alert').classList.remove('show'), 7000);
 updateTimelineByClock();
 setInterval(updateTimelineByClock, 60000);
-
-function openSOSModal(){
-document.getElementById('sosModal').style.display='flex';
-}
-
 </script>
-
-<div id="sosModal" onclick="closeModal('sosModal')" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.92); z-index:10000; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(8px);">
-<div class="bg-white p-8 rounded-[3rem] max-w-sm w-full shadow-2xl" onclick="event.stopPropagation()">
+<div id="sosModal" onclick="closeSOSModal()" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.92); z-index:10001; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(8px);">
+<div class="modal-card" onclick="event.stopPropagation()">
 <p class="text-[10px] font-black uppercase tracking-widest text-red-500 mb-2">Contatti emergenza</p>
 <h3 class="font-black italic text-2xl mb-6 text-slate-900 uppercase">Chi vuoi chiamare?</h3>
-
 <div class="space-y-3 mb-6">
-<a href="tel:+393383915771" class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4">
-<div>
-<p class="text-sm font-black text-slate-900">Carlo Ghelfi</p>
-<p class="text-xs text-slate-500 font-bold">+39 338 391 5771</p>
+<a class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4" href="tel:+393383915771"><div><p class="text-sm font-black text-slate-900">Carlo Ghelfi</p><p class="text-xs text-slate-500 font-bold">+39 338 391 5771</p></div><i class="fa-solid fa-phone text-red-600"></i></a>
+<a class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4" href="tel:+393343532067"><div><p class="text-sm font-black text-slate-900">Anna Maria Mozzanega</p><p class="text-xs text-slate-500 font-bold">+39 334 353 2067</p></div><i class="fa-solid fa-phone text-red-600"></i></a>
+<a class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4" href="tel:+393289158141"><div><p class="text-sm font-black text-slate-900">Angelo Carmisciano</p><p class="text-xs text-slate-500 font-bold">+39 328 915 8141</p></div><i class="fa-solid fa-phone text-red-600"></i></a>
 </div>
-<i class="fa-solid fa-phone text-red-600"></i>
-</a>
-
-<a href="tel:+393343532067" class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4">
-<div>
-<p class="text-sm font-black text-slate-900">Anna Maria Mozzanega</p>
-<p class="text-xs text-slate-500 font-bold">+39 334 353 2067</p>
-</div>
-<i class="fa-solid fa-phone text-red-600"></i>
-</a>
-
-<a href="tel:+393289158141" class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4">
-<div>
-<p class="text-sm font-black text-slate-900">Angelo Carmisciano</p>
-<p class="text-xs text-slate-500 font-bold">+39 328 915 8141</p>
-</div>
-<i class="fa-solid fa-phone text-red-600"></i>
-</a>
-</div>
-
-<button onclick="closeModal('sosModal')" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs">
-CHIUDI
-</button>
-</div>
-</div>
-
-</body>
+<button class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs" onclick="closeSOSModal()">Chiudi</button>
+</div></div></body>
 </html>

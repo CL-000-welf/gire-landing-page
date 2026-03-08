@@ -4,18 +4,11 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-<meta name="description" content="GIRE - Safe &amp; Smart School Trips"/>
-<link rel="icon" type="image/png" href="assets/favicon.png"/>
 <title>Mercoledi 11.03.2026 - Gita a Roma</title>
-<script src="https://cdn.tailwindcss.com">
-function openSOSModal(){
-document.getElementById('sosModal').style.display='flex';
-}
-
-</script>
+<script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
-<link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet">
+<link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
 <style>
 body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; overflow-x: hidden; }
 .safe-card { background: white; border-radius: 2.2rem; border: 1px solid #E2E8F0; overflow: hidden; box-shadow: 0 10px 25px rgba(15,23,42,0.04); }
@@ -55,7 +48,7 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 .nav-row a, .nav-row span { min-width: 110px; text-align:center; text-decoration:none; background:white; border:1px solid #E2E8F0; border-radius: 1rem; padding: .8rem 1rem; font-weight: 800; color:#334155; }
 @media (max-width: 420px) { .diary-head h4 { font-size: 1rem; } .diary-short { font-size:.95rem; } }
 </style>
-</link></head>
+<link href="assets/favicon.png" rel="icon" type="image/png"/><meta content="Itinerario giornaliero GIRE per la gita a Roma con timeline, mappa e contatti SOS." name="description"/></head>
 <body class="flex flex-col min-h-screen p-5 pb-10">
 <div class="bg-slate-900 text-white p-5 rounded-[2rem] shadow-2xl flex items-center gap-4 border border-white/20" id="push-alert">
 <div class="bg-indigo-500 h-10 w-10 rounded-full flex items-center justify-center shrink-0"><i class="fa-solid fa-paper-plane text-white"></i></div>
@@ -74,7 +67,7 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 <div class="bg-indigo-600 rounded-[2.5rem] p-6 text-white shadow-xl flex items-center justify-between gap-4" id="appello-box">
 <div>
 <p class="text-[9px] font-black uppercase text-indigo-200 mb-1 tracking-widest">Programma</p>
-<h3 class="font-black text-base sm:text-lg italic tracking-tighter uppercase leading-tight max-w-[15rem]">Fori, Colosseo e stratificazione della Roma imperiale</h3>
+<h3 class="font-black text-base italic tracking-tighter uppercase leading-tight md:text-lg">Fori, Colosseo e stratificazione della Roma imperiale</h3>
 </div>
 <button class="bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all" onclick="confermaPresenza()">OK</button>
 </div>
@@ -92,21 +85,21 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 <div class="timeline-time">08:30</div>
 </div>
 </div>
-<div class="timeline-row timeline-row active" data-time="ATTIVO">
+<div class="timeline-row timeline-row active" data-time="08:45">
 <div class="dot" style="background:#f6a623;color:#fff"><i class="fa-solid fa-location-dot"></i></div>
 <div class="timeline-copy">
 <div class="timeline-title">Teatro Marcello</div>
-<div class="timeline-time">ATTIVO</div>
+<div class="timeline-time">08:45</div>
 </div>
 </div>
-<div class="timeline-row timeline-row future" data-time="09:00-09:30">
+<div class="timeline-row timeline-row future" data-time="09:00">
 <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
 <div class="timeline-copy">
 <div class="timeline-title">Piazza Venezia</div>
 <div class="timeline-time">09:00-09:30</div>
 </div>
 </div>
-<div class="timeline-row timeline-row future" data-time="09:35-10:00">
+<div class="timeline-row timeline-row future" data-time="09:35">
 <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
 <div class="timeline-copy">
 <div class="timeline-title">Fori Imperiali</div>
@@ -120,14 +113,14 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 <div class="timeline-time">10:05</div>
 </div>
 </div>
-<div class="timeline-row timeline-row future" data-time="10:45-11:15">
+<div class="timeline-row timeline-row future" data-time="10:45">
 <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
 <div class="timeline-copy">
 <div class="timeline-title">Colosseo, ingresso prenotato</div>
 <div class="timeline-time">10:45-11:15</div>
 </div>
 </div>
-<div class="timeline-row timeline-row future" data-time="13:30-15:30">
+<div class="timeline-row timeline-row future" data-time="13:30">
 <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
 <div class="timeline-copy">
 <div class="timeline-title">Pranzo libero - Pasta Urbana</div>
@@ -141,21 +134,21 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 <div class="timeline-time">15:30</div>
 </div>
 </div>
-<div class="timeline-row timeline-row future" data-time="Pomeriggio">
+<div class="timeline-row timeline-row future" data-time="16:30">
 <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
 <div class="timeline-copy">
 <div class="timeline-title">Fori Romani e Palatino, ingresso prenotato</div>
 <div class="timeline-time">Pomeriggio</div>
 </div>
 </div>
-<div class="timeline-row timeline-row future" data-time="Da definire">
+<div class="timeline-row timeline-row future" data-time="17:30">
 <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
 <div class="timeline-copy">
 <div class="timeline-title">Santa Maria della Vittoria</div>
 <div class="timeline-time">Da definire</div>
 </div>
 </div>
-<div class="timeline-row timeline-row future" data-time="Sera">
+<div class="timeline-row timeline-row future" data-time="18:30">
 <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
 <div class="timeline-copy">
 <div class="timeline-title">Rientro a Trastevere</div>
@@ -165,12 +158,21 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 </div>
 </div>
 <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic">I diari di viaggio</h3>
-<div class="space-y-6 mb-12">
-<article class="diary-card safe-card">
+<div class="space-y-6 mb-12"><article class="diary-card safe-card">
+<img alt="Partenza da Trastevere" class="diary-img" src="https://images.unsplash.com/photo-1531572753322-ad063cecc140?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"/>
+<div class="diary-body">
+<div class="diary-head">
+<h4>1. Partenza da Trastevere</h4>
+<button aria-label="Ascolta Partenza da Trastevere" class="audio-btn" data-audio-text="Questa tappa serve a ricostruire il punto di avvio della giornata, controllare il gruppo e impostare il percorso. Nel diario di bordo può diventare il momento in cui fissare obiettivi, quartieri e ritmo della visita."><i class="fa-solid fa-volume-high"></i></button>
+</div>
+<p class="diary-short">Momento di partenza e organizzazione del gruppo prima degli spostamenti.</p>
+<button class="more-link" data-text="Questa tappa serve a ricostruire il punto di avvio della giornata, controllare il gruppo e impostare il percorso. Nel diario di bordo può diventare il momento in cui fissare obiettivi, quartieri e ritmo della visita." data-title="Partenza da Trastevere">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
+</div>
+</article><article class="diary-card safe-card">
 <img alt="Teatro Marcello" class="diary-img" src="https://images.unsplash.com/photo-1525874684015-58379d421a52?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"/>
 <div class="diary-body">
 <div class="diary-head">
-<h4>1. Teatro Marcello</h4>
+<h4>Teatro Marcello</h4>
 <button aria-label="Ascolta Teatro Marcello" class="audio-btn" data-audio-text="Qui l'antico resta leggibile pur essendo inglobato nella città successiva. Il teatro aiuta a introdurre l'idea di continuità materiale tra Roma classica e Roma abitata.">
 <i class="fa-solid fa-volume-high"></i>
 </button>
@@ -178,12 +180,11 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 <p class="diary-short">Snodo di apertura per leggere la persistenza dell antico nel tessuto urbano.</p>
 <button class="more-link" data-text="Qui l'antico resta leggibile pur essendo inglobato nella città successiva. Il teatro aiuta a introdurre l'idea di continuità materiale tra Roma classica e Roma abitata." data-title="Teatro Marcello">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
 </div>
-</article>
-<article class="diary-card safe-card">
+</article><article class="diary-card safe-card">
 <img alt="Piazza Venezia" class="diary-img" src="https://images.unsplash.com/photo-1531572753322-ad063cecc140?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"/>
 <div class="diary-body">
 <div class="diary-head">
-<h4>2. Piazza Venezia</h4>
+<h4>Piazza Venezia</h4>
 <button aria-label="Ascolta Piazza Venezia" class="audio-btn" data-audio-text="È un punto di osservazione strategico per capire gli assi urbani che si aprono verso i Fori, il Campidoglio e via del Corso. Nel diario può diventare il luogo delle grandi prospettive monumentali.">
 <i class="fa-solid fa-volume-high"></i>
 </button>
@@ -191,12 +192,11 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 <p class="diary-short">Punto di osservazione tra il Vittoriano e gli assi del centro monumentale.</p>
 <button class="more-link" data-text="È un punto di osservazione strategico per capire gli assi urbani che si aprono verso i Fori, il Campidoglio e via del Corso. Nel diario può diventare il luogo delle grandi prospettive monumentali." data-title="Piazza Venezia">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
 </div>
-</article>
-<article class="diary-card safe-card">
+</article><article class="diary-card safe-card">
 <img alt="Fori Imperiali" class="diary-img" src="https://images.unsplash.com/photo-1552432552-06c0bfe94a94?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"/>
 <div class="diary-body">
 <div class="diary-head">
-<h4>3. Fori Imperiali</h4>
+<h4>Fori Imperiali</h4>
 <button aria-label="Ascolta Fori Imperiali" class="audio-btn" data-audio-text="Da Cesare a Traiano, questi complessi raccontano una politica che si esprime anche attraverso lo spazio. Camminandoli si vede come l'architettura organizzi memoria, autorità e rappresentazione.">
 <i class="fa-solid fa-volume-high"></i>
 </button>
@@ -204,22 +204,77 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 <p class="diary-short">Sequenza di piazze e complessi costruiti dai grandi imperatori tra Cesare e Traiano.</p>
 <button class="more-link" data-text="Da Cesare a Traiano, questi complessi raccontano una politica che si esprime anche attraverso lo spazio. Camminandoli si vede come l'architettura organizzi memoria, autorità e rappresentazione." data-title="Fori Imperiali">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
 </div>
-</article>
-<article class="diary-card safe-card">
-<img alt="Stazione Metro Colosseo" class="diary-img" src="https://images.unsplash.com/photo-1555992828-ca4dbe41d294?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"/>
+</article><article class="diary-card safe-card">
+<img alt="Metro Colosseo - visita interna alla stazione Metro C" class="diary-img" src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"/>
 <div class="diary-body">
 <div class="diary-head">
-<h4>4. Stazione Metro Colosseo</h4>
-<button aria-label="Ascolta Stazione Metro Colosseo" class="audio-btn" data-audio-text="La visita alla stazione ricorda che a Roma l'archeologia non è confinata nei musei: emerge dentro le infrastrutture e modifica il modo di costruire e muoversi nella città contemporanea.">
-<i class="fa-solid fa-volume-high"></i>
-</button>
+<h4>5. Metro Colosseo - visita interna alla stazione Metro C</h4>
+<button aria-label="Ascolta Metro Colosseo - visita interna alla stazione Metro C" class="audio-btn" data-audio-text="Tappa centrale per osservare il cuore politico e spettacolare dell antica Roma. Questa scheda accompagna la tappa con un testo breve, utile per orientarsi, fissare i punti chiave e trasformare la visita in appunti di diario coerenti con la timeline."><i class="fa-solid fa-volume-high"></i></button>
 </div>
-<p class="diary-short">Occasione per osservare come l archeologia emerga anche nelle infrastrutture contemporanee.</p>
-<button class="more-link" data-text="La visita alla stazione ricorda che a Roma l'archeologia non è confinata nei musei: emerge dentro le infrastrutture e modifica il modo di costruire e muoversi nella città contemporanea." data-title="Stazione Metro Colosseo">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
+<p class="diary-short">Tappa centrale per osservare il cuore politico e spettacolare dell antica Roma.</p>
+<button class="more-link" data-text="Tappa centrale per osservare il cuore politico e spettacolare dell antica Roma. Questa scheda accompagna la tappa con un testo breve, utile per orientarsi, fissare i punti chiave e trasformare la visita in appunti di diario coerenti con la timeline." data-title="Metro Colosseo - visita interna alla stazione Metro C">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
 </div>
-</article>
+</article><article class="diary-card safe-card">
+<img alt="Colosseo, ingresso prenotato" class="diary-img" src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"/>
+<div class="diary-body">
+<div class="diary-head">
+<h4>6. Colosseo, ingresso prenotato</h4>
+<button aria-label="Ascolta Colosseo, ingresso prenotato" class="audio-btn" data-audio-text="Tappa centrale per osservare il cuore politico e spettacolare dell antica Roma. Questa scheda accompagna la tappa con un testo breve, utile per orientarsi, fissare i punti chiave e trasformare la visita in appunti di diario coerenti con la timeline."><i class="fa-solid fa-volume-high"></i></button>
 </div>
-<div class="nav-row"><a href="martedi-10-03-2026.html">← Mar 10</a><a href="giovedi-12-03-2026.html">Gio 12 →</a></div>
+<p class="diary-short">Tappa centrale per osservare il cuore politico e spettacolare dell antica Roma.</p>
+<button class="more-link" data-text="Tappa centrale per osservare il cuore politico e spettacolare dell antica Roma. Questa scheda accompagna la tappa con un testo breve, utile per orientarsi, fissare i punti chiave e trasformare la visita in appunti di diario coerenti con la timeline." data-title="Colosseo, ingresso prenotato">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
+</div>
+</article><article class="diary-card safe-card">
+<img alt="Pranzo libero - Pasta Urbana" class="diary-img" src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%271200%27%20height%3D%27700%27%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20x2%3D%271%27%20y1%3D%270%27%20y2%3D%271%27%3E%3Cstop%20stop-color%3D%27%23c7d2fe%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%23e2e8f0%27/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%27100%25%27%20height%3D%27100%25%27%20fill%3D%27url%28%23g%29%27/%3E%0A%20%20%20%20%3Ctext%20x%3D%2750%25%27%20y%3D%2750%25%27%20dominant-baseline%3D%27middle%27%20text-anchor%3D%27middle%27%20fill%3D%27%23312e81%27%20font-family%3D%27Arial%2C%20sans-serif%27%20font-size%3D%2752%27%20font-weight%3D%27700%27%3EPranzo%20libero%20-%20Pasta%20Urbana%3C/text%3E%0A%20%20%20%20%3C/svg%3E"/>
+<div class="diary-body">
+<div class="diary-head">
+<h4>7. Pranzo libero - Pasta Urbana</h4>
+<button aria-label="Ascolta Pranzo libero - Pasta Urbana" class="audio-btn" data-audio-text="La pausa non è solo logistica: aiuta a leggere i tempi reali della giornata, a riorganizzare gli spostamenti e a preparare l attenzione per la visita successiva."><i class="fa-solid fa-volume-high"></i></button>
+</div>
+<p class="diary-short">Pausa per il pranzo e tempo di recupero prima della tappa successiva.</p>
+<button class="more-link" data-text="La pausa non è solo logistica: aiuta a leggere i tempi reali della giornata, a riorganizzare gli spostamenti e a preparare l attenzione per la visita successiva." data-title="Pranzo libero - Pasta Urbana">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
+</div>
+</article><article class="diary-card safe-card">
+<img alt="Ritrovo al Colosseo" class="diary-img" src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"/>
+<div class="diary-body">
+<div class="diary-head">
+<h4>8. Ritrovo al Colosseo</h4>
+<button aria-label="Ascolta Ritrovo al Colosseo" class="audio-btn" data-audio-text="Momento di partenza e organizzazione del gruppo prima degli spostamenti. Questa scheda accompagna la tappa con un testo breve, utile per orientarsi, fissare i punti chiave e trasformare la visita in appunti di diario coerenti con la timeline."><i class="fa-solid fa-volume-high"></i></button>
+</div>
+<p class="diary-short">Momento di partenza e organizzazione del gruppo prima degli spostamenti.</p>
+<button class="more-link" data-text="Momento di partenza e organizzazione del gruppo prima degli spostamenti. Questa scheda accompagna la tappa con un testo breve, utile per orientarsi, fissare i punti chiave e trasformare la visita in appunti di diario coerenti con la timeline." data-title="Ritrovo al Colosseo">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
+</div>
+</article><article class="diary-card safe-card">
+<img alt="Fori Romani e Palatino, ingresso prenotato" class="diary-img" src="https://images.unsplash.com/photo-1529260830199-42c24126f198?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"/>
+<div class="diary-body">
+<div class="diary-head">
+<h4>9. Fori Romani e Palatino, ingresso prenotato</h4>
+<button aria-label="Ascolta Fori Romani e Palatino, ingresso prenotato" class="audio-btn" data-audio-text="Tappa centrale per osservare il cuore politico e spettacolare dell antica Roma. Questa scheda accompagna la tappa con un testo breve, utile per orientarsi, fissare i punti chiave e trasformare la visita in appunti di diario coerenti con la timeline."><i class="fa-solid fa-volume-high"></i></button>
+</div>
+<p class="diary-short">Tappa centrale per osservare il cuore politico e spettacolare dell antica Roma.</p>
+<button class="more-link" data-text="Tappa centrale per osservare il cuore politico e spettacolare dell antica Roma. Questa scheda accompagna la tappa con un testo breve, utile per orientarsi, fissare i punti chiave e trasformare la visita in appunti di diario coerenti con la timeline." data-title="Fori Romani e Palatino, ingresso prenotato">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
+</div>
+</article><article class="diary-card safe-card">
+<img alt="Santa Maria della Vittoria" class="diary-img" src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%271200%27%20height%3D%27700%27%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20x2%3D%271%27%20y1%3D%270%27%20y2%3D%271%27%3E%3Cstop%20stop-color%3D%27%23c7d2fe%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%23e2e8f0%27/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%27100%25%27%20height%3D%27100%25%27%20fill%3D%27url%28%23g%29%27/%3E%0A%20%20%20%20%3Ctext%20x%3D%2750%25%27%20y%3D%2750%25%27%20dominant-baseline%3D%27middle%27%20text-anchor%3D%27middle%27%20fill%3D%27%23312e81%27%20font-family%3D%27Arial%2C%20sans-serif%27%20font-size%3D%2752%27%20font-weight%3D%27700%27%3ESanta%20Maria%20della%20Vittoria%3C/text%3E%0A%20%20%20%20%3C/svg%3E"/>
+<div class="diary-body">
+<div class="diary-head">
+<h4>10. Santa Maria della Vittoria</h4>
+<button aria-label="Ascolta Santa Maria della Vittoria" class="audio-btn" data-audio-text="Tappa dedicata a storia, arte e lettura dello spazio sacro nel contesto romano. Questa scheda accompagna la tappa con un testo breve, utile per orientarsi, fissare i punti chiave e trasformare la visita in appunti di diario coerenti con la timeline."><i class="fa-solid fa-volume-high"></i></button>
+</div>
+<p class="diary-short">Tappa dedicata a storia, arte e lettura dello spazio sacro nel contesto romano.</p>
+<button class="more-link" data-text="Tappa dedicata a storia, arte e lettura dello spazio sacro nel contesto romano. Questa scheda accompagna la tappa con un testo breve, utile per orientarsi, fissare i punti chiave e trasformare la visita in appunti di diario coerenti con la timeline." data-title="Santa Maria della Vittoria">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
+</div>
+</article><article class="diary-card safe-card">
+<img alt="Rientro a Trastevere" class="diary-img" src="https://images.unsplash.com/photo-1531572753322-ad063cecc140?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"/>
+<div class="diary-body">
+<div class="diary-head">
+<h4>11. Rientro a Trastevere</h4>
+<button aria-label="Ascolta Rientro a Trastevere" class="audio-btn" data-audio-text="Il rientro chiude il percorso e permette di collegare tra loro le tappe viste durante la giornata. È il momento utile per tirare le fila del diario di bordo."><i class="fa-solid fa-volume-high"></i></button>
+</div>
+<p class="diary-short">Rientro verso la base e chiusura della giornata con ricomposizione del gruppo.</p>
+<button class="more-link" data-text="Il rientro chiude il percorso e permette di collegare tra loro le tappe viste durante la giornata. È il momento utile per tirare le fila del diario di bordo." data-title="Rientro a Trastevere">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
+</div>
+</article></div>
 <div class="mt-auto pt-2">
 <div class="bg-red-50 rounded-[2.5rem] p-6 border border-red-100 flex items-center justify-between shadow-sm gap-4">
 <div>
@@ -227,10 +282,10 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 <h3 class="font-black text-sm italic tracking-tighter uppercase leading-tight text-slate-900">Hai bisogno di aiuto?</h3>
 <p class="text-[8px] font-bold text-red-400 uppercase mt-1 leading-none">Invia posizione GPS ai docenti</p>
 </div>
-<button class="bg-red-600 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg shadow-red-200 active:scale-95 transition-all" onclick="sendSOS(event)">SOS</button>
+<button class="bg-red-600 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg shadow-red-200 active:scale-95 transition-all" onclick="openSOSModal()">SOS</button>
 </div>
 <p class="text-center text-[8px] font-black text-gray-400 uppercase mt-4 tracking-widest italic leading-none">Premere solo in caso di vera emergenza</p>
-
+<div class="nav-row"><a href="martedi-10-03-2026.html">← Mar 10</a><a href="giovedi-12-03-2026.html">Gio 12 →</a></div>
 </div>
 <div id="infoModal" onclick="closeModal()">
 <div class="modal-card" onclick="event.stopPropagation()">
@@ -239,12 +294,7 @@ body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E29
 <button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase text-xs" onclick="closeModal()">Ho capito!</button>
 </div>
 </div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-function openSOSModal(){
-document.getElementById('sosModal').style.display='flex';
-}
-
-</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const hotel = {"name": "Casa San Giuseppe", "lat": 41.8877, "lng": 12.4667, "label": "Hotel / base a Trastevere"};
 const stops = [{"name": "Casa San Giuseppe", "lat": 41.8877, "lng": 12.4667, "kind": "hotel", "visit": "Partenza dal quartiere di Trastevere."}, {"name": "Teatro Marcello", "lat": 41.8923, "lng": 12.4799, "visit": "Snodo di apertura per leggere la persistenza dell antico nel tessuto urbano."}, {"name": "Piazza Venezia", "lat": 41.8958, "lng": 12.4831, "visit": "Punto di osservazione tra il Vittoriano e gli assi del centro monumentale."}, {"name": "Fori Imperiali", "lat": 41.8957, "lng": 12.4865, "visit": "Sequenza di piazze e complessi costruiti dai grandi imperatori tra Cesare e Traiano."}, {"name": "Stazione Metro Colosseo", "lat": 41.891, "lng": 12.4919, "visit": "Occasione per osservare come l archeologia emerga anche nelle infrastrutture contemporanee."}, {"name": "Colosseo", "lat": 41.8902, "lng": 12.4922, "visit": "Anfiteatro Flavio, macchina spettacolare della Roma imperiale."}, {"name": "Foro Romano", "lat": 41.8925, "lng": 12.4853, "visit": "Centro politico, religioso e giudiziario della citta antica."}, {"name": "Palatino", "lat": 41.8894, "lng": 12.488, "visit": "Collina della memoria originaria e delle residenze imperiali."}, {"name": "Santa Maria della Vittoria", "lat": 41.9049, "lng": 12.4937, "visit": "Eventuale tappa finale per la cappella Cornaro e l Estasi di santa Teresa di Bernini."}];
@@ -258,15 +308,23 @@ L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(map);
 const circle = L.circle([hotel.lat, hotel.lng], { radius: 3101, color:'#4f46e5', weight:2, fillColor:'#4f46e5', fillOpacity:.08, dashArray:'6 8' }).addTo(map);
 circle.bindPopup('Perimetro indicativo degli spostamenti della giornata');
 L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(map).bindPopup(`<strong>${hotel.name}</strong><br>Segnaposto della base a Trastevere`);
-const stopMarkers = [];
 stops.forEach((stop, idx) => {
   if (idx === 0) return;
-  const marker = L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#6d5efc', 'fa-landmark') }).addTo(map);
+  const marker = L.marker([stop.lat, stop.lng], { icon: createGiantIcon(idx === 1 ? '#3b82f6' : '#f59e0b', idx === 1 ? 'fa-location-dot' : 'fa-landmark') }).addTo(map);
   marker.bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`);
-  stopMarkers.push(marker);
 });
-const currentMarker = L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#3b82f6', 'fa-user', true) }).addTo(map).bindPopup('<strong>Sei qui</strong><br>Posizione stimata in base alla tappa attiva');
 map.fitBounds(L.latLngBounds(routePoints).pad(0.25));
+
+const liveMarker = L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#3b82f6', 'fa-location-dot', true) }).addTo(map).bindPopup('Posizione stimata della tappa attiva');
+function moveMapToActiveStop(activeTitle) {
+  if (!activeTitle) return;
+  const t = activeTitle.toLowerCase();
+  const match = stops.find(s => t.includes((s.name || '').toLowerCase()) || (s.name || '').toLowerCase().includes(t));
+  if (!match) return;
+  liveMarker.setLatLng([match.lat, match.lng]);
+  map.panTo([match.lat, match.lng], { animate:true, duration:0.8 });
+}
+
 
 let currentUtterance = null;
 let currentButton = null;
@@ -335,12 +393,6 @@ function applyTimelineState(row, state) {
     icon.className = 'fa-solid fa-clock';
   }
 }
-function setMapPositionForActiveStop(activeIdx) {
-  const routeIdx = Math.max(0, Math.min(stops.length - 1, activeIdx + 1));
-  const target = stops[routeIdx] || stops[0];
-  currentMarker.setLatLng([target.lat, target.lng]);
-}
-
 function updateTimelineByClock() {
   const rows = Array.from(document.querySelectorAll('.timeline-row'));
   if (!rows.length) return;
@@ -362,8 +414,6 @@ function updateTimelineByClock() {
   });
   if (todayStr !== pageDate) {
     // keep a sensible static progression when not viewed on the itinerary date
-    const presetIdx = Math.max(0, rows.findIndex(r => r.classList.contains('active')));
-    setMapPositionForActiveStop(presetIdx);
     return;
   }
   let activeIdx = -1;
@@ -385,7 +435,9 @@ function updateTimelineByClock() {
     const state = idx < activeIdx ? 'done' : idx === activeIdx ? 'active' : 'future';
     applyTimelineState(p.row, state);
   });
-  setMapPositionForActiveStop(activeIdx);
+  const activeRow = points[activeIdx]?.row;
+  const activeTitle = activeRow?.querySelector('.timeline-title')?.innerText || '';
+  moveMapToActiveStop(activeTitle);
 }
 
 
@@ -395,63 +447,22 @@ document.querySelectorAll('.more-link').forEach(btn => {
 function confermaPresenza() { document.getElementById('appello-box').classList.add('hidden-appello'); }
 function openInfo(title, text) { document.getElementById('infoTitle').innerText = title; document.getElementById('infoContent').innerText = text; document.getElementById('infoModal').style.display = 'flex'; }
 function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
-function sendSOS(e) {
-  const btn = e.currentTarget;
-  btn.innerText = 'INVIATO...';
-  btn.classList.replace('bg-red-600', 'bg-slate-900');
-  setTimeout(() => {
-    alert('SOS inviato! I docenti hanno ricevuto la tua posizione GPS.');
-    btn.innerText = 'SOS';
-    btn.classList.replace('bg-slate-900', 'bg-red-600');
-  }, 1200);
-}
+function openSOSModal() { document.getElementById('sosModal').style.display = 'flex'; }
+function closeSOSModal() { document.getElementById('sosModal').style.display = 'none'; }
 setTimeout(() => document.getElementById('push-alert').classList.add('show'), 1200);
 setTimeout(() => document.getElementById('push-alert').classList.remove('show'), 7000);
 updateTimelineByClock();
 setInterval(updateTimelineByClock, 60000);
-
-function openSOSModal(){
-document.getElementById('sosModal').style.display='flex';
-}
-
 </script>
-
-<div id="sosModal" onclick="closeModal('sosModal')" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.92); z-index:10000; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(8px);">
-<div class="bg-white p-8 rounded-[3rem] max-w-sm w-full shadow-2xl" onclick="event.stopPropagation()">
+<div id="sosModal" onclick="closeSOSModal()" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.92); z-index:10001; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(8px);">
+<div class="modal-card" onclick="event.stopPropagation()">
 <p class="text-[10px] font-black uppercase tracking-widest text-red-500 mb-2">Contatti emergenza</p>
 <h3 class="font-black italic text-2xl mb-6 text-slate-900 uppercase">Chi vuoi chiamare?</h3>
-
 <div class="space-y-3 mb-6">
-<a href="tel:+393383915771" class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4">
-<div>
-<p class="text-sm font-black text-slate-900">Carlo Ghelfi</p>
-<p class="text-xs text-slate-500 font-bold">+39 338 391 5771</p>
+<a class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4" href="tel:+393383915771"><div><p class="text-sm font-black text-slate-900">Carlo Ghelfi</p><p class="text-xs text-slate-500 font-bold">+39 338 391 5771</p></div><i class="fa-solid fa-phone text-red-600"></i></a>
+<a class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4" href="tel:+393343532067"><div><p class="text-sm font-black text-slate-900">Anna Maria Mozzanega</p><p class="text-xs text-slate-500 font-bold">+39 334 353 2067</p></div><i class="fa-solid fa-phone text-red-600"></i></a>
+<a class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4" href="tel:+393289158141"><div><p class="text-sm font-black text-slate-900">Angelo Carmisciano</p><p class="text-xs text-slate-500 font-bold">+39 328 915 8141</p></div><i class="fa-solid fa-phone text-red-600"></i></a>
 </div>
-<i class="fa-solid fa-phone text-red-600"></i>
-</a>
-
-<a href="tel:+393343532067" class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4">
-<div>
-<p class="text-sm font-black text-slate-900">Anna Maria Mozzanega</p>
-<p class="text-xs text-slate-500 font-bold">+39 334 353 2067</p>
-</div>
-<i class="fa-solid fa-phone text-red-600"></i>
-</a>
-
-<a href="tel:+393289158141" class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4">
-<div>
-<p class="text-sm font-black text-slate-900">Angelo Carmisciano</p>
-<p class="text-xs text-slate-500 font-bold">+39 328 915 8141</p>
-</div>
-<i class="fa-solid fa-phone text-red-600"></i>
-</a>
-</div>
-
-<button onclick="closeModal('sosModal')" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs">
-CHIUDI
-</button>
-</div>
-</div>
-
-</body>
+<button class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs" onclick="closeSOSModal()">Chiudi</button>
+</div></div></body>
 </html>
