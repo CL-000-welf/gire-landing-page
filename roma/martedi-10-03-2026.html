@@ -516,10 +516,12 @@ function openInfo(title, text) { document.getElementById('infoTitle').innerText 
 function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
 function openSOSModal() { document.getElementById('sosModal').style.display = 'flex'; }
 function closeSOSModal() { document.getElementById('sosModal').style.display = 'none'; }
-function sendLocationWhatsApp(phone) {
-  if (!navigator.geolocation) {
-    alert('Geolocalizzazione non supportata su questo dispositivo.');
-    return;
+
+  function sendLocationWhatsApp(phone) {
+    setTimeout(() => document.getElementById('push-alert').classList.add('show'), 1200);
+    setTimeout(() => document.getElementById('push-alert').classList.remove('show'), 7000);
+    updateTimelineByClock();
+    setInterval(updateTimelineByClock, 60000);
   }
   navigator.geolocation.getCurrentPosition(function(position) {
     const lat = position.coords.latitude;
