@@ -518,11 +518,80 @@ function openSOSModal() { document.getElementById('sosModal').style.display = 'f
 function closeSOSModal() { document.getElementById('sosModal').style.display = 'none'; }
 
   function sendLocationWhatsApp(phone) {
-    setTimeout(() => document.getElementById('push-alert').classList.add('show'), 1200);
-    setTimeout(() => document.getElementById('push-alert').classList.remove('show'), 7000);
-    updateTimelineByClock();
-    setInterval(updateTimelineByClock, 60000);
+
+  if (!navigator.geolocation) {
+    alert('Geolocalizzazione non supportata su questo dispositivo.');
+    return;
   }
+
+  function sendPosition(position) {
+
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+
+    const message = encodeURIComponent(
+      'SOS STUDENTE\nLa mia posizione GPS:\nhttps://maps.google.com/?q=' + lat + ',' + lon
+    );
+
+    window.location.href = 'https://wa.me/' + phone + '?text=' + message;
+  }
+
+  function gpsError(error) {
+
+    if (error.code === 1) {
+      alert('Permesso posizione negato. Controlla i permessi GPS del browser.');
+    }
+
+    else if (error.code === 2) {
+      alert('Posizione non disponibile. Attiva GPS o rete dati.');
+    }
+
+    else if (error.code === 3) {
+      alert('Timeout GPS. Riprovare tra qualche secondo.');
+    }
+
+    else {
+      alert('Errore sconosciuto nella geolocalizzazione.');
+    }
+
+    console.log('Errore GPS:', error);
+  }
+
+  if (navigator.permissions) {
+
+    navigator.permissions.query({ name: 'geolocation' }).then(function(permission) {
+
+      if (permission.state === 'denied') {
+        alert('Il browser ha bloccato l’accesso alla posizione. Abilita la localizzazione nelle impostazioni.');
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        sendPosition,
+        gpsError,
+        {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 0
+        }
+      );
+
+    });
+
+  } else {
+
+    navigator.geolocation.getCurrentPosition(
+      sendPosition,
+      gpsError,
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0
+      }
+    );
+
+  }
+}
   navigator.geolocation.getCurrentPosition(function(position) {
     const lat = position.coords.latitude;
     const lon = position.coords.longitude;
