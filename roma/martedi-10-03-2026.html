@@ -516,20 +516,42 @@ function openInfo(title, text) { document.getElementById('infoTitle').innerText 
 function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
 function openSOSModal() { document.getElementById('sosModal').style.display = 'flex'; }
 function closeSOSModal() { document.getElementById('sosModal').style.display = 'none'; }
+
 function sendLocationWhatsApp(phone) {
   if (!navigator.geolocation) {
     alert('Geolocalizzazione non supportata su questo dispositivo.');
     return;
   }
-  navigator.geolocation.getCurrentPosition(function(position) {
-    const lat = position.coords.latitude;
-    const lon = position.coords.longitude;
-    const message = encodeURIComponent('SOS STUDENTE\nLa mia posizione GPS:\nhttps://maps.google.com/?q=' + lat + ',' + lon);
-    window.location.href = 'https://wa.me/' + phone + '?text=' + message;
-  }, function() {
-    alert('Non riesco a leggere la posizione. Controlla i permessi GPS del browser.');
-  }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
+
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      const message = encodeURIComponent(
+        'SOS STUDENTE\nLa mia posizione GPS:\nhttps://maps.google.com/?q=' + lat + ',' + lon
+      );
+      window.location.href = 'https://wa.me/' + phone + '?text=' + message;
+    },
+    function(error) {
+      if (error.code === 1) {
+        alert('Permesso posizione negato. Controlla i permessi GPS del browser.');
+      } else if (error.code === 2) {
+        alert('Posizione non disponibile.');
+      } else if (error.code === 3) {
+        alert('Timeout GPS. Riprovare tra qualche secondo.');
+      } else {
+        alert('Non riesco a leggere la posizione.');
+      }
+      console.log('Errore GPS:', error);
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
+    }
+  );
 }
+  
 setTimeout(() => document.getElementById('push-alert').classList.add('show'), 1200);
 setTimeout(() => document.getElementById('push-alert').classList.remove('show'), 7000);
 updateTimelineByClock();
