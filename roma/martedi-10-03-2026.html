@@ -38,17 +38,17 @@
 
     .safe-card {
       background: white;
-      border-radius: 2rem;
+      border-radius: 1.9rem;
       border: 1px solid #E2E8F0;
       overflow: hidden;
       box-shadow: 0 10px 25px rgba(15,23,42,0.04);
     }
 
     #map-student {
-      height: 220px;
-      border-radius: 1.7rem;
+      height: 210px;
+      border-radius: 1.35rem;
       z-index: 10;
-      border: 3px solid white;
+      border: 2px solid white;
       box-shadow: 0 8px 18px rgba(0,0,0,0.05);
     }
 
@@ -56,38 +56,70 @@
       position: relative;
     }
 
+    .map-meta {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: end;
+      margin-top: 12px;
+    }
+
     .map-legend {
-      display: flex;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 12px;
-      margin-top: 10px;
       font-size: 11px;
-      font-weight: 800;
+      font-weight: 900;
       color: #64748b;
       text-transform: uppercase;
       letter-spacing: .03em;
+    }
+
+    .legend-block {
+      line-height: 1.35;
+    }
+
+    .legend-weather {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      background: #eff6ff;
+      color: #0369a1;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 10px;
+      font-weight: 900;
+      box-shadow: 0 2px 8px rgba(15,23,42,0.05);
     }
 
     .map-controls {
       display: flex;
       justify-content: flex-end;
       gap: 8px;
-      margin-top: 10px;
+      flex-wrap: wrap;
     }
 
     .map-controls button {
       background: white;
       border: 1px solid #E2E8F0;
       border-radius: 14px;
-      min-width: 40px;
-      height: 40px;
+      min-width: 42px;
+      height: 42px;
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 2px 8px rgba(15,23,42,0.06);
       color: #334155;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .map-controls button.reset-btn {
+      min-width: 64px;
+      padding: 0 12px;
+      gap: 6px;
       font-size: 12px;
-      font-weight: 800;
     }
 
     #push-alert {
@@ -146,7 +178,7 @@
 
     .modal-card {
       background:white;
-      border-radius:2.5rem;
+      border-radius:2.3rem;
       max-width: 420px;
       width:100%;
       padding: 2rem;
@@ -327,15 +359,45 @@
       white-space: nowrap;
     }
 
+    footer.app-footer {
+      margin-top: 28px;
+      padding: 18px 8px 2px;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    footer.app-footer .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #64748b;
+    }
+
+    footer.app-footer img {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+    }
+
     @media (max-width: 420px) {
       body { padding: 16px 16px 32px; }
-      .safe-card { border-radius: 1.8rem; }
-      #map-student { height: 205px; }
+      .safe-card { border-radius: 1.7rem; }
+      #map-student { height: 198px; border-radius: 1.2rem; }
       .diary-body { padding: 1rem; }
       .diary-head h4 { font-size: 1rem; }
       .diary-short { font-size:.95rem; line-height: 1.55; }
       .nav-row a, .nav-row span { min-width: 96px; padding: .7rem .85rem; }
       .modal-card { padding: 1.5rem; border-radius: 2rem; }
+      .map-meta { grid-template-columns: 1fr; }
+      .map-controls { justify-content: flex-start; }
     }
   </style>
 </head>
@@ -363,7 +425,6 @@
     <div class="text-right">
       <p class="text-xs font-black italic uppercase text-slate-800">Martedì<br/>10.03.2026</p>
       <div class="flex justify-end gap-2 mt-2 items-center">
-        <span class="text-[9px] bg-sky-100 text-sky-700 px-2 py-0.5 rounded-full font-bold uppercase">16° Sereno</span>
         <span class="text-[9px] bg-green-500 text-white px-2 py-0.5 rounded-full font-bold uppercase">Live</span>
         <button onclick="openSOSModal()" class="text-[9px] bg-red-500 text-white px-2 py-0.5 rounded-full font-bold uppercase border-0 active:scale-95 transition-all">SOS</button>
       </div>
@@ -383,15 +444,25 @@
       <div id="map-student"></div>
     </div>
 
-    <div class="map-legend">
-      <span>Base: Casa San Giuseppe</span>
-      <span>Cerchio = area spostamenti</span>
-    </div>
+    <div class="map-meta">
+      <div class="map-legend">
+        <div class="legend-block">
+          <div>Base: Casa San Giuseppe</div>
+          <div class="legend-weather"><i class="fa-solid fa-sun"></i> 16° Sereno</div>
+        </div>
+        <div class="legend-block">
+          <div>Cerchio = area</div>
+          <div>spostamenti</div>
+        </div>
+      </div>
 
-    <div class="map-controls">
-      <button onclick="map.zoomIn()" aria-label="Zoom avanti"><i class="fa-solid fa-plus"></i></button>
-      <button onclick="map.zoomOut()" aria-label="Zoom indietro"><i class="fa-solid fa-minus"></i></button>
-      <button onclick="resetMapView()" aria-label="Reset mappa">Reset</button>
+      <div class="map-controls">
+        <button onclick="map.zoomIn()" aria-label="Zoom avanti"><i class="fa-solid fa-plus"></i></button>
+        <button onclick="map.zoomOut()" aria-label="Zoom indietro"><i class="fa-solid fa-minus"></i></button>
+        <button class="reset-btn" onclick="resetMapView()" aria-label="Reset mappa">
+          <i class="fa-solid fa-rotate-left"></i> Reset
+        </button>
+      </div>
     </div>
   </div>
 
@@ -493,7 +564,6 @@
   <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic">I diari di viaggio</h3>
 
   <div class="space-y-6 mb-12">
-
     <article class="diary-card safe-card">
       <img alt="Musei Vaticani / Basilica di San Pietro" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/assets/vaticano.jpg"/>
       <div class="diary-body">
@@ -605,7 +675,6 @@
         </button>
       </div>
     </article>
-
   </div>
 
   <div class="mt-auto pt-2">
@@ -619,11 +688,20 @@
     </div>
 
     <p class="text-center text-[8px] font-black text-gray-400 uppercase mt-4 tracking-widest italic leading-none">Premere solo in caso di vera emergenza</p>
+
     <div class="nav-row">
       <a href="lunedi-09-03-2026.html">← Lun 09</a>
       <a href="mercoledi-11-03-2026.html">Mer 11 →</a>
     </div>
   </div>
+
+  <footer class="app-footer">
+    <div class="footer-brand">
+      <img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE"/>
+      <span>GIRE</span>
+    </div>
+    <span>Area studente · Roma 2026</span>
+  </footer>
 
   <div id="infoModal" onclick="closeModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
@@ -704,13 +782,13 @@
   <script>
     const hotel = {
       name: "Casa San Giuseppe",
-      lat: 41.8877,
-      lng: 12.4667,
+      lat: 41.88895,
+      lng: 12.47035,
       label: "Hotel / base a Trastevere"
     };
 
     const stops = [
-      { name: "Casa San Giuseppe", lat: 41.8877, lng: 12.4667, kind: "hotel", visit: "Partenza mattutina dal quartiere base." },
+      { name: "Casa San Giuseppe", lat: 41.88895, lng: 12.47035, kind: "hotel", visit: "Base logistica in Vicolo Moroni, vicino a Piazza Trilussa." },
       { name: "Musei Vaticani", lat: 41.9065, lng: 12.4536, visit: "Percorso tra cortili, sculture classiche, Stanze di Raffaello e Cappella Sistina." },
       { name: "Basilica di San Pietro", lat: 41.9022, lng: 12.4539, visit: "Alternativa o integrazione alla visita dei musei, centro simbolico della Roma papale." },
       { name: "Castel Sant Angelo", lat: 41.9031, lng: 12.4663, visit: "Da mausoleo di Adriano a fortezza pontificia, cerniera tra antichità e potere papale." },
@@ -721,7 +799,7 @@
       { name: "Fontana di Trevi", lat: 41.9009, lng: 12.4833, visit: "Sintesi spettacolare tra facciata-palazzo, scultura e suono dell’acqua." }
     ];
 
-    const walkMinutes = [25, 12, 10, 8, 10, 6, 9, 11];
+    const walkMinutes = [25, 12, 8, 9, 6, 5, 6, 9];
 
     const map = L.map('map-student', {
       zoomControl: false,
@@ -732,25 +810,35 @@
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    function createGiantIcon(color, iconClass, isMe = false) {
+    function createGiantIcon(color, iconClass, pulse = false) {
       return L.divIcon({
         className: 'custom-icon',
-        html: `<div class="${isMe ? 'pulse-me' : ''}" style="background-color:${color}; width:46px; height:46px; border:4px solid white; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:18px; box-shadow:0 8px 15px rgba(0,0,0,0.15);"><i class="fa-solid ${iconClass}"></i></div>`,
+        html: `<div class="${pulse ? 'pulse-me' : ''}" style="background-color:${color}; width:46px; height:46px; border:4px solid white; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:18px; box-shadow:0 8px 15px rgba(0,0,0,0.15);"><i class="fa-solid ${iconClass}"></i></div>`,
         iconSize:[46,46],
         iconAnchor:[23,23]
       });
     }
 
-    const routePoints = stops.map(s => [s.lat, s.lng]);
+    const routePoints = [
+      [hotel.lat, hotel.lng],
+      [41.9065, 12.4536],
+      [41.9031, 12.4663],
+      [41.8994, 12.4725],
+      [41.8986, 12.4769],
+      [41.8992, 12.4731],
+      [41.8956, 12.4769],
+      [41.9009, 12.4833],
+      [hotel.lat, hotel.lng]
+    ];
 
-    const routeLine = L.polyline(routePoints, {
+    L.polyline(routePoints, {
       color:'#4f46e5',
       weight:4,
       opacity:.75
     }).addTo(map);
 
     const circle = L.circle([hotel.lat, hotel.lng], {
-      radius: 2514,
+      radius: 2500,
       color:'#4f46e5',
       weight:2,
       fillColor:'#4f46e5',
@@ -762,14 +850,22 @@
 
     const hotelMarker = L.marker([hotel.lat, hotel.lng], {
       icon: createGiantIcon('#ef4444', 'fa-hotel')
-    }).addTo(map).bindPopup(`<strong>${hotel.name}</strong><br>Segnaposto della base a Trastevere`);
+    }).addTo(map).bindPopup(`<strong>${hotel.name}</strong><br>Base a Vicolo Moroni, vicino a Piazza Trilussa`);
 
-    stops.forEach((stop, idx) => {
-      if (idx === 0) return;
-      const marker = L.marker([stop.lat, stop.lng], {
-        icon: createGiantIcon(idx === 1 ? '#3b82f6' : '#f59e0b', idx === 1 ? 'fa-location-dot' : 'fa-landmark')
-      }).addTo(map);
-      marker.bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`);
+    const staticStops = [
+      { lat: 41.9065, lng: 12.4536, icon: 'fa-landmark', color: '#f59e0b', title: 'Musei Vaticani', text: 'Percorso tra cortili, Stanze di Raffaello e Cappella Sistina.' },
+      { lat: 41.9031, lng: 12.4663, icon: 'fa-landmark', color: '#f59e0b', title: 'Castel Sant’Angelo', text: 'Da mausoleo imperiale a fortezza pontificia.' },
+      { lat: 41.8994, lng: 12.4725, icon: 'fa-church', color: '#f59e0b', title: 'San Luigi dei Francesi', text: 'Il ciclo di Caravaggio dedicato a San Matteo.' },
+      { lat: 41.8986, lng: 12.4769, icon: 'fa-landmark', color: '#f59e0b', title: 'Pantheon', text: 'Cupola monumentale e oculo centrale.' },
+      { lat: 41.8992, lng: 12.4731, icon: 'fa-fountain', color: '#f59e0b', title: 'Piazza Navona', text: 'Piazza barocca sullo stadio di Domiziano.' },
+      { lat: 41.8956, lng: 12.4769, icon: 'fa-landmark', color: '#f59e0b', title: 'Largo di Torre Argentina', text: 'Area archeologica repubblicana nel cuore della città.' },
+      { lat: 41.9009, lng: 12.4833, icon: 'fa-fountain', color: '#f59e0b', title: 'Fontana di Trevi', text: 'Grande teatro dell’acqua barocco.' }
+    ];
+
+    staticStops.forEach(stop => {
+      L.marker([stop.lat, stop.lng], {
+        icon: createGiantIcon(stop.color, stop.icon)
+      }).addTo(map).bindPopup(`<strong>${stop.title}</strong><br>${stop.text}`);
     });
 
     function midpoint(a, b) {
@@ -792,7 +888,7 @@
     }
 
     function resetMapView() {
-      map.fitBounds(L.latLngBounds(routePoints).pad(0.25));
+      map.fitBounds(L.latLngBounds(routePoints).pad(0.22));
     }
 
     resetMapView();
@@ -805,13 +901,15 @@
     function moveMapToActiveStop(activeTitle) {
       if (!activeTitle) return;
       const t = activeTitle.toLowerCase();
+
       const match = stops.find(s =>
         t.includes((s.name || '').toLowerCase()) ||
         (s.name || '').toLowerCase().includes(t)
       );
+
       if (!match) return;
       liveMarker.setLatLng([match.lat, match.lng]);
-      map.panTo([match.lat, match.lng], { animate: false });
+      map.panTo([match.lat, match.lng], { animate:false });
     }
 
     let currentUtterance = null;
@@ -865,13 +963,12 @@
 
       if (t.includes('musei vaticani')) return 'fa-landmark';
       if (t.includes('san pietro')) return 'fa-church';
-      if (t.includes('castel sant')) return 'fa-fort-awesome';
+      if (t.includes('castel sant')) return 'fa-landmark';
       if (t.includes('san luigi')) return 'fa-church';
       if (t.includes('pantheon')) return 'fa-landmark';
       if (t.includes('piazza navona')) return 'fa-fountain';
       if (t.includes('torre argentina')) return 'fa-landmark';
       if (t.includes('trevi')) return 'fa-fountain';
-
       if (t.includes('piazza') || t.includes('arrivo')) return 'fa-location-dot';
 
       return 'fa-landmark';
