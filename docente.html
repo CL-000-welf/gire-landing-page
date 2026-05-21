@@ -17,6 +17,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #F3F4F6; }
@@ -338,28 +339,29 @@
                     <div id="studentsList" class="space-y-3"></div>
                 </div>
 
-                <div id="sos" class="bg-red-600 rounded-[2rem] p-8 text-white card-shadow relative overflow-hidden">
-                    <div class="relative z-10">
-                        <p class="text-red-100 text-[10px] font-black uppercase tracking-[0.3em] mb-3">Gestione live</p>
-                        <h3 class="text-2xl md:text-3xl font-black mb-4 uppercase tracking-tight">SOS e sicurezza</h3>
-                        <p class="text-red-100 text-sm font-medium leading-relaxed max-w-xl mb-6">
-                            Il docente può simulare l'attivazione di una procedura SOS, registrare l'evento
-                            e inviare un alert immediato alla UI studente.
-                        </p>
-                        <div id="sosStatus" class="bg-white/15 border border-white/10 rounded-3xl p-5 mb-5">
-                            <p class="text-[10px] font-black uppercase tracking-widest text-red-100 mb-1">Stato corrente</p>
-                            <p class="font-black text-xl">Nessuna emergenza attiva</p>
+                <div id="sos" class="bg-white rounded-[2rem] p-8 border border-gray-100 card-shadow">
+                    <div class="flex items-center justify-between gap-4 mb-6">
+                        <div>
+                            <h3 class="font-black text-gray-900 uppercase tracking-tight">Live Map e SOS</h3>
+                            <p class="text-gray-400 text-sm font-semibold mt-1">Simulazione SOS studente con overlay, suono, vibrazione e localizzazione.</p>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <button onclick="triggerSOS()" class="bg-white text-red-600 py-4 rounded-2xl font-black uppercase text-xs hover:bg-red-50 transition">
-                                <i class="fa-solid fa-bolt mr-2"></i> Simula SOS
-                            </button>
-                            <button onclick="resolveSOS()" class="bg-black/20 text-white py-4 rounded-2xl font-black uppercase text-xs hover:bg-black/30 transition">
-                                <i class="fa-solid fa-check mr-2"></i> Chiudi evento
-                            </button>
-                        </div>
+                        <span id="liveStatus" class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[9px] font-black uppercase">
+                            Live ora
+                        </span>
                     </div>
-                    <i class="fa-solid fa-triangle-exclamation absolute -right-10 -bottom-10 text-[10rem] text-white/10"></i>
+
+                    <div id="map-container" class="mb-5">
+                        <div id="teacherMap"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <button onclick="triggerSOS()" class="bg-red-600 text-white py-4 rounded-2xl font-black uppercase text-xs hover:bg-red-500 transition shadow-xl shadow-red-100">
+                            <i class="fa-solid fa-bell-slash mr-2"></i> Simula SOS Studente
+                        </button>
+                        <button onclick="resolveSOS()" class="bg-gray-900 text-white py-4 rounded-2xl font-black uppercase text-xs hover:bg-purple-600 transition">
+                            <i class="fa-solid fa-check mr-2"></i> Chiudi evento
+                        </button>
+                    </div>
                 </div>
             </section>
 
@@ -395,6 +397,30 @@
     </main>
 
     <!-- JAVASCRIPT DEMO -->
+
+    <!-- OVERLAY SOS: riprende la logica funzionante della vecchia demo Live Map -->
+    <div id="sosOverlay" class="fixed inset-0 z-[200] bg-red-600/95 backdrop-blur-md flex items-center justify-center p-6 hidden">
+        <div class="bg-white rounded-[3rem] p-8 max-w-sm w-full text-center shadow-2xl shake">
+            <div class="w-24 h-24 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6 status-pulse">
+                <i class="fa-solid fa-triangle-exclamation text-5xl"></i>
+            </div>
+            <h2 class="text-3xl font-black text-gray-900 mb-2 uppercase tracking-tighter italic">Allerta SOS</h2>
+            <p class="text-gray-500 font-medium mb-8 leading-relaxed">
+                Lo studente <span class="text-red-600 font-black underline">Marco Rossi</span> ha inviato una segnalazione di emergenza.
+            </p>
+            <div class="space-y-3">
+                <button onclick="handleSOSAction(true)" class="w-full bg-red-600 text-white py-5 rounded-[1.5rem] font-black uppercase text-xs shadow-lg shadow-red-200 hover:bg-red-700 transition-all">
+                    Localizza sulla mappa
+                </button>
+                <button onclick="handleSOSAction(false)" class="w-full bg-gray-100 text-gray-400 py-4 rounded-[1.5rem] font-black uppercase text-[10px] tracking-widest">
+                    Ignora segnalazione
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <script>
         /*
             Demo funzionante senza backend:
@@ -407,11 +433,63 @@
             document.getElementById('sidebar').classList.toggle('-translate-x-full');
         }
 
+
+        // Sblocco audio su prima interazione utente, necessario su browser mobile.
+        const unlockAudio = () => {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            document.removeEventListener('touchstart', unlockAudio);
+            document.removeEventListener('click', unlockAudio);
+        };
+        document.addEventListener('touchstart', unlockAudio);
+        document.addEventListener('click', unlockAudio);
+
+        function startSound() {
+            if (!audioCtx) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            clearInterval(beepInterval);
+            beepInterval = setInterval(() => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.4);
+            }, 600);
+        }
+
+        function stopSound() {
+            clearInterval(beepInterval);
+        }
+
+        function initMap() {
+            teacherMap = L.map('teacherMap', { zoomControl: false, tap: false, touchZoom: true }).setView([41.8992, 12.4731], 16);
+            L.control.zoom({ position: 'bottomright' }).addTo(teacherMap);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(teacherMap);
+            L.circle([41.8992, 12.4731], { color: '#7C4DFF', weight: 2, fillOpacity: 0.1, radius: 200 }).addTo(teacherMap);
+            L.marker([41.8992, 12.4731]).addTo(teacherMap).bindPopup('Gruppo 3A');
+            sosMarker = L.circleMarker([41.9005, 12.4715], {
+                radius: 8,
+                fillColor: '#F59E0B',
+                color: 'white',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.9
+            }).addTo(teacherMap).bindPopup('Marco Rossi');
+        }
+
         const dayBaseClass = 'day-tab bg-gray-50 text-gray-900 rounded-3xl p-5 text-left border border-gray-100 hover:border-purple-200 transition';
         const daySelectedClass = 'day-tab bg-purple-600 text-white rounded-3xl p-5 text-left transition';
 
         let currentDay = 'lunedi';
         let published = false;
+        let audioCtx;
+        let beepInterval;
+        let teacherMap;
+        let sosMarker;
 
         const program = {
             lunedi: {
@@ -672,19 +750,76 @@
         }
 
         function triggerSOS() {
-            document.getElementById('sosStatus').innerHTML = `
-                <p class="text-[10px] font-black uppercase tracking-widest text-red-100 mb-1">Stato corrente</p>
-                <p class="font-black text-xl">SOS simulato attivo · gruppo in verifica</p>
-            `;
+            const overlay = document.getElementById('sosOverlay');
+            overlay.classList.remove('hidden');
+            overlay.style.display = 'flex';
+
+            document.getElementById('sosBadge').innerText = '1';
+            document.getElementById('sosBadge').className = 'text-3xl font-black text-red-600 animate-pulse';
+            document.getElementById('liveStatus').innerText = 'SOS attivo';
+            document.getElementById('liveStatus').className = 'bg-red-100 text-red-700 px-3 py-1 rounded-full text-[9px] font-black uppercase animate-pulse';
+
             sendAlert('SOS docente attivato: restare nel punto di ritrovo e attendere istruzioni.', 'red');
+            startSound();
+            if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
+        }
+
+        function handleSOSAction(shouldScroll) {
+            stopSound();
+
+            const overlay = document.getElementById('sosOverlay');
+            overlay.classList.add('hidden');
+            overlay.style.display = 'none';
+
+            document.getElementById('sosBadge').innerText = '0';
+            document.getElementById('sosBadge').className = 'text-3xl font-black text-gray-900';
+            document.getElementById('liveStatus').innerText = 'Live ora';
+            document.getElementById('liveStatus').className = 'bg-green-100 text-green-700 px-3 py-1 rounded-full text-[9px] font-black uppercase';
+
+            const main = document.getElementById('main-content');
+            const target = document.getElementById('map-container');
+
+            if (shouldScroll) {
+                main.scrollTo({ top: target.offsetTop - 20, behavior: 'smooth' });
+
+                setTimeout(() => {
+                    teacherMap.invalidateSize();
+                    teacherMap.flyTo([41.9005, 12.4715], 18, { animate: true, duration: 1.5 });
+                }, 500);
+
+                setTimeout(() => {
+                    L.popup()
+                        .setLatLng([41.9005, 12.4715])
+                        .setContent("<div style='text-align:center; padding:5px;'><b>Marco Rossi</b><br><span style='color:red; font-weight:bold;'>RICHIESTA SOS</span></div>")
+                        .openOn(teacherMap);
+                }, 2200);
+            } else {
+                main.scrollTo({ top: target.offsetTop - 20, behavior: 'smooth' });
+                teacherMap.invalidateSize();
+                L.popup()
+                    .setLatLng([41.9005, 12.4715])
+                    .setContent("<div style='text-align:center; padding:5px;'><b>Marco Rossi</b><br><span style='color:gray; font-weight:bold;'>Segnalazione Annullata</span></div>")
+                    .openOn(teacherMap);
+            }
         }
 
         function resolveSOS() {
-            document.getElementById('sosStatus').innerHTML = `
-                <p class="text-[10px] font-black uppercase tracking-widest text-red-100 mb-1">Stato corrente</p>
-                <p class="font-black text-xl">Evento chiuso · nessuna emergenza attiva</p>
-            `;
+            stopSound();
+
+            document.getElementById('sosBadge').innerText = '0';
+            document.getElementById('sosBadge').className = 'text-3xl font-black text-gray-900';
+            document.getElementById('liveStatus').innerText = 'Live ora';
+            document.getElementById('liveStatus').className = 'bg-green-100 text-green-700 px-3 py-1 rounded-full text-[9px] font-black uppercase';
+
             sendAlert('Evento SOS chiuso: il gruppo può riprendere il programma.', 'green');
+
+            if (teacherMap) {
+                teacherMap.invalidateSize();
+                L.popup()
+                    .setLatLng([41.9005, 12.4715])
+                    .setContent("<div style='text-align:center; padding:5px;'><b>Marco Rossi</b><br><span style='color:green; font-weight:bold;'>SOS CHIUSO</span></div>")
+                    .openOn(teacherMap);
+            }
         }
 
         function publishStudentView() {
@@ -732,6 +867,8 @@
             document.getElementById('statAppello').innerText = presentCount + '/42';
         }
 
+        initMap();
+        setTimeout(() => teacherMap.invalidateSize(), 300);
         selectDay('lunedi');
         renderStudents();
         updatePublishStatus(false);
