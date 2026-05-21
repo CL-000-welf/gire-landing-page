@@ -13,6 +13,8 @@
         body { font-family: 'Inter', sans-serif; background-color: #F3F4F6; }
         .sidebar { background-color: #1A1C2E; }
         .card-shadow { box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .proposal-card { cursor: pointer; }
+        .proposal-card:focus { outline: 3px solid rgba(124,77,255,.35); outline-offset: 3px; }
     </style>
 </head>
 
@@ -24,7 +26,7 @@
             <img src="assets/logo.png" alt="Logo" class="h-6">
             <span class="font-black tracking-tighter italic text-purple-400">GIRE</span>
         </div>
-        <button onclick="toggleMenu()" class="text-2xl p-2 bg-white/10 rounded-lg">
+        <button onclick="toggleMenu()" class="text-2xl p-2 bg-white/10 rounded-lg" aria-label="Apri menu">
             <i class="fa-solid fa-bars"></i>
         </button>
     </div>
@@ -103,7 +105,7 @@
                     </p>
                 </div>
 
-                <button class="bg-gray-900 text-white px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl active:scale-95 transition hover:bg-purple-600">
+                <button id="exportButton" class="bg-gray-900 text-white px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl active:scale-95 transition hover:bg-purple-600">
                     <i class="fa-solid fa-file-export mr-2"></i>
                     Esporta Fascicolo
                 </button>
@@ -114,7 +116,7 @@
                 <div class="bg-white rounded-3xl p-5 border border-gray-100 card-shadow">
                     <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Proposte</p>
                     <div class="flex items-end justify-between">
-                        <span class="text-4xl font-black text-gray-900">12</span>
+                        <span id="statProposte" class="text-4xl font-black text-gray-900">12</span>
                         <i class="fa-solid fa-lightbulb text-purple-500 text-2xl"></i>
                     </div>
                 </div>
@@ -122,7 +124,7 @@
                 <div class="bg-white rounded-3xl p-5 border border-gray-100 card-shadow">
                     <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Fascicoli pronti</p>
                     <div class="flex items-end justify-between">
-                        <span class="text-4xl font-black text-gray-900">4</span>
+                        <span id="statFascicoli" class="text-4xl font-black text-gray-900">4</span>
                         <i class="fa-solid fa-folder-open text-green-500 text-2xl"></i>
                     </div>
                 </div>
@@ -130,7 +132,7 @@
                 <div class="bg-white rounded-3xl p-5 border border-gray-100 card-shadow">
                     <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">MEPA</p>
                     <div class="flex items-end justify-between">
-                        <span class="text-4xl font-black text-gray-900">3</span>
+                        <span id="statMepa" class="text-4xl font-black text-gray-900">3</span>
                         <i class="fa-solid fa-file-contract text-amber-500 text-2xl"></i>
                     </div>
                 </div>
@@ -138,7 +140,7 @@
                 <div class="bg-white rounded-3xl p-5 border border-gray-100 card-shadow">
                     <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Docenti sync</p>
                     <div class="flex items-end justify-between">
-                        <span class="text-4xl font-black text-gray-900">2</span>
+                        <span id="statSync" class="text-4xl font-black text-gray-900">2</span>
                         <i class="fa-solid fa-chalkboard-user text-blue-500 text-2xl"></i>
                     </div>
                 </div>
@@ -152,7 +154,7 @@
                             Proposte didattiche
                         </h3>
                         <p class="text-gray-400 text-sm font-semibold mt-1">
-                            Le proposte inviate dai consigli di classe a inizio anno.
+                            Le proposte inviate dai consigli di classe a inizio anno. Seleziona una gita per aggiornare fascicolo, MEPA, preventivi e sincronizzazione docente.
                         </p>
                     </div>
 
@@ -163,9 +165,14 @@
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                    <div class="border-2 border-purple-500 bg-purple-50 rounded-3xl p-5">
+                    <div id="proposal-roma"
+                         role="button"
+                         tabindex="0"
+                         onclick="selectTrip('roma')"
+                         onkeydown="handleProposalKey(event, 'roma')"
+                         class="proposal-card border-2 border-purple-500 bg-purple-50 rounded-3xl p-5 transition">
                         <div class="flex justify-between items-start mb-5">
-                            <span class="bg-purple-600 text-white px-3 py-1 rounded-full text-[9px] font-black uppercase">
+                            <span id="badge-roma" class="bg-purple-600 text-white px-3 py-1 rounded-full text-[9px] font-black uppercase">
                                 Selezionata
                             </span>
                             <span class="text-purple-300 text-4xl font-black">01</span>
@@ -184,9 +191,14 @@
                         </div>
                     </div>
 
-                    <div class="border border-gray-100 bg-gray-50 rounded-3xl p-5">
+                    <div id="proposal-firenze"
+                         role="button"
+                         tabindex="0"
+                         onclick="selectTrip('firenze')"
+                         onkeydown="handleProposalKey(event, 'firenze')"
+                         class="proposal-card border border-gray-100 bg-gray-50 rounded-3xl p-5 hover:border-purple-200 transition">
                         <div class="flex justify-between items-start mb-5">
-                            <span class="bg-amber-100 text-amber-600 px-3 py-1 rounded-full text-[9px] font-black uppercase">
+                            <span id="badge-firenze" class="bg-amber-100 text-amber-600 px-3 py-1 rounded-full text-[9px] font-black uppercase">
                                 Da valutare
                             </span>
                             <span class="text-gray-200 text-4xl font-black">02</span>
@@ -205,9 +217,14 @@
                         </div>
                     </div>
 
-                    <div class="border border-gray-100 bg-gray-50 rounded-3xl p-5">
+                    <div id="proposal-torino"
+                         role="button"
+                         tabindex="0"
+                         onclick="selectTrip('torino')"
+                         onkeydown="handleProposalKey(event, 'torino')"
+                         class="proposal-card border border-gray-100 bg-gray-50 rounded-3xl p-5 hover:border-purple-200 transition">
                         <div class="flex justify-between items-start mb-5">
-                            <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-[9px] font-black uppercase">
+                            <span id="badge-torino" class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-[9px] font-black uppercase">
                                 Bozza
                             </span>
                             <span class="text-gray-200 text-4xl font-black">03</span>
@@ -241,43 +258,53 @@
                             <h4 class="font-black text-gray-900 uppercase tracking-tight">
                                 Fascicolo viaggio
                             </h4>
-                            <p class="text-xs text-gray-400 font-bold uppercase tracking-widest">
+                            <p id="tripSubtitle" class="text-xs text-gray-400 font-bold uppercase tracking-widest">
                                 Roma · Classe 3A
                             </p>
                         </div>
                     </div>
 
                     <div class="space-y-4">
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
+                        <div class="flex items-center justify-between gap-4 p-4 bg-gray-50 rounded-2xl">
                             <span class="text-sm font-bold text-gray-600">Classi coinvolte</span>
-                            <span class="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-[9px] font-black uppercase">3A · 42 studenti</span>
+                            <span id="classiValue" class="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-[9px] font-black uppercase whitespace-nowrap">
+                                3A · 42 studenti
+                            </span>
                         </div>
-                       
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
+
+                        <div class="flex items-center justify-between gap-4 p-4 bg-gray-50 rounded-2xl">
                             <span class="text-sm font-bold text-gray-600">Autorizzazioni famiglie</span>
-                            <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-[9px] font-black uppercase">38/42</span>
+                            <span id="autorizzazioniValue" class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-[9px] font-black uppercase whitespace-nowrap">
+                                38/42
+                            </span>
                         </div>
 
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
+                        <div class="flex items-center justify-between gap-4 p-4 bg-gray-50 rounded-2xl">
                             <span class="text-sm font-bold text-gray-600">Accompagnatori</span>
-                            <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-[9px] font-black uppercase">4 assegnati</span>
+                            <span id="accompagnatoriValue" class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-[9px] font-black uppercase whitespace-nowrap">
+                                4 assegnati
+                            </span>
                         </div>
 
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
+                        <div class="flex items-center justify-between gap-4 p-4 bg-gray-50 rounded-2xl">
                             <span class="text-sm font-bold text-gray-600">Studenti BES / inclusione</span>
-                            <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-[9px] font-black uppercase">2 profili</span>
+                            <span id="inclusioneValue" class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-[9px] font-black uppercase whitespace-nowrap">
+                                2 profili
+                            </span>
                         </div>
 
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
+                        <div class="flex items-center justify-between gap-4 p-4 bg-gray-50 rounded-2xl">
                             <span class="text-sm font-bold text-gray-600">Delibere e documentazione amministrativa</span>
-                            <span class="bg-amber-100 text-amber-600 px-3 py-1 rounded-full text-[9px] font-black uppercase">Da allegare</span>
+                            <span id="deliberaValue" class="bg-amber-100 text-amber-600 px-3 py-1 rounded-full text-[9px] font-black uppercase whitespace-nowrap">
+                                Da allegare
+                            </span>
                         </div>
                     </div>
                 </div>
 
                 <!-- MEPA -->
                 <div id="mepa" class="bg-white rounded-[2rem] p-8 border border-gray-100 card-shadow">
-                    <div class="flex justify-between items-start mb-6">
+                    <div class="flex justify-between items-start gap-4 mb-6">
                         <div class="flex items-center gap-3">
                             <div class="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
                                 <i class="fa-solid fa-file-contract text-xl"></i>
@@ -286,35 +313,35 @@
                                 <h4 class="font-black text-gray-900 uppercase tracking-tight">
                                     Documentazione MEPA
                                 </h4>
-                                <p class="text-xs text-gray-400 font-bold uppercase tracking-widest">
+                                <p id="mepaSubtitle" class="text-xs text-gray-400 font-bold uppercase tracking-widest">
                                     Scheda tecnica pronta
                                 </p>
                             </div>
                         </div>
 
-                        <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-[9px] font-black uppercase">
+                        <span id="mepaBadge" class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-[9px] font-black uppercase whitespace-nowrap">
                             MEPA Ready
                         </span>
                     </div>
 
-                    <div class="p-5 bg-green-50 rounded-3xl border border-green-100 mb-5">
+                    <div id="mepaBox" class="p-5 bg-green-50 rounded-3xl border border-green-100 mb-5">
                         <div class="flex items-center gap-3 mb-3">
-                            <i class="fa-solid fa-shield-check text-green-500"></i>
-                            <span class="text-green-800 font-black text-xs uppercase">
+                            <i id="mepaIcon" class="fa-solid fa-shield-check text-green-500"></i>
+                            <span id="mepaStatus" class="text-green-800 font-black text-xs uppercase">
                                 Fascicolo coerente con i dati viaggio
                             </span>
                         </div>
-                        <p class="text-sm text-green-700 font-semibold leading-relaxed">
+                        <p id="mepaText" class="text-sm text-green-700 font-semibold leading-relaxed">
                             GIRE ha preparato oggetto fornitura, servizi richiesti, partecipanti, accompagnatori,
                             requisiti minimi, inclusione e allegati tecnici esportabili.
                         </p>
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
-                        <button class="bg-gray-900 text-white py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-purple-600 transition">
+                        <button id="mepaExportButton" class="bg-gray-900 text-white py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-purple-600 transition">
                             Esporta PDF
                         </button>
-                        <button class="bg-green-500 text-white py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-green-600 transition">
+                        <button id="mepaCopyButton" class="bg-green-500 text-white py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-green-600 transition">
                             Copia dati MEPA
                         </button>
                     </div>
@@ -330,42 +357,12 @@
                         <h4 class="font-black text-gray-900 uppercase tracking-tight">
                             Preventivi logistica
                         </h4>
-                        <span class="text-[9px] font-black bg-amber-100 text-amber-600 px-3 py-1 rounded-full uppercase">
+                        <span id="preventiviBadge" class="text-[9px] font-black bg-amber-100 text-amber-600 px-3 py-1 rounded-full uppercase">
                             3 nuovi
                         </span>
                     </div>
 
-                    <div class="space-y-4">
-                        <div class="group cursor-pointer border-2 border-purple-500 p-4 rounded-2xl bg-purple-50 transition">
-                            <div class="flex justify-between items-center">
-                                <p class="font-black text-gray-900 text-sm">Hotel Imperial Roma</p>
-                                <p class="font-black text-purple-600 text-lg">€2.100</p>
-                            </div>
-                            <div class="flex flex-wrap gap-4 mt-2">
-                                <span class="text-[9px] font-bold text-gray-500">
-                                    <i class="fa-solid fa-elevator mr-1"></i>
-                                    Ascensore XL
-                                </span>
-                                <span class="text-[9px] font-bold text-green-600">
-                                    <i class="fa-solid fa-check mr-1"></i>
-                                    Miglior scelta inclusiva
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="group cursor-pointer border border-gray-100 p-4 rounded-2xl hover:border-purple-200 transition">
-                            <div class="flex justify-between items-center">
-                                <p class="font-black text-gray-900 text-sm">B&B Domus Aurea</p>
-                                <p class="font-black text-gray-400 text-lg">€1.850</p>
-                            </div>
-                            <div class="flex gap-4 mt-2 text-red-400">
-                                <span class="text-[9px] font-bold">
-                                    <i class="fa-solid fa-triangle-exclamation mr-1"></i>
-                                    Barriere architettoniche
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="preventiviList" class="space-y-4"></div>
                 </div>
 
                 <div class="bg-white rounded-[2rem] p-8 border border-gray-100 card-shadow">
@@ -377,45 +374,13 @@
                             <h4 class="font-black text-gray-900 uppercase tracking-tight">
                                 Inclusione e accessibilità
                             </h4>
-                            <p class="text-xs text-gray-400 font-bold uppercase tracking-widest">
+                            <p id="inclusioneSubtitle" class="text-xs text-gray-400 font-bold uppercase tracking-widest">
                                 Staff e bisogni speciali
                             </p>
                         </div>
                     </div>
 
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-black text-xs">
-                                    MR
-                                </div>
-                                <div>
-                                    <p class="font-black text-gray-900 text-sm">Marco Rossi</p>
-                                    <p class="text-[9px] text-gray-400 uppercase font-black">L.104 · motoria</p>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-[10px] font-black text-purple-600 uppercase">Prof.ssa Bianchi</p>
-                                <p class="text-[9px] text-green-500 font-bold">Assegnata</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center font-black text-xs">
-                                    SG
-                                </div>
-                                <div>
-                                    <p class="font-black text-gray-900 text-sm">Sara Gialli</p>
-                                    <p class="text-[9px] text-gray-400 uppercase font-black">Ipovedente</p>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-[10px] font-black text-purple-600 uppercase">Prof. Neri</p>
-                                <p class="text-[9px] text-green-500 font-bold">Assegnato</p>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="inclusioneList" class="space-y-4"></div>
                 </div>
 
             </section>
@@ -424,13 +389,13 @@
             <section id="docente" class="bg-[#1A1C2E] rounded-[2.5rem] p-8 md:p-10 text-white card-shadow relative overflow-hidden">
                 <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                     <div>
-                        <p class="text-green-400 text-[10px] font-black uppercase tracking-[0.3em] mb-3">
+                        <p id="syncSectionLabel" class="text-green-400 text-[10px] font-black uppercase tracking-[0.3em] mb-3">
                             Sincronizzazione docente
                         </p>
-                        <h3 class="text-2xl md:text-3xl font-black mb-4 uppercase tracking-tight">
+                        <h3 id="syncTitle" class="text-2xl md:text-3xl font-black mb-4 uppercase tracking-tight">
                             La gita è pronta per la bacheca docente
                         </h3>
-                        <p class="text-gray-300 text-sm font-medium leading-relaxed max-w-xl">
+                        <p id="syncDescription" class="text-gray-300 text-sm font-medium leading-relaxed max-w-xl">
                             Dopo l’approvazione amministrativa, GIRE sincronizza il viaggio con il docente designato:
                             programma, date, classi, accompagnatori e vincoli operativi diventano la base per costruire
                             timeline, tappe, card didattiche e notifiche per gli studenti.
@@ -438,17 +403,21 @@
                     </div>
 
                     <div class="bg-white/10 rounded-3xl p-6 border border-white/10">
-                        <div class="flex items-center justify-between mb-5">
+                        <div class="flex items-center justify-between gap-4 mb-5">
                             <div>
-                                <p class="text-white font-black uppercase text-sm">Prof.ssa Bianchi</p>
-                                <p class="text-gray-400 text-xs font-bold uppercase">Docente designato · Roma 3A</p>
+                                <p id="docenteName" class="text-white font-black uppercase text-sm">
+                                    Prof.ssa Bianchi
+                                </p>
+                                <p id="docenteSubtitle" class="text-gray-400 text-xs font-bold uppercase">
+                                    Docente designato · Roma 3A
+                                </p>
                             </div>
-                            <span class="bg-green-500 text-black px-3 py-1 rounded-full text-[9px] font-black uppercase">
+                            <span id="syncBadge" class="bg-green-500 text-black px-3 py-1 rounded-full text-[9px] font-black uppercase whitespace-nowrap">
                                 Sync attiva
                             </span>
                         </div>
 
-                        <button class="w-full bg-green-500 text-black py-4 rounded-2xl font-black uppercase text-xs hover:bg-green-400 transition">
+                        <button id="syncButton" class="w-full bg-green-500 text-black py-4 rounded-2xl font-black uppercase text-xs hover:bg-green-400 transition">
                             Apri bacheca docente
                         </button>
                     </div>
@@ -464,6 +433,356 @@
         function toggleMenu() {
             document.getElementById('sidebar').classList.toggle('-translate-x-full');
         }
+
+        function handleProposalKey(event, key) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                selectTrip(key);
+            }
+        }
+
+        const baseProposalClass = 'proposal-card border border-gray-100 bg-gray-50 rounded-3xl p-5 hover:border-purple-200 transition';
+        const selectedProposalClass = 'proposal-card border-2 border-purple-500 bg-purple-50 rounded-3xl p-5 transition';
+
+        const trips = {
+            roma: {
+                subtitle: 'Roma · Classe 3A',
+                classi: '3A · 42 studenti',
+                autorizzazioni: '38/42',
+                autorizzazioniClass: 'bg-green-100 text-green-600',
+                accompagnatori: '4 assegnati',
+                accompagnatoriClass: 'bg-green-100 text-green-600',
+                inclusione: '2 profili',
+                inclusioneClass: 'bg-blue-100 text-blue-600',
+                delibera: 'Da allegare',
+                deliberaClass: 'bg-amber-100 text-amber-600',
+                mepaSubtitle: 'Scheda tecnica pronta',
+                mepaBadge: 'MEPA Ready',
+                mepaBadgeClass: 'bg-green-100 text-green-600',
+                mepaBoxClass: 'bg-green-50 border-green-100',
+                mepaIcon: 'fa-solid fa-shield-check text-green-500',
+                mepaStatusClass: 'text-green-800',
+                mepaTextClass: 'text-green-700',
+                mepaStatus: 'Fascicolo coerente con i dati viaggio',
+                mepaText: 'GIRE ha preparato oggetto fornitura, servizi richiesti, partecipanti, accompagnatori, requisiti minimi, inclusione e allegati tecnici esportabili.',
+                mepaExportButton: 'Esporta PDF',
+                mepaExportButtonClass: 'bg-gray-900 text-white hover:bg-purple-600',
+                mepaCopyButton: 'Copia dati MEPA',
+                mepaCopyButtonClass: 'bg-green-500 text-white hover:bg-green-600',
+                preventiviBadge: '3 nuovi',
+                preventiviBadgeClass: 'bg-amber-100 text-amber-600',
+                preventivi: [
+                    {
+                        title: 'Hotel Imperial Roma',
+                        price: '€2.100',
+                        selected: true,
+                        meta: [
+                            { icon: 'fa-elevator', text: 'Ascensore XL', className: 'text-gray-500' },
+                            { icon: 'fa-check', text: 'Miglior scelta inclusiva', className: 'text-green-600' }
+                        ]
+                    },
+                    {
+                        title: 'B&B Domus Aurea',
+                        price: '€1.850',
+                        selected: false,
+                        meta: [
+                            { icon: 'fa-triangle-exclamation', text: 'Barriere architettoniche', className: 'text-red-400' }
+                        ]
+                    }
+                ],
+                inclusioneSubtitle: 'Staff e bisogni speciali',
+                inclusioneList: [
+                    { initials: 'MR', name: 'Marco Rossi', need: 'L.104 · motoria', color: 'bg-blue-100 text-blue-600', teacher: 'Prof.ssa Bianchi', status: 'Assegnata' },
+                    { initials: 'SG', name: 'Sara Gialli', need: 'Ipovedente', color: 'bg-amber-100 text-amber-600', teacher: 'Prof. Neri', status: 'Assegnato' }
+                ],
+                syncLabelClass: 'text-green-400',
+                syncTitle: 'La gita è pronta per la bacheca docente',
+                syncDescription: 'Dopo l’approvazione amministrativa, GIRE sincronizza il viaggio con il docente designato: programma, date, classi, accompagnatori e vincoli operativi diventano la base per costruire timeline, tappe, card didattiche e notifiche per gli studenti.',
+                docente: 'Prof.ssa Bianchi',
+                docenteSubtitle: 'Docente designato · Roma 3A',
+                syncBadge: 'Sync attiva',
+                syncBadgeClass: 'bg-green-500 text-black',
+                syncButton: 'Apri bacheca docente',
+                syncButtonClass: 'bg-green-500 text-black hover:bg-green-400',
+                exportDisabled: false
+            },
+
+            firenze: {
+                subtitle: 'Firenze · Classe 4B',
+                classi: '4B · 28 studenti',
+                autorizzazioni: '0/28',
+                autorizzazioniClass: 'bg-amber-100 text-amber-600',
+                accompagnatori: 'Da assegnare',
+                accompagnatoriClass: 'bg-amber-100 text-amber-600',
+                inclusione: '1 profilo',
+                inclusioneClass: 'bg-blue-100 text-blue-600',
+                delibera: 'In bozza',
+                deliberaClass: 'bg-blue-100 text-blue-600',
+                mepaSubtitle: 'Scheda tecnica da completare',
+                mepaBadge: 'Non pronto',
+                mepaBadgeClass: 'bg-amber-100 text-amber-600',
+                mepaBoxClass: 'bg-amber-50 border-amber-100',
+                mepaIcon: 'fa-solid fa-circle-exclamation text-amber-500',
+                mepaStatusClass: 'text-amber-800',
+                mepaTextClass: 'text-amber-700',
+                mepaStatus: 'Gita non ancora sincronizzata',
+                mepaText: 'La proposta Firenze è stata selezionata, ma mancano preventivi confermati, accompagnatori e delibera. La bacheca docente non è ancora attiva.',
+                mepaExportButton: 'Esporta bozza',
+                mepaExportButtonClass: 'bg-gray-900 text-white hover:bg-purple-600',
+                mepaCopyButton: 'Completa MEPA',
+                mepaCopyButtonClass: 'bg-amber-400 text-black hover:bg-amber-300',
+                preventiviBadge: '1 ricevuto',
+                preventiviBadgeClass: 'bg-blue-100 text-blue-600',
+                preventivi: [
+                    {
+                        title: 'Hotel Santa Croce Firenze',
+                        price: '€1.420',
+                        selected: false,
+                        meta: [
+                            { icon: 'fa-clock', text: 'In attesa conferma disponibilità', className: 'text-amber-600' }
+                        ]
+                    },
+                    {
+                        title: 'Museo laboratorio Rinascimento',
+                        price: 'Da stimare',
+                        selected: false,
+                        meta: [
+                            { icon: 'fa-file-circle-plus', text: 'Richiesta preventivo da inviare', className: 'text-blue-600' }
+                        ]
+                    }
+                ],
+                inclusioneSubtitle: 'Verifica accessibilità da completare',
+                inclusioneList: [
+                    { initials: 'LB', name: 'Luca Bianchi', need: 'BES · attenzione alimentare', color: 'bg-green-100 text-green-600', teacher: 'Da assegnare', status: 'In verifica' }
+                ],
+                syncLabelClass: 'text-amber-300',
+                syncTitle: 'La bacheca docente non è ancora sincronizzata',
+                syncDescription: 'La segreteria deve completare accompagnatori, preventivi e delibera prima di attivare la bacheca docente. Dopo la sincronizzazione il docente potrà costruire programma, timeline e card didattiche per Firenze.',
+                docente: 'Non assegnato',
+                docenteSubtitle: 'Bacheca docente non ancora sincronizzata',
+                syncBadge: 'Sync non attiva',
+                syncBadgeClass: 'bg-amber-400 text-black',
+                syncButton: 'Completa fascicolo',
+                syncButtonClass: 'bg-amber-400 text-black hover:bg-amber-300',
+                exportDisabled: false
+            },
+
+            torino: {
+                subtitle: 'Torino · Classe 2C',
+                classi: '2C · 31 studenti',
+                autorizzazioni: '0/31',
+                autorizzazioniClass: 'bg-red-100 text-red-600',
+                accompagnatori: '2 richiesti',
+                accompagnatoriClass: 'bg-amber-100 text-amber-600',
+                inclusione: 'Da verificare',
+                inclusioneClass: 'bg-gray-200 text-gray-600',
+                delibera: 'Da approvare',
+                deliberaClass: 'bg-red-100 text-red-600',
+                mepaSubtitle: 'Fascicolo non avviato',
+                mepaBadge: 'Bloccato',
+                mepaBadgeClass: 'bg-red-100 text-red-600',
+                mepaBoxClass: 'bg-red-50 border-red-100',
+                mepaIcon: 'fa-solid fa-lock text-red-500',
+                mepaStatusClass: 'text-red-800',
+                mepaTextClass: 'text-red-700',
+                mepaStatus: 'Istruttoria da avviare',
+                mepaText: 'La proposta Torino è ancora preliminare. Mancano periodo definitivo, accompagnatori, preventivi, delibera e dati necessari per generare la documentazione MEPA.',
+                mepaExportButton: 'Esporta bozza',
+                mepaExportButtonClass: 'bg-gray-300 text-gray-500 cursor-not-allowed',
+                mepaCopyButton: 'Avvia istruttoria',
+                mepaCopyButtonClass: 'bg-red-500 text-white hover:bg-red-600',
+                preventiviBadge: '0 ricevuti',
+                preventiviBadgeClass: 'bg-red-100 text-red-600',
+                preventivi: [
+                    {
+                        title: 'Museo Egizio Torino',
+                        price: 'Da richiedere',
+                        selected: false,
+                        meta: [
+                            { icon: 'fa-paper-plane', text: 'Richiesta preventivo non inviata', className: 'text-red-500' }
+                        ]
+                    },
+                    {
+                        title: 'Trasporto A/R Torino',
+                        price: 'Da stimare',
+                        selected: false,
+                        meta: [
+                            { icon: 'fa-route', text: 'Periodo viaggio da confermare', className: 'text-gray-500' }
+                        ]
+                    }
+                ],
+                inclusioneSubtitle: 'Profili non ancora verificati',
+                inclusioneList: [
+                    { initials: '2C', name: 'Classe 2C', need: 'Verifica bisogni speciali in attesa', color: 'bg-gray-200 text-gray-600', teacher: 'Segreteria', status: 'Da controllare' }
+                ],
+                syncLabelClass: 'text-red-300',
+                syncTitle: 'Sincronizzazione bloccata',
+                syncDescription: 'La gita non può essere inviata al docente finché la segreteria non avvia il fascicolo viaggio, definisce accompagnatori, periodo, preventivi e documentazione amministrativa.',
+                docente: 'Da definire',
+                docenteSubtitle: 'Nessun docente designato',
+                syncBadge: 'Sync bloccata',
+                syncBadgeClass: 'bg-red-500 text-white',
+                syncButton: 'Avvia istruttoria',
+                syncButtonClass: 'bg-red-500 text-white hover:bg-red-600',
+                exportDisabled: true
+            }
+        };
+
+        function setBadge(id, text, className) {
+            const el = document.getElementById(id);
+            el.className = 'px-3 py-1 rounded-full text-[9px] font-black uppercase whitespace-nowrap ' + className;
+            el.innerText = text;
+        }
+
+        function setPill(id, text, className) {
+            const el = document.getElementById(id);
+            el.className = 'px-3 py-1 rounded-full text-[9px] font-black uppercase whitespace-nowrap ' + className;
+            el.innerText = text;
+        }
+
+        function setButton(id, text, className) {
+            const el = document.getElementById(id);
+            el.className = 'py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition ' + className;
+            el.innerText = text;
+        }
+
+        function setSyncButton(text, className) {
+            const el = document.getElementById('syncButton');
+            el.className = 'w-full py-4 rounded-2xl font-black uppercase text-xs transition ' + className;
+            el.innerText = text;
+        }
+
+        function renderPreventivi(items) {
+            const container = document.getElementById('preventiviList');
+            container.innerHTML = items.map(item => {
+                const cardClass = item.selected
+                    ? 'group cursor-pointer border-2 border-purple-500 p-4 rounded-2xl bg-purple-50 transition'
+                    : 'group cursor-pointer border border-gray-100 p-4 rounded-2xl hover:border-purple-200 transition';
+
+                const meta = item.meta.map(m => `
+                    <span class="text-[9px] font-bold ${m.className}">
+                        <i class="fa-solid ${m.icon} mr-1"></i>
+                        ${m.text}
+                    </span>
+                `).join('');
+
+                return `
+                    <div class="${cardClass}">
+                        <div class="flex justify-between items-center gap-4">
+                            <p class="font-black text-gray-900 text-sm">${item.title}</p>
+                            <p class="font-black ${item.selected ? 'text-purple-600' : 'text-gray-400'} text-lg whitespace-nowrap">${item.price}</p>
+                        </div>
+                        <div class="flex flex-wrap gap-4 mt-2">
+                            ${meta}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderInclusione(items) {
+            const container = document.getElementById('inclusioneList');
+            container.innerHTML = items.map(item => `
+                <div class="flex items-center justify-between gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 ${item.color} rounded-full flex items-center justify-center font-black text-xs">
+                            ${item.initials}
+                        </div>
+                        <div>
+                            <p class="font-black text-gray-900 text-sm">${item.name}</p>
+                            <p class="text-[9px] text-gray-400 uppercase font-black">${item.need}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] font-black text-purple-600 uppercase">${item.teacher}</p>
+                        <p class="text-[9px] text-green-500 font-bold">${item.status}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateProposalBadges(selectedKey) {
+            const defaultBadges = {
+                roma: { text: 'Approvabile', className: 'bg-green-100 text-green-600' },
+                firenze: { text: 'Da valutare', className: 'bg-amber-100 text-amber-600' },
+                torino: { text: 'Bozza', className: 'bg-blue-100 text-blue-600' }
+            };
+
+            Object.keys(defaultBadges).forEach(key => {
+                const proposal = document.getElementById('proposal-' + key);
+                const badge = document.getElementById('badge-' + key);
+
+                proposal.className = baseProposalClass;
+                badge.className = defaultBadges[key].className + ' px-3 py-1 rounded-full text-[9px] font-black uppercase';
+                badge.innerText = defaultBadges[key].text;
+            });
+
+            const selectedProposal = document.getElementById('proposal-' + selectedKey);
+            const selectedBadge = document.getElementById('badge-' + selectedKey);
+
+            selectedProposal.className = selectedProposalClass;
+            selectedBadge.className = 'bg-purple-600 text-white px-3 py-1 rounded-full text-[9px] font-black uppercase';
+            selectedBadge.innerText = 'Selezionata';
+        }
+
+        function selectTrip(key) {
+            const trip = trips[key];
+
+            document.getElementById('tripSubtitle').innerText = trip.subtitle;
+            setPill('classiValue', trip.classi, 'bg-purple-100 text-purple-600');
+            setPill('autorizzazioniValue', trip.autorizzazioni, trip.autorizzazioniClass);
+            setPill('accompagnatoriValue', trip.accompagnatori, trip.accompagnatoriClass);
+            setPill('inclusioneValue', trip.inclusione, trip.inclusioneClass);
+            setPill('deliberaValue', trip.delibera, trip.deliberaClass);
+
+            document.getElementById('mepaSubtitle').innerText = trip.mepaSubtitle;
+            setBadge('mepaBadge', trip.mepaBadge, trip.mepaBadgeClass);
+
+            const mepaBox = document.getElementById('mepaBox');
+            mepaBox.className = 'p-5 rounded-3xl border mb-5 ' + trip.mepaBoxClass;
+
+            document.getElementById('mepaIcon').className = trip.mepaIcon;
+            const mepaStatus = document.getElementById('mepaStatus');
+            mepaStatus.className = trip.mepaStatusClass + ' font-black text-xs uppercase';
+            mepaStatus.innerText = trip.mepaStatus;
+
+            const mepaText = document.getElementById('mepaText');
+            mepaText.className = 'text-sm font-semibold leading-relaxed ' + trip.mepaTextClass;
+            mepaText.innerText = trip.mepaText;
+
+            setButton('mepaExportButton', trip.mepaExportButton, trip.mepaExportButtonClass);
+            setButton('mepaCopyButton', trip.mepaCopyButton, trip.mepaCopyButtonClass);
+
+            setBadge('preventiviBadge', trip.preventiviBadge, trip.preventiviBadgeClass);
+            renderPreventivi(trip.preventivi);
+
+            document.getElementById('inclusioneSubtitle').innerText = trip.inclusioneSubtitle;
+            renderInclusione(trip.inclusioneList);
+
+            const syncSectionLabel = document.getElementById('syncSectionLabel');
+            syncSectionLabel.className = trip.syncLabelClass + ' text-[10px] font-black uppercase tracking-[0.3em] mb-3';
+            syncSectionLabel.innerText = 'Sincronizzazione docente';
+
+            document.getElementById('syncTitle').innerText = trip.syncTitle;
+            document.getElementById('syncDescription').innerText = trip.syncDescription;
+            document.getElementById('docenteName').innerText = trip.docente;
+            document.getElementById('docenteSubtitle').innerText = trip.docenteSubtitle;
+            setBadge('syncBadge', trip.syncBadge, trip.syncBadgeClass);
+            setSyncButton(trip.syncButton, trip.syncButtonClass);
+
+            const exportButton = document.getElementById('exportButton');
+            if (trip.exportDisabled) {
+                exportButton.className = 'bg-gray-300 text-gray-500 px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl transition cursor-not-allowed';
+                exportButton.innerHTML = '<i class="fa-solid fa-lock mr-2"></i> Fascicolo Bloccato';
+            } else {
+                exportButton.className = 'bg-gray-900 text-white px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl active:scale-95 transition hover:bg-purple-600';
+                exportButton.innerHTML = '<i class="fa-solid fa-file-export mr-2"></i> Esporta Fascicolo';
+            }
+
+            updateProposalBadges(key);
+        }
+
+        selectTrip('roma');
     </script>
 
 </body>
