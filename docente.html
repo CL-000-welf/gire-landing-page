@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <!--
+        GIRE - docente.html
+        Demo docente basata sul layout di segreteria.html.
+
+        Obiettivo:
+        - simulare la bacheca del docente designato dopo la sincronizzazione dalla Segreteria;
+        - permettere al docente di costruire programma, timeline, tappe e card didattiche;
+        - simulare notifiche/alert, appelli, SOS e pubblicazione lato studente.
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIRE - Bacheca Docente</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F3F4F6; }
+        .sidebar { background-color: #1A1C2E; }
+        .card-shadow { box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .day-tab, .timeline-item, .place-card { cursor: pointer; }
+        .day-tab:focus, .timeline-item:focus, .place-card:focus {
+            outline: 3px solid rgba(124,77,255,.35);
+            outline-offset: 3px;
+        }
+    </style>
+</head>
+
+<body class="flex flex-col md:flex-row h-screen overflow-hidden">
+
+    <!-- MOBILE HEADER -->
+    <div class="md:hidden bg-[#1A1C2E] text-white p-4 flex justify-between items-center shadow-lg fixed top-0 left-0 right-0 z-[100]">
+        <div class="flex items-center space-x-2">
+            <img src="assets/logo.png" alt="Logo" class="h-6">
+            <span class="font-black tracking-tighter italic text-purple-400">GIRE</span>
+        </div>
+        <button onclick="toggleMenu()" class="text-2xl p-2 bg-white/10 rounded-lg" aria-label="Apri menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </div>
+
+    <!-- SIDEBAR DOCENTE -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-[110] w-64 sidebar text-white transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 flex flex-col p-6">
+
+        <div class="hidden md:flex items-center space-x-3 mb-10">
+            <img src="assets/logo.png" alt="Logo" class="h-8">
+            <span class="text-xl font-black tracking-tighter italic">GIRE</span>
+        </div>
+
+        <div class="mb-8">
+            <p class="text-[10px] font-black uppercase tracking-[0.3em] text-purple-300 mb-2">Area Docente</p>
+            <h2 class="text-lg font-black uppercase leading-tight">Bacheca Gita</h2>
+        </div>
+
+        <nav class="flex-grow space-y-2">
+            <a href="#programma" class="flex items-center p-3 bg-purple-600 rounded-xl font-bold">
+                <i class="fa-solid fa-calendar-days mr-3 w-5"></i> Programma
+            </a>
+            <a href="#timeline" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition">
+                <i class="fa-solid fa-timeline mr-3 w-5"></i> Timeline
+            </a>
+            <a href="#tappe" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition">
+                <i class="fa-solid fa-map-location-dot mr-3 w-5"></i> Tappe
+            </a>
+            <a href="#notifiche" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition">
+                <i class="fa-solid fa-bell mr-3 w-5"></i> Notifiche
+            </a>
+            <a href="#appello" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition">
+                <i class="fa-solid fa-users mr-3 w-5"></i> Appello
+            </a>
+            <a href="#sos" class="flex items-center p-3 hover:bg-white/10 rounded-xl transition text-red-300">
+                <i class="fa-solid fa-triangle-exclamation mr-3 w-5"></i> SOS
+            </a>
+        </nav>
+
+        <div class="mt-auto pt-6 border-t border-white/10 space-y-3">
+            <a href="segreteria.html" class="block p-3 bg-white/5 rounded-xl text-white font-black uppercase tracking-widest text-[10px] hover:bg-white/10 transition text-center">
+                <i class="fa-solid fa-building-columns mr-2"></i> Area Segreteria
+            </a>
+            <a href="index.html" class="block p-3 bg-white/5 rounded-xl text-white font-black uppercase tracking-widest text-[10px] hover:bg-white/10 transition text-center">
+                <i class="fa-solid fa-house mr-2"></i> Landing
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 overflow-y-auto pt-[88px] md:pt-8 px-4 md:px-8">
+        <div class="max-w-6xl mx-auto pb-32">
+
+            <!-- HEADER -->
+            <header class="mb-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5">
+                <div>
+                    <p class="text-purple-600 font-black text-[10px] uppercase tracking-[0.3em] mb-3">
+                        Gita sincronizzata dalla Segreteria · I.C. "G. Rodari"
+                    </p>
+                    <h1 class="text-3xl md:text-5xl font-black text-gray-900 uppercase tracking-tighter leading-none">
+                        Bacheca Docente
+                    </h1>
+                    <p class="text-gray-400 font-bold text-xs uppercase mt-3 tracking-widest">
+                        Costruisci la gita che vedranno gli studenti
+                    </p>
+                    <p class="text-gray-500 text-sm font-semibold mt-4 max-w-2xl leading-relaxed">
+                        Organizza il programma giorno per giorno, crea la timeline, aggiungi tappe e card didattiche,
+                        gestisci appelli, SOS e notifiche live prima di pubblicare il lato studente.
+                    </p>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+                    <a href="roma/lunedi-09-03-2026.html"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="bg-white text-gray-900 px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl border border-gray-100 hover:bg-gray-50 transition text-center">
+                        <i class="fa-solid fa-mobile-screen-button mr-2"></i> Anteprima Studente
+                    </a>
+                    <button id="publishButton" onclick="publishStudentView()"
+                            class="bg-green-500 text-black px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:bg-green-400 transition">
+                        <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Pubblica lato studente
+                    </button>
+                </div>
+            </header>
+
+            <!-- STATUS CARDS -->
+            <section class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white rounded-3xl p-5 border border-gray-100 card-shadow">
+                    <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Timeline</p>
+                    <div class="flex items-end justify-between">
+                        <span id="statTimeline" class="text-4xl font-black text-gray-900">6</span>
+                        <i class="fa-solid fa-timeline text-purple-500 text-2xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white rounded-3xl p-5 border border-gray-100 card-shadow">
+                    <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Card didattiche</p>
+                    <div class="flex items-end justify-between">
+                        <span id="statCards" class="text-4xl font-black text-gray-900">4</span>
+                        <i class="fa-solid fa-landmark text-amber-500 text-2xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white rounded-3xl p-5 border border-gray-100 card-shadow">
+                    <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Appello</p>
+                    <div class="flex items-end justify-between">
+                        <span id="statAppello" class="text-4xl font-black text-gray-900">39/42</span>
+                        <i class="fa-solid fa-users text-green-500 text-2xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white rounded-3xl p-5 border border-gray-100 card-shadow">
+                    <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Stato</p>
+                    <div class="flex items-end justify-between">
+                        <span id="statPublish" class="text-3xl font-black text-gray-900">Bozza</span>
+                        <i class="fa-solid fa-cloud-arrow-up text-blue-500 text-2xl"></i>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PROGRAMMA / GIORNI -->
+            <section id="programma" class="bg-white p-6 md:p-8 rounded-[2.5rem] shadow-sm border border-gray-100 mb-8">
+                <div class="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-6">
+                    <div>
+                        <h3 class="font-black text-gray-900 uppercase tracking-tight text-xl">Programma della gita</h3>
+                        <p class="text-gray-400 text-sm font-semibold mt-1">
+                            La segreteria ha sincronizzato date, classe e accompagnatori. Il docente costruisce contenuti e ritmo della giornata.
+                        </p>
+                    </div>
+                    <div class="bg-purple-50 text-purple-700 px-4 py-2 rounded-2xl font-black text-[10px] uppercase tracking-widest">
+                        Roma · Classe 3A · 42 studenti
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    <button id="day-lunedi" onclick="selectDay('lunedi')" class="day-tab bg-purple-600 text-white rounded-3xl p-5 text-left transition">
+                        <p class="text-[10px] font-black uppercase tracking-widest opacity-70 mb-2">Giorno 01</p>
+                        <h4 class="text-xl font-black uppercase">Lunedì</h4>
+                        <p class="text-sm font-semibold opacity-80 mt-1">09/03/2026 · Roma antica</p>
+                    </button>
+                    <button id="day-martedi" onclick="selectDay('martedi')" class="day-tab bg-gray-50 text-gray-900 rounded-3xl p-5 text-left border border-gray-100 hover:border-purple-200 transition">
+                        <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Giorno 02</p>
+                        <h4 class="text-xl font-black uppercase">Martedì</h4>
+                        <p class="text-sm font-semibold text-gray-500 mt-1">10/03/2026 · Musei e città</p>
+                    </button>
+                    <button id="day-mercoledi" onclick="selectDay('mercoledi')" class="day-tab bg-gray-50 text-gray-900 rounded-3xl p-5 text-left border border-gray-100 hover:border-purple-200 transition">
+                        <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Giorno 03</p>
+                        <h4 class="text-xl font-black uppercase">Mercoledì</h4>
+                        <p class="text-sm font-semibold text-gray-500 mt-1">11/03/2026 · Rientro</p>
+                    </button>
+                </div>
+
+                <div class="bg-gray-50 rounded-[2rem] p-6 border border-gray-100">
+                    <div class="flex flex-col md:flex-row justify-between md:items-center gap-4">
+                        <div>
+                            <p id="dayLabel" class="text-purple-600 text-[10px] font-black uppercase tracking-[0.3em] mb-2">Giorno 01</p>
+                            <h4 id="dayTitle" class="text-2xl font-black text-gray-900 uppercase tracking-tight">Roma antica</h4>
+                            <p id="dayDescription" class="text-gray-500 text-sm font-semibold mt-2 max-w-2xl leading-relaxed">
+                                Timeline dedicata a Colosseo, Fori Imperiali e Campidoglio, con punti di ritrovo e card monumenti già pronte per gli studenti.
+                            </p>
+                        </div>
+                        <button onclick="addTimelineItem()" class="bg-gray-900 text-white px-5 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-purple-600 transition">
+                            <i class="fa-solid fa-plus mr-2"></i> Aggiungi tappa
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TIMELINE + CARD MONUMENTO -->
+            <section id="timeline" class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <div class="lg:col-span-2 bg-white rounded-[2rem] p-8 border border-gray-100 card-shadow">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <h3 class="font-black text-gray-900 uppercase tracking-tight text-xl">Timeline operativa</h3>
+                            <p class="text-gray-400 text-sm font-semibold mt-1">Ogni tappa può generare una card visibile nella UI studente.</p>
+                        </div>
+                        <span id="timelineBadge" class="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-[9px] font-black uppercase w-fit">6 elementi</span>
+                    </div>
+                    <div id="timelineList" class="space-y-4"></div>
+                </div>
+
+                <div class="bg-[#1A1C2E] rounded-[2rem] p-8 text-white card-shadow relative overflow-hidden">
+                    <div class="relative z-10">
+                        <p class="text-purple-300 text-[10px] font-black uppercase tracking-[0.3em] mb-3">Card studenti</p>
+                        <h3 id="selectedPlaceTitle" class="text-2xl font-black uppercase tracking-tight mb-3">Colosseo</h3>
+                        <p id="selectedPlaceMeta" class="text-green-400 text-[10px] font-black uppercase tracking-widest mb-5">10:30 · Visita guidata</p>
+                        <p id="selectedPlaceText" class="text-gray-300 text-sm font-medium leading-relaxed mb-6">
+                            Anfiteatro simbolo di Roma imperiale. La card studente contiene contesto storico, punto di ritrovo e nota di sicurezza.
+                        </p>
+                        <div class="space-y-3">
+                            <div class="bg-white/10 rounded-2xl p-4 border border-white/10">
+                                <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-1">Punto di ritrovo</p>
+                                <p id="selectedPlaceMeeting" class="font-bold text-sm">Arco di Costantino</p>
+                            </div>
+                            <div class="bg-white/10 rounded-2xl p-4 border border-white/10">
+                                <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-1">Nota docente</p>
+                                <p id="selectedPlaceNote" class="font-bold text-sm">Contare il gruppo prima dell'ingresso.</p>
+                            </div>
+                        </div>
+                        <button onclick="savePlaceCard()" class="mt-6 w-full bg-green-500 text-black py-4 rounded-2xl font-black uppercase text-xs hover:bg-green-400 transition">
+                            Salva card studente
+                        </button>
+                    </div>
+                    <i class="fa-solid fa-landmark absolute -right-10 -bottom-10 text-[10rem] text-white/5"></i>
+                </div>
+            </section>
+
+            <!-- TAPPE / CARD MONUMENTI -->
+            <section id="tappe" class="bg-white rounded-[2.5rem] p-6 md:p-8 border border-gray-100 card-shadow mb-8">
+                <div class="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-6">
+                    <div>
+                        <h3 class="font-black text-gray-900 uppercase tracking-tight text-xl">Tappe e card monumenti</h3>
+                        <p class="text-gray-400 text-sm font-semibold mt-1">Le card sono i contenuti che lo studente vede durante la gita.</p>
+                    </div>
+                    <button onclick="createPlaceCard()" class="bg-purple-600 text-white px-5 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-purple-700 transition">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> Genera card
+                    </button>
+                </div>
+                <div id="placesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5"></div>
+            </section>
+
+            <!-- NOTIFICHE + ANTEPRIMA STUDENTE -->
+            <section id="notifiche" class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div class="bg-white rounded-[2rem] p-8 border border-gray-100 card-shadow">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center">
+                            <i class="fa-solid fa-bell text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-black text-gray-900 uppercase tracking-tight">Alert e notifiche</h3>
+                            <p class="text-xs text-gray-400 font-bold uppercase tracking-widest">Invio simulato alla UI studente</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 mb-5">
+                        <button onclick="sendAlert('Ritrovo anticipato alle 12:20 presso l’Arco di Costantino.', 'amber')" class="w-full bg-amber-50 text-amber-800 p-4 rounded-2xl text-left font-black text-xs uppercase hover:bg-amber-100 transition">
+                            <i class="fa-solid fa-clock mr-2"></i> Ritrovo anticipato
+                        </button>
+                        <button onclick="sendAlert('Cambio programma: pausa pranzo spostata alle 13:15.', 'purple')" class="w-full bg-purple-50 text-purple-700 p-4 rounded-2xl text-left font-black text-xs uppercase hover:bg-purple-100 transition">
+                            <i class="fa-solid fa-arrows-rotate mr-2"></i> Cambio programma
+                        </button>
+                        <button onclick="sendAlert('Attenzione: restare in gruppo e seguire il docente accompagnatore.', 'red')" class="w-full bg-red-50 text-red-700 p-4 rounded-2xl text-left font-black text-xs uppercase hover:bg-red-100 transition">
+                            <i class="fa-solid fa-triangle-exclamation mr-2"></i> Avviso sicurezza
+                        </button>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <input id="customAlertInput" type="text" placeholder="Scrivi una notifica personalizzata..."
+                               class="flex-1 bg-gray-50 border border-gray-100 rounded-2xl px-4 py-3 text-sm font-semibold outline-none focus:border-purple-300">
+                        <button onclick="sendCustomAlert()" class="bg-gray-900 text-white px-5 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-purple-600 transition">
+                            Invia
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-[2rem] p-8 border border-gray-100 card-shadow">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                            <i class="fa-solid fa-mobile-screen-button text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-black text-gray-900 uppercase tracking-tight">Anteprima lato studente</h3>
+                            <p class="text-xs text-gray-400 font-bold uppercase tracking-widest">Simulazione notifica live</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#1A1C2E] rounded-[2rem] p-5 text-white">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <p class="font-black text-sm">Roma · Giorno 01</p>
+                                <p class="text-[10px] text-gray-400 uppercase font-bold">UI studente</p>
+                            </div>
+                            <span class="bg-green-500 text-black px-3 py-1 rounded-full text-[9px] font-black uppercase">Live</span>
+                        </div>
+
+                        <div id="studentAlertBox" class="bg-amber-500/15 border border-amber-400/20 rounded-2xl p-4 mb-4">
+                            <p id="studentAlertLabel" class="text-amber-300 text-[10px] font-black uppercase tracking-widest mb-1">Alert docente</p>
+                            <p id="studentAlertText" class="text-sm font-bold leading-relaxed">Ritrovo anticipato alle 12:20 presso l’Arco di Costantino.</p>
+                        </div>
+
+                        <div class="bg-white/10 rounded-2xl p-4">
+                            <p class="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">Prossima tappa</p>
+                            <p id="studentNextStop" class="font-black text-lg">Colosseo · 10:30</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- APPELLO + SOS -->
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div id="appello" class="bg-white rounded-[2rem] p-8 border border-gray-100 card-shadow">
+                    <div class="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-6">
+                        <div>
+                            <h3 class="font-black text-gray-900 uppercase tracking-tight">Appello classe</h3>
+                            <p class="text-gray-400 text-sm font-semibold mt-1">Simulazione presenza gruppo durante la gita.</p>
+                        </div>
+                        <button onclick="markAllPresent()" class="bg-green-500 text-black px-5 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-green-400 transition">
+                            Tutti presenti
+                        </button>
+                    </div>
+                    <div id="studentsList" class="space-y-3"></div>
+                </div>
+
+                <div id="sos" class="bg-red-600 rounded-[2rem] p-8 text-white card-shadow relative overflow-hidden">
+                    <div class="relative z-10">
+                        <p class="text-red-100 text-[10px] font-black uppercase tracking-[0.3em] mb-3">Gestione live</p>
+                        <h3 class="text-2xl md:text-3xl font-black mb-4 uppercase tracking-tight">SOS e sicurezza</h3>
+                        <p class="text-red-100 text-sm font-medium leading-relaxed max-w-xl mb-6">
+                            Il docente può simulare l'attivazione di una procedura SOS, registrare l'evento
+                            e inviare un alert immediato alla UI studente.
+                        </p>
+                        <div id="sosStatus" class="bg-white/15 border border-white/10 rounded-3xl p-5 mb-5">
+                            <p class="text-[10px] font-black uppercase tracking-widest text-red-100 mb-1">Stato corrente</p>
+                            <p class="font-black text-xl">Nessuna emergenza attiva</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <button onclick="triggerSOS()" class="bg-white text-red-600 py-4 rounded-2xl font-black uppercase text-xs hover:bg-red-50 transition">
+                                <i class="fa-solid fa-bolt mr-2"></i> Simula SOS
+                            </button>
+                            <button onclick="resolveSOS()" class="bg-black/20 text-white py-4 rounded-2xl font-black uppercase text-xs hover:bg-black/30 transition">
+                                <i class="fa-solid fa-check mr-2"></i> Chiudi evento
+                            </button>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-triangle-exclamation absolute -right-10 -bottom-10 text-[10rem] text-white/10"></i>
+                </div>
+            </section>
+
+            <!-- PUBBLICAZIONE -->
+            <section class="bg-[#1A1C2E] rounded-[2.5rem] p-8 md:p-10 text-white card-shadow relative overflow-hidden">
+                <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <p class="text-green-400 text-[10px] font-black uppercase tracking-[0.3em] mb-3">Pubblicazione lato studente</p>
+                        <h3 id="publishTitle" class="text-2xl md:text-3xl font-black mb-4 uppercase tracking-tight">Bozza pronta per la revisione</h3>
+                        <p id="publishDescription" class="text-gray-300 text-sm font-medium leading-relaxed max-w-xl">
+                            Quando programma, tappe, card monumenti, notifiche e appelli sono verificati,
+                            il docente può pubblicare la versione aggiornata nella UI studente.
+                        </p>
+                    </div>
+
+                    <div class="bg-white/10 rounded-3xl p-6 border border-white/10">
+                        <div class="flex items-center justify-between gap-4 mb-5">
+                            <div>
+                                <p class="text-white font-black uppercase text-sm">roma/lunedi-09-03-2026.html</p>
+                                <p id="publishMeta" class="text-gray-400 text-xs font-bold uppercase">Ultima modifica · bozza docente</p>
+                            </div>
+                            <span id="publishBadge" class="bg-amber-400 text-black px-3 py-1 rounded-full text-[9px] font-black uppercase whitespace-nowrap">Bozza</span>
+                        </div>
+                        <button onclick="publishStudentView()" class="w-full bg-green-500 text-black py-4 rounded-2xl font-black uppercase text-xs hover:bg-green-400 transition">
+                            Pubblica aggiornamenti
+                        </button>
+                    </div>
+                </div>
+                <i class="fa-solid fa-cloud-arrow-up absolute -right-10 -bottom-10 text-[10rem] text-white/5"></i>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- JAVASCRIPT DEMO -->
+    <script>
+        /*
+            Demo funzionante senza backend:
+            - dati del programma mantenuti in oggetti JS;
+            - selezione del giorno aggiorna timeline e card;
+            - appello, alert, SOS e pubblicazione simulano l'esperienza reale.
+        */
+
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        }
+
+        const dayBaseClass = 'day-tab bg-gray-50 text-gray-900 rounded-3xl p-5 text-left border border-gray-100 hover:border-purple-200 transition';
+        const daySelectedClass = 'day-tab bg-purple-600 text-white rounded-3xl p-5 text-left transition';
+
+        let currentDay = 'lunedi';
+        let published = false;
+
+        const program = {
+            lunedi: {
+                label: 'Giorno 01',
+                title: 'Roma antica',
+                description: 'Timeline dedicata a Colosseo, Fori Imperiali e Campidoglio, con punti di ritrovo e card monumenti già pronte per gli studenti.',
+                nextStop: 'Colosseo · 10:30',
+                timeline: [
+                    { time: '08:00', title: 'Partenza dalla scuola', type: 'Logistica', text: 'Ritrovo davanti all’ingresso principale. Controllo autorizzazioni e appello iniziale.', meeting: 'Ingresso scuola', note: 'Verificare presenza documenti e farmaci personali.' },
+                    { time: '10:30', title: 'Colosseo', type: 'Visita guidata', text: 'Anfiteatro simbolo di Roma imperiale. Card con contesto storico e note di sicurezza.', meeting: 'Arco di Costantino', note: 'Contare il gruppo prima dell’ingresso.' },
+                    { time: '12:15', title: 'Fori Imperiali', type: 'Tappa didattica', text: 'Percorso tra spazi pubblici, politica e vita quotidiana nella Roma antica.', meeting: 'Colonna Traiana', note: 'Dividere la classe in due sottogruppi.' },
+                    { time: '13:15', title: 'Pausa pranzo', type: 'Logistica', text: 'Pranzo al sacco presso area concordata con accompagnatori.', meeting: 'Area verde Campidoglio', note: 'Verificare intolleranze alimentari segnalate.' },
+                    { time: '15:00', title: 'Musei Capitolini', type: 'Museo', text: 'Osservazione guidata delle collezioni e compilazione diario digitale.', meeting: 'Scalinata del Campidoglio', note: 'Attivare consegna foto e riflessione breve.' },
+                    { time: '18:00', title: 'Check-in hotel', type: 'Pernotto', text: 'Assegnazione camere, regole serali e verifica gruppo.', meeting: 'Hall Hotel Imperial', note: 'Confermare camere e accompagnatori di piano.' }
+                ]
+            },
+            martedi: {
+                label: 'Giorno 02',
+                title: 'Musei e città',
+                description: 'Giornata dedicata a musei, percorsi urbani e attività di osservazione con diario digitale.',
+                nextStop: 'Pantheon · 09:45',
+                timeline: [
+                    { time: '08:30', title: 'Appello in hotel', type: 'Controllo', text: 'Verifica gruppo prima dell’uscita e consegna indicazioni della giornata.', meeting: 'Hall Hotel Imperial', note: 'Controllare zaini, acqua e badge gruppo.' },
+                    { time: '09:45', title: 'Pantheon', type: 'Tappa monumento', text: 'Lettura architettonica della cupola e confronto con gli edifici romani studiati.', meeting: 'Fontana di Piazza della Rotonda', note: 'Tenere il gruppo compatto in piazza.' },
+                    { time: '11:30', title: 'Piazza Navona', type: 'Laboratorio urbano', text: 'Osservazione della trasformazione dello spazio pubblico dall’età romana al Barocco.', meeting: 'Fontana dei Quattro Fiumi', note: 'Attivare consegna foto guidata.' },
+                    { time: '15:00', title: 'Museo interattivo', type: 'Didattica attiva', text: 'Attività a gruppi e raccolta materiali per report finale.', meeting: 'Ingresso museo', note: 'Creare gruppi da 5 studenti.' }
+                ]
+            },
+            mercoledi: {
+                label: 'Giorno 03',
+                title: 'Rientro',
+                description: 'Chiusura attività, ultimo appello, raccolta materiali e rientro verso la scuola.',
+                nextStop: 'Ultimo appello · 09:00',
+                timeline: [
+                    { time: '09:00', title: 'Ultimo appello', type: 'Controllo', text: 'Verifica completa del gruppo e controllo bagagli.', meeting: 'Hall Hotel Imperial', note: 'Controllare oggetti smarriti e camere.' },
+                    { time: '10:30', title: 'Passeggiata conclusiva', type: 'Riflessione', text: 'Breve percorso conclusivo con raccolta impressioni degli studenti.', meeting: 'Piazza Venezia', note: 'Raccogliere feedback per report finale.' },
+                    { time: '13:00', title: 'Partenza per rientro', type: 'Logistica', text: 'Partenza bus e invio notifica alle famiglie tramite segreteria.', meeting: 'Area bus turistici', note: 'Appello prima della salita sul bus.' }
+                ]
+            }
+        };
+
+        const students = [
+            { id: 1, name: 'Alessia Romano', status: 'present' },
+            { id: 2, name: 'Marco Rossi', status: 'present' },
+            { id: 3, name: 'Sara Gialli', status: 'present' },
+            { id: 4, name: 'Luca Bianchi', status: 'present' },
+            { id: 5, name: 'Giulia Verdi', status: 'missing' },
+            { id: 6, name: 'Davide Conti', status: 'present' },
+            { id: 7, name: 'Martina Ferri', status: 'missing' },
+            { id: 8, name: 'Nicolò Greco', status: 'missing' }
+        ];
+
+        function selectDay(dayKey) {
+            currentDay = dayKey;
+            const day = program[dayKey];
+
+            Object.keys(program).forEach(key => {
+                document.getElementById('day-' + key).className = dayBaseClass;
+            });
+
+            document.getElementById('day-' + dayKey).className = daySelectedClass;
+
+            document.getElementById('dayLabel').innerText = day.label;
+            document.getElementById('dayTitle').innerText = day.title;
+            document.getElementById('dayDescription').innerText = day.description;
+            document.getElementById('studentNextStop').innerText = day.nextStop;
+
+            renderTimeline();
+            renderPlaces();
+            updateStats();
+
+            if (day.timeline.length > 0) {
+                selectTimelineItem(0);
+            }
+        }
+
+        function renderTimeline() {
+            const day = program[currentDay];
+            const list = document.getElementById('timelineList');
+            document.getElementById('timelineBadge').innerText = day.timeline.length + ' elementi';
+
+            list.innerHTML = day.timeline.map((item, index) => `
+                <div class="timeline-item flex gap-4 p-4 rounded-3xl border border-gray-100 bg-gray-50 hover:border-purple-200 transition"
+                     role="button" tabindex="0" onclick="selectTimelineItem(${index})">
+                    <div class="w-16 shrink-0">
+                        <div class="bg-purple-100 text-purple-600 rounded-2xl py-2 text-center font-black text-xs">${item.time}</div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-2">
+                            <h4 class="font-black text-gray-900 uppercase">${item.title}</h4>
+                            <span class="bg-white text-gray-500 px-3 py-1 rounded-full text-[9px] font-black uppercase w-fit">${item.type}</span>
+                        </div>
+                        <p class="text-sm text-gray-500 font-medium leading-relaxed">${item.text}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectTimelineItem(index) {
+            const item = program[currentDay].timeline[index];
+            document.getElementById('selectedPlaceTitle').innerText = item.title;
+            document.getElementById('selectedPlaceMeta').innerText = item.time + ' · ' + item.type;
+            document.getElementById('selectedPlaceText').innerText = item.text;
+            document.getElementById('selectedPlaceMeeting').innerText = item.meeting;
+            document.getElementById('selectedPlaceNote').innerText = item.note;
+        }
+
+        function renderPlaces() {
+            const grid = document.getElementById('placesGrid');
+            const places = program[currentDay].timeline.filter(item =>
+                item.type !== 'Logistica' && item.type !== 'Controllo' && item.type !== 'Pernotto'
+            );
+
+            grid.innerHTML = places.map((item) => `
+                <div class="place-card bg-gray-50 border border-gray-100 rounded-3xl p-5 hover:border-purple-200 transition"
+                     role="button" tabindex="0" onclick="selectPlaceByTitle('${escapeForAttribute(item.title)}')">
+                    <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mb-5">
+                        <i class="fa-solid fa-landmark"></i>
+                    </div>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">${item.time}</p>
+                    <h4 class="font-black uppercase text-gray-900 mb-2">${item.title}</h4>
+                    <p class="text-sm text-gray-500 font-medium leading-relaxed">${item.text}</p>
+                </div>
+            `).join('');
+
+            if (places.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full bg-gray-50 border border-gray-100 rounded-3xl p-6 text-center">
+                        <p class="text-gray-400 font-bold text-sm">Nessuna card monumento per questo giorno.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function selectPlaceByTitle(title) {
+            const index = program[currentDay].timeline.findIndex(item => item.title === title);
+            if (index >= 0) {
+                selectTimelineItem(index);
+                document.getElementById('timeline').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function escapeForAttribute(value) {
+            return value.replace(/'/g, "\'");
+        }
+
+        function addTimelineItem() {
+            const newItem = {
+                time: '16:30',
+                title: 'Nuova tappa docente',
+                type: 'Bozza',
+                text: 'Tappa aggiunta dal docente. Completa titolo, descrizione e punto di ritrovo prima della pubblicazione.',
+                meeting: 'Da definire',
+                note: 'Completare la card didattica.'
+            };
+            program[currentDay].timeline.push(newItem);
+            renderTimeline();
+            renderPlaces();
+            updateStats();
+            updatePublishStatus(false);
+            selectTimelineItem(program[currentDay].timeline.length - 1);
+        }
+
+        function createPlaceCard() {
+            const item = {
+                time: '17:15',
+                title: 'Card monumento generata',
+                type: 'Tappa didattica',
+                text: 'Card generata automaticamente dalla bacheca docente per arricchire la UI studente.',
+                meeting: 'Punto da confermare',
+                note: 'Verificare contenuto prima della pubblicazione.'
+            };
+            program[currentDay].timeline.push(item);
+            renderTimeline();
+            renderPlaces();
+            updateStats();
+            updatePublishStatus(false);
+            sendAlert('Nuova card didattica aggiunta alla bozza del programma.', 'purple');
+        }
+
+        function savePlaceCard() {
+            sendAlert('Card studente salvata in bozza docente.', 'green');
+            updatePublishStatus(false);
+        }
+
+        function sendCustomAlert() {
+            const input = document.getElementById('customAlertInput');
+            const text = input.value.trim();
+            if (!text) {
+                sendAlert('Scrivi un messaggio prima di inviare la notifica.', 'red');
+                return;
+            }
+            sendAlert(text, 'purple');
+            input.value = '';
+        }
+
+        function sendAlert(text, color) {
+            const box = document.getElementById('studentAlertBox');
+            const label = document.getElementById('studentAlertLabel');
+            const message = document.getElementById('studentAlertText');
+
+            const styles = {
+                amber: 'bg-amber-500/15 border border-amber-400/20',
+                purple: 'bg-purple-500/15 border border-purple-400/20',
+                red: 'bg-red-500/20 border border-red-400/30',
+                green: 'bg-green-500/15 border border-green-400/20'
+            };
+            const labelStyles = {
+                amber: 'text-amber-300',
+                purple: 'text-purple-300',
+                red: 'text-red-300',
+                green: 'text-green-300'
+            };
+
+            box.className = (styles[color] || styles.amber) + ' rounded-2xl p-4 mb-4';
+            label.className = (labelStyles[color] || labelStyles.amber) + ' text-[10px] font-black uppercase tracking-widest mb-1';
+            label.innerText = color === 'red' ? 'Alert sicurezza' : 'Alert docente';
+            message.innerText = text;
+        }
+
+        function renderStudents() {
+            const list = document.getElementById('studentsList');
+            list.innerHTML = students.map(student => {
+                const present = student.status === 'present';
+                return `
+                    <div class="flex items-center justify-between gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 ${present ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'} rounded-full flex items-center justify-center font-black text-xs">
+                                ${student.name.split(' ').map(part => part[0]).join('').slice(0, 2)}
+                            </div>
+                            <div>
+                                <p class="font-black text-gray-900 text-sm">${student.name}</p>
+                                <p class="text-[9px] text-gray-400 uppercase font-black">Classe 3A</p>
+                            </div>
+                        </div>
+                        <button onclick="toggleStudent(${student.id})"
+                                class="${present ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'} px-3 py-1 rounded-full text-[9px] font-black uppercase">
+                            ${present ? 'Presente' : 'Da verificare'}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+            updateStats();
+        }
+
+        function toggleStudent(id) {
+            const student = students.find(item => item.id === id);
+            student.status = student.status === 'present' ? 'missing' : 'present';
+            renderStudents();
+            updatePublishStatus(false);
+        }
+
+        function markAllPresent() {
+            students.forEach(student => student.status = 'present');
+            renderStudents();
+            sendAlert('Appello completato: tutti gli studenti risultano presenti.', 'green');
+            updatePublishStatus(false);
+        }
+
+        function triggerSOS() {
+            document.getElementById('sosStatus').innerHTML = `
+                <p class="text-[10px] font-black uppercase tracking-widest text-red-100 mb-1">Stato corrente</p>
+                <p class="font-black text-xl">SOS simulato attivo · gruppo in verifica</p>
+            `;
+            sendAlert('SOS docente attivato: restare nel punto di ritrovo e attendere istruzioni.', 'red');
+        }
+
+        function resolveSOS() {
+            document.getElementById('sosStatus').innerHTML = `
+                <p class="text-[10px] font-black uppercase tracking-widest text-red-100 mb-1">Stato corrente</p>
+                <p class="font-black text-xl">Evento chiuso · nessuna emergenza attiva</p>
+            `;
+            sendAlert('Evento SOS chiuso: il gruppo può riprendere il programma.', 'green');
+        }
+
+        function publishStudentView() {
+            updatePublishStatus(true);
+            sendAlert('Programma aggiornato dal docente. Controlla la prossima tappa.', 'green');
+        }
+
+        function updatePublishStatus(isPublished) {
+            published = isPublished;
+            const stat = document.getElementById('statPublish');
+            const badge = document.getElementById('publishBadge');
+            const title = document.getElementById('publishTitle');
+            const description = document.getElementById('publishDescription');
+            const meta = document.getElementById('publishMeta');
+            const button = document.getElementById('publishButton');
+
+            if (published) {
+                stat.innerText = 'Live';
+                badge.className = 'bg-green-500 text-black px-3 py-1 rounded-full text-[9px] font-black uppercase whitespace-nowrap';
+                badge.innerText = 'Pubblicata';
+                title.innerText = 'Lato studente aggiornato';
+                description.innerText = 'Le modifiche del docente sono state pubblicate nella demo studente: programma, timeline, card e notifiche sono ora allineate.';
+                meta.innerText = 'Ultima modifica · pubblicata ora';
+                button.innerHTML = '<i class="fa-solid fa-check mr-2"></i> Pubblicato';
+            } else {
+                stat.innerText = 'Bozza';
+                badge.className = 'bg-amber-400 text-black px-3 py-1 rounded-full text-[9px] font-black uppercase whitespace-nowrap';
+                badge.innerText = 'Bozza';
+                title.innerText = 'Bozza pronta per la revisione';
+                description.innerText = 'Quando programma, tappe, card monumenti, notifiche e appelli sono verificati, il docente può pubblicare la versione aggiornata nella UI studente.';
+                meta.innerText = 'Ultima modifica · bozza docente';
+                button.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-2"></i> Pubblica lato studente';
+            }
+        }
+
+        function updateStats() {
+            const day = program[currentDay];
+            const cardCount = day.timeline.filter(item =>
+                item.type !== 'Logistica' && item.type !== 'Controllo' && item.type !== 'Pernotto'
+            ).length;
+            const presentCount = students.filter(student => student.status === 'present').length;
+
+            document.getElementById('statTimeline').innerText = day.timeline.length;
+            document.getElementById('statCards').innerText = cardCount;
+            document.getElementById('statAppello').innerText = presentCount + '/42';
+        }
+
+        selectDay('lunedi');
+        renderStudents();
+        updatePublishStatus(false);
+    </script>
+
+</body>
+</html>
