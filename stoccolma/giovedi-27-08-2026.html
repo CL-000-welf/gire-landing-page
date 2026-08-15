@@ -50,6 +50,7 @@
   </style>
 </head>
 <body class="flex flex-col min-h-screen p-5 pb-10">
+
   <header class="flex justify-between items-start mb-6 px-1 gap-3">
     <div class="flex items-start gap-2">
       <img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE" class="h-8 w-8 rounded-lg mt-1"/>
@@ -66,6 +67,7 @@
       </div>
     </div>
   </header>
+
   <div id="appello-box" class="bg-indigo-600 rounded-[2.5rem] p-6 text-white shadow-xl flex items-center justify-between gap-4">
     <div>
       <p class="text-[9px] font-black uppercase text-indigo-200 mb-1 tracking-widest">Programma</p>
@@ -73,6 +75,7 @@
     </div>
     <button class="bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all" onclick="confermaPresenza()">OK</button>
   </div>
+
   <div class="safe-card p-4 mb-8">
     <div class="map-shell">
       <div id="map-student"></div>
@@ -91,25 +94,26 @@
       </div>
     </div>
   </div>
+
   <div class="safe-card p-6 mb-8">
     <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6 italic text-center">Programma giornata</h3>
     <div class="relative">
       <div class="timeline-line"></div>
-      <div class="timeline-row timeline-row active" data-time="09:30">
+      <div class="timeline-row active" data-time="09:30">
         <div class="dot" style="background:#f6a623;color:#fff"><i class="fa-solid fa-location-dot"></i></div>
         <div class="timeline-copy">
           <div class="timeline-title">Quartiere Södermalm (Giro libero)</div>
           <div class="timeline-time">09:30</div>
         </div>
       </div>
-      <div class="timeline-row timeline-row future" data-time="13:00">
+      <div class="timeline-row future" data-time="13:00">
         <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
           <div class="timeline-title">Centralbadet & Stadsbiblioteket</div>
           <div class="timeline-time">13:00</div>
         </div>
       </div>
-      <div class="timeline-row timeline-row future" data-time="15:30">
+      <div class="timeline-row future" data-time="15:30">
         <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
           <div class="timeline-title">Tour Fermate Metro Artistiche (Linea Blu)</div>
@@ -118,6 +122,7 @@
       </div>
     </div>
   </div>
+
   <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic">I diari di viaggio</h3>
   <div class="space-y-6 mb-12">
     <article class="diary-card safe-card">
@@ -131,6 +136,7 @@
         <button class="more-link" data-text="Esplorazione di Södermalm, l'ex quartiere operaio oggi cuore creativo e hipster della città. Tra boutique, caffetterie, scorci panoramici e parchi affacciati sull'acqua." data-title="Södermalm">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
       </div>
     </article>
+
     <article class="diary-card safe-card">
       <img alt="Stadsbiblioteket" class="diary-img" src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=800&q=80"/>
       <div class="diary-body">
@@ -142,6 +148,7 @@
         <button class="more-link" data-text="Ammiriamo la Stadsbiblioteket capolavoro modernista del 1928 firmato da Gunnar Asplund con la sua monumentale sala circolare. Prima passiamo per il Centralbadet, celebre complesso termale in stile Art Nouveau." data-title="Biblioteca Civica & Centralbadet">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
       </div>
     </article>
+
     <article class="diary-card safe-card">
       <img alt="Metro Art" class="diary-img" src="https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=800&q=80"/>
       <div class="diary-body">
@@ -154,6 +161,7 @@
       </div>
     </article>
   </div>
+
   <div class="mt-auto pt-2">
     <div class="bg-red-50 rounded-[2.5rem] p-6 border border-red-100 flex items-center justify-between shadow-sm gap-4">
       <div>
@@ -167,12 +175,28 @@
       <span></span>
     </div>
   </div>
+
   <footer class="app-footer">
     <div class="footer-brand"><img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE"/><span>GIRE</span></div>
     <span>Area studente · Stoccolma 2026</span>
   </footer>
-  <div id="infoModal" onclick="closeModal()"><div class="modal-card" onclick="event.stopPropagation()"><h3 id="infoTitle" class="font-black italic text-3xl mb-4 text-indigo-600 uppercase"></h3><p id="infoContent" class="text-lg text-gray-600 mb-8"></p><button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black text-xs" onclick="closeModal()">Ho capito!</button></div></div>
-  <div id="sosModal" onclick="closeSOSModal()"><div class="modal-card" onclick="event.stopPropagation()"><h3 class="font-black text-2xl mb-6 uppercase">Emergenza</h3><a class="flex items-center justify-between w-full bg-slate-50 rounded-2xl p-4 mb-3" href="tel:+393383915771"><b>Carlo Ghelfi</b><i class="fa-solid fa-phone text-red-600"></i></a><button class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black text-xs" onclick="closeSOSModal()">Chiudi</button></div></div>
+
+  <div id="infoModal" onclick="closeModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <h3 id="infoTitle" class="font-black italic text-3xl mb-4 text-indigo-600 uppercase"></h3>
+      <p id="infoContent" class="text-lg text-gray-600 mb-8"></p>
+      <button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black text-xs uppercase" onclick="closeModal()">Ho capito!</button>
+    </div>
+  </div>
+
+  <div id="sosModal" onclick="closeSOSModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <h3 class="font-black text-2xl mb-6 uppercase">Emergenza</h3>
+      <a class="flex items-center justify-between w-full bg-slate-50 rounded-2xl p-4 mb-3" href="tel:+393383915771"><b>Carlo Ghelfi</b><i class="fa-solid fa-phone text-red-600"></i></a>
+      <button class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black text-xs uppercase" onclick="closeSOSModal()">Chiudi</button>
+    </div>
+  </div>
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     const stops = [
@@ -181,15 +205,99 @@
       { name: "Stockholms Stadsbibliotek", lat: 59.3434, lng: 18.0547 },
       { name: "Metro Solna Centrum", lat: 59.3592, lng: 17.9991 }
     ];
+
     const map = L.map('map-student', { zoomControl: false }).setView([59.3300, 18.0600], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-    stops.forEach(s => L.marker([s.lat, s.lng]).addTo(map).bindPopup(s.name));
-    function resetMapView() { map.setView([59.3300, 18.0600], 13); }
-    function openInfo(t, c) { document.getElementById('infoTitle').innerText = t; document.getElementById('infoContent').innerText = c; document.getElementById('infoModal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
-    function openSOSModal() { document.getElementById('sosModal').style.display = 'flex'; }
-    function closeSOSModal() { document.getElementById('sosModal').style.display = 'none'; }
-    function confermaPresenza() { document.getElementById('appello-box').classList.add('hidden-appello'); }
+    
+    stops.forEach(s => {
+      L.marker([s.lat, s.lng]).addTo(map).bindPopup(`<b>${s.name}</b>`);
+    });
+
+    function resetMapView() { 
+      map.setView([59.3300, 18.0600], 13); 
+    }
+
+    function openInfo(t, c) { 
+      document.getElementById('infoTitle').innerText = t; 
+      document.getElementById('infoContent').innerText = c; 
+      document.getElementById('infoModal').style.display = 'flex'; 
+    }
+
+    function closeModal() { 
+      document.getElementById('infoModal').style.display = 'none'; 
+    }
+
+    function openSOSModal() { 
+      document.getElementById('sosModal').style.display = 'flex'; 
+    }
+
+    function closeSOSModal() { 
+      document.getElementById('sosModal').style.display = 'none'; 
+    }
+
+    function confermaPresenza() { 
+      document.getElementById('appello-box').classList.add('hidden-appello'); 
+    }
+
+    // Gestione Modale "Leggi di più"
+    document.querySelectorAll('.more-link').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const title = btn.getAttribute('data-title');
+        const text = btn.getAttribute('data-text');
+        openInfo(title, text);
+      });
+    });
+
+    // Gestione Sintesi Vocale (Audio TTS)
+    let currentUtterance = null;
+    let activeAudioBtn = null;
+
+    document.querySelectorAll('.audio-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const text = btn.getAttribute('data-audio-text');
+        
+        if ('speechSynthesis' in window) {
+          if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+            if (activeAudioBtn === btn) {
+              btn.classList.remove('playing');
+              btn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+              activeAudioBtn = null;
+              return;
+            }
+          }
+
+          if (activeAudioBtn) {
+            activeAudioBtn.classList.remove('playing');
+            activeAudioBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+          }
+
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = 'it-IT';
+          
+          btn.classList.add('playing');
+          btn.innerHTML = '<i class="fa-solid fa-square"></i>';
+          activeAudioBtn = btn;
+
+          utterance.onend = () => {
+            btn.classList.remove('playing');
+            btn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+            activeAudioBtn = null;
+          };
+
+          utterance.onerror = () => {
+            btn.classList.remove('playing');
+            btn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+            activeAudioBtn = null;
+          };
+
+          speechSynthesis.speak(utterance);
+        } else {
+          alert("Spiacenti, il tuo browser non supporta la sintesi vocale.");
+        }
+      });
+    });
   </script>
 </body>
 </html>
