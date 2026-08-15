@@ -25,7 +25,7 @@
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; overflow-x: hidden; }
     .safe-card { background: white; border-radius: 1.9rem; border: 1px solid #E2E8F0; overflow: hidden; box-shadow: 0 10px 25px rgba(15,23,42,0.04); }
-    #map-student { height: 210px; border-radius: 1.35rem; z-index: 10; border: 2px solid white; box-shadow: 0 8px 18px rgba(0,0,0,0.05); }
+    #map-student { height: 250px; border-radius: 1.35rem; z-index: 10; border: 2px solid white; box-shadow: 0 8px 18px rgba(0,0,0,0.05); }
     .map-shell { position: relative; }
     .map-meta { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: end; margin-top: 12px; }
     .map-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 11px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: .03em; }
@@ -66,7 +66,11 @@
     .more-link i { margin-left: .35rem; }
     .nav-row { display:flex; justify-content:space-between; gap:12px; margin-top: 18px; }
     .nav-row a, .nav-row span { min-width: 110px; text-align:center; text-decoration:none; background:white; border:1px solid #E2E8F0; border-radius: 1rem; padding: .8rem 1rem; font-weight: 800; color:#334155; }
-    .walk-label { background: white; border: 1px solid #e2e8f0; border-radius: 999px; padding: 3px 8px; font-size: 10px; font-weight: 800; color: #475569; box-shadow: 0 2px 6px rgba(0,0,0,.08); white-space: nowrap; }
+    
+    /* Stile Etichette Tempo Minuti sulla Mappa */
+    .walk-label { background: white; border: 1px solid #cbd5e1; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 800; color: #1e293b; box-shadow: 0 2px 8px rgba(0,0,0,.12); white-space: nowrap; text-align: center; }
+    .walk-label i { color: #4f46e5; margin-right: 3px; }
+
     footer.app-footer { margin-top: 28px; padding: 18px 8px 2px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #94a3b8; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
     footer.app-footer .footer-brand { display: flex; align-items: center; gap: 8px; color: #64748b; }
     footer.app-footer img { width: 20px; height: 20px; border-radius: 6px; }
@@ -99,6 +103,7 @@
       </div>
     </div>
   </header>
+
   <div id="appello-box" class="bg-indigo-600 rounded-[2.5rem] p-6 text-white shadow-xl flex items-center justify-between gap-4">
     <div>
       <p class="text-[9px] font-black uppercase text-indigo-200 mb-1 tracking-widest">Programma</p>
@@ -106,6 +111,7 @@
     </div>
     <button class="bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all" onclick="confermaPresenza()">OK</button>
   </div>
+
   <div class="safe-card p-4 mb-8">
     <div class="map-shell">
       <div id="map-student"></div>
@@ -113,8 +119,8 @@
     <div class="map-meta">
       <div class="map-legend">
         <div class="legend-block">
-          <div>Base: Norrmalm Hotel</div>
-          <div class="legend-weather"><i class="fa-solid fa-cloud-sun"></i> 20° Soleggiato</div>
+          <div>Base: Hotel C Stockholm</div>
+          <div class="legend-weather"><i class="fa-solid fa-cloud-sun"></i> 18°C Parz. Nuv.</div>
         </div>
         <div class="legend-block">
           <div>Cerchio = area</div>
@@ -130,6 +136,7 @@
       </div>
     </div>
   </div>
+
   <div class="safe-card p-6 mb-8">
     <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6 italic text-center">Programma giornata</h3>
     <div class="relative">
@@ -178,6 +185,7 @@
       </div>
     </div>
   </div>
+
   <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic">I diari di viaggio</h3>
   <div class="space-y-6 mb-12">
     <article class="diary-card safe-card">
@@ -190,11 +198,12 @@
           </button>
         </div>
         <p class="diary-short">Visita al celebre Municipio, con la Sala Blu del banchetto dei Nobel e la splendida Sala Oro.</p>
-        <button class="more-link" data-text="Partiamo a piedi dall'hotel in zona Norrmalm per visitare il municipio di Stoccolma. Visiteremo la celebre Sala Blu, sede del banchetto dei Premi Nobel, e la spettacolare Sala Oro rivestita da oltre 18 milioni di tessere di mosaico." data-title="Municipio (Stadshuset)">
+        <button class="more-link" onclick="openInfo('Municipio (Stadshuset)', 'Partiamo a piedi dall\'hotel in zona Norrmalm per visitare il municipio di Stoccolma. Visiteremo la celebre Sala Blu, sede del banchetto dei Premi Nobel, e la spettacolare Sala Oro rivestita da oltre 18 milioni di tessere di mosaico.')">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </article>
+
     <article class="diary-card safe-card">
       <img alt="Gamla Stan" class="diary-img" src="https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?auto=format&fit=crop&w=800&q=80"/>
       <div class="diary-body">
@@ -205,11 +214,12 @@
           </button>
         </div>
         <p class="diary-short">Attraversiamo il ponte Vasabron per immergerci nell'atmosfera medievale di Gamla Stan con la guida.</p>
-        <button class="more-link" data-text="Ci dirigiamo verso la città vecchia attraversando il ponte Vasabron, perfetto per i pedoni e con una vista splendida. Evitiamo il Centralbron riservato alle auto. A Gamla Stan proseguiamo la visita guidata tra vicoli medievali e palazzi storici." data-title="Gamla Stan via Vasabron">
+        <button class="more-link" onclick="openInfo('Gamla Stan via Vasabron', 'Ci dirigiamo verso la città vecchia attraversando il ponte Vasabron, perfetto per i pedoni e con una vista splendida. Evitiamo il Centralbron riservato alle auto. A Gamla Stan proseguiamo la visita guidata tra vicoli medievali e palazzi storici.')">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </article>
+
     <article class="diary-card safe-card">
       <img alt="Parlamento e Operan" class="diary-img" src="https://images.unsplash.com/photo-1596484552834-6a58f850e0a1?auto=format&fit=crop&w=800&q=80"/>
       <div class="diary-body">
@@ -220,11 +230,12 @@
           </button>
         </div>
         <p class="diary-short">Attraversamento del ponte storico Norrbro, vista sul Parlamento e sul Teatro dell'Opera.</p>
-        <button class="more-link" data-text="Nel pomeriggio attraversiamo il ponte Norrbro, di fronte al Palazzo Reale, il più bello e storico della città, interamente pedonale. Passiamo sull'isola del Parlamento e arriviamo davanti al Teatro dell'Opera di fine '800." data-title="Ponte Norrbro, Parlamento & Operan">
+        <button class="more-link" onclick="openInfo('Ponte Norrbro, Parlamento & Operan', 'Nel pomeriggio attraversiamo il ponte Norrbro, di fronte al Palazzo Reale, il più bello e storico della città, interamente pedonale. Passiamo sull\'isola del Parlamento e arriviamo davanti al Teatro dell\'Opera di fine \'800.')">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </article>
+
     <article class="diary-card safe-card">
       <img alt="Crociera Arcipelago" class="diary-img" src="https://images.unsplash.com/photo-1508189860359-770d387551af?auto=format&fit=crop&w=800&q=80"/>
       <div class="diary-body">
@@ -235,12 +246,13 @@
           </button>
         </div>
         <p class="diary-short">Crociera panoramica di due ore nell'incantevole arcipelago di Stoccolma con partenza alle 18:00.</p>
-        <button class="more-link" data-text="Torniamo a Gamla Stan passando dal ponte Strömbron per raggiungere l'imbarco vicino alla statua di Gustav III. Ci attende una favolosa crociera di due ore tra le isole dell'arcipelago di Stoccolma." data-title="Crociera Arcipelago">
+        <button class="more-link" onclick="openInfo('Crociera Arcipelago', 'Torniamo a Gamla Stan passando dal ponte Strömbron per raggiungere l\'imbarco vicino alla statua di Gustav III. Ci attende una favolosa crociera di due ore tra le isole dell\'arcipelago di Stoccolma.')">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </article>
   </div>
+
   <div class="mt-auto pt-2">
     <div class="bg-red-50 rounded-[2.5rem] p-6 border border-red-100 flex items-center justify-between shadow-sm gap-4">
       <div>
@@ -256,6 +268,7 @@
       <a href="mercoledi-26-08-2026.html">Mer 26 →</a>
     </div>
   </div>
+
   <footer class="app-footer">
     <div class="footer-brand">
       <img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE"/>
@@ -263,46 +276,51 @@
     </div>
     <span>Area studente · Stoccolma 2026</span>
   </footer>
+
   <div id="infoModal" onclick="closeModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
-      <h3 class="font-black italic text-3xl mb-4 text-indigo-600 uppercase leading-none" id="infoTitle"></h3>
-      <p class="text-lg font-medium leading-relaxed mb-8 text-gray-600" id="infoContent"></p>
-      <button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase text-xs" onclick="closeModal()">Ho capito!</button>
+      <h3 class="font-black italic text-2xl mb-4 text-indigo-600 uppercase leading-tight" id="infoTitle"></h3>
+      <p class="text-base font-medium leading-relaxed mb-6 text-gray-600" id="infoContent"></p>
+      <button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeModal()">Ho capito!</button>
     </div>
   </div>
+
   <div id="sosModal" onclick="closeSOSModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
       <p class="text-[10px] font-black uppercase tracking-widest text-red-500 mb-2">Contatti emergenza</p>
       <h3 class="font-black italic text-2xl mb-6 text-slate-900 uppercase">Chi vuoi chiamare?</h3>
       <div class="space-y-3 mb-4">
-        <a class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4" href="tel:+393383915771">
+        <a class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4" href="tel:+393391801232">
           <div>
-            <p class="text-sm font-black text-slate-900">Carlo Ghelfi</p>
-            <p class="text-xs text-slate-500 font-bold">+39 338 391 5771</p>
+            <p class="text-sm font-black text-slate-900">Francesca Schiavi</p>
+            <p class="text-xs text-slate-500 font-bold">+39 339 180 1232</p>
           </div>
           <i class="fa-solid fa-phone text-red-600"></i>
         </a>
-        <button class="flex items-center justify-between w-full bg-emerald-50 hover:bg-emerald-100 transition rounded-2xl px-5 py-4" onclick="sendLocationWhatsApp('393383915771')">
+        <button class="flex items-center justify-between w-full bg-emerald-50 hover:bg-emerald-100 transition rounded-2xl px-5 py-4" onclick="sendLocationWhatsApp('393391801232')">
           <div class="text-left">
             <p class="text-sm font-black text-slate-900">Invia posizione WhatsApp</p>
-            <p class="text-xs text-slate-500 font-bold">a Carlo Ghelfi</p>
+            <p class="text-xs text-slate-500 font-bold">a Francesca Schiavi</p>
           </div>
           <i class="fa-solid fa-location-dot text-emerald-600"></i>
         </button>
         <a class="flex items-center justify-between w-full bg-red-50 hover:bg-red-100 transition rounded-2xl px-5 py-4" href="tel:112">
           <div>
-            <p class="text-sm font-black text-slate-900">Chiama emergenza 112</p>
-            <p class="text-xs text-slate-500 font-bold">Numero unico emergenze</p>
+            <p class="text-sm font-black text-slate-900">Soccorso Svezia (112)</p>
+            <p class="text-xs text-slate-500 font-bold">Numero unico emergenze locale</p>
           </div>
           <i class="fa-solid fa-triangle-exclamation text-red-600"></i>
         </a>
       </div>
-      <button class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs" onclick="closeSOSModal()">Chiudi</button>
+      <button class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeSOSModal()">Chiudi</button>
     </div>
   </div>
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    const hotel = { name: "Hotel Norrmalm", lat: 59.3326, lng: 18.0649, label: "Hotel Norrmalm" };
+    // Hotel C Stockholm (Vasaplan 4, Stockholm)
+    const hotel = { name: "Hotel C Stockholm", lat: 59.3323, lng: 18.0583, label: "Hotel C Stockholm" };
+    
     const stops = [
       { name: "Municipio (Stadshuset)", lat: 59.3275, lng: 18.0543, visit: "Visita Sala Oro e Sala Blu." },
       { name: "Gamla Stan (Vasabron)", lat: 59.3257, lng: 18.0686, visit: "Città vecchia attraverso il ponte pedonale." },
@@ -311,8 +329,30 @@
       { name: "Östermalmstorg & Saluhall", lat: 59.3360, lng: 18.0780, visit: "Mercato al coperto e tempio della gastronomia." },
       { name: "Imbarco Crociera (Gustav III)", lat: 59.3262, lng: 18.0745, visit: "Partenza crociera 2 ore arcipelago." }
     ];
+
+    const routePoints = [
+      [hotel.lat, hotel.lng],
+      [stops[0].lat, stops[0].lng],
+      [stops[1].lat, stops[1].lng],
+      [stops[2].lat, stops[2].lng],
+      [stops[3].lat, stops[3].lng],
+      [stops[4].lat, stops[4].lng],
+      [stops[5].lat, stops[5].lng]
+    ];
+
+    // Tempi di percorrenza stimati tra i segmenti consecutivi
+    const segmentTimes = [
+      { lat: 59.3299, lng: 18.0563, text: "<i class='fa-solid fa-person-walking'></i> 10 min" },
+      { lat: 59.3266, lng: 18.0614, text: "<i class='fa-solid fa-person-walking'></i> 12 min" },
+      { lat: 59.3265, lng: 18.0684, text: "<i class='fa-solid fa-person-walking'></i> 3 min" },
+      { lat: 59.3285, lng: 18.0693, text: "<i class='fa-solid fa-person-walking'></i> 4 min" },
+      { lat: 59.3328, lng: 18.0741, text: "<i class='fa-solid fa-person-walking'></i> 10 min" },
+      { lat: 59.3311, lng: 18.0762, text: "<i class='fa-solid fa-person-walking'></i> 14 min" }
+    ];
+
     const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 14);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+
     function createGiantIcon(color, iconClass, pulse = false) {
       return L.divIcon({
         className: 'custom-icon',
@@ -320,36 +360,88 @@
         iconSize:[46,46], iconAnchor:[23,23]
       });
     }
-    const routePoints = [[hotel.lat, hotel.lng], [59.3275, 18.0543], [59.3257, 18.0686], [59.3273, 18.0683], [59.3297, 18.0703], [59.3360, 18.0780], [59.3262, 18.0745]];
+
+    // Disegna la rotta
     L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(map);
-    L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(map).bindPopup(`<strong>${hotel.name}</strong>`);
-    stops.forEach(stop => { L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(map).bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`); });
+
+    // Marker Albergo
+    L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(map).bindPopup(`<strong>${hotel.name}</strong><br>Vasaplan 4`);
+
+    // Marker Tappe
+    stops.forEach(stop => { 
+      L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(map).bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`); 
+    });
+
+    // Etichette dei minuti sulle tratte
+    segmentTimes.forEach(st => {
+      L.marker([st.lat, st.lng], {
+        icon: L.divIcon({
+          className: '',
+          html: `<div class="walk-label">${st.text}</div>`,
+          iconSize: [60, 20],
+          iconAnchor: [30, 10]
+        })
+      }).addTo(map);
+    });
+
     function resetMapView() { map.fitBounds(L.latLngBounds(routePoints).pad(0.2)); }
     resetMapView();
     window.addEventListener('load', () => setTimeout(() => map.invalidateSize(), 150));
-    
+
+    // Gestione Riproduttore Audio
     let currentUtterance = null, currentButton = null;
-    function stopSpeech() { window.speechSynthesis.cancel(); if (currentButton) currentButton.classList.remove('playing'); currentUtterance = null; currentButton = null; }
+    function stopSpeech() { 
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel(); 
+      if (currentButton) currentButton.classList.remove('playing'); 
+      currentUtterance = null; 
+      currentButton = null; 
+    }
+
     document.querySelectorAll('.audio-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
         const text = btn.dataset.audioText;
-        if (currentButton === btn && window.speechSynthesis.speaking) { stopSpeech(); return; }
+        if (!('speechSynthesis' in window)) {
+          alert("La sintesi vocale non è supportata dal tuo browser.");
+          return;
+        }
+        if (currentButton === btn && window.speechSynthesis.speaking) { 
+          stopSpeech(); 
+          return; 
+        }
         stopSpeech();
-        const msg = new SpeechSynthesisUtterance(text); msg.lang = 'it-IT'; msg.rate = 0.95; msg.onend = stopSpeech; msg.onerror = stopSpeech;
-        currentUtterance = msg; currentButton = btn; btn.classList.add('playing'); window.speechSynthesis.speak(msg);
+        const msg = new SpeechSynthesisUtterance(text); 
+        msg.lang = 'it-IT'; 
+        msg.rate = 0.95; 
+        msg.onend = stopSpeech; 
+        msg.onerror = stopSpeech;
+        currentUtterance = msg; 
+        currentButton = btn; 
+        btn.classList.add('playing'); 
+        window.speechSynthesis.speak(msg);
       });
     });
     window.addEventListener('beforeunload', stopSpeech);
-    function openInfo(title, text) { document.getElementById('infoTitle').innerText = title; document.getElementById('infoContent').innerText = text; document.getElementById('infoModal').style.display = 'flex'; }
+
+    // Gestione Modali Pop-up
+    function openInfo(title, text) { 
+      document.getElementById('infoTitle').innerText = title; 
+      document.getElementById('infoContent').innerText = text; 
+      document.getElementById('infoModal').style.display = 'flex'; 
+    }
     function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
     function openSOSModal() { document.getElementById('sosModal').style.display = 'flex'; }
     function closeSOSModal() { document.getElementById('sosModal').style.display = 'none'; }
     function confermaPresenza() { document.getElementById('appello-box').classList.add('hidden-appello'); }
+
+    // Invia Posizione WhatsApp
     function sendLocationWhatsApp(phone) {
-      if (!navigator.geolocation) { alert('Geolocalizzazione non supportata'); return; }
+      if (!navigator.geolocation) { alert('Geolocalizzazione non supportata dal dispositivo.'); return; }
       navigator.geolocation.getCurrentPosition(p => {
         const msg = encodeURIComponent('SOS STUDENTE: https://maps.google.com/?q=' + p.coords.latitude + ',' + p.coords.longitude);
         window.location.href = 'https://wa.me/' + phone + '?text=' + msg;
+      }, () => {
+        alert('Impossibile recuperare la posizione GPS attuale.');
       });
     }
   </script>
