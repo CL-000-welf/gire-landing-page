@@ -6,6 +6,12 @@
   <title>Mercoledì 26.08.2026 - Viaggio a Stoccolma</title>
   <meta name="description" content="Itinerario giornaliero GIRE per la gita a Stoccolma con timeline, mappa e contatti SOS."/>
   <link rel="icon" type="image/png" href="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
+  <link rel="apple-touch-icon" href="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
+  <meta property="og:title" content="Mercoledì 26.08.2026 - Viaggio a Stoccolma"/>
+  <meta property="og:description" content="Itinerario giornaliero GIRE per la gita a Stoccolma con timeline, mappa e contatti SOS."/>
+  <meta property="og:url" content="https://cl-000-welf.github.io/gire-landing-page/mercoledi-26-08-2026.html"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image" content="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet"/>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
@@ -13,44 +19,52 @@
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; overflow-x: hidden; }
     .safe-card { background: white; border-radius: 1.9rem; border: 1px solid #E2E8F0; overflow: hidden; box-shadow: 0 10px 25px rgba(15,23,42,0.04); }
-    #map-student { height: 210px; border-radius: 1.35rem; z-index: 10; border: 2px solid white; box-shadow: 0 8px 18px rgba(0,0,0,0.05); }
+    #map-student { height: 250px; border-radius: 1.35rem; z-index: 10; border: 2px solid white; box-shadow: 0 8px 18px rgba(0,0,0,0.05); }
     .map-shell { position: relative; }
     .map-meta { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: end; margin-top: 12px; }
     .map-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 11px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: .03em; }
-    .legend-weather { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; background: #eff6ff; color: #0369a1; border-radius: 999px; padding: 5px 10px; font-size: 10px; font-weight: 900; }
+    .legend-block { line-height: 1.35; }
+    .legend-weather { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; background: #eff6ff; color: #0369a1; border-radius: 999px; padding: 5px 10px; font-size: 10px; font-weight: 900; box-shadow: 0 2px 8px rgba(15,23,42,0.05); }
     .map-controls { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
     .map-controls button { background: white; border: 1px solid #E2E8F0; border-radius: 14px; min-width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(15,23,42,0.06); color: #334155; font-size: 14px; font-weight: 900; }
     .map-controls button.reset-btn { min-width: 64px; padding: 0 12px; gap: 6px; font-size: 12px; }
-    #push-alert { position: fixed; top: 20px; left: 20px; right: 20px; z-index: 9999; transform: translateY(-150%); transition: transform 0.6s cubic-bezier(0.175,0.885,0.32,1.275); }
-    #push-alert.show { transform: translateY(0); }
     #appello-box { transition: all 0.6s ease; max-height: 300px; opacity: 1; margin-bottom: 1.5rem; }
     #appello-box.hidden-appello { max-height: 0; opacity: 0; margin-bottom: 0; padding: 0; transform: scale(0.9); pointer-events: none; }
+    .pulse-me { animation: pulse-blue 2s infinite; border-radius: 50%; }
+    @keyframes pulse-blue { 0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.6); } 70% { box-shadow: 0 0 0 15px rgba(59,130,246,0); } 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); } }
     #infoModal, #sosModal { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.92); z-index:10000; align-items:center; justify-content:center; padding:20px; backdrop-filter: blur(8px); }
     .modal-card { background:white; border-radius:2.3rem; max-width: 420px; width:100%; padding: 2rem; box-shadow:0 22px 60px rgba(0,0,0,.2); }
     .timeline-line { position:absolute; left:13px; top:12px; bottom:12px; width:2px; background:#edf0f3; }
     .timeline-row { position:relative; display:flex; gap:14px; align-items:center; }
     .timeline-row + .timeline-row { margin-top: 26px; }
     .dot { z-index:1; width:28px; height:28px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:4px solid white; box-shadow:0 2px 6px rgba(0,0,0,.08); font-size:10px; flex:0 0 auto; }
+    .timeline-copy { min-width:0; }
     .timeline-title { font-size: .97rem; font-weight: 900; font-style: italic; line-height:1.1; color:#162038; }
     .timeline-time { font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .02em; color: #8a94a6; margin-top: 2px; }
+    .timeline-row.active .timeline-time { color:#d97706; }
+    .timeline-row.future .timeline-title, .timeline-row.future .timeline-time { color:#94a3b8; }
     .diary-card { overflow:hidden; }
     .diary-img { width:100%; height:176px; object-fit:cover; display:block; background:linear-gradient(135deg,#c7d2fe,#e2e8f0); }
     .diary-body { padding: 1.25rem; }
     .diary-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:.55rem; }
     .diary-head h4 { margin:0; font-weight:900; font-style:italic; text-transform:uppercase; color:#4f46e5; font-size:1.08rem; line-height:1.05; }
-    .audio-btn { background:#eef2ff; color:#4f46e5; width:42px; height:42px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:none; cursor:pointer; flex:0 0 auto; }
+    .audio-btn { background:#eef2ff; color:#4f46e5; width:42px; height:42px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:none; cursor:pointer; flex:0 0 auto; transition:transform .15s ease, background .2s ease; }
     .audio-btn.playing { background:#4f46e5; color:white; }
+    .audio-btn:active { transform:scale(.93); }
     .diary-short { font-size:1rem; line-height:1.7; color:#4b5563; margin: 0 0 1.2rem; }
     .more-link { border:none; background:none; color:#4f46e5; font-weight:900; text-transform:uppercase; font-size:.9rem; padding:0 0 .15rem; border-bottom:4px solid #dfe4ff; cursor:pointer; }
+    .more-link i { margin-left: .35rem; }
     .nav-row { display:flex; justify-content:space-between; gap:12px; margin-top: 18px; }
     .nav-row a, .nav-row span { min-width: 110px; text-align:center; text-decoration:none; background:white; border:1px solid #E2E8F0; border-radius: 1rem; padding: .8rem 1rem; font-weight: 800; color:#334155; }
-    footer.app-footer { margin-top: 28px; padding: 18px 8px 2px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #94a3b8; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+    .walk-label { background: white; border: 1px solid #cbd5e1; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 800; color: #1e293b; box-shadow: 0 2px 8px rgba(0,0,0,.12); white-space: nowrap; text-align: center; }
+    .walk-label i { color: #4f46e5; margin-right: 3px; }
+    footer.app-footer { margin-top: 28px; padding: 18px 8px 2px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #94a3b8; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
     footer.app-footer .footer-brand { display: flex; align-items: center; gap: 8px; color: #64748b; }
     footer.app-footer img { width: 20px; height: 20px; border-radius: 6px; }
+    @media (max-width: 420px) { body { padding: 16px 16px 32px; } .safe-card { border-radius: 1.7rem; } #map-student { height: 262px; border-radius: 1.6rem; margin: -16px -16px 0px -16px; } .diary-body { padding: 1rem; } .diary-head h4 { font-size: 1rem; } .diary-short { font-size:.95rem; line-height: 1.55; } .nav-row a, .nav-row span { min-width: 96px; padding: .7rem .85rem; } .modal-card { padding: 1.5rem; border-radius: 2rem; } .map-meta { grid-template-columns: 1fr; } .map-controls { justify-content: flex-start; } }
   </style>
 </head>
 <body class="flex flex-col min-h-screen p-5 pb-10">
-
   <header class="flex justify-between items-start mb-6 px-1 gap-3">
     <div class="flex items-start gap-2">
       <img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE" class="h-8 w-8 rounded-lg mt-1"/>
@@ -71,7 +85,7 @@
   <div id="appello-box" class="bg-indigo-600 rounded-[2.5rem] p-6 text-white shadow-xl flex items-center justify-between gap-4">
     <div>
       <p class="text-[9px] font-black uppercase text-indigo-200 mb-1 tracking-widest">Programma</p>
-      <h3 class="font-black text-base italic tracking-tighter uppercase leading-tight md:text-lg">Nybroplan, National Museum e Isola di Skeppsholmen</h3>
+      <h3 class="font-black text-base italic tracking-tighter uppercase leading-tight md:text-lg">Museo Vasa, Museo ABBA e Djurgården</h3>
     </div>
     <button class="bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all" onclick="confermaPresenza()">OK</button>
   </div>
@@ -83,14 +97,20 @@
     <div class="map-meta">
       <div class="map-legend">
         <div class="legend-block">
-          <div>Area: Skeppsholmen</div>
-          <div class="legend-weather"><i class="fa-solid fa-sun"></i> 22° Sereno</div>
+          <div>Base: Hotel C Stockholm</div>
+          <div class="legend-weather"><i class="fa-solid fa-sun"></i> 20°C Soleggiato</div>
+        </div>
+        <div class="legend-block">
+          <div>Isola di</div>
+          <div>Djurgården</div>
         </div>
       </div>
       <div class="map-controls">
-        <button onclick="map.zoomIn()"><i class="fa-solid fa-plus"></i></button>
-        <button onclick="map.zoomOut()"><i class="fa-solid fa-minus"></i></button>
-        <button class="reset-btn" onclick="resetMapView()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+        <button onclick="map.zoomIn()" aria-label="Zoom avanti"><i class="fa-solid fa-plus"></i></button>
+        <button onclick="map.zoomOut()" aria-label="Zoom indietro"><i class="fa-solid fa-minus"></i></button>
+        <button class="reset-btn" onclick="resetMapView()" aria-label="Reset mappa">
+          <i class="fa-solid fa-rotate-left"></i> Reset
+        </button>
       </div>
     </div>
   </div>
@@ -102,29 +122,29 @@
       <div class="timeline-row active" data-time="09:30">
         <div class="dot" style="background:#f6a623;color:#fff"><i class="fa-solid fa-location-dot"></i></div>
         <div class="timeline-copy">
-          <div class="timeline-title">Dramaten, Hallwylska & Grand Hotel</div>
+          <div class="timeline-title">Museo Vasa (Vasamuseet)</div>
           <div class="timeline-time">09:30</div>
         </div>
       </div>
-      <div class="timeline-row future" data-time="10:30">
+      <div class="timeline-row future" data-time="12:30">
         <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
-          <div class="timeline-title">National Museum (Visita d'Arte)</div>
-          <div class="timeline-time">10:30-12:30</div>
+          <div class="timeline-title">Pranzo su Djurgården & Parco</div>
+          <div class="timeline-time">12:30</div>
         </div>
       </div>
-      <div class="timeline-row future" data-time="14:00">
+      <div class="timeline-row future" data-time="14:30">
         <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
-          <div class="timeline-title">Ponte delle Corone & Skeppsholmen</div>
-          <div class="timeline-time">14:00</div>
+          <div class="timeline-title">ABBA The Museum</div>
+          <div class="timeline-time">14:30</div>
         </div>
       </div>
-      <div class="timeline-row future" data-time="15:30">
+      <div class="timeline-row future" data-time="17:00">
         <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
-          <div class="timeline-title">Moderna Museet & Giardino Paradiset</div>
-          <div class="timeline-time">15:30</div>
+          <div class="timeline-title">Rientro panoramico a piedi o in traghetto</div>
+          <div class="timeline-time">17:00</div>
         </div>
       </div>
     </div>
@@ -133,26 +153,34 @@
   <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic">I diari di viaggio</h3>
   <div class="space-y-6 mb-12">
     <article class="diary-card safe-card">
-      <img alt="National Museum" class="diary-img" src="https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?auto=format&fit=crop&w=800&q=80"/>
+      <img alt="Museo Vasa" class="diary-img" src="https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=800&q=80"/>
       <div class="diary-body">
         <div class="diary-head">
-          <h4>National Museum</h4>
-          <button class="audio-btn" data-audio-text="Visita approfondita al National Museum di Stoccolma, il principale museo d'arte e design della Svezia. Ammireremo capolavori pittorici e collezioni storiche in uno spazio architettonico magnifico."><i class="fa-solid fa-volume-high"></i></button>
+          <h4>Museo Vasa</h4>
+          <button aria-label="Ascolta Museo Vasa" class="audio-btn" data-audio-text="Visita all'incredibile Vassa-museet, dove è custodito l'unico galeone del XVII secolo integro al mondo, affondato nel suo viaggio inaugurale nel 1628 e recuperato dopo 333 anni.">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
         </div>
-        <p class="diary-short">Immersione di circa due ore tra i capolavori dell'arte e del design svedese ed europeo.</p>
-        <button class="more-link" data-text="Visita approfondita al National Museum di Stoccolma, il principale museo d'arte e design della Svezia. Ammireremo capolavori pittorici e collezioni storiche in uno spazio architettonico magnifico." data-title="National Museum">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
+        <p class="diary-short">Visita guidata al galeone reale del 1628 perfettamente conservato.</p>
+        <button class="more-link" onclick="openInfo('Museo Vasa', 'Visita all\'incredibile Vassa-museet, dove è custodito l\'unico galeone del XVII secolo integro al mondo, affondato nel suo viaggio inaugurale nel 1628 e recuperato dopo 333 anni.')">
+          Leggi di più <i class="fa-solid fa-arrow-right"></i>
+        </button>
       </div>
     </article>
 
     <article class="diary-card safe-card">
-      <img alt="Moderna Museet" class="diary-img" src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=800&q=80"/>
+      <img alt="ABBA The Museum" class="diary-img" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80"/>
       <div class="diary-body">
         <div class="diary-head">
-          <h4>Moderna Museet & Paradiset</h4>
-          <button class="audio-btn" data-audio-text="Sull'isola di Skeppsholmen visitiamo il Moderna Museet con il suo splendido caffè panoramico. All'esterno non perdiamo Paradiset, il giardino con le 16 sculture oniriche e colorate di Niki de Saint Phalle."><i class="fa-solid fa-volume-high"></i></button>
+          <h4>ABBA The Museum</h4>
+          <button aria-label="Ascolta ABBA Museum" class="audio-btn" data-audio-text="Esperienza interattiva nel museo dedicato alla celebre band pop svedese ABBA. Potrete cantare, ballare e scoprire i costumi di scena e la storia che ha segnato la musica mondiale.">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
         </div>
-        <p class="diary-short">Arte moderna e contemporanea sull'isola di Skeppsholmen, col celebre giardino delle sculture.</p>
-        <button class="more-link" data-text="Sull'isola di Skeppsholmen visitiamo il Moderna Museet con il suo splendido caffè panoramico. All'esterno non perdiamo Paradiset, il giardino con le 16 sculture oniriche e colorate di Niki de Saint Phalle." data-title="Moderna Museet & Paradiset">Leggi di più <i class="fa-solid fa-arrow-right"></i></button>
+        <p class="diary-short">Tuffo interattivo nella storia, musica e costumi del leggendario gruppo svedese.</p>
+        <button class="more-link" onclick="openInfo('ABBA The Museum', 'Esperienza interattiva nel museo dedicato alla celebre band pop svedese ABBA. Potrete cantare, ballare e scoprire i costumi di scena e la storia che ha segnato la musica mondiale.')">
+          Leggi di più <i class="fa-solid fa-arrow-right"></i>
+        </button>
       </div>
     </article>
   </div>
@@ -162,8 +190,9 @@
       <div>
         <p class="text-[9px] font-black uppercase text-red-600 mb-1 tracking-widest">Gire Safe Mode</p>
         <h3 class="font-black text-sm italic tracking-tighter uppercase leading-tight text-slate-900">Hai bisogno di aiuto?</h3>
+        <p class="text-[8px] font-bold text-red-400 uppercase mt-1 leading-none">Invia posizione GPS ai docenti</p>
       </div>
-      <button class="bg-red-600 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px]" onclick="openSOSModal()">SOS</button>
+      <button class="bg-red-600 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg shadow-red-200 active:scale-95 transition-all" onclick="openSOSModal()">SOS</button>
     </div>
     <div class="nav-row">
       <a href="martedi-25-08-2026.html">← Mar 25</a>
@@ -178,120 +207,132 @@
 
   <div id="infoModal" onclick="closeModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
-      <h3 id="infoTitle" class="font-black italic text-3xl mb-4 text-indigo-600 uppercase"></h3>
-      <p id="infoContent" class="text-lg text-gray-600 mb-8"></p>
-      <button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black text-xs uppercase" onclick="closeModal()">Ho capito!</button>
+      <h3 class="font-black italic text-2xl mb-4 text-indigo-600 uppercase leading-tight" id="infoTitle"></h3>
+      <p class="text-base font-medium leading-relaxed mb-6 text-gray-600" id="infoContent"></p>
+      <button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeModal()">Ho capito!</button>
     </div>
   </div>
 
   <div id="sosModal" onclick="closeSOSModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
-      <h3 class="font-black text-2xl mb-6 uppercase">Emergenza</h3>
-      <a class="flex items-center justify-between w-full bg-slate-50 rounded-2xl p-4 mb-3" href="tel:+393383915771"><b>Carlo Ghelfi</b><i class="fa-solid fa-phone text-red-600"></i></a>
-      <button class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black text-xs uppercase" onclick="closeSOSModal()">Chiudi</button>
+      <p class="text-[10px] font-black uppercase tracking-widest text-red-500 mb-2">Contatti emergenza</p>
+      <h3 class="font-black italic text-2xl mb-6 text-slate-900 uppercase">Chi vuoi chiamare?</h3>
+      <div class="space-y-3 mb-4">
+        <a class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4" href="tel:+393391801232">
+          <div><p class="text-sm font-black text-slate-900">Francesca Schiavi</p><p class="text-xs text-slate-500 font-bold">+39 339 180 1232</p></div>
+          <i class="fa-solid fa-phone text-red-600"></i>
+        </a>
+        <button class="flex items-center justify-between w-full bg-emerald-50 hover:bg-emerald-100 transition rounded-2xl px-5 py-4" onclick="sendLocationWhatsApp('393391801232')">
+          <div class="text-left"><p class="text-sm font-black text-slate-900">Invia posizione WhatsApp</p><p class="text-xs text-slate-500 font-bold">a Francesca Schiavi</p></div>
+          <i class="fa-solid fa-location-dot text-emerald-600"></i>
+        </button>
+        <a class="flex items-center justify-between w-full bg-red-50 hover:bg-red-100 transition rounded-2xl px-5 py-4" href="tel:112">
+          <div><p class="text-sm font-black text-slate-900">Soccorso Svezia (112)</p><p class="text-xs text-slate-500 font-bold">Numero unico emergenze locale</p></div>
+          <i class="fa-solid fa-triangle-exclamation text-red-600"></i>
+        </a>
+      </div>
+      <button class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeSOSModal()">Chiudi</button>
     </div>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
+    const hotel = { name: "Hotel C Stockholm", lat: 59.3323, lng: 18.0583 };
+    
     const stops = [
-      { name: "Dramaten & Nybroplan", lat: 59.3332, lng: 18.0771 },
-      { name: "National Museum", lat: 59.3283, lng: 18.0781 },
-      { name: "Skeppsholmen (Moderna)", lat: 59.3260, lng: 18.0847 }
+      { name: "Museo Vasa (Vasamuseet)", lat: 59.3280, lng: 18.0914, visit: "Galeone del XVII secolo." },
+      { name: "Parco Djurgården", lat: 59.3265, lng: 18.0940, visit: "Passeggiata e pranzo all'aperto." },
+      { name: "ABBA The Museum", lat: 59.3249, lng: 18.0965, visit: "Museo interattivo musicale." }
     ];
 
-    const map = L.map('map-student', { zoomControl: false }).setView([59.3283, 18.0781], 14);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-    
-    stops.forEach(s => {
-      L.marker([s.lat, s.lng]).addTo(map).bindPopup(`<b>${s.name}</b>`);
-    });
+    const routePoints = [
+      [hotel.lat, hotel.lng],
+      [stops[0].lat, stops[0].lng],
+      [stops[1].lat, stops[1].lng],
+      [stops[2].lat, stops[2].lng]
+    ];
 
-    function resetMapView() { 
-      map.setView([59.3283, 18.0781], 14); 
-    }
+    const segmentTimes = [
+      { lat: 59.3301, lng: 18.0748, text: "<i class='fa-solid fa-person-walking'></i> 25 min" },
+      { lat: 59.3272, lng: 18.0927, text: "<i class='fa-solid fa-person-walking'></i> 5 min" },
+      { lat: 59.3257, lng: 18.0952, text: "<i class='fa-solid fa-person-walking'></i> 4 min" }
+    ];
 
-    function openInfo(t, c) { 
-      document.getElementById('infoTitle').innerText = t; 
-      document.getElementById('infoContent').innerText = c; 
-      document.getElementById('infoModal').style.display = 'flex'; 
-    }
+    const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
 
-    function closeModal() { 
-      document.getElementById('infoModal').style.display = 'none'; 
-    }
-
-    function openSOSModal() { 
-      document.getElementById('sosModal').style.display = 'flex'; 
-    }
-
-    function closeSOSModal() { 
-      document.getElementById('sosModal').style.display = 'none'; 
-    }
-
-    function confermaPresenza() { 
-      document.getElementById('appello-box').classList.add('hidden-appello'); 
-    }
-
-    // Gestione Modale "Leggi di più"
-    document.querySelectorAll('.more-link').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const title = btn.getAttribute('data-title');
-        const text = btn.getAttribute('data-text');
-        openInfo(title, text);
+    function createGiantIcon(color, iconClass, pulse = false) {
+      return L.divIcon({
+        className: 'custom-icon',
+        html: `<div class="${pulse ? 'pulse-me' : ''}" style="background-color:${color}; width:46px; height:46px; border:4px solid white; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:18px; box-shadow:0 8px 15px rgba(0,0,0,0.15);"><i class="fa-solid ${iconClass}"></i></div>`,
+        iconSize:[46,46], iconAnchor:[23,23]
       });
+    }
+
+    L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(map);
+    L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(map).bindPopup(`<strong>${hotel.name}</strong><br>Vasaplan 4`);
+
+    stops.forEach(stop => { 
+      L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(map).bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`); 
     });
 
-    // Gestione Sintesi Vocale (Audio TTS)
-    let currentUtterance = null;
-    let activeAudioBtn = null;
+    segmentTimes.forEach(st => {
+      L.marker([st.lat, st.lng], {
+        icon: L.divIcon({
+          className: '',
+          html: `<div class="walk-label">${st.text}</div>`,
+          iconSize: [60, 20],
+          iconAnchor: [30, 10]
+        })
+      }).addTo(map);
+    });
+
+    function resetMapView() { map.fitBounds(L.latLngBounds(routePoints).pad(0.2)); }
+    resetMapView();
+    window.addEventListener('load', () => setTimeout(() => map.invalidateSize(), 150));
+
+    let currentUtterance = null, currentButton = null;
+    function stopSpeech() { 
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel(); 
+      if (currentButton) currentButton.classList.remove('playing'); 
+      currentUtterance = null; 
+      currentButton = null; 
+    }
 
     document.querySelectorAll('.audio-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        const text = btn.getAttribute('data-audio-text');
-        
-        if ('speechSynthesis' in window) {
-          if (speechSynthesis.speaking) {
-            speechSynthesis.cancel();
-            if (activeAudioBtn === btn) {
-              btn.classList.remove('playing');
-              btn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-              activeAudioBtn = null;
-              return;
-            }
-          }
-
-          if (activeAudioBtn) {
-            activeAudioBtn.classList.remove('playing');
-            activeAudioBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-          }
-
-          const utterance = new SpeechSynthesisUtterance(text);
-          utterance.lang = 'it-IT';
-          
-          btn.classList.add('playing');
-          btn.innerHTML = '<i class="fa-solid fa-square"></i>';
-          activeAudioBtn = btn;
-
-          utterance.onend = () => {
-            btn.classList.remove('playing');
-            btn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-            activeAudioBtn = null;
-          };
-
-          utterance.onerror = () => {
-            btn.classList.remove('playing');
-            btn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-            activeAudioBtn = null;
-          };
-
-          speechSynthesis.speak(utterance);
-        } else {
-          alert("Spiacenti, il tuo browser non supporta la sintesi vocale.");
-        }
+        const text = btn.dataset.audioText;
+        if (!('speechSynthesis' in window)) { alert("Sintesi vocale non supportata."); return; }
+        if (currentButton === btn && window.speechSynthesis.speaking) { stopSpeech(); return; }
+        stopSpeech();
+        const msg = new SpeechSynthesisUtterance(text); 
+        msg.lang = 'it-IT'; msg.rate = 0.95; 
+        msg.onend = stopSpeech; msg.onerror = stopSpeech;
+        currentUtterance = msg; currentButton = btn; 
+        btn.classList.add('playing'); 
+        window.speechSynthesis.speak(msg);
       });
     });
+    window.addEventListener('beforeunload', stopSpeech);
+
+    function openInfo(title, text) { 
+      document.getElementById('infoTitle').innerText = title; 
+      document.getElementById('infoContent').innerText = text; 
+      document.getElementById('infoModal').style.display = 'flex'; 
+    }
+    function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
+    function openSOSModal() { document.getElementById('sosModal').style.display = 'flex'; }
+    function closeSOSModal() { document.getElementById('sosModal').style.display = 'none'; }
+    function confermaPresenza() { document.getElementById('appello-box').classList.add('hidden-appello'); }
+
+    function sendLocationWhatsApp(phone) {
+      if (!navigator.geolocation) { alert('Geolocalizzazione non supportata.'); return; }
+      navigator.geolocation.getCurrentPosition(p => {
+        const msg = encodeURIComponent('SOS STUDENTE: https://maps.google.com/?q=' + p.coords.latitude + ',' + p.coords.longitude);
+        window.location.href = 'https://wa.me/' + phone + '?text=' + msg;
+      }, () => { alert('Impossibile recuperare il GPS.'); });
+    }
   </script>
 </body>
 </html>
