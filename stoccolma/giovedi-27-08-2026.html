@@ -48,7 +48,7 @@
     #appello-box.hidden-appello { max-height: 0; opacity: 0; margin-bottom: 0; padding: 0; transform: scale(0.9); pointer-events: none; }
     .pulse-me { animation: pulse-blue 2s infinite; border-radius: 50%; }
     @keyframes pulse-blue { 0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.6); } 70% { box-shadow: 0 0 0 15px rgba(59,130,246,0); } 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); } }
-    #infoModal, #sosModal { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.92); z-index:10000; align-items:center; justify-content:center; padding:20px; backdrop-filter: blur(8px); }
+    #infoModal, #sosModal, #mapModal { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.92); z-index:10000; align-items:center; justify-content:center; padding:20px; backdrop-filter: blur(8px); }
     .modal-card { background:white; border-radius:2.3rem; max-width: 420px; width:100%; padding: 2rem; box-shadow:0 22px 60px rgba(0,0,0,.2); max-height: 90vh; overflow-y: auto; }
     .timeline-line { position:absolute; left:13px; top:12px; bottom:12px; width:2px; background:#edf0f3; }
     .timeline-row { position:relative; display:flex; gap:14px; align-items:center; }
@@ -61,11 +61,16 @@
     .timeline-row.future .timeline-title, .timeline-row.future .timeline-time { color:#94a3b8; }
     .timeline-row.done .timeline-title { color:#475569; }
     .timeline-row.active .timeline-title { color:#162038; }
+    
+    /* Contenitore Immagine Card */
+    .diary-img-wrapper { overflow: hidden; height: 190px; width: 100%; cursor: pointer; }
+    .diary-img { width:100%; height:100%; object-fit:cover; object-position:center; display:block; background:linear-gradient(135deg,#c7d2fe,#e2e8f0); transition: transform 0.4s ease; }
+    .diary-card:hover .diary-img { transform: scale(1.05); }
+    
     .diary-card { overflow:hidden; }
-    .diary-img { width:100%; height:176px; object-fit:cover; display:block; background:linear-gradient(135deg,#c7d2fe,#e2e8f0); }
     .diary-body { padding: 1.25rem; }
     .diary-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:.55rem; }
-    .diary-head h4 { margin:0; font-weight:900; font-style:italic; text-transform:uppercase; color:#4f46e5; font-size:1.08rem; line-height:1.05; }
+    .diary-head h4 { margin:0; font-weight:900; font-style:italic; text-transform:uppercase; color:#4f46e5; font-size:1.08rem; line-height:1.05; cursor: pointer; }
     .audio-btn { background:#eef2ff; color:#4f46e5; width:42px; height:42px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:none; cursor:pointer; flex:0 0 auto; transition:transform .15s ease, background .2s ease; }
     .audio-btn.playing { background:#4f46e5; color:white; }
     .audio-btn:active { transform:scale(.93); }
@@ -79,6 +84,11 @@
     footer.app-footer { margin-top: 28px; padding: 18px 8px 2px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #94a3b8; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
     footer.app-footer .footer-brand { display: flex; align-items: center; gap: 8px; color: #64748b; }
     footer.app-footer img { width: 20px; height: 20px; border-radius: 6px; }
+    
+    /* Overlay Mappa a tutto schermo */
+    #mapModal .modal-map-container { width: 100%; height: 80vh; border-radius: 1.5rem; overflow: hidden; }
+    #map-fullscreen { width: 100%; height: 100%; }
+
     @media (max-width: 420px) { body { padding: 16px 16px 32px; } .safe-card { border-radius: 1.7rem; } #map-student { height: 262px; border-radius: 1.6rem; margin: -16px -16px 0px -16px; } .diary-body { padding: 1rem; } .diary-head h4 { font-size: 1rem; } .diary-short { font-size:.95rem; line-height: 1.55; } .nav-row a, .nav-row span { min-width: 96px; padding: .7rem .85rem; } .modal-card { padding: 1.5rem; border-radius: 2rem; } .map-meta { grid-template-columns: 1fr; } .map-controls { justify-content: flex-start; } }
   </style>
 </head>
@@ -115,20 +125,6 @@
       </div>
     </div>
   </header>
-
-  <!-- ========================================== -->
-  <!--           BARRA AVANZAMENTO GIORNATA      -->
-  <!-- ========================================== -->
-  <div class="safe-card p-4 mb-6">
-    <div class="flex justify-between items-center mb-2">
-      <span class="text-[10px] font-black uppercase tracking-widest text-indigo-600 italic">Avanzamento Giornata</span>
-      <span id="progress-percent" class="text-xs font-black text-indigo-600">20%</span>
-    </div>
-    <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden p-0.5 border border-slate-200">
-      <div id="progress-bar" class="bg-indigo-600 h-full rounded-full transition-all duration-500" style="width: 20%;"></div>
-    </div>
-  </div>
-
   <!-- ========================================== -->
   <!--           3. BANNER PROGRAMMA / APPELLO    -->
   <!-- ========================================== -->
@@ -160,6 +156,7 @@
       <div class="map-controls">
         <button onclick="map.zoomIn()" aria-label="Zoom avanti"><i class="fa-solid fa-plus"></i></button>
         <button onclick="map.zoomOut()" aria-label="Zoom indietro"><i class="fa-solid fa-minus"></i></button>
+        <button onclick="openMapModal()" aria-label="Mappa Fullscreen"><i class="fa-solid fa-expand"></i></button>
         <button class="reset-btn" onclick="resetMapView()" aria-label="Reset mappa">
           <i class="fa-solid fa-rotate-left"></i> Reset
         </button>
@@ -175,40 +172,40 @@
       <div class="timeline-line"></div>
       
       <!-- Tappa 1 -->
-      <div class="timeline-row active" data-time="09:30">
-        <div class="dot" style="background:#f6a623;color:#fff"><i class="fa-solid fa-location-dot"></i></div>
+      <div class="timeline-row" data-time="09:30">
+        <div class="dot"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
           <div class="timeline-title">Quartiere Södermalm (Giro libero & Spiaggia)</div>
           <div class="timeline-time">09:30</div>
         </div>
       </div>
       <!-- Tappa 2 -->
-      <div class="timeline-row future" data-time="12:30">
-        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
+      <div class="timeline-row" data-time="12:30">
+        <div class="dot"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
           <div class="timeline-title">Centralbadet (Terme Art Nouveau)</div>
           <div class="timeline-time">12:30</div>
         </div>
       </div>
       <!-- Tappa 3 -->
-      <div class="timeline-row future" data-time="14:00">
-        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
+      <div class="timeline-row" data-time="14:00">
+        <div class="dot"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
           <div class="timeline-title">Stockholms stadsbibliotek (Asplund 1928)</div>
           <div class="timeline-time">14:00</div>
         </div>
       </div>
       <!-- Tappa 4 -->
-      <div class="timeline-row future" data-time="15:30">
-        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
+      <div class="timeline-row" data-time="15:30">
+        <div class="dot"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
           <div class="timeline-title">Metro Art: T-Centralen & Kungsträdgården</div>
           <div class="timeline-time">15:30</div>
         </div>
       </div>
       <!-- Tappa 5 -->
-      <div class="timeline-row future" data-time="16:30">
-        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
+      <div class="timeline-row" data-time="16:30">
+        <div class="dot"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
           <div class="timeline-title">Metro Art: Rådhuset & Solna Centrum</div>
           <div class="timeline-time">16:30</div>
@@ -224,10 +221,12 @@
     
     <!-- Card 1: Södermalm -->
     <article class="diary-card safe-card">
-      <img alt="Södermalm Stoccolma" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-sodermalm.webp"/>
+      <div class="diary-img-wrapper" onclick="openInfo('Södermalm & Spiaggia Cittadina', 'Sotto Gamla Stan si trova Södermalm, l\'ex quartiere operaio oggi tra i più trendy e vivaci di Stoccolma. Fai un giro libero tra negozietti, piazze e bar alla moda. Esploriamo le aree verdi fino alla spiaggia urbana dove gli svedesi amano fare il bagno nelle acque cittadine!', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-sodermalm.webp')">
+        <img alt="Södermalm Stoccolma" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-sodermalm.webp"/>
+      </div>
       <div class="diary-body">
         <div class="diary-head">
-          <h4>Södermalm & Spiaggia Cittadina</h4>
+          <h4 onclick="openInfo('Södermalm & Spiaggia Cittadina', 'Sotto Gamla Stan si trova Södermalm, l\'ex quartiere operaio oggi tra i più trendy e vivaci di Stoccolma. Fai un giro libero tra negozietti, piazze e bar alla moda. Esploriamo le aree verdi fino alla spiaggia urbana dove gli svedesi amano fare il bagno nelle acque cittadine!', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-sodermalm.webp')">Södermalm & Spiaggia Cittadina</h4>
           <button aria-label="Ascolta Södermalm" class="audio-btn" data-audio-text="Sotto Gamla Stan si trova Södermalm, l'ex quartiere operaio oggi tra i più trendy e vivaci di Stoccolma. Fai un giro libero tra negozietti, piazze e bar alla moda. Esploriamo le aree verdi fino alla spiaggia urbana dove gli svedesi amano fare il bagno nelle acque cittadine!">
             <i class="fa-solid fa-volume-high"></i>
           </button>
@@ -240,10 +239,12 @@
     </article>
     <!-- Card 2: Centralbadet -->
     <article class="diary-card safe-card">
-      <img alt="Centralbadet Terme Art Nouveau" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-centralbadet.avif?auto=format&fit=crop&w=800&q=80"/>
+      <div class="diary-img-wrapper" onclick="openInfo('Centralbadet', 'Rientrando verso la zona albergo scopriamo il Centralbadet, uno storico e suggestivo impianto termale nascosto in un giardino interno. Famoso per la sua splendida architettura Art Nouveau e le sue storiche piscine con bagno turco.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-centralbadet.avif?auto=format&fit=crop&w=800&q=80')">
+        <img alt="Centralbadet Terme Art Nouveau" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-centralbadet.avif?auto=format&fit=crop&w=800&q=80"/>
+      </div>
       <div class="diary-body">
         <div class="diary-head">
-          <h4>Centralbadet</h4>
+          <h4 onclick="openInfo('Centralbadet', 'Rientrando verso la zona albergo scopriamo il Centralbadet, uno storico e suggestivo impianto termale nascosto in un giardino interno. Famoso per la sua splendida architettura Art Nouveau e le sue storiche piscine con bagno turco.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-centralbadet.avif?auto=format&fit=crop&w=800&q=80')">Centralbadet</h4>
           <button aria-label="Ascolta Centralbadet" class="audio-btn" data-audio-text="Rientrando verso la zona albergo scopriamo il Centralbadet, uno storico e suggestivo impianto termale nascosto in un giardino interno. Famoso per la sua splendida architettura Art Nouveau e le sue storiche piscine con bagno turco.">
             <i class="fa-solid fa-volume-high"></i>
           </button>
@@ -256,10 +257,12 @@
     </article>
     <!-- Card 3: Stockholms Stadsbibliotek -->
     <article class="diary-card safe-card">
-      <img alt="Stockholms Stadsbibliotek" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-biblioteca.jpg"/>
+      <div class="diary-img-wrapper" onclick="openInfo('Stockholms Stadsbibliotek', 'Proseguiamo verso nord per ammirare la Stockholms Stadsbibliotek, eccelso capolavoro del modernismo svedese progettato dall\'architetto Gunnar Asplund nel 1928. Famosa per la sua spettacolare sala circolare con i libri disposti a 360 gradi a portata di mano.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-biblioteca.jpg')">
+        <img alt="Stockholms Stadsbibliotek" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-biblioteca.jpg"/>
+      </div>
       <div class="diary-body">
         <div class="diary-head">
-          <h4>Stockholms Stadsbibliotek</h4>
+          <h4 onclick="openInfo('Stockholms Stadsbibliotek', 'Proseguiamo verso nord per ammirare la Stockholms Stadsbibliotek, eccelso capolavoro del modernismo svedese progettato dall\'architetto Gunnar Asplund nel 1928. Famosa per la sua spettacolare sala circolare con i libri disposti a 360 gradi a portata di mano.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-biblioteca.jpg')">Stockholms Stadsbibliotek</h4>
           <button aria-label="Ascolta Biblioteca" class="audio-btn" data-audio-text="Proseguiamo verso nord per ammirare la Stockholms Stadsbibliotek, eccelso capolavoro del modernismo svedese progettato dall'architetto Gunnar Asplund nel 1928. Famosa per la sua spettacolare sala circolare con i libri disposti a 360 gradi a portata di mano.">
             <i class="fa-solid fa-volume-high"></i>
           </button>
@@ -272,10 +275,12 @@
     </article>
     <!-- Card 4: Metro Art - Kungsträdgården -->
     <article class="diary-card safe-card">
-      <img alt="Metro Kungsträdgården" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-metro.jpg"/>
+      <div class="diary-img-wrapper" onclick="openInfo('Metro Art: T-Centralen & Kungsträdgården', 'Con il ticket 75 minuti iniziamo il tour della linea blu da T-Centralen. Raggiungiamo il capolinea est di Kungsträdgården: un vero e proprio sito archeologico sotterraneo con pavimentazione a scacchi, statue in marmo, colonne classiche e i resti del vecchio palazzo Makalös.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-metro.jpg')">
+        <img alt="Metro Kungsträdgården" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-metro.jpg"/>
+      </div>
       <div class="diary-body">
         <div class="diary-head">
-          <h4>Metro Art: T-Centralen & Kungsträdgården</h4>
+          <h4 onclick="openInfo('Metro Art: T-Centralen & Kungsträdgården', 'Con il ticket 75 minuti iniziamo il tour della linea blu da T-Centralen. Raggiungiamo il capolinea est di Kungsträdgården: un vero e proprio sito archeologico sotterraneo con pavimentazione a scacchi, statue in marmo, colonne classiche e i resti del vecchio palazzo Makalös.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-metro.jpg')">Metro Art: T-Centralen & Kungsträdgården</h4>
           <button aria-label="Ascolta Kungsträdgården" class="audio-btn" data-audio-text="Con il ticket 75 minuti iniziamo il tour della linea blu da T-Centralen. Raggiungiamo il capolinea est di Kungsträdgården: un vero e proprio sito archeologico sotterraneo con pavimentazione a scacchi, statue in marmo, colonne classiche e i resti del vecchio palazzo Makalös.">
             <i class="fa-solid fa-volume-high"></i>
           </button>
@@ -288,10 +293,12 @@
     </article>
     <!-- Card 5: Metro Art - Rådhuset & Solna Centrum -->
     <article class="diary-card safe-card">
-      <img alt="Metro Solna Centrum" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-solna-centrum.jpg"/>
+      <div class="diary-img-wrapper" onclick="openInfo('Metro Art: Rådhuset & Solna Centrum', 'Torniamo verso ovest fermandoci a Rådhuset, con le sue suggestive caverne color salmone. Poi prendiamo il ramo verso Akalla per scendere a Solna Centrum, dove pareti e soffitti dipinti di rosso fuoco e verde bosco rievocano una foresta al tramonto con sagome di pini e uccelli.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-solna-centrum.jpg')">
+        <img alt="Metro Solna Centrum" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-solna-centrum.jpg"/>
+      </div>
       <div class="diary-body">
         <div class="diary-head">
-          <h4>Metro Art: Rådhuset & Solna Centrum</h4>
+          <h4 onclick="openInfo('Metro Art: Rådhuset & Solna Centrum', 'Torniamo verso ovest fermandoci a Rådhuset, con le sue suggestive caverne color salmone. Poi prendiamo il ramo verso Akalla per scendere a Solna Centrum, dove pareti e soffitti dipinti di rosso fuoco e verde bosco rievocano una foresta al tramonto con sagome di pini e uccelli.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-solna-centrum.jpg')">Metro Art: Rådhuset & Solna Centrum</h4>
           <button aria-label="Ascolta Solna Centrum" class="audio-btn" data-audio-text="Torniamo verso ovest fermandoci a Rådhuset, con le sue suggestive caverne color salmone. Poi prendiamo il ramo verso Akalla per scendere a Solna Centrum, dove pareti e soffitti dipinti di rosso fuoco e verde bosco rievocano una foresta al tramonto con sagome di pini e uccelli.">
             <i class="fa-solid fa-volume-high"></i>
           </button>
@@ -339,10 +346,25 @@
   <!-- Pop-up Dettagli "Leggi di più" -->
   <div id="infoModal" onclick="closeModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
-      <img id="infoModalImg" src="" alt="" class="w-full h-48 object-cover rounded-2xl mb-4 hidden"/>
+      <div id="infoImageContainer" class="mb-4 rounded-2xl overflow-hidden hidden">
+        <img id="infoImage" src="" alt="Dettaglio tappa" class="w-full h-48 object-cover"/>
+      </div>
       <h3 class="font-black italic text-2xl mb-4 text-indigo-600 uppercase leading-tight" id="infoTitle"></h3>
       <p class="text-base font-medium leading-relaxed mb-6 text-gray-600" id="infoContent"></p>
       <button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeModal()">Ho capito!</button>
+    </div>
+  </div>
+  <!-- Pop-up Mappa Fullscreen -->
+  <div id="mapModal" onclick="closeMapModal()">
+    <div class="modal-card max-w-xl" onclick="event.stopPropagation()">
+      <div class="flex justify-between items-center mb-3">
+        <h3 class="font-black italic text-lg text-slate-900 uppercase">Mappa Itinerario</h3>
+        <button onclick="closeMapModal()" class="text-slate-400 text-xl font-black">&times;</button>
+      </div>
+      <div class="modal-map-container mb-4">
+        <div id="map-fullscreen"></div>
+      </div>
+      <button class="w-full bg-slate-900 text-white py-3 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeMapModal()">Chiudi Mappa</button>
     </div>
   </div>
   <!-- Pop-up Contatti di Emergenza SOS -->
@@ -430,6 +452,10 @@
     // Inizializzazione Mappa Leaflet
     const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 12);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+    
+    // Inizializzazione Mappa Fullscreen (Pop-up)
+    let fullMap = null;
+
     // Helper creazione icone personalizzate grandi
     function createGiantIcon(color, iconClass, pulse = false) {
       return L.divIcon({
@@ -468,6 +494,85 @@
     function resetMapView() { map.fitBounds(hotelCircle.getBounds().pad(0.1)); }
     resetMapView();
     window.addEventListener('load', () => setTimeout(() => map.invalidateSize(), 150));
+
+    // --- POP-UP MAPPA FULLSCREEN ---
+    function openMapModal() {
+      document.getElementById('mapModal').style.display = 'flex';
+      if (!fullMap) {
+        fullMap = L.map('map-fullscreen', { zoomControl: true }).setView([hotel.lat, hotel.lng], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(fullMap);
+        
+        L.circle([hotel.lat, hotel.lng], { color: '#3b82f6', fillColor: '#93c5fd', fillOpacity: 0.35, radius: maxDistanceInMeters }).addTo(fullMap);
+        L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(fullMap);
+        L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(fullMap).bindPopup(`<strong>${hotel.name}</strong>`);
+        
+        stops.forEach(stop => { 
+          L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(fullMap).bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`); 
+        });
+        
+        segmentTimes.forEach(st => {
+          L.marker([st.lat, st.lng], {
+            icon: L.divIcon({ className: '', html: `<div class="walk-label">${st.text}</div>`, iconSize: [60, 20], iconAnchor: [30, 10] })
+          }).addTo(fullMap);
+        });
+      }
+      setTimeout(() => {
+        fullMap.invalidateSize();
+        fullMap.fitBounds(hotelCircle.getBounds().pad(0.1));
+      }, 200);
+    }
+    function closeMapModal() {
+      document.getElementById('mapModal').style.display = 'none';
+    }
+
+    // --- AGGIORNAMENTO TIMELINE IN BASE ALL'ORARIO ---
+    function updateTimelineStatus() {
+      const rows = document.querySelectorAll('.timeline-row');
+      const now = new Date();
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+      let activeFound = false;
+
+      // Scorriamo al contrario per individuare l'ultima tappa superata o corrente
+      const times = Array.from(rows).map(row => {
+        const [h, m] = row.dataset.time.split(':').map(Number);
+        return h * 60 + m;
+      });
+
+      rows.forEach((row, index) => {
+        const rowTime = times[index];
+        const nextTime = times[index + 1] || 24 * 60; // fino a fine giornata
+
+        const dot = row.querySelector('.dot');
+        row.classList.remove('done', 'active', 'future');
+
+        if (currentMinutes >= rowTime && currentMinutes < nextTime) {
+          // Tappa attuale
+          row.classList.add('active');
+          dot.style.background = '#f6a623';
+          dot.style.color = '#fff';
+          dot.innerHTML = '<i class="fa-solid fa-location-dot"></i>';
+          activeFound = true;
+        } else if (currentMinutes >= nextTime) {
+          // Tappa già completata
+          row.classList.add('done');
+          dot.style.background = '#10b981'; // Verde completato
+          dot.style.color = '#fff';
+          dot.innerHTML = '<i class="fa-solid fa-check"></i>';
+        } else {
+          // Tappa futura
+          row.classList.add('future');
+          dot.style.background = '#e2e8f0';
+          dot.style.color = '#94a3b8';
+          dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
+        }
+      });
+    }
+
+    // Esegui aggiornamento timeline all'avvio e ogni minuto
+    updateTimelineStatus();
+    setInterval(updateTimelineStatus, 60000);
+
     // --- SINTESI VOCALE AUDIO ---
     let currentUtterance = null, currentButton = null;
     function stopSpeech() { 
@@ -492,18 +597,22 @@
       });
     });
     window.addEventListener('beforeunload', stopSpeech);
+
     // --- GESTIONE MODALI E INTERAZIONI ---
-    function openInfo(title, text, imgSrc) { 
+    function openInfo(title, text, imgSrc = null) { 
       document.getElementById('infoTitle').innerText = title; 
       document.getElementById('infoContent').innerText = text; 
-      const imgElem = document.getElementById('infoModalImg');
+      
+      const imgContainer = document.getElementById('infoImageContainer');
+      const imgEl = document.getElementById('infoImage');
+      
       if (imgSrc) {
-        imgElem.src = imgSrc;
-        imgElem.alt = title;
-        imgElem.classList.remove('hidden');
+        imgEl.src = imgSrc;
+        imgContainer.classList.remove('hidden');
       } else {
-        imgElem.classList.add('hidden');
+        imgContainer.classList.add('hidden');
       }
+      
       document.getElementById('infoModal').style.display = 'flex'; 
     }
     function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
