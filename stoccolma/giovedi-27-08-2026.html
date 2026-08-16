@@ -403,6 +403,26 @@
   <!-- ========================================== -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
+     /* =====================================================================
+       BLOCCO NOTIFICA PUSH INIZIALE (Copia questo blocco per gli altri file)
+       =====================================================================
+       Funzionamento:
+       - Attende il caricamento completo della pagina ('load').
+       - Dopo 1000ms (1 secondo) mostra il banner notifiche facendo scorrere l'elemento #push-alert.
+       - Dopo altri 5000ms (5 secondi) nasconde automaticamente la notifica.
+    */
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const pushAlert = document.getElementById('push-alert');
+        if (pushAlert) {
+          pushAlert.classList.add('show');
+          setTimeout(() => {
+            pushAlert.classList.remove('show');
+          }, 5000);
+        }
+      }, 1000);
+    });
+    /* ===================================================================== */
     // Coordinate dell'Hotel C Stockholm
     const hotel = { name: "Hotel C Stockholm", lat: 59.3323, lng: 18.0583 };
     
