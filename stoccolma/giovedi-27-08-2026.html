@@ -4,16 +4,32 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Giovedì 27.08.2026 - Viaggio a Stoccolma</title>
+  
+  <!-- SEO & OpenGraph Meta Tags -->
   <meta name="description" content="Itinerario giornaliero GIRE per la gita a Stoccolma con timeline, mappa e contatti SOS."/>
   <link rel="icon" type="image/png" href="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
   <link rel="apple-touch-icon" href="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
   <meta property="og:title" content="Giovedì 27.08.2026 - Viaggio a Stoccolma"/>
   <meta property="og:description" content="Itinerario giornaliero GIRE per la gita a Stoccolma con timeline, mappa e contatti SOS."/>
   <meta property="og:url" content="https://cl-000-welf.github.io/gire-landing-page/giovedi-27-08-2026.html"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image" content="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
+  <meta property="og:image:secure_url" content="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
+  <meta property="og:image:type" content="image/png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Giovedì 27.08.2026 - Viaggio a Stoccolma"/>
+  <meta name="twitter:description" content="Itinerario giornaliero GIRE per la gita a Stoccolma con timeline, mappa e contatti SOS."/>
+  <meta name="twitter:image" content="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
+  
+  <!-- Librerie Esterne (Tailwind CSS, FontAwesome, Leaflet Mappe) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet"/>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
   <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
+  
+  <!-- ========================================== -->
+  <!--           SEZIONE STILI CSS               -->
+  <!-- ========================================== -->
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; overflow-x: hidden; }
     .safe-card { background: white; border-radius: 1.9rem; border: 1px solid #E2E8F0; overflow: hidden; box-shadow: 0 10px 25px rgba(15,23,42,0.04); }
@@ -26,6 +42,8 @@
     .map-controls { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
     .map-controls button { background: white; border: 1px solid #E2E8F0; border-radius: 14px; min-width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(15,23,42,0.06); color: #334155; font-size: 14px; font-weight: 900; }
     .map-controls button.reset-btn { min-width: 64px; padding: 0 12px; gap: 6px; font-size: 12px; }
+    #push-alert { position: fixed; top: 20px; left: 20px; right: 20px; z-index: 9999; transform: translateY(-150%); transition: transform 0.6s cubic-bezier(0.175,0.885,0.32,1.275); }
+    #push-alert.show { transform: translateY(0); }
     #appello-box { transition: all 0.6s ease; max-height: 300px; opacity: 1; margin-bottom: 1.5rem; }
     #appello-box.hidden-appello { max-height: 0; opacity: 0; margin-bottom: 0; padding: 0; transform: scale(0.9); pointer-events: none; }
     .pulse-me { animation: pulse-blue 2s infinite; border-radius: 50%; }
@@ -41,6 +59,8 @@
     .timeline-time { font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .02em; color: #8a94a6; margin-top: 2px; }
     .timeline-row.active .timeline-time { color:#d97706; }
     .timeline-row.future .timeline-title, .timeline-row.future .timeline-time { color:#94a3b8; }
+    .timeline-row.done .timeline-title { color:#475569; }
+    .timeline-row.active .timeline-title { color:#162038; }
     .diary-card { overflow:hidden; }
     .diary-img { width:100%; height:176px; object-fit:cover; display:block; background:linear-gradient(135deg,#c7d2fe,#e2e8f0); }
     .diary-body { padding: 1.25rem; }
@@ -63,6 +83,23 @@
   </style>
 </head>
 <body class="flex flex-col min-h-screen p-5 pb-10">
+  
+  <!-- ========================================== -->
+  <!--           1. NOTIFICA PUSH POP-UP          -->
+  <!-- ========================================== -->
+  <div id="push-alert" class="bg-slate-900 text-white p-5 rounded-[2rem] shadow-2xl flex items-center gap-4 border border-white/20">
+    <div class="bg-indigo-500 h-10 w-10 rounded-full flex items-center justify-center shrink-0">
+      <i class="fa-solid fa-paper-plane text-white"></i>
+    </div>
+    <div>
+      <p class="text-[9px] font-black uppercase tracking-widest text-indigo-300">Docenti</p>
+      <p class="text-xs font-bold leading-tight">Giorno 3: Esplorazione Södermalm, Architettura & Tour Metro Art!</p>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!--           2. INTESTAZIONE / HEADER         -->
+  <!-- ========================================== -->
   <header class="flex justify-between items-start mb-6 px-1 gap-3">
     <div class="flex items-start gap-2">
       <img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE" class="h-8 w-8 rounded-lg mt-1"/>
@@ -80,6 +117,9 @@
     </div>
   </header>
 
+  <!-- ========================================== -->
+  <!--           3. BANNER PROGRAMMA / APPELLO    -->
+  <!-- ========================================== -->
   <div id="appello-box" class="bg-indigo-600 rounded-[2.5rem] p-6 text-white shadow-xl flex items-center justify-between gap-4">
     <div>
       <p class="text-[9px] font-black uppercase text-indigo-200 mb-1 tracking-widest">Programma</p>
@@ -88,6 +128,9 @@
     <button class="bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all" onclick="confermaPresenza()">OK</button>
   </div>
 
+  <!-- ========================================== -->
+  <!--           4. SEZIONE MAPPA INTERATTIVA     -->
+  <!-- ========================================== -->
   <div class="safe-card p-4 mb-8">
     <div class="map-shell">
       <div id="map-student"></div>
@@ -99,8 +142,8 @@
           <div class="legend-weather"><i class="fa-solid fa-cloud-sun"></i> 19°C Nuvole sparse</div>
         </div>
         <div class="legend-block">
-          <div>Tour</div>
-          <div>Metropolitano</div>
+          <div>Cerchio = Area Hotel</div>
+          <div>Pin = Tappe percorso</div>
         </div>
       </div>
       <div class="map-controls">
@@ -113,85 +156,153 @@
     </div>
   </div>
 
+  <!-- ========================================== -->
+  <!--           5. TIMELINE / PROGRAMMA GIORNO   -->
+  <!-- ========================================== -->
   <div class="safe-card p-6 mb-8">
     <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6 italic text-center">Programma giornata</h3>
     <div class="relative">
       <div class="timeline-line"></div>
+      
+      <!-- Tappa 1 -->
       <div class="timeline-row active" data-time="09:30">
         <div class="dot" style="background:#f6a623;color:#fff"><i class="fa-solid fa-location-dot"></i></div>
         <div class="timeline-copy">
-          <div class="timeline-title">Quartiere Södermalm (Giro libero)</div>
+          <div class="timeline-title">Quartiere Södermalm (Giro libero & Spiaggia)</div>
           <div class="timeline-time">09:30</div>
         </div>
       </div>
-      <div class="timeline-row future" data-time="13:00">
+      <!-- Tappa 2 -->
+      <div class="timeline-row future" data-time="12:30">
         <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
-          <div class="timeline-title">Centralbadet & Stadsbiblioteket</div>
-          <div class="timeline-time">13:00</div>
+          <div class="timeline-title">Centralbadet (Terme Art Nouveau)</div>
+          <div class="timeline-time">12:30</div>
         </div>
       </div>
+      <!-- Tappa 3 -->
+      <div class="timeline-row future" data-time="14:00">
+        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
+        <div class="timeline-copy">
+          <div class="timeline-title">Stockholms stadsbibliotek (Asplund 1928)</div>
+          <div class="timeline-time">14:00</div>
+        </div>
+      </div>
+      <!-- Tappa 4 -->
       <div class="timeline-row future" data-time="15:30">
         <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
-          <div class="timeline-title">Tour Fermate Metro Artistiche (Linea Blu)</div>
-          <div class="timeline-time">15:30-17:30</div>
+          <div class="timeline-title">Metro Art: T-Centralen & Kungsträdgården</div>
+          <div class="timeline-time">15:30</div>
+        </div>
+      </div>
+      <!-- Tappa 5 -->
+      <div class="timeline-row future" data-time="16:30">
+        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
+        <div class="timeline-copy">
+          <div class="timeline-title">Metro Art: Rådhuset & Solna Centrum</div>
+          <div class="timeline-time">16:30</div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- ========================================== -->
+  <!--           6. CARDE DIARIO / SCHEDE TAPPE   -->
+  <!-- ========================================== -->
   <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic">I diari di viaggio</h3>
   <div class="space-y-6 mb-12">
+    
+    <!-- Card 1: Södermalm -->
     <article class="diary-card safe-card">
-      <img alt="Södermalm" class="diary-img" src="https://images.unsplash.com/photo-1509356843151-3e7d96241e11?auto=format&fit=crop&w=800&q=80"/>
+      <img alt="Södermalm Stoccolma" class="diary-img" src="https://images.unsplash.com/photo-1509356843151-3e7d96241e11?auto=format&fit=crop&w=800&q=80"/>
       <div class="diary-body">
         <div class="diary-head">
-          <h4>Södermalm</h4>
-          <button aria-label="Ascolta Södermalm" class="audio-btn" data-audio-text="Esplorazione di Södermalm, l'ex quartiere operaio oggi cuore creativo e hipster della città. Tra boutique, caffetterie, scorci panoramici e parchi affacciati sull'acqua.">
+          <h4>Södermalm & Spiaggia Cittadina</h4>
+          <button aria-label="Ascolta Södermalm" class="audio-btn" data-audio-text="Sotto Gamla Stan si trova Södermalm, l'ex quartiere operaio oggi tra i più trendy e vivaci di Stoccolma. Fai un giro libero tra negozietti, piazze e bar alla moda. Esploriamo le aree verdi fino alla spiaggia urbana dove gli svedesi amano fare il bagno nelle acque cittadine!">
             <i class="fa-solid fa-volume-high"></i>
           </button>
         </div>
-        <p class="diary-short">Giro libero nel quartiere più vivace della città tra boutique vintage, parchi e caffetterie.</p>
-        <button class="more-link" onclick="openInfo('Södermalm', 'Esplorazione di Södermalm, l\'ex quartiere operaio oggi cuore creativo e hipster della città. Tra boutique, caffetterie, scorci panoramici e parchi affacciati sull\'acqua.')">
+        <p class="diary-short">Giro libero nell'ex quartiere operaio ora hipster tra boutique, piazze, bar e la spiaggia per i coraggiosi svedesi.</p>
+        <button class="more-link" onclick="openInfo('Södermalm & Spiaggia Cittadina', 'Sotto Gamla Stan si trova Södermalm, l\'ex quartiere operaio oggi tra i più trendy e vivaci di Stoccolma. Fai un giro libero tra negozietti, piazze e bar alla moda. Esploriamo le aree verdi fino alla spiaggia urbana dove gli svedesi amano fare il bagno nelle acque cittadine!')">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </article>
 
+    <!-- Card 2: Centralbadet -->
     <article class="diary-card safe-card">
-      <img alt="Stadsbiblioteket" class="diary-img" src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=800&q=80"/>
+      <img alt="Centralbadet Terme Art Nouveau" class="diary-img" src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=800&q=80"/>
       <div class="diary-body">
         <div class="diary-head">
-          <h4>Biblioteca Civica & Centralbadet</h4>
-          <button aria-label="Ascolta Biblioteca" class="audio-btn" data-audio-text="Ammiriamo la Stadsbiblioteket capolavoro modernista del 1928 firmato da Gunnar Asplund con la sua monumentale sala circolare. Prima passiamo per il Centralbadet, celebre complesso termale in stile Art Nouveau.">
+          <h4>Centralbadet</h4>
+          <button aria-label="Ascolta Centralbadet" class="audio-btn" data-audio-text="Rientrando verso la zona albergo scopriamo il Centralbadet, uno storico e suggestivo impianto termale nascosto in un giardino interno. Famoso per la sua splendida architettura Art Nouveau e le sue storiche piscine con bagno turco.">
             <i class="fa-solid fa-volume-high"></i>
           </button>
         </div>
-        <p class="diary-short">Capolavori di architettura: dalle terme Art Nouveau alla celebre rotonda libraria di Asplund.</p>
-        <button class="more-link" onclick="openInfo('Biblioteca Civica & Centralbadet', 'Ammiriamo la Stadsbiblioteket capolavoro modernista del 1928 firmato da Gunnar Asplund con la sua monumentale sala circolare. Prima passiamo per il Centralbadet, celebre complesso termale in stile Art Nouveau.')">
+        <p class="diary-short">Visita dello storico complesso termale in stile Art Nouveau nascosto in un meraviglioso giardino interno.</p>
+        <button class="more-link" onclick="openInfo('Centralbadet', 'Rientrando verso la zona albergo scopriamo il Centralbadet, uno storico e suggestivo impianto termale nascosto in un giardino interno. Famoso per la sua splendida architettura Art Nouveau e le sue storiche piscine con bagno turco.')">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </article>
 
+    <!-- Card 3: Stockholms Stadsbibliotek -->
     <article class="diary-card safe-card">
-      <img alt="Metro Art" class="diary-img" src="https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=800&q=80"/>
+      <img alt="Stockholms Stadsbibliotek" class="diary-img" src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=800&q=80"/>
       <div class="diary-body">
         <div class="diary-head">
-          <h4>Metro Art - Linea Blu</h4>
-          <button aria-label="Ascolta Metro Art" class="audio-btn" data-audio-text="Tour della galleria d'arte sotterranea più lunga del mondo: Kungsträdgården con i suoi scavi archeologici, Rådhuset dal soffitto salmone e la spettacolare Solna Centrum con le sue pareti dipinte di rosso e verde bosco.">
+          <h4>Stockholms Stadsbibliotek</h4>
+          <button aria-label="Ascolta Biblioteca" class="audio-btn" data-audio-text="Proseguiamo verso nord per ammirare la Stockholms Stadsbibliotek, eccelso capolavoro del modernismo svedese progettato dall'architetto Gunnar Asplund nel 1928. Famosa per la sua spettacolare sala circolare con i libri disposti a 360 gradi a portata di mano.">
             <i class="fa-solid fa-volume-high"></i>
           </button>
         </div>
-        <p class="diary-short">Tour guidato tra le stazioni d'arte sotterranee più famose di Stoccolma sulla linea Blu.</p>
-        <button class="more-link" onclick="openInfo('Metro Art - Linea Blu', 'Tour della galleria d\'arte sotterranea più lunga del mondo: Kungsträdgården con i suoi scavi archeologici, Rådhuset dal soffitto salmone e la spettacolare Solna Centrum con le pareti dipinte di rosso e verde bosco.')">
+        <p class="diary-short">Celebre capolavoro del modernismo di Asplund (1928) con l'incredibile sala circolare e scaffali a vista.</p>
+        <button class="more-link" onclick="openInfo('Stockholms Stadsbibliotek', 'Proseguiamo verso nord per ammirare la Stockholms Stadsbibliotek, eccelso capolavoro del modernismo svedese progettato dall\'architetto Gunnar Asplund nel 1928. Famosa per la sua spettacolare sala circolare con i libri disposti a 360 gradi a portata di mano.')">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </article>
+
+    <!-- Card 4: Metro Art - Kungsträdgården -->
+    <article class="diary-card safe-card">
+      <img alt="Metro Kungsträdgården" class="diary-img" src="https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=800&q=80"/>
+      <div class="diary-body">
+        <div class="diary-head">
+          <h4>Metro Art: T-Centralen & Kungsträdgården</h4>
+          <button aria-label="Ascolta Kungsträdgården" class="audio-btn" data-audio-text="Con il ticket 75 minuti iniziamo il tour della linea blu da T-Centralen. Raggiungiamo il capolinea est di Kungsträdgården: un vero e proprio sito archeologico sotterraneo con pavimentazione a scacchi, statue in marmo, colonne classiche e i resti del vecchio palazzo Makalös.">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+        </div>
+        <p class="diary-short">Inizio del tour artistico sulla linea Blu: sito archeologico sotterraneo, scacchiera e resti del Palazzo Makalös.</p>
+        <button class="more-link" onclick="openInfo('Metro Art: T-Centralen & Kungsträdgården', 'Con il ticket 75 minuti iniziamo il tour della linea blu da T-Centralen. Raggiungiamo il capolinea est di Kungsträdgården: un vero e proprio sito archeologico sotterraneo con pavimentazione a scacchi, statue in marmo, colonne classiche e i resti del vecchio palazzo Makalös.')">
+          Leggi di più <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </article>
+
+    <!-- Card 5: Metro Art - Rådhuset & Solna Centrum -->
+    <article class="diary-card safe-card">
+      <img alt="Metro Solna Centrum" class="diary-img" src="https://images.unsplash.com/photo-1508189860359-770d387551af?auto=format&fit=crop&w=800&q=80"/>
+      <div class="diary-body">
+        <div class="diary-head">
+          <h4>Metro Art: Rådhuset & Solna Centrum</h4>
+          <button aria-label="Ascolta Solna Centrum" class="audio-btn" data-audio-text="Torniamo verso ovest fermandoci a Rådhuset, con le sue suggestive caverne color salmone. Poi prendiamo il ramo verso Akalla per scendere a Solna Centrum, dove pareti e soffitti dipinti di rosso fuoco e verde bosco rievocano una foresta al tramonto con sagome di pini e uccelli.">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+        </div>
+        <p class="diary-short">La stazione vulcanica di Rådhuset e le iconiche pareti rosso e verde al tramonto di Solna Centrum.</p>
+        <button class="more-link" onclick="openInfo('Metro Art: Rådhuset & Solna Centrum', 'Torniamo verso ovest fermandoci a Rådhuset, con le sue suggestive caverne color salmone. Poi prendiamo il ramo verso Akalla per scendere a Solna Centrum, dove pareti e soffitti dipinti di rosso fuoco e verde bosco rievocano una foresta al tramonto con sagome di pini e uccelli.')">
+          Leggi di più <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </article>
+
   </div>
 
+  <!-- ========================================== -->
+  <!--           7. BANNER SOS & NAVIGAZIONE      -->
+  <!-- ========================================== -->
   <div class="mt-auto pt-2">
     <div class="bg-red-50 rounded-[2.5rem] p-6 border border-red-100 flex items-center justify-between shadow-sm gap-4">
       <div>
@@ -201,17 +312,30 @@
       </div>
       <button class="bg-red-600 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg shadow-red-200 active:scale-95 transition-all" onclick="openSOSModal()">SOS</button>
     </div>
+    <p class="text-center text-[8px] font-black text-gray-400 uppercase mt-4 tracking-widest italic leading-none">Premere solo in caso di vera emergenza</p>
+    
+    <!-- Link di navigazione tra le giornate -->
     <div class="nav-row">
       <a href="mercoledi-26-08-2026.html">← Mer 26</a>
-      <span></span>
+      <a href="venerdi-28-08-2026.html">Ven 28 →</a>
     </div>
   </div>
 
+  <!-- ========================================== -->
+  <!--           8. FOOTER / PIÈ DI PAGINA        -->
+  <!-- ========================================== -->
   <footer class="app-footer">
-    <div class="footer-brand"><img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE"/><span>GIRE</span></div>
+    <div class="footer-brand">
+      <img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE"/>
+      <span>GIRE</span>
+    </div>
     <span>Area studente · Stoccolma 2026</span>
   </footer>
 
+  <!-- ========================================== -->
+  <!--           9. MODALI / POP-UP OVERLAY       -->
+  <!-- ========================================== -->
+  <!-- Pop-up Dettagli "Leggi di più" -->
   <div id="infoModal" onclick="closeModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
       <h3 class="font-black italic text-2xl mb-4 text-indigo-600 uppercase leading-tight" id="infoTitle"></h3>
@@ -220,21 +344,31 @@
     </div>
   </div>
 
+  <!-- Pop-up Contatti di Emergenza SOS -->
   <div id="sosModal" onclick="closeSOSModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
       <p class="text-[10px] font-black uppercase tracking-widest text-red-500 mb-2">Contatti emergenza</p>
       <h3 class="font-black italic text-2xl mb-6 text-slate-900 uppercase">Chi vuoi chiamare?</h3>
       <div class="space-y-3 mb-4">
         <a class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4" href="tel:+393391801232">
-          <div><p class="text-sm font-black text-slate-900">Francesca Schiavi</p><p class="text-xs text-slate-500 font-bold">+39 339 180 1232</p></div>
+          <div>
+            <p class="text-sm font-black text-slate-900">Francesca Schiavi</p>
+            <p class="text-xs text-slate-500 font-bold">+39 339 180 1232</p>
+          </div>
           <i class="fa-solid fa-phone text-red-600"></i>
         </a>
         <button class="flex items-center justify-between w-full bg-emerald-50 hover:bg-emerald-100 transition rounded-2xl px-5 py-4" onclick="sendLocationWhatsApp('393391801232')">
-          <div class="text-left"><p class="text-sm font-black text-slate-900">Invia posizione WhatsApp</p><p class="text-xs text-slate-500 font-bold">a Francesca Schiavi</p></div>
+          <div class="text-left">
+            <p class="text-sm font-black text-slate-900">Invia posizione WhatsApp</p>
+            <p class="text-xs text-slate-500 font-bold">a Francesca Schiavi</p>
+          </div>
           <i class="fa-solid fa-location-dot text-emerald-600"></i>
         </button>
         <a class="flex items-center justify-between w-full bg-red-50 hover:bg-red-100 transition rounded-2xl px-5 py-4" href="tel:112">
-          <div><p class="text-sm font-black text-slate-900">Soccorso Svezia (112)</p><p class="text-xs text-slate-500 font-bold">Numero unico emergenze locale</p></div>
+          <div>
+            <p class="text-sm font-black text-slate-900">Soccorso Svezia (112)</p>
+            <p class="text-xs text-slate-500 font-bold">Numero unico emergenze locale</p>
+          </div>
           <i class="fa-solid fa-triangle-exclamation text-red-600"></i>
         </a>
       </div>
@@ -242,35 +376,67 @@
     </div>
   </div>
 
+  <!-- ========================================== -->
+  <!--           10. LOGICA JAVASCRIPT            -->
+  <!-- ========================================== -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
+    // Coordinate dell'Hotel C Stockholm
     const hotel = { name: "Hotel C Stockholm", lat: 59.3323, lng: 18.0583 };
-
+    
+    // Elenco delle tappe aggiornato al terzo giorno
     const stops = [
-      { name: "Södermalm (Slussen)", lat: 59.3150, lng: 18.0720, visit: "Giro libero tra boutique e caffetterie." },
-      { name: "Centralbadet", lat: 59.3358, lng: 18.0601, visit: "Complesso termale Art Nouveau." },
-      { name: "Stockholms Stadsbibliotek", lat: 59.3434, lng: 18.0547, visit: "Biblioteca civica con rotonda libraria." },
-      { name: "Metro Solna Centrum", lat: 59.3592, lng: 17.9991, visit: "Stazione d'arte sotterranea Linea Blu." }
+      { name: "Södermalm (Tantolunden Spiaggia)", lat: 59.3130, lng: 18.0510, visit: "Giro libero tra boutique, bar e la spiaggia urbana." },
+      { name: "Centralbadet", lat: 59.3358, lng: 18.0601, visit: "Terme e piscine in stile Art Nouveau." },
+      { name: "Stockholms stadsbibliotek", lat: 59.3434, lng: 18.0547, visit: "Biblioteca modernista di Asplund con sala circolare." },
+      { name: "Metro Kungsträdgården", lat: 59.3308, lng: 18.0717, visit: "Scavi archeologici sotterranei e resti di palazzo Makalös." },
+      { name: "Metro Rådhuset", lat: 59.3307, lng: 18.0423, visit: "Stazione sotterranea vulcanica color salmone." },
+      { name: "Metro Solna Centrum", lat: 59.3592, lng: 17.9991, visit: "Pareti e soffitti rosso e verde bosco al tramonto." }
     ];
 
+    // Coordinate per tracciare la linea della rotta
     const routePoints = [
       [hotel.lat, hotel.lng],
       [stops[0].lat, stops[0].lng],
       [stops[1].lat, stops[1].lng],
       [stops[2].lat, stops[2].lng],
-      [stops[3].lat, stops[3].lng]
+      [stops[3].lat, stops[3].lng],
+      [stops[4].lat, stops[4].lng],
+      [stops[5].lat, stops[5].lng]
     ];
 
+    // Etichette dei tempi di percorrenza (A piedi o in Metro)
     const segmentTimes = [
-      { lat: 59.3236, lng: 18.0651, text: "<i class='fa-solid fa-subway'></i> 12 min" },
-      { lat: 59.3254, lng: 18.0660, text: "<i class='fa-solid fa-person-walking'></i> 20 min" },
+      { lat: 59.3226, lng: 18.0546, text: "<i class='fa-solid fa-subway'></i> 10 min" },
+      { lat: 59.3244, lng: 18.0555, text: "<i class='fa-solid fa-person-walking'></i> 20 min" },
       { lat: 59.3396, lng: 18.0574, text: "<i class='fa-solid fa-person-walking'></i> 10 min" },
-      { lat: 59.3513, lng: 18.0269, text: "<i class='fa-solid fa-subway'></i> 15 min" }
+      { lat: 59.3371, lng: 18.0632, text: "<i class='fa-solid fa-person-walking'></i> 12 min" },
+      { lat: 59.3308, lng: 18.0570, text: "<i class='fa-solid fa-subway'></i> 3 min" },
+      { lat: 59.3450, lng: 18.0200, text: "<i class='fa-solid fa-subway'></i> 8 min" }
     ];
 
-    const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 13);
+    // Formula dell'Emiverseno (Haversine) per il calcolo della distanza esatta in metri
+    function getDistanceMeters(lat1, lon1, lat2, lon2) {
+      const R = 6371000;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    // Calcolo del raggio massimo dall'hotel alla tappa più lontana
+    const maxDistanceInMeters = Math.max(
+      ...stops.map(stop => getDistanceMeters(hotel.lat, hotel.lng, stop.lat, stop.lng))
+    );
+
+    // Inizializzazione Mappa Leaflet
+    const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 12);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
 
+    // Helper creazione icone personalizzate grandi
     function createGiantIcon(color, iconClass, pulse = false) {
       return L.divIcon({
         className: 'custom-icon',
@@ -279,13 +445,26 @@
       });
     }
 
+    // 1. Cerchio dinamico calcolato attorno all'hotel
+    const hotelCircle = L.circle([hotel.lat, hotel.lng], {
+      color: '#3b82f6',
+      fillColor: '#93c5fd',
+      fillOpacity: 0.35,
+      radius: maxDistanceInMeters
+    }).addTo(map);
+
+    // 2. Linea del percorso tra i punti
     L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(map);
+
+    // 3. Marker Hotel (Rosso)
     L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(map).bindPopup(`<strong>${hotel.name}</strong><br>Vasaplan 4`);
 
+    // 4. Marker Tappe (Giallo/Arancio)
     stops.forEach(stop => { 
       L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(map).bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`); 
     });
 
+    // 5. Etichette Tempi di Percorrenza
     segmentTimes.forEach(st => {
       L.marker([st.lat, st.lng], {
         icon: L.divIcon({
@@ -297,10 +476,12 @@
       }).addTo(map);
     });
 
-    function resetMapView() { map.fitBounds(L.latLngBounds(routePoints).pad(0.2)); }
+    // Reset vista mappa con adattamento bordi cerchio
+    function resetMapView() { map.fitBounds(hotelCircle.getBounds().pad(0.1)); }
     resetMapView();
     window.addEventListener('load', () => setTimeout(() => map.invalidateSize(), 150));
 
+    // --- SINTESI VOCALE AUDIO ---
     let currentUtterance = null, currentButton = null;
     function stopSpeech() { 
       if ('speechSynthesis' in window) window.speechSynthesis.cancel(); 
@@ -308,7 +489,6 @@
       currentUtterance = null; 
       currentButton = null; 
     }
-
     document.querySelectorAll('.audio-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -326,6 +506,7 @@
     });
     window.addEventListener('beforeunload', stopSpeech);
 
+    // --- GESTIONE MODALI E INTERAZIONI ---
     function openInfo(title, text) { 
       document.getElementById('infoTitle').innerText = title; 
       document.getElementById('infoContent').innerText = text; 
@@ -336,12 +517,13 @@
     function closeSOSModal() { document.getElementById('sosModal').style.display = 'none'; }
     function confermaPresenza() { document.getElementById('appello-box').classList.add('hidden-appello'); }
 
+    // Invio Posizione WhatsApp per SOS
     function sendLocationWhatsApp(phone) {
       if (!navigator.geolocation) { alert('Geolocalizzazione non supportata.'); return; }
       navigator.geolocation.getCurrentPosition(p => {
         const msg = encodeURIComponent('SOS STUDENTE: https://maps.google.com/?q=' + p.coords.latitude + ',' + p.coords.longitude);
         window.location.href = 'https://wa.me/' + phone + '?text=' + msg;
-      }, () => { alert('Impossibile recuperare il GPS.'); });
+      }, () => { alert('Impossibile recuperare la posizione GPS.'); });
     }
   </script>
 </body>
