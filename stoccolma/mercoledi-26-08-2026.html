@@ -4,6 +4,8 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Mercoledì 26.08.2026 - Viaggio a Stoccolma</title>
+  
+  <!-- SEO & OpenGraph Meta Tags -->
   <meta name="description" content="Itinerario giornaliero GIRE per la gita a Stoccolma con timeline, mappa e contatti SOS."/>
   <link rel="icon" type="image/png" href="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
   <link rel="apple-touch-icon" href="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
@@ -12,10 +14,22 @@
   <meta property="og:url" content="https://cl-000-welf.github.io/gire-landing-page/mercoledi-26-08-2026.html"/>
   <meta property="og:type" content="website"/>
   <meta property="og:image" content="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
+  <meta property="og:image:secure_url" content="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
+  <meta property="og:image:type" content="image/png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Mercoledì 26.08.2026 - Viaggio a Stoccolma"/>
+  <meta name="twitter:description" content="Itinerario giornaliero GIRE per la gita a Stoccolma con timeline, mappa e contatti SOS."/>
+  <meta name="twitter:image" content="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
+  
+  <!-- Librerie Esterne (Tailwind CSS, FontAwesome, Leaflet Mappe) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet"/>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
   <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
+  
+  <!-- ========================================== -->
+  <!--           SEZIONE STILI CSS               -->
+  <!-- ========================================== -->
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; overflow-x: hidden; }
     .safe-card { background: white; border-radius: 1.9rem; border: 1px solid #E2E8F0; overflow: hidden; box-shadow: 0 10px 25px rgba(15,23,42,0.04); }
@@ -28,6 +42,8 @@
     .map-controls { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
     .map-controls button { background: white; border: 1px solid #E2E8F0; border-radius: 14px; min-width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(15,23,42,0.06); color: #334155; font-size: 14px; font-weight: 900; }
     .map-controls button.reset-btn { min-width: 64px; padding: 0 12px; gap: 6px; font-size: 12px; }
+    #push-alert { position: fixed; top: 20px; left: 20px; right: 20px; z-index: 9999; transform: translateY(-150%); transition: transform 0.6s cubic-bezier(0.175,0.885,0.32,1.275); }
+    #push-alert.show { transform: translateY(0); }
     #appello-box { transition: all 0.6s ease; max-height: 300px; opacity: 1; margin-bottom: 1.5rem; }
     #appello-box.hidden-appello { max-height: 0; opacity: 0; margin-bottom: 0; padding: 0; transform: scale(0.9); pointer-events: none; }
     .pulse-me { animation: pulse-blue 2s infinite; border-radius: 50%; }
@@ -43,6 +59,8 @@
     .timeline-time { font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .02em; color: #8a94a6; margin-top: 2px; }
     .timeline-row.active .timeline-time { color:#d97706; }
     .timeline-row.future .timeline-title, .timeline-row.future .timeline-time { color:#94a3b8; }
+    .timeline-row.done .timeline-title { color:#475569; }
+    .timeline-row.active .timeline-title { color:#162038; }
     .diary-card { overflow:hidden; }
     .diary-img { width:100%; height:176px; object-fit:cover; display:block; background:linear-gradient(135deg,#c7d2fe,#e2e8f0); }
     .diary-body { padding: 1.25rem; }
@@ -65,6 +83,23 @@
   </style>
 </head>
 <body class="flex flex-col min-h-screen p-5 pb-10">
+  
+  <!-- ========================================== -->
+  <!--           1. NOTIFICA PUSH POP-UP          -->
+  <!-- ========================================== -->
+  <div id="push-alert" class="bg-slate-900 text-white p-5 rounded-[2rem] shadow-2xl flex items-center gap-4 border border-white/20">
+    <div class="bg-indigo-500 h-10 w-10 rounded-full flex items-center justify-center shrink-0">
+      <i class="fa-solid fa-paper-plane text-white"></i>
+    </div>
+    <div>
+      <p class="text-[9px] font-black uppercase tracking-widest text-indigo-300">Docenti</p>
+      <p class="text-xs font-bold leading-tight">Giorno 2: Direzione Nybroplan, Nationalmuseum e Skeppsholmen!</p>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!--           2. INTESTAZIONE / HEADER         -->
+  <!-- ========================================== -->
   <header class="flex justify-between items-start mb-6 px-1 gap-3">
     <div class="flex items-start gap-2">
       <img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE" class="h-8 w-8 rounded-lg mt-1"/>
@@ -82,14 +117,20 @@
     </div>
   </header>
 
+  <!-- ========================================== -->
+  <!--           3. BANNER PROGRAMMA / APPELLO    -->
+  <!-- ========================================== -->
   <div id="appello-box" class="bg-indigo-600 rounded-[2.5rem] p-6 text-white shadow-xl flex items-center justify-between gap-4">
     <div>
       <p class="text-[9px] font-black uppercase text-indigo-200 mb-1 tracking-widest">Programma</p>
-      <h3 class="font-black text-base italic tracking-tighter uppercase leading-tight md:text-lg">Museo Vasa, Museo ABBA e Djurgården</h3>
+      <h3 class="font-black text-base italic tracking-tighter uppercase leading-tight md:text-lg">Nybroplan, Nationalmuseum & Isola di Skeppsholmen</h3>
     </div>
     <button class="bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all" onclick="confermaPresenza()">OK</button>
   </div>
 
+  <!-- ========================================== -->
+  <!--           4. SEZIONE MAPPA INTERATTIVA     -->
+  <!-- ========================================== -->
   <div class="safe-card p-4 mb-8">
     <div class="map-shell">
       <div id="map-student"></div>
@@ -101,8 +142,8 @@
           <div class="legend-weather"><i class="fa-solid fa-sun"></i> 20°C Soleggiato</div>
         </div>
         <div class="legend-block">
-          <div>Isola di</div>
-          <div>Djurgården</div>
+          <div>Cerchio = Area Hotel</div>
+          <div>Pin = Tappe percorso</div>
         </div>
       </div>
       <div class="map-controls">
@@ -115,76 +156,178 @@
     </div>
   </div>
 
+  <!-- ========================================== -->
+  <!--           5. TIMELINE / PROGRAMMA GIORNO   -->
+  <!-- ========================================== -->
   <div class="safe-card p-6 mb-8">
     <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6 italic text-center">Programma giornata</h3>
     <div class="relative">
       <div class="timeline-line"></div>
-      <div class="timeline-row active" data-time="09:30">
+      
+      <!-- Tappa 1 -->
+      <div class="timeline-row active" data-time="09:15">
         <div class="dot" style="background:#f6a623;color:#fff"><i class="fa-solid fa-location-dot"></i></div>
         <div class="timeline-copy">
-          <div class="timeline-title">Museo Vasa (Vasamuseet)</div>
-          <div class="timeline-time">09:30</div>
+          <div class="timeline-title">Dramaten, Hallwylska & Raoul Wallenbergs</div>
+          <div class="timeline-time">09:15</div>
         </div>
       </div>
+      <!-- Tappa 2 -->
+      <div class="timeline-row future" data-time="10:00">
+        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
+        <div class="timeline-copy">
+          <div class="timeline-title">Blasieholmstorg & Grand Hôtel</div>
+          <div class="timeline-time">10:00</div>
+        </div>
+      </div>
+      <!-- Tappa 3 -->
+      <div class="timeline-row future" data-time="10:30">
+        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
+        <div class="timeline-copy">
+          <div class="timeline-title">Nationalmuseum (Visita 1h 30m)</div>
+          <div class="timeline-time">10:30</div>
+        </div>
+      </div>
+      <!-- Tappa 4 -->
       <div class="timeline-row future" data-time="12:30">
         <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
-          <div class="timeline-title">Pranzo su Djurgården & Parco</div>
+          <div class="timeline-title">Ponte Skeppsholmsbron & Isola</div>
           <div class="timeline-time">12:30</div>
         </div>
       </div>
-      <div class="timeline-row future" data-time="14:30">
+      <!-- Tappa 5 -->
+      <div class="timeline-row future" data-time="14:00">
         <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
-          <div class="timeline-title">ABBA The Museum</div>
-          <div class="timeline-time">14:30</div>
+          <div class="timeline-title">Moderna Museet & Giardino "Paradiset"</div>
+          <div class="timeline-time">14:00</div>
         </div>
       </div>
-      <div class="timeline-row future" data-time="17:00">
+      <!-- Tappa 6 -->
+      <div class="timeline-row future" data-time="16:00">
         <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
-          <div class="timeline-title">Rientro panoramico a piedi o in traghetto</div>
-          <div class="timeline-time">17:00</div>
+          <div class="timeline-title">Museo ArkDes (Opzionale) / Caffè panoramico</div>
+          <div class="timeline-time">16:00</div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- ========================================== -->
+  <!--           6. CARDE DIARIO / SCHEDE TAPPE   -->
+  <!-- ========================================== -->
   <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic">I diari di viaggio</h3>
   <div class="space-y-6 mb-12">
+    
+    <!-- Card 1: Dramaten & Nybroplan -->
     <article class="diary-card safe-card">
-      <img alt="Museo Vasa" class="diary-img" src="https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=800&q=80"/>
+      <img alt="Teatro Dramaten e Nybroplan" class="diary-img" src="https://images.unsplash.com/photo-1509356843151-3e7d96241e11?auto=format&fit=crop&w=800&q=80"/>
       <div class="diary-body">
         <div class="diary-head">
-          <h4>Museo Vasa</h4>
-          <button aria-label="Ascolta Museo Vasa" class="audio-btn" data-audio-text="Visita all'incredibile Vassa-museet, dove è custodito l'unico galeone del XVII secolo integro al mondo, affondato nel suo viaggio inaugurale nel 1628 e recuperato dopo 333 anni.">
+          <h4>Dramaten, Hallwylska & Raoul Wallenbergs</h4>
+          <button aria-label="Ascolta Dramaten" class="audio-btn" data-audio-text="Dirigiamoci verso Nybroplan. Ammiriamo la facciata Art Nouveau del Dramaten, il Teatro Reale Drammatico, arricchita dalle sculture di Carl Milles. Passiamo rapidamente accanto al Museo Hallwylska e a Piazza Raoul Wallenbergs, con il monumento dedicato all'eroe svedese che salvò migliaia di ebrei a Budapest.">
             <i class="fa-solid fa-volume-high"></i>
           </button>
         </div>
-        <p class="diary-short">Visita guidata al galeone reale del 1628 perfettamente conservato.</p>
-        <button class="more-link" onclick="openInfo('Museo Vasa', 'Visita all\'incredibile Vassa-museet, dove è custodito l\'unico galeone del XVII secolo integro al mondo, affondato nel suo viaggio inaugurale nel 1628 e recuperato dopo 333 anni.')">
+        <p class="diary-short">Passeggiata tra il Teatro Reale Drammatico Art Nouveau, il museo Hallwylska e la piazza dedicata a Raoul Wallenberg.</p>
+        <button class="more-link" onclick="openInfo('Dramaten, Hallwylska & Raoul Wallenbergs', 'Dirigiamoci verso Nybroplan. Ammiriamo la facciata Art Nouveau del Dramaten, il Teatro Reale Drammatico, arricchita dalle sculture di Carl Milles. Passiamo rapidamente accanto al Museo Hallwylska e a Piazza Raoul Wallenbergs, con il monumento dedicato all\'eroe svedese che salvò migliaia di ebrei a Budapest.')">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </article>
 
+    <!-- Card 2: Blasieholmstorg & Grand Hôtel -->
     <article class="diary-card safe-card">
-      <img alt="ABBA The Museum" class="diary-img" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80"/>
+      <img alt="Grand Hotel e Blasieholmen" class="diary-img" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80"/>
       <div class="diary-body">
         <div class="diary-head">
-          <h4>ABBA The Museum</h4>
-          <button aria-label="Ascolta ABBA Museum" class="audio-btn" data-audio-text="Esperienza interattiva nel museo dedicato alla celebre band pop svedese ABBA. Potrete cantare, ballare e scoprire i costumi di scena e la storia che ha segnato la musica mondiale.">
+          <h4>Blasieholmstorg & Grand Hôtel</h4>
+          <button aria-label="Ascolta Blasieholmstorg" class="audio-btn" data-audio-text="Breve passaggio lungo piazza Blasieholmstorgal. Diamo uno sguardo al prestigioso Grand Hôtel, famoso per i suoi rinomati locali e per l'antico battello d'epoca ormeggiato di fronte, prima di proseguire verso la punta della penisola.">
             <i class="fa-solid fa-volume-high"></i>
           </button>
         </div>
-        <p class="diary-short">Tuffo interattivo nella storia, musica e costumi del leggendario gruppo svedese.</p>
-        <button class="more-link" onclick="openInfo('ABBA The Museum', 'Esperienza interattiva nel museo dedicato alla celebre band pop svedese ABBA. Potrete cantare, ballare e scoprire i costumi di scena e la storia che ha segnato la musica mondiale.')">
+        <p class="diary-short">Sguardo rapido a piazza Blasieholmstorg e al Grand Hôtel con i suoi locali ed il battello storico.</p>
+        <button class="more-link" onclick="openInfo('Blasieholmstorg & Grand Hôtel', 'Breve passaggio lungo piazza Blasieholmstorgal. Diamo uno sguardo al prestigioso Grand Hôtel, famoso per i suoi rinomati locali e per l\'antico battello d\'epoca ormeggiato di fronte, prima di proseguire verso la punta della penisola.')">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </article>
+
+    <!-- Card 3: Nationalmuseum -->
+    <article class="diary-card safe-card">
+      <img alt="Nationalmuseum Stoccolma" class="diary-img" src="https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?auto=format&fit=crop&w=800&q=80"/>
+      <div class="diary-body">
+        <div class="diary-head">
+          <h4>Nationalmuseum</h4>
+          <button aria-label="Ascolta Nationalmuseum" class="audio-btn" data-audio-text="Visita d'obbligo di almeno un'ora e mezza al Nationalmuseum, il principale museo d'arte e design della Svezia. Custodisce capolavori dal Rinascimento fino al XX secolo, pittura scandinava e collezioni di arti applicate eccezionali.">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+        </div>
+        <p class="diary-short">Tappa fondamentale di almeno un'ora e mezza per ammirare la principale collezione d'arte della Svezia.</p>
+        <button class="more-link" onclick="openInfo('Nationalmuseum', 'Visita d\'obbligo di almeno un\'ora e mezza al Nationalmuseum, il principale museo d\'arte e design della Svezia. Custodisce capolavori dal Rinascimento fino al XX secolo, pittura scandinava e collezioni di arti applicate eccezionali.')">
+          Leggi di più <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </article>
+
+    <!-- Card 4: Ponte Skeppsholmsbron & Isola -->
+    <article class="diary-card safe-card">
+      <img alt="Ponte delle Corone Skeppsholmen" class="diary-img" src="https://images.unsplash.com/photo-1508189860359-770d387551af?auto=format&fit=crop&w=800&q=80"/>
+      <div class="diary-body">
+        <div class="diary-head">
+          <h4>Ponte Skeppsholmsbron & Isola</h4>
+          <button aria-label="Ascolta Ponte Skeppsholmen" class="audio-btn" data-audio-text="Attraversiamo a piedi il famoso ponte Skeppsholmsbron, celebre per le sue corone dorate. Raggiungiamo l'isolotto di Skeppsholmen, un'oasi tranquilla circondata da barche storiche e viste mozzafiato sul mare.">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+        </div>
+        <p class="diary-short">Passeggiata sul celebre ponte con le corone dorate verso l'isolotto delle barche d'epoca.</p>
+        <button class="more-link" onclick="openInfo('Ponte Skeppsholmsbron & Isola', 'Attraversiamo a piedi il famoso ponte Skeppsholmsbron, celebre per le sue corone dorate. Raggiungiamo l\'isolotto di Skeppsholmen, un\'oasi tranquilla circondata da barche storiche e viste mozzafiato sul mare.')">
+          Leggi di più <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </article>
+
+    <!-- Card 5: Moderna Museet & Paradiset -->
+    <article class="diary-card safe-card">
+      <img alt="Moderna Museet e Paradiset" class="diary-img" src="https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=800&q=80"/>
+      <div class="diary-body">
+        <div class="diary-head">
+          <h4>Moderna Museet & Giardino "Paradiset"</h4>
+          <button aria-label="Ascolta Moderna Museet" class="audio-btn" data-audio-text="Visitiamo il Museo d'Arte Moderna e non perdiamo assolutamente 'Paradiset', l'iconico giardino all'aperto che ospita 16 monumentali sculture oniriche e coloratissime di Niki de Saint Phalle e Jean Tinguely. Pausa ideale al caffè del museo con vetrate e vista sulla città.">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+        </div>
+        <p class="diary-short">Arte moderna, il fantastico giardino "Paradiset" di Niki de Saint Phalle e caffè con vista panoramica.</p>
+        <button class="more-link" onclick="openInfo('Moderna Museet & Giardino Paradiset', 'Visitiamo il Museo d\'Arte Moderna e non perdiamo assolutamente \'Paradiset\', l\'iconico giardino all\'aperto che ospita 16 monumentali sculture oniriche e coloratissime di Niki de Saint Phalle e Jean Tinguely. Pausa ideale al caffè del museo con vetrate e vista sulla città.')">
+          Leggi di più <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </article>
+
+    <!-- Card 6: Museo ArkDes -->
+    <article class="diary-card safe-card">
+      <img alt="ArkDes Museo Architettura" class="diary-img" src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80"/>
+      <div class="diary-body">
+        <div class="diary-head">
+          <h4>Museo ArkDes (Architettura e Design)</h4>
+          <button aria-label="Ascolta ArkDes" class="audio-btn" data-audio-text="Situato nello stesso complesso del Moderna Museet, ArkDes è il centro nazionale svedese per l'architettura e il design. Tappa opzionale a seconda del livello di stanchezza del gruppo.">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+        </div>
+        <p class="diary-short">Il Museo del Design e dell'Architettura. Visita opzionale valutando le energie del gruppo.</p>
+        <button class="more-link" onclick="openInfo('Museo ArkDes (Architettura e Design)', 'Situato nello stesso complesso del Moderna Museet, ArkDes è il centro nazionale svedese per l\'architettura e il design. Tappa opzionale a seconda del livello di stanchezza del gruppo.')">
+          Leggi di più <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </article>
+
   </div>
 
+  <!-- ========================================== -->
+  <!--           7. BANNER SOS & NAVIGAZIONE      -->
+  <!-- ========================================== -->
   <div class="mt-auto pt-2">
     <div class="bg-red-50 rounded-[2.5rem] p-6 border border-red-100 flex items-center justify-between shadow-sm gap-4">
       <div>
@@ -194,17 +337,30 @@
       </div>
       <button class="bg-red-600 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg shadow-red-200 active:scale-95 transition-all" onclick="openSOSModal()">SOS</button>
     </div>
+    <p class="text-center text-[8px] font-black text-gray-400 uppercase mt-4 tracking-widest italic leading-none">Premere solo in caso di vera emergenza</p>
+    
+    <!-- Link di navigazione tra le giornate -->
     <div class="nav-row">
       <a href="martedi-25-08-2026.html">← Mar 25</a>
       <a href="giovedi-27-08-2026.html">Gio 27 →</a>
     </div>
   </div>
 
+  <!-- ========================================== -->
+  <!--           8. FOOTER / PIÈ DI PAGINA        -->
+  <!-- ========================================== -->
   <footer class="app-footer">
-    <div class="footer-brand"><img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE"/><span>GIRE</span></div>
+    <div class="footer-brand">
+      <img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE"/>
+      <span>GIRE</span>
+    </div>
     <span>Area studente · Stoccolma 2026</span>
   </footer>
 
+  <!-- ========================================== -->
+  <!--           9. MODALI / POP-UP OVERLAY       -->
+  <!-- ========================================== -->
+  <!-- Pop-up Dettagli "Leggi di più" -->
   <div id="infoModal" onclick="closeModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
       <h3 class="font-black italic text-2xl mb-4 text-indigo-600 uppercase leading-tight" id="infoTitle"></h3>
@@ -213,21 +369,31 @@
     </div>
   </div>
 
+  <!-- Pop-up Contatti di Emergenza SOS -->
   <div id="sosModal" onclick="closeSOSModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
       <p class="text-[10px] font-black uppercase tracking-widest text-red-500 mb-2">Contatti emergenza</p>
       <h3 class="font-black italic text-2xl mb-6 text-slate-900 uppercase">Chi vuoi chiamare?</h3>
       <div class="space-y-3 mb-4">
         <a class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4" href="tel:+393391801232">
-          <div><p class="text-sm font-black text-slate-900">Francesca Schiavi</p><p class="text-xs text-slate-500 font-bold">+39 339 180 1232</p></div>
+          <div>
+            <p class="text-sm font-black text-slate-900">Francesca Schiavi</p>
+            <p class="text-xs text-slate-500 font-bold">+39 339 180 1232</p>
+          </div>
           <i class="fa-solid fa-phone text-red-600"></i>
         </a>
         <button class="flex items-center justify-between w-full bg-emerald-50 hover:bg-emerald-100 transition rounded-2xl px-5 py-4" onclick="sendLocationWhatsApp('393391801232')">
-          <div class="text-left"><p class="text-sm font-black text-slate-900">Invia posizione WhatsApp</p><p class="text-xs text-slate-500 font-bold">a Francesca Schiavi</p></div>
+          <div class="text-left">
+            <p class="text-sm font-black text-slate-900">Invia posizione WhatsApp</p>
+            <p class="text-xs text-slate-500 font-bold">a Francesca Schiavi</p>
+          </div>
           <i class="fa-solid fa-location-dot text-emerald-600"></i>
         </button>
         <a class="flex items-center justify-between w-full bg-red-50 hover:bg-red-100 transition rounded-2xl px-5 py-4" href="tel:112">
-          <div><p class="text-sm font-black text-slate-900">Soccorso Svezia (112)</p><p class="text-xs text-slate-500 font-bold">Numero unico emergenze locale</p></div>
+          <div>
+            <p class="text-sm font-black text-slate-900">Soccorso Svezia (112)</p>
+            <p class="text-xs text-slate-500 font-bold">Numero unico emergenze locale</p>
+          </div>
           <i class="fa-solid fa-triangle-exclamation text-red-600"></i>
         </a>
       </div>
@@ -235,32 +401,67 @@
     </div>
   </div>
 
+  <!-- ========================================== -->
+  <!--           10. LOGICA JAVASCRIPT            -->
+  <!-- ========================================== -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
+    // Coordinate dell'Hotel C Stockholm
     const hotel = { name: "Hotel C Stockholm", lat: 59.3323, lng: 18.0583 };
     
+    // Elenco delle tappe aggiornato fedelmente al secondo giorno
     const stops = [
-      { name: "Museo Vasa (Vasamuseet)", lat: 59.3280, lng: 18.0914, visit: "Galeone del XVII secolo." },
-      { name: "Parco Djurgården", lat: 59.3265, lng: 18.0940, visit: "Passeggiata e pranzo all'aperto." },
-      { name: "ABBA The Museum", lat: 59.3249, lng: 18.0965, visit: "Museo interattivo musicale." }
+      { name: "Teatro Dramaten & Nybroplan", lat: 59.3332, lng: 18.0770, visit: "Facciata Art Nouveau e sculture di Carl Milles." },
+      { name: "Piazza Blasieholmstorg & Grand Hôtel", lat: 59.3298, lng: 18.0754, visit: "Grand Hôtel e battello storico." },
+      { name: "Nationalmuseum", lat: 59.3282, lng: 18.0781, visit: "Visita principale d'arte e design (1h 30m)." },
+      { name: "Ponte Skeppsholmsbron", lat: 59.3275, lng: 18.0815, visit: "Ponte delle corone verso Skeppsholmen." },
+      { name: "Moderna Museet & Paradiset", lat: 59.3260, lng: 18.0847, visit: "Sculture di Niki de Saint Phalle e bar panoramico." },
+      { name: "Museo ArkDes", lat: 59.3256, lng: 18.0858, visit: "Museo dell'Architettura e del Design (opzionale)." }
     ];
 
+    // Coordinate per tracciare la linea della rotta
     const routePoints = [
       [hotel.lat, hotel.lng],
       [stops[0].lat, stops[0].lng],
       [stops[1].lat, stops[1].lng],
-      [stops[2].lat, stops[2].lng]
+      [stops[2].lat, stops[2].lng],
+      [stops[3].lat, stops[3].lng],
+      [stops[4].lat, stops[4].lng],
+      [stops[5].lat, stops[5].lng]
     ];
 
+    // Etichette dei tempi di percorrenza a piedi tra le tappe
     const segmentTimes = [
-      { lat: 59.3301, lng: 18.0748, text: "<i class='fa-solid fa-person-walking'></i> 25 min" },
-      { lat: 59.3272, lng: 18.0927, text: "<i class='fa-solid fa-person-walking'></i> 5 min" },
-      { lat: 59.3257, lng: 18.0952, text: "<i class='fa-solid fa-person-walking'></i> 4 min" }
+      { lat: 59.3328, lng: 18.0676, text: "<i class='fa-solid fa-person-walking'></i> 14 min" },
+      { lat: 59.3315, lng: 18.0762, text: "<i class='fa-solid fa-person-walking'></i> 5 min" },
+      { lat: 59.3290, lng: 18.0767, text: "<i class='fa-solid fa-person-walking'></i> 3 min" },
+      { lat: 59.3278, lng: 18.0798, text: "<i class='fa-solid fa-person-walking'></i> 4 min" },
+      { lat: 59.3268, lng: 18.0831, text: "<i class='fa-solid fa-person-walking'></i> 4 min" },
+      { lat: 59.3258, lng: 18.0852, text: "<i class='fa-solid fa-person-walking'></i> 1 min" }
     ];
 
-    const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 14);
+    // Formula dell'Emiverseno (Haversine) per il calcolo della distanza esatta in metri
+    function getDistanceMeters(lat1, lon1, lat2, lon2) {
+      const R = 6371000;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    // Calcolo del raggio massimo dall'hotel alla tappa più lontana
+    const maxDistanceInMeters = Math.max(
+      ...stops.map(stop => getDistanceMeters(hotel.lat, hotel.lng, stop.lat, stop.lng))
+    );
+
+    // Inizializzazione Mappa Leaflet
+    const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
 
+    // Helper creazione icone personalizzate grandi
     function createGiantIcon(color, iconClass, pulse = false) {
       return L.divIcon({
         className: 'custom-icon',
@@ -269,13 +470,26 @@
       });
     }
 
+    // 1. Cerchio dinamico calcolato attorno all'hotel
+    const hotelCircle = L.circle([hotel.lat, hotel.lng], {
+      color: '#3b82f6',
+      fillColor: '#93c5fd',
+      fillOpacity: 0.35,
+      radius: maxDistanceInMeters
+    }).addTo(map);
+
+    // 2. Linea del percorso tra i punti
     L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(map);
+
+    // 3. Marker Hotel (Rosso)
     L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(map).bindPopup(`<strong>${hotel.name}</strong><br>Vasaplan 4`);
 
+    // 4. Marker Tappe (Giallo/Arancio)
     stops.forEach(stop => { 
       L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(map).bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`); 
     });
 
+    // 5. Etichette Tempi di Camminata
     segmentTimes.forEach(st => {
       L.marker([st.lat, st.lng], {
         icon: L.divIcon({
@@ -287,10 +501,12 @@
       }).addTo(map);
     });
 
-    function resetMapView() { map.fitBounds(L.latLngBounds(routePoints).pad(0.2)); }
+    // Reset vista mappa con adattamento bordi cerchio
+    function resetMapView() { map.fitBounds(hotelCircle.getBounds().pad(0.1)); }
     resetMapView();
     window.addEventListener('load', () => setTimeout(() => map.invalidateSize(), 150));
 
+    // --- SINTESI VOCALE AUDIO ---
     let currentUtterance = null, currentButton = null;
     function stopSpeech() { 
       if ('speechSynthesis' in window) window.speechSynthesis.cancel(); 
@@ -298,7 +514,6 @@
       currentUtterance = null; 
       currentButton = null; 
     }
-
     document.querySelectorAll('.audio-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -316,6 +531,7 @@
     });
     window.addEventListener('beforeunload', stopSpeech);
 
+    // --- GESTIONE MODALI E INTERAZIONI ---
     function openInfo(title, text) { 
       document.getElementById('infoTitle').innerText = title; 
       document.getElementById('infoContent').innerText = text; 
@@ -326,12 +542,13 @@
     function closeSOSModal() { document.getElementById('sosModal').style.display = 'none'; }
     function confermaPresenza() { document.getElementById('appello-box').classList.add('hidden-appello'); }
 
+    // Invio Posizione WhatsApp per SOS
     function sendLocationWhatsApp(phone) {
       if (!navigator.geolocation) { alert('Geolocalizzazione non supportata.'); return; }
       navigator.geolocation.getCurrentPosition(p => {
         const msg = encodeURIComponent('SOS STUDENTE: https://maps.google.com/?q=' + p.coords.latitude + ',' + p.coords.longitude);
         window.location.href = 'https://wa.me/' + phone + '?text=' + msg;
-      }, () => { alert('Impossibile recuperare il GPS.'); });
+      }, () => { alert('Impossibile recuperare la posizione GPS.'); });
     }
   </script>
 </body>
