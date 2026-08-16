@@ -49,7 +49,7 @@
     .pulse-me { animation: pulse-blue 2s infinite; border-radius: 50%; }
     @keyframes pulse-blue { 0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.6); } 70% { box-shadow: 0 0 0 15px rgba(59,130,246,0); } 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); } }
     #infoModal, #sosModal { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.92); z-index:10000; align-items:center; justify-content:center; padding:20px; backdrop-filter: blur(8px); }
-    .modal-card { background:white; border-radius:2.3rem; max-width: 420px; width:100%; padding: 2rem; box-shadow:0 22px 60px rgba(0,0,0,.2); overflow: hidden; }
+    .modal-card { background:white; border-radius:2.3rem; max-width: 420px; width:100%; padding: 2rem; box-shadow:0 22px 60px rgba(0,0,0,.2); max-height: 90vh; overflow-y: auto; }
     .timeline-line { position:absolute; left:13px; top:12px; bottom:12px; width:2px; background:#edf0f3; }
     .timeline-row { position:relative; display:flex; gap:14px; align-items:center; }
     .timeline-row + .timeline-row { margin-top: 26px; }
@@ -115,6 +115,20 @@
       </div>
     </div>
   </header>
+
+  <!-- ========================================== -->
+  <!--           BARRA AVANZAMENTO GIORNATA      -->
+  <!-- ========================================== -->
+  <div class="safe-card p-4 mb-6">
+    <div class="flex justify-between items-center mb-2">
+      <span class="text-[10px] font-black uppercase tracking-widest text-indigo-600 italic">Avanzamento Giornata</span>
+      <span id="progress-percent" class="text-xs font-black text-indigo-600">20%</span>
+    </div>
+    <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden p-0.5 border border-slate-200">
+      <div id="progress-bar" class="bg-indigo-600 h-full rounded-full transition-all duration-500" style="width: 20%;"></div>
+    </div>
+  </div>
+
   <!-- ========================================== -->
   <!--           3. BANNER PROGRAMMA / APPELLO    -->
   <!-- ========================================== -->
@@ -325,7 +339,7 @@
   <!-- Pop-up Dettagli "Leggi di più" -->
   <div id="infoModal" onclick="closeModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
-      <img id="infoImage" src="" alt="" class="w-full h-48 object-cover rounded-2xl mb-4 hidden"/>
+      <img id="infoModalImg" src="" alt="" class="w-full h-48 object-cover rounded-2xl mb-4 hidden"/>
       <h3 class="font-black italic text-2xl mb-4 text-indigo-600 uppercase leading-tight" id="infoTitle"></h3>
       <p class="text-base font-medium leading-relaxed mb-6 text-gray-600" id="infoContent"></p>
       <button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeModal()">Ho capito!</button>
@@ -482,7 +496,7 @@
     function openInfo(title, text, imgSrc) { 
       document.getElementById('infoTitle').innerText = title; 
       document.getElementById('infoContent').innerText = text; 
-      const imgElem = document.getElementById('infoImage');
+      const imgElem = document.getElementById('infoModalImg');
       if (imgSrc) {
         imgElem.src = imgSrc;
         imgElem.alt = title;
