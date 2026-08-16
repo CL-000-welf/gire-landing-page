@@ -31,7 +31,8 @@
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; overflow-x: hidden; }
     .safe-card { background: white; border-radius: 1.9rem; border: 1px solid #E2E8F0; overflow: hidden; box-shadow: 0 10px 25px rgba(15,23,42,0.04); }
-    #map-student { height: 250px; border-radius: 1.35rem; z-index: 10; border: 2px solid white; box-shadow: 0 8px 18px rgba(0,0,0,0.05); }
+    #map-student { height: 250px; border-radius: 1.35rem; z-index: 10; border: 2px solid white; box-shadow: 0 8px 18px rgba(0,0,0,0.05); cursor: pointer; }
+    #map-modal-container { height: 75vh; width: 100%; border-radius: 1.5rem; }
     .map-shell { position: relative; }
     .map-meta { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: end; margin-top: 12px; }
     .map-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 11px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: .03em; }
@@ -46,8 +47,9 @@
     #appello-box.hidden-appello { max-height: 0; opacity: 0; margin-bottom: 0; padding: 0; transform: scale(0.9); pointer-events: none; }
     .pulse-me { animation: pulse-blue 2s infinite; border-radius: 50%; }
     @keyframes pulse-blue { 0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.6); } 70% { box-shadow: 0 0 0 15px rgba(59,130,246,0); } 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); } }
-    #infoModal, #sosModal { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.92); z-index:10000; align-items:center; justify-content:center; padding:20px; backdrop-filter: blur(8px); }
-    .modal-card { background:white; border-radius:2.3rem; max-width: 420px; width:100%; padding: 2rem; box-shadow:0 22px 60px rgba(0,0,0,.2); }
+    #infoModal, #sosModal, #mapModal { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.92); z-index:10000; align-items:center; justify-content:center; padding:20px; backdrop-filter: blur(8px); }
+    .modal-card { background:white; border-radius:2.3rem; max-width: 420px; width:100%; padding: 2rem; box-shadow:0 22px 60px rgba(0,0,0,.2); max-height: 90vh; overflow-y: auto; }
+    .modal-card-map { background:white; border-radius:2.3rem; max-width: 600px; width:100%; padding: 1.25rem; box-shadow:0 22px 60px rgba(0,0,0,.2); }
     .timeline-line { position:absolute; left:13px; top:12px; bottom:12px; width:2px; background:#edf0f3; }
     .timeline-row { position:relative; display:flex; gap:14px; align-items:center; }
     .timeline-row + .timeline-row { margin-top: 26px; }
@@ -59,7 +61,8 @@
     .timeline-row.future .timeline-title, .timeline-row.future .timeline-time { color:#94a3b8; }
     .timeline-row.done .timeline-title { color:#475569; }
     .timeline-row.active .timeline-title { color:#162038; }
-    .diary-card { overflow:hidden; }
+    .diary-card { cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .diary-card:active { transform: scale(0.98); }
     .diary-img { width:100%; height:176px; object-fit:cover; display:block; background:linear-gradient(135deg,#c7d2fe,#e2e8f0); }
     .diary-body { padding: 1.25rem; }
     .diary-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:.55rem; }
@@ -88,7 +91,7 @@
       <i class="fa-solid fa-paper-plane text-white"></i>
     </div>
     <div>
-      <p class="text-[9px] font-black uppercase tracking-widest text-indigo-300">Gire</p>
+      <p class="text-[9px] font-black uppercase tracking-widest text-indigo-300">Docenti</p>
       <p class="text-xs font-bold leading-tight">Benvenuti a Stoccolma! Seguite il programma e la guida a Gamla Stan.</p>
     </div>
   </div>
@@ -99,7 +102,7 @@
       <img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE" class="h-8 w-8 rounded-lg mt-1"/>
       <div>
         <p class="text-[10px] font-black uppercase tracking-widest text-indigo-600 italic">Gita a Stoccolma</p>
-        <h1 class="text-2xl font-black italic tracking-tighter uppercase leading-none">Il nostro viaggio</h1>
+        <h1 class="text-2xl font-black italic tracking-tighter uppercase leading-none">Area Studente</h1>
       </div>
     </div>
     <div class="text-right">
@@ -123,7 +126,7 @@
   <!-- 4. SEZIONE MAPPA INTERATTIVA -->
   <div class="safe-card p-4 mb-8">
     <div class="map-shell">
-      <div id="map-student"></div>
+      <div id="map-student" onclick="openMapModal()" title="Clicca per ingrandire la mappa"></div>
     </div>
     <div class="map-meta">
       <div class="map-legend">
@@ -137,6 +140,7 @@
         </div>
       </div>
       <div class="map-controls">
+        <button onclick="openMapModal()" title="Mappa a schermo intero"><i class="fa-solid fa-expand"></i></button>
         <button onclick="map.zoomIn()" aria-label="Zoom avanti"><i class="fa-solid fa-plus"></i></button>
         <button onclick="map.zoomOut()" aria-label="Zoom indietro"><i class="fa-solid fa-minus"></i></button>
         <button class="reset-btn" onclick="resetMapView()" aria-label="Reset mappa">
@@ -197,11 +201,11 @@
     </div>
   </div>
 
-  <!-- 6. CARDE DIARIO / SCHEDE TAPPE -->
+  <!-- 6. CARDE DIARIO / SCHEDE TAPPE (INTERAMENTE CLICCABILI) -->
   <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic">I diari di viaggio</h3>
   <div class="space-y-6 mb-12">
     
-    <article class="diary-card safe-card">
+    <article class="diary-card safe-card" onclick="openInfo('Municipio (Stadshuset) - Sala Oro e Blu', 'Partiamo a piedi dall\'hotel in zona Norrmalm per visitare il municipio di Stoccolma. Visiteremo la celebre Sala Blu, sede del banchetto dei Premi Nobel, e la spettacolare Sala Oro rivestita da oltre 18 milioni di tessere di mosaico.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/municipio.jpg')">
       <img alt="Municipio Stadshuset" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/municipio.jpg"/>
       <div class="diary-body">
         <div class="diary-head">
@@ -211,13 +215,13 @@
           </button>
         </div>
         <p class="diary-short">Visita al celebre Municipio, con la Sala Blu del banchetto dei Nobel e la splendida Sala Oro.</p>
-        <button class="more-link" onclick="openInfo('Municipio (Stadshuset) - Sala Oro e Blu', 'Partiamo a piedi dall\'hotel in zona Norrmalm per visitare il municipio di Stoccolma. Visiteremo la celebre Sala Blu, sede del banchetto dei Premi Nobel, e la spettacolare Sala Oro rivestita da oltre 18 milioni di tessere di mosaico.')">
+        <span class="more-link">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
-        </button>
+        </span>
       </div>
     </article>
 
-    <article class="diary-card safe-card">
+    <article class="diary-card safe-card" onclick="openInfo('Gamla Stan tramite Ponte Vasabron', 'Ci dirigiamo verso la città vecchia attraversando il ponte Vasabron, perfetto per i pedoni e con una vista splendida. Evitiamo il Centralbron riservato alle auto. A Gamla Stan proseguiamo la visita guidata tra vicoli medievali e palazzi storici.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/vasabron.jpg')">
       <img alt="Gamla Stan" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/vasabron.jpg"/>
       <div class="diary-body">
         <div class="diary-head">
@@ -227,13 +231,13 @@
           </button>
         </div>
         <p class="diary-short">Attraversiamo il ponte Vasabron per immergerci nell'atmosfera medievale di Gamla Stan con la guida.</p>
-        <button class="more-link" onclick="openInfo('Gamla Stan tramite Ponte Vasabron', 'Ci dirigiamo verso la città vecchia attraversando il ponte Vasabron, perfetto per i pedoni e con una vista splendida. Evitiamo il Centralbron riservato alle auto. A Gamla Stan proseguiamo la visita guidata tra vicoli medievali e palazzi storici.')">
+        <span class="more-link">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
-        </button>
+        </span>
       </div>
     </article>
 
-    <article class="diary-card safe-card">
+    <article class="diary-card safe-card" onclick="openInfo('Ponte Norrbro, Parlamento e Operan', 'Nel pomeriggio attraversiamo il ponte Norrbro, di fronte al Palazzo Reale, il più bello e storico della città, interamente pedonale. Passiamo sull\'isola del Parlamento e arriviamo davanti al Teatro dell\'Opera di fine \'800.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/norrbro.webp')">
       <img alt="Parlamento e Operan" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/norrbro.webp"/>
       <div class="diary-body">
         <div class="diary-head">
@@ -243,13 +247,13 @@
           </button>
         </div>
         <p class="diary-short">Attraversamento del ponte storico Norrbro, vista sul Parlamento e sul Teatro dell'Opera.</p>
-        <button class="more-link" onclick="openInfo('Ponte Norrbro, Parlamento e Operan', 'Nel pomeriggio attraversiamo il ponte Norrbro, di fronte al Palazzo Reale, il più bello e storico della città, interamente pedonale. Passiamo sull\'isola del Parlamento e arriviamo davanti al Teatro dell\'Opera di fine \'800.')">
+        <span class="more-link">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
-        </button>
+        </span>
       </div>
     </article>
 
-    <article class="diary-card safe-card">
+    <article class="diary-card safe-card" onclick="openInfo('Kungsträdgården & Museo Wetterling', 'Passeggiata nel Giardino del Re, uno dei parchi pubblici più famosi e vivaci di Stoccolma, seguita da una rapida sosta alla Wetterling Gallery, celebre galleria d\'arte contemporanea.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/giardino.jpeg')">
       <img alt="Kungsträdgården" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/giardino.jpeg"/>
       <div class="diary-body">
         <div class="diary-head">
@@ -259,13 +263,13 @@
           </button>
         </div>
         <p class="diary-short">Relax nel Giardino del Re e visita d'arte contemporanea alla galleria Wetterling.</p>
-        <button class="more-link" onclick="openInfo('Kungsträdgården & Museo Wetterling', 'Passeggiata nel Giardino del Re, uno dei parchi pubblici più famosi e vivaci di Stoccolma, seguita da una rapida sosta alla Wetterling Gallery, celebre galleria d\'arte contemporanea.')">
+        <span class="more-link">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
-        </button>
+        </span>
       </div>
     </article>
 
-    <article class="diary-card safe-card">
+    <article class="diary-card safe-card" onclick="openInfo('Piazza Östermalmstorg & Salu Hall', 'Raggiungiamo il quartiere elegante di Östermalm per visitare la storica Salu Hall, un fantastico mercato coperto del 1888 con le migliori specialità gastronomiche svedesi.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/salu-hall.jpg')">
       <img alt="Östermalmstorg Salu Hall" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/salu-hall.jpg"/>
       <div class="diary-body">
         <div class="diary-head">
@@ -275,13 +279,13 @@
           </button>
         </div>
         <p class="diary-short">Esplorazione della vivace piazza Östermalmstorg e dello storico mercato gastronomico Salu Hall.</p>
-        <button class="more-link" onclick="openInfo('Piazza Östermalmstorg & Salu Hall', 'Raggiungiamo il quartiere elegante di Östermalm per visitare la storica Salu Hall, un fantastico mercato coperto del 1888 con le migliori specialità gastronomiche svedesi.')">
+        <span class="more-link">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
-        </button>
+        </span>
       </div>
     </article>
 
-    <article class="diary-card safe-card">
+    <article class="diary-card safe-card" onclick="openInfo('Crociera Arcipelago (Statua Gustav III)', 'Torniamo verso la riva di Gamla Stan per raggiungere l\'imbarco situato nei pressi della statua di Gustav III. Ci attende una favolosa crociera di due ore tra le isole dell\'arcipelago di Stoccolma.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/arcipelago.jpg')">
       <img alt="Crociera Arcipelago" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/arcipelago.jpg"/>
       <div class="diary-body">
         <div class="diary-head">
@@ -291,9 +295,9 @@
           </button>
         </div>
         <p class="diary-short">Crociera panoramica di due ore nell'incantevole arcipelago di Stoccolma con partenza alle 18:00.</p>
-        <button class="more-link" onclick="openInfo('Crociera Arcipelago (Statua Gustav III)', 'Torniamo verso la riva di Gamla Stan per raggiungere l\'imbarco situato nei pressi della statua di Gustav III. Ci attende una favolosa crociera di due ore tra le isole dell\'arcipelago di Stoccolma.')">
+        <span class="more-link">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
-        </button>
+        </span>
       </div>
     </article>
   </div>
@@ -304,7 +308,7 @@
       <div>
         <p class="text-[9px] font-black uppercase text-red-600 mb-1 tracking-widest">Gire Safe Mode</p>
         <h3 class="font-black text-sm italic tracking-tighter uppercase leading-tight text-slate-900">Hai bisogno di aiuto?</h3>
-        <p class="text-[8px] font-bold text-red-400 uppercase mt-1 leading-none">Invia posizione GPS al capo gruppo</p>
+        <p class="text-[8px] font-bold text-red-400 uppercase mt-1 leading-none">Invia posizione GPS ai docenti</p>
       </div>
       <button class="bg-red-600 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg shadow-red-200 active:scale-95 transition-all" onclick="openSOSModal()">SOS</button>
     </div>
@@ -326,14 +330,29 @@
   </footer>
 
   <!-- 9. MODALI / POP-UP OVERLAY -->
+  <!-- Modale Dettaglio Tappa con Immagine integrata -->
   <div id="infoModal" onclick="closeModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
+      <img id="infoImage" src="" alt="" class="w-full h-48 object-cover rounded-2xl mb-4 hidden"/>
       <h3 class="font-black italic text-2xl mb-4 text-indigo-600 uppercase leading-tight" id="infoTitle"></h3>
       <p class="text-base font-medium leading-relaxed mb-6 text-gray-600" id="infoContent"></p>
       <button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeModal()">Ho capito!</button>
     </div>
   </div>
 
+  <!-- Modale Mappa Ingrandita -->
+  <div id="mapModal" onclick="closeMapModal()">
+    <div class="modal-card-map" onclick="event.stopPropagation()">
+      <div class="flex justify-between items-center mb-3 px-2">
+        <h3 class="font-black italic text-lg uppercase text-slate-800">Mappa Percorso</h3>
+        <button onclick="closeMapModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="map-modal-container"></div>
+      <button class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-black uppercase text-xs mt-3 active:scale-95 transition-all" onclick="closeMapModal()">Chiudi Mappa</button>
+    </div>
+  </div>
+
+  <!-- Modale SOS -->
   <div id="sosModal" onclick="closeSOSModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
       <p class="text-[10px] font-black uppercase tracking-widest text-red-500 mb-2">Contatti emergenza</p>
@@ -368,7 +387,14 @@
   <!-- 10. LOGICA JAVASCRIPT -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    // Animazione Notifica Push Pop-up
+    /* =====================================================================
+       BLOCCO NOTIFICA PUSH INIZIALE (Copia questo blocco per gli altri file)
+       =====================================================================
+       Funzionamento:
+       - Attende il caricamento completo della pagina ('load').
+       - Dopo 1000ms (1 secondo) mostra il banner notifiche facendo scorrere l'elemento #push-alert.
+       - Dopo altri 5000ms (5 secondi) nasconde automaticamente la notifica.
+    */
     window.addEventListener('load', () => {
       setTimeout(() => {
         const pushAlert = document.getElementById('push-alert');
@@ -380,6 +406,7 @@
         }
       }, 1000);
     });
+    /* ===================================================================== */
 
     // Coordinate Hotel
     const hotel = { name: "Hotel C Stockholm", lat: 59.3323, lng: 18.0583, label: "Hotel C Stockholm" };
@@ -428,6 +455,7 @@
       ...stops.map(stop => getDistanceMeters(hotel.lat, hotel.lng, stop.lat, stop.lng))
     );
 
+    // Mappa Principale
     const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
 
@@ -439,34 +467,62 @@
       });
     }
 
-    const hotelCircle = L.circle([hotel.lat, hotel.lng], {
-      color: '#3b82f6',
-      fillColor: '#93c5fd',
-      fillOpacity: 0.35,
-      radius: maxDistanceInMeters
-    }).addTo(map);
+    // Popolamento Mappa Principale
+    function renderMapElements(targetMap) {
+      const hotelCircle = L.circle([hotel.lat, hotel.lng], {
+        color: '#3b82f6',
+        fillColor: '#93c5fd',
+        fillOpacity: 0.35,
+        radius: maxDistanceInMeters
+      }).addTo(targetMap);
 
-    L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(map);
-    L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(map).bindPopup(`<strong>${hotel.name}</strong><br>Vasaplan 4`);
-    
-    stops.forEach(stop => { 
-      L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(map).bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`); 
-    });
+      L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(targetMap);
+      L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(targetMap).bindPopup(`<strong>${hotel.name}</strong><br>Vasaplan 4`);
+      
+      stops.forEach(stop => { 
+        L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(targetMap).bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`); 
+      });
 
-    segmentTimes.forEach(st => {
-      L.marker([st.lat, st.lng], {
-        icon: L.divIcon({
-          className: '',
-          html: `<div class="walk-label">${st.text}</div>`,
-          iconSize: [60, 20],
-          iconAnchor: [30, 10]
-        })
-      }).addTo(map);
-    });
+      segmentTimes.forEach(st => {
+        L.marker([st.lat, st.lng], {
+          icon: L.divIcon({
+            className: '',
+            html: `<div class="walk-label">${st.text}</div>`,
+            iconSize: [60, 20],
+            iconAnchor: [30, 10]
+          })
+        }).addTo(targetMap);
+      });
 
-    function resetMapView() { map.fitBounds(hotelCircle.getBounds().pad(0.1)); }
+      return hotelCircle;
+    }
+
+    const hotelCircleMain = renderMapElements(map);
+
+    function resetMapView() { map.fitBounds(hotelCircleMain.getBounds().pad(0.1)); }
     resetMapView();
     window.addEventListener('load', () => setTimeout(() => map.invalidateSize(), 150));
+
+    // Mappa Modale (Ingrandita)
+    let modalMap = null;
+    let modalHotelCircle = null;
+
+    function openMapModal() {
+      document.getElementById('mapModal').style.display = 'flex';
+      if (!modalMap) {
+        modalMap = L.map('map-modal-container', { zoomControl: true }).setView([hotel.lat, hotel.lng], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(modalMap);
+        modalHotelCircle = renderMapElements(modalMap);
+      }
+      setTimeout(() => {
+        modalMap.invalidateSize();
+        modalMap.fitBounds(modalHotelCircle.getBounds().pad(0.1));
+      }, 200);
+    }
+
+    function closeMapModal() {
+      document.getElementById('mapModal').style.display = 'none';
+    }
 
     // Sintesi Vocale
     let currentUtterance = null, currentButton = null;
@@ -502,10 +558,19 @@
     });
     window.addEventListener('beforeunload', stopSpeech);
 
-    // Gestione Modali
-    function openInfo(title, text) { 
+    // Gestione Modali Dettagli e SOS
+    function openInfo(title, text, imgSrc = '') { 
       document.getElementById('infoTitle').innerText = title; 
       document.getElementById('infoContent').innerText = text; 
+      
+      const imgEl = document.getElementById('infoImage');
+      if (imgSrc) {
+        imgEl.src = imgSrc;
+        imgEl.classList.remove('hidden');
+      } else {
+        imgEl.classList.add('hidden');
+      }
+      
       document.getElementById('infoModal').style.display = 'flex'; 
     }
     function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
