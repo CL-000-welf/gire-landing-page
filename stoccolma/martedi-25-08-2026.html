@@ -20,13 +20,11 @@
   <meta name="twitter:title" content="Martedì 25.08.2026 - Viaggio a Stoccolma"/>
   <meta name="twitter:description" content="Itinerario giornaliero GIRE per la gita a Stoccolma con timeline, mappa e contatti SOS."/>
   <meta name="twitter:image" content="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
-
   <!-- Librerie Esterne (Tailwind CSS, FontAwesome, Leaflet Mappe) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet"/>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
   <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
-
   <!-- ========================================== -->
   <!--           SEZIONE STILI CSS               -->
   <!-- ========================================== -->
@@ -78,16 +76,13 @@
     /* Stile Etichette Tempo Minuti sulla Mappa */
     .walk-label { background: white; border: 1px solid #cbd5e1; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 800; color: #1e293b; box-shadow: 0 2px 8px rgba(0,0,0,.12); white-space: nowrap; text-align: center; }
     .walk-label i { color: #4f46e5; margin-right: 3px; }
-
     footer.app-footer { margin-top: 28px; padding: 18px 8px 2px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #94a3b8; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
     footer.app-footer .footer-brand { display: flex; align-items: center; gap: 8px; color: #64748b; }
     footer.app-footer img { width: 20px; height: 20px; border-radius: 6px; }
     @media (max-width: 420px) { body { padding: 16px 16px 32px; } .safe-card { border-radius: 1.7rem; } #map-student { height: 262px; border-radius: 1.6rem; margin: -16px -16px 0px -16px; } .diary-body { padding: 1rem; } .diary-head h4 { font-size: 1rem; } .diary-short { font-size:.95rem; line-height: 1.55; } .nav-row a, .nav-row span { min-width: 96px; padding: .7rem .85rem; } .modal-card { padding: 1.5rem; border-radius: 2rem; } .map-meta { grid-template-columns: 1fr; } .map-controls { justify-content: flex-start; } }
   </style>
 </head>
-
 <body class="flex flex-col min-h-screen p-5 pb-10">
-
   <!-- ========================================== -->
   <!--           1. NOTIFICA PUSH POP-UP          -->
   <!-- ========================================== -->
@@ -100,7 +95,6 @@
       <p class="text-xs font-bold leading-tight">Benvenuti a Stoccolma! Seguite il programma e la guida a Gamla Stan.</p>
     </div>
   </div>
-
   <!-- ========================================== -->
   <!--           2. INTESTAZIONE / HEADER         -->
   <!-- ========================================== -->
@@ -120,7 +114,6 @@
       </div>
     </div>
   </header>
-
   <!-- ========================================== -->
   <!--           3. BANNER PROGRAMMA / APPELLO    -->
   <!-- ========================================== -->
@@ -131,7 +124,6 @@
     </div>
     <button class="bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all" onclick="confermaPresenza()">OK</button>
   </div>
-
   <!-- ========================================== -->
   <!--           4. SEZIONE MAPPA INTERATTIVA     -->
   <!-- ========================================== -->
@@ -159,7 +151,6 @@
       </div>
     </div>
   </div>
-
   <!-- ========================================== -->
   <!--           5. TIMELINE / PROGRAMMA GIORNO   -->
   <!-- ========================================== -->
@@ -176,7 +167,6 @@
           <div class="timeline-time">09:00</div>
         </div>
       </div>
-
       <!-- Tappa 2 -->
       <div class="timeline-row future" data-time="10:30">
         <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
@@ -185,7 +175,6 @@
           <div class="timeline-time">10:30</div>
         </div>
       </div>
-
       <!-- Tappa 3 -->
       <div class="timeline-row future" data-time="15:00">
         <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
@@ -194,7 +183,6 @@
           <div class="timeline-time">15:00</div>
         </div>
       </div>
-
       <!-- Tappa 4 -->
       <div class="timeline-row future" data-time="16:00">
         <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
@@ -203,7 +191,6 @@
           <div class="timeline-time">16:00</div>
         </div>
       </div>
-
       <!-- Tappa 5 -->
       <div class="timeline-row future" data-time="17:00">
         <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
@@ -212,7 +199,6 @@
           <div class="timeline-time">17:00</div>
         </div>
       </div>
-
       <!-- Tappa 6 -->
       <div class="timeline-row future" data-time="18:00">
         <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
@@ -221,10 +207,8 @@
           <div class="timeline-time">18:00</div>
         </div>
       </div>
-
     </div>
   </div>
-
   <!-- ========================================== -->
   <!--           6. CARDE DIARIO / SCHEDE TAPPE   -->
   <!-- ========================================== -->
@@ -247,7 +231,6 @@
         </button>
       </div>
     </article>
-
     <!-- Card 2: Gamla Stan -->
     <article class="diary-card safe-card">
       <img alt="Gamla Stan" class="diary-img" src="https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?auto=format&fit=crop&w=800&q=80"/>
@@ -264,7 +247,6 @@
         </button>
       </div>
     </article>
-
     <!-- Card 3: Parlamento -->
     <article class="diary-card safe-card">
       <img alt="Parlamento e Operan" class="diary-img" src="https://images.unsplash.com/photo-1596484552834-6a58f850e0a1?auto=format&fit=crop&w=800&q=80"/>
@@ -281,7 +263,6 @@
         </button>
       </div>
     </article>
-
     <!-- Card 4: Kungsträdgården -->
     <article class="diary-card safe-card">
       <img alt="Kungsträdgården" class="diary-img" src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80"/>
@@ -298,7 +279,6 @@
         </button>
       </div>
     </article>
-
     <!-- Card 5: Östermalmstorg -->
     <article class="diary-card safe-card">
       <img alt="Östermalmstorg Salu Hall" class="diary-img" src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80"/>
@@ -315,7 +295,6 @@
         </button>
       </div>
     </article>
-
     <!-- Card 6: Crociera -->
     <article class="diary-card safe-card">
       <img alt="Crociera Arcipelago" class="diary-img" src="https://images.unsplash.com/photo-1508189860359-770d387551af?auto=format&fit=crop&w=800&q=80"/>
@@ -332,9 +311,7 @@
         </button>
       </div>
     </article>
-
   </div>
-
   <!-- ========================================== -->
   <!--           7. BANNER SOS & NAVIGAZIONE      -->
   <!-- ========================================== -->
@@ -355,7 +332,6 @@
       <a href="mercoledi-26-08-2026.html">Mer 26 →</a>
     </div>
   </div>
-
   <!-- ========================================== -->
   <!--           8. FOOTER / PIÈ DI PAGINA        -->
   <!-- ========================================== -->
@@ -366,7 +342,6 @@
     </div>
     <span>Area studente · Stoccolma 2026</span>
   </footer>
-
   <!-- ========================================== -->
   <!--           9. MODALI / POP-UP OVERLAY       -->
   <!-- ========================================== -->
@@ -378,7 +353,6 @@
       <button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeModal()">Ho capito!</button>
     </div>
   </div>
-
   <!-- Pop-up Contatti di Emergenza SOS -->
   <div id="sosModal" onclick="closeSOSModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
@@ -410,7 +384,6 @@
       <button class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeSOSModal()">Chiudi</button>
     </div>
   </div>
-
   <!-- ========================================== -->
   <!--           10. LOGICA JAVASCRIPT            -->
   <!-- ========================================== -->
@@ -428,7 +401,6 @@
       { name: "Östermalmstorg & Salu Hall", lat: 59.3360, lng: 18.0780, visit: "Mercato al coperto gastronomico." },
       { name: "Imbarco Crociera (Gustav III)", lat: 59.3262, lng: 18.0745, visit: "Partenza crociera 2 ore arcipelago." }
     ];
-
     // Coordinate per tracciare la linea della rotta
     const routePoints = [
       [hotel.lat, hotel.lng],
@@ -439,7 +411,6 @@
       [stops[4].lat, stops[4].lng],
       [stops[5].lat, stops[5].lng]
     ];
-
     // Tempi di percorrenza stimati (etichette a piedi)
     const segmentTimes = [
       { lat: 59.3299, lng: 18.0563, text: "<i class='fa-solid fa-person-walking'></i> 10 min" },
@@ -450,8 +421,25 @@
       { lat: 59.3311, lng: 18.0762, text: "<i class='fa-solid fa-person-walking'></i> 14 min" }
     ];
 
+    // Funzione Haversine per calcolare la distanza in metri tra due coordinate geografiche
+    function getDistanceMeters(lat1, lon1, lat2, lon2) {
+      const R = 6371000; // Raggio medio della Terra in metri
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    // Calcolo del raggio basato sulla distanza tra l'hotel e la tappa più lontana
+    const maxDistanceInMeters = Math.max(
+      ...stops.map(stop => getDistanceMeters(hotel.lat, hotel.lng, stop.lat, stop.lng))
+    );
+
     // Inizializzazione Mappa Leaflet
-    const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 10);
+    const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
 
     // Funzione helper per creare icone personalizzate per i Marker
@@ -465,12 +453,12 @@
 
     // --- ELEMENTI GRAFICI SULLA MAPPA ---
     
-    // 1. Cerchio di area attorno all'hotel (Raggio 800 metri)
-    L.circle([hotel.lat, hotel.lng], {
+    // 1. Cerchio di area attorno all'hotel (con raggio calcolato dinamicamente)
+    const hotelCircle = L.circle([hotel.lat, hotel.lng], {
       color: '#3b82f6',
       fillColor: '#93c5fd',
       fillOpacity: 0.35,
-      radius: 800
+      radius: maxDistanceInMeters
     }).addTo(map);
 
     // 2. Linea di percorso tra le tappe
@@ -496,8 +484,8 @@
       }).addTo(map);
     });
 
-    // Reset vista della mappa
-    function resetMapView() { map.fitBounds(L.latLngBounds(routePoints).pad(0.2)); }
+    // Reset vista della mappa (adatta la vista per includere il cerchio intero)
+    function resetMapView() { map.fitBounds(hotelCircle.getBounds().pad(0.1)); }
     resetMapView();
     window.addEventListener('load', () => setTimeout(() => map.invalidateSize(), 150));
 
@@ -509,7 +497,6 @@
       currentUtterance = null; 
       currentButton = null; 
     }
-
     document.querySelectorAll('.audio-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
