@@ -48,8 +48,8 @@
     #appello-box.hidden-appello { max-height: 0; opacity: 0; margin-bottom: 0; padding: 0; transform: scale(0.9); pointer-events: none; }
     .pulse-me { animation: pulse-blue 2s infinite; border-radius: 50%; }
     @keyframes pulse-blue { 0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.6); } 70% { box-shadow: 0 0 0 15px rgba(59,130,246,0); } 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); } }
-    #infoModal, #sosModal { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.92); z-index:10000; align-items:center; justify-content:center; padding:20px; backdrop-filter: blur(8px); }
-    .modal-card { background:white; border-radius:2.3rem; max-width: 420px; width:100%; padding: 2rem; box-shadow:0 22px 60px rgba(0,0,0,.2); }
+    #infoModal, #sosModal, #mapModal { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.92); z-index:10000; align-items:center; justify-content:center; padding:20px; backdrop-filter: blur(8px); }
+    .modal-card { background:white; border-radius:2.3rem; max-width: 420px; width:100%; padding: 2rem; box-shadow:0 22px 60px rgba(0,0,0,.2); max-height: 90vh; overflow-y: auto; }
     .timeline-line { position:absolute; left:13px; top:12px; bottom:12px; width:2px; background:#edf0f3; }
     .timeline-row { position:relative; display:flex; gap:14px; align-items:center; }
     .timeline-row + .timeline-row { margin-top: 26px; }
@@ -61,11 +61,16 @@
     .timeline-row.future .timeline-title, .timeline-row.future .timeline-time { color:#94a3b8; }
     .timeline-row.done .timeline-title { color:#475569; }
     .timeline-row.active .timeline-title { color:#162038; }
+    
+    /* Contenitore Immagine Card */
+    .diary-img-wrapper { overflow: hidden; height: 190px; width: 100%; cursor: pointer; }
+    .diary-img { width:100%; height:100%; object-fit:cover; object-position:center; display:block; background:linear-gradient(135deg,#c7d2fe,#e2e8f0); transition: transform 0.4s ease; }
+    .diary-card:hover .diary-img { transform: scale(1.05); }
+    
     .diary-card { overflow:hidden; }
-    .diary-img { width:100%; height:176px; object-fit:cover; display:block; background:linear-gradient(135deg,#c7d2fe,#e2e8f0); }
     .diary-body { padding: 1.25rem; }
     .diary-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:.55rem; }
-    .diary-head h4 { margin:0; font-weight:900; font-style:italic; text-transform:uppercase; color:#4f46e5; font-size:1.08rem; line-height:1.05; }
+    .diary-head h4 { margin:0; font-weight:900; font-style:italic; text-transform:uppercase; color:#4f46e5; font-size:1.08rem; line-height:1.05; cursor: pointer; }
     .audio-btn { background:#eef2ff; color:#4f46e5; width:42px; height:42px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:none; cursor:pointer; flex:0 0 auto; transition:transform .15s ease, background .2s ease; }
     .audio-btn.playing { background:#4f46e5; color:white; }
     .audio-btn:active { transform:scale(.93); }
@@ -79,6 +84,11 @@
     footer.app-footer { margin-top: 28px; padding: 18px 8px 2px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #94a3b8; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
     footer.app-footer .footer-brand { display: flex; align-items: center; gap: 8px; color: #64748b; }
     footer.app-footer img { width: 20px; height: 20px; border-radius: 6px; }
+    
+    /* Overlay Mappa a tutto schermo */
+    #mapModal .modal-map-container { width: 100%; height: 80vh; border-radius: 1.5rem; overflow: hidden; }
+    #map-fullscreen { width: 100%; height: 100%; }
+
     @media (max-width: 420px) { body { padding: 16px 16px 32px; } .safe-card { border-radius: 1.7rem; } #map-student { height: 262px; border-radius: 1.6rem; margin: -16px -16px 0px -16px; } .diary-body { padding: 1rem; } .diary-head h4 { font-size: 1rem; } .diary-short { font-size:.95rem; line-height: 1.55; } .nav-row a, .nav-row span { min-width: 96px; padding: .7rem .85rem; } .modal-card { padding: 1.5rem; border-radius: 2rem; } .map-meta { grid-template-columns: 1fr; } .map-controls { justify-content: flex-start; } }
   </style>
 </head>
@@ -96,7 +106,6 @@
       <p class="text-xs font-bold leading-tight">Giorno 2: Direzione Nybroplan, Nationalmuseum e Skeppsholmen!</p>
     </div>
   </div>
-
   <!-- ========================================== -->
   <!--           2. INTESTAZIONE / HEADER         -->
   <!-- ========================================== -->
@@ -105,7 +114,7 @@
       <img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE" class="h-8 w-8 rounded-lg mt-1"/>
       <div>
         <p class="text-[10px] font-black uppercase tracking-widest text-indigo-600 italic">Gita a Stoccolma</p>
-        <h1 class="text-2xl font-black italic tracking-tighter uppercase leading-none">Area Studente</h1>
+        <h1 class="text-2xl font-black italic tracking-tighter uppercase leading-none">Il nostro viaggio</h1>
       </div>
     </div>
     <div class="text-right">
@@ -116,7 +125,6 @@
       </div>
     </div>
   </header>
-
   <!-- ========================================== -->
   <!--           3. BANNER PROGRAMMA / APPELLO    -->
   <!-- ========================================== -->
@@ -127,7 +135,6 @@
     </div>
     <button class="bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all" onclick="confermaPresenza()">OK</button>
   </div>
-
   <!-- ========================================== -->
   <!--           4. SEZIONE MAPPA INTERATTIVA     -->
   <!-- ========================================== -->
@@ -149,13 +156,13 @@
       <div class="map-controls">
         <button onclick="map.zoomIn()" aria-label="Zoom avanti"><i class="fa-solid fa-plus"></i></button>
         <button onclick="map.zoomOut()" aria-label="Zoom indietro"><i class="fa-solid fa-minus"></i></button>
+        <button onclick="openMapModal()" aria-label="Mappa Fullscreen"><i class="fa-solid fa-expand"></i></button>
         <button class="reset-btn" onclick="resetMapView()" aria-label="Reset mappa">
           <i class="fa-solid fa-rotate-left"></i> Reset
         </button>
       </div>
     </div>
   </div>
-
   <!-- ========================================== -->
   <!--           5. TIMELINE / PROGRAMMA GIORNO   -->
   <!-- ========================================== -->
@@ -165,48 +172,48 @@
       <div class="timeline-line"></div>
       
       <!-- Tappa 1 -->
-      <div class="timeline-row active" data-time="09:15">
-        <div class="dot" style="background:#f6a623;color:#fff"><i class="fa-solid fa-location-dot"></i></div>
+      <div class="timeline-row" data-time="09:15">
+        <div class="dot"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
           <div class="timeline-title">Dramaten, Hallwylska & Raoul Wallenbergs</div>
           <div class="timeline-time">09:15</div>
         </div>
       </div>
       <!-- Tappa 2 -->
-      <div class="timeline-row future" data-time="10:00">
-        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
+      <div class="timeline-row" data-time="10:00">
+        <div class="dot"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
           <div class="timeline-title">Blasieholmstorg & Grand Hôtel</div>
           <div class="timeline-time">10:00</div>
         </div>
       </div>
       <!-- Tappa 3 -->
-      <div class="timeline-row future" data-time="10:30">
-        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
+      <div class="timeline-row" data-time="10:30">
+        <div class="dot"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
           <div class="timeline-title">Nationalmuseum (Visita 1h 30m)</div>
           <div class="timeline-time">10:30</div>
         </div>
       </div>
       <!-- Tappa 4 -->
-      <div class="timeline-row future" data-time="12:30">
-        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
+      <div class="timeline-row" data-time="12:30">
+        <div class="dot"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
           <div class="timeline-title">Ponte Skeppsholmsbron & Isola</div>
           <div class="timeline-time">12:30</div>
         </div>
       </div>
       <!-- Tappa 5 -->
-      <div class="timeline-row future" data-time="14:00">
-        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
+      <div class="timeline-row" data-time="14:00">
+        <div class="dot"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
           <div class="timeline-title">Moderna Museet & Giardino "Paradiset"</div>
           <div class="timeline-time">14:00</div>
         </div>
       </div>
       <!-- Tappa 6 -->
-      <div class="timeline-row future" data-time="16:00">
-        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
+      <div class="timeline-row" data-time="16:00">
+        <div class="dot"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
           <div class="timeline-title">Museo ArkDes (Opzionale) / Caffè panoramico</div>
           <div class="timeline-time">16:00</div>
@@ -214,7 +221,6 @@
       </div>
     </div>
   </div>
-
   <!-- ========================================== -->
   <!--           6. CARDE DIARIO / SCHEDE TAPPE   -->
   <!-- ========================================== -->
@@ -223,108 +229,113 @@
     
     <!-- Card 1: Dramaten & Nybroplan -->
     <article class="diary-card safe-card">
-      <img alt="Teatro Dramaten e Nybroplan" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-teatro.webp"/>
+      <div class="diary-img-wrapper" onclick="openInfo('Dramaten, Hallwylska & Raoul Wallenbergs', 'Dirigiamoci verso Nybroplan. Ammiriamo la facciata Art Nouveau del Dramaten, il Teatro Reale Drammatico, arricchita dalle sculture di Carl Milles. Passiamo rapidly accanto al Museo Hallwylska e a Piazza Raoul Wallenbergs, con il monumento dedicato all\'eroe svedese che salvò migliaia di ebrei a Budapest.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-teatro.webp')">
+        <img alt="Teatro Dramaten e Nybroplan" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-teatro.webp"/>
+      </div>
       <div class="diary-body">
         <div class="diary-head">
-          <h4>Dramaten, Hallwylska & Raoul Wallenbergs</h4>
+          <h4 onclick="openInfo('Dramaten, Hallwylska & Raoul Wallenbergs', 'Dirigiamoci verso Nybroplan. Ammiriamo la facciata Art Nouveau del Dramaten, il Teatro Reale Drammatico, arricchita dalle sculture di Carl Milles. Passiamo rapidly accanto al Museo Hallwylska e a Piazza Raoul Wallenbergs, con il monumento dedicato all\'eroe svedese che salvò migliaia di ebrei a Budapest.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-teatro.webp')">Dramaten, Hallwylska & Raoul Wallenbergs</h4>
           <button aria-label="Ascolta Dramaten" class="audio-btn" data-audio-text="Dirigiamoci verso Nybroplan. Ammiriamo la facciata Art Nouveau del Dramaten, il Teatro Reale Drammatico, arricchita dalle sculture di Carl Milles. Passiamo rapidamente accanto al Museo Hallwylska e a Piazza Raoul Wallenbergs, con il monumento dedicato all'eroe svedese che salvò migliaia di ebrei a Budapest.">
             <i class="fa-solid fa-volume-high"></i>
           </button>
         </div>
         <p class="diary-short">Passeggiata tra il Teatro Reale Drammatico Art Nouveau, il museo Hallwylska e la piazza dedicata a Raoul Wallenberg.</p>
-        <button class="more-link" onclick="openInfo('Dramaten, Hallwylska & Raoul Wallenbergs', 'Dirigiamoci verso Nybroplan. Ammiriamo la facciata Art Nouveau del Dramaten, il Teatro Reale Drammatico, arricchita dalle sculture di Carl Milles. Passiamo rapidamente accanto al Museo Hallwylska e a Piazza Raoul Wallenbergs, con il monumento dedicato all\'eroe svedese che salvò migliaia di ebrei a Budapest.')">
+        <button class="more-link" onclick="openInfo('Dramaten, Hallwylska & Raoul Wallenbergs', 'Dirigiamoci verso Nybroplan. Ammiriamo la facciata Art Nouveau del Dramaten, il Teatro Reale Drammatico, arricchita dalle sculture di Carl Milles. Passiamo rapidamente accanto al Museo Hallwylska e a Piazza Raoul Wallenbergs, con il monumento dedicato all\'eroe svedese che salvò migliaia di ebrei a Budapest.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-teatro.webp')">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </article>
-
     <!-- Card 2: Blasieholmstorg & Grand Hôtel -->
     <article class="diary-card safe-card">
-      <img alt="Grand Hotel e Blasieholmen" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-piazza.jpeg?auto=format&fit=crop&w=800&q=80"/>
+      <div class="diary-img-wrapper" onclick="openInfo('Blasieholmstorg & Grand Hôtel', 'Breve passaggio lungo piazza Blasieholmstorgal. Diamo uno sguardo al prestigioso Grand Hôtel, famoso per i suoi rinomati locali e per l\'antico battello d\'epoca ormeggiato di fronte, prima di proseguire verso la punta della penisola.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-piazza.jpeg?auto=format&fit=crop&w=800&q=80')">
+        <img alt="Grand Hotel e Blasieholmen" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-piazza.jpeg?auto=format&fit=crop&w=800&q=80"/>
+      </div>
       <div class="diary-body">
         <div class="diary-head">
-          <h4>Blasieholmstorg & Grand Hôtel</h4>
+          <h4 onclick="openInfo('Blasieholmstorg & Grand Hôtel', 'Breve passaggio lungo piazza Blasieholmstorgal. Diamo uno sguardo al prestigioso Grand Hôtel, famoso per i suoi rinomati locali e per l\'antico battello d\'epoca ormeggiato di fronte, prima di proseguire verso la punta della penisola.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-piazza.jpeg?auto=format&fit=crop&w=800&q=80')">Blasieholmstorg & Grand Hôtel</h4>
           <button aria-label="Ascolta Blasieholmstorg" class="audio-btn" data-audio-text="Breve passaggio lungo piazza Blasieholmstorgal. Diamo uno sguardo al prestigioso Grand Hôtel, famoso per i suoi rinomati locali e per l'antico battello d'epoca ormeggiato di fronte, prima di proseguire verso la punta della penisola.">
             <i class="fa-solid fa-volume-high"></i>
           </button>
         </div>
         <p class="diary-short">Sguardo rapido a piazza Blasieholmstorg e al Grand Hôtel con i suoi locali ed il battello storico.</p>
-        <button class="more-link" onclick="openInfo('Blasieholmstorg & Grand Hôtel', 'Breve passaggio lungo piazza Blasieholmstorgal. Diamo uno sguardo al prestigioso Grand Hôtel, famoso per i suoi rinomati locali e per l\'antico battello d\'epoca ormeggiato di fronte, prima di proseguire verso la punta della penisola.')">
+        <button class="more-link" onclick="openInfo('Blasieholmstorg & Grand Hôtel', 'Breve passaggio lungo piazza Blasieholmstorgal. Diamo uno sguardo al prestigioso Grand Hôtel, famoso per i suoi rinomati locali e per l\'antico battello d\'epoca ormeggiato di fronte, prima di proseguire verso la punta della penisola.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-piazza.jpeg?auto=format&fit=crop&w=800&q=80')">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </article>
-
     <!-- Card 3: Nationalmuseum -->
     <article class="diary-card safe-card">
-      <img alt="Nationalmuseum Stoccolma" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-museo.jpg"/>
+      <div class="diary-img-wrapper" onclick="openInfo('Nationalmuseum', 'Visita d\'obbligo di almeno un\'ora e mezza al Nationalmuseum, il principale museo d\'arte e design della Svezia. Custodisce capolavori dal Rinascimento fino al XX secolo, pittura scandinava e collezioni di arti applicate eccezionali.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-museo.jpg')">
+        <img alt="Nationalmuseum Stoccolma" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-museo.jpg"/>
+      </div>
       <div class="diary-body">
         <div class="diary-head">
-          <h4>Nationalmuseum</h4>
+          <h4 onclick="openInfo('Nationalmuseum', 'Visita d\'obbligo di almeno un\'ora e mezza al Nationalmuseum, il principale museo d\'arte e design della Svezia. Custodisce capolavori dal Rinascimento fino al XX secolo, pittura scandinava e collezioni di arti applicate eccezionali.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-museo.jpg')">Nationalmuseum</h4>
           <button aria-label="Ascolta Nationalmuseum" class="audio-btn" data-audio-text="Visita d'obbligo di almeno un'ora e mezza al Nationalmuseum, il principale museo d'arte e design della Svezia. Custodisce capolavori dal Rinascimento fino al XX secolo, pittura scandinava e collezioni di arti applicate eccezionali.">
             <i class="fa-solid fa-volume-high"></i>
           </button>
         </div>
         <p class="diary-short">Tappa fondamentale di almeno un'ora e mezza per ammirare la principale collezione d'arte della Svezia.</p>
-        <button class="more-link" onclick="openInfo('Nationalmuseum', 'Visita d\'obbligo di almeno un\'ora e mezza al Nationalmuseum, il principale museo d\'arte e design della Svezia. Custodisce capolavori dal Rinascimento fino al XX secolo, pittura scandinava e collezioni di arti applicate eccezionali.')">
+        <button class="more-link" onclick="openInfo('Nationalmuseum', 'Visita d\'obbligo di almeno un\'ora e mezza al Nationalmuseum, il principale museo d\'arte e design della Svezia. Custodisce capolavori dal Rinascimento fino al XX secolo, pittura scandinava e collezioni di arti applicate eccezionali.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-museo.jpg')">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </article>
-
     <!-- Card 4: Ponte Skeppsholmsbron & Isola -->
     <article class="diary-card safe-card">
-      <img alt="Ponte delle Corone Skeppsholmen" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-ponte.jpeg"/>
+      <div class="diary-img-wrapper" onclick="openInfo('Ponte Skeppsholmsbron & Isola', 'Attraversiamo a piedi il famoso ponte Skeppsholmsbron, celebre per le sue corone dorate. Raggiungiamo l\'isolotto di Skeppsholmen, un\'oasi tranquilla circondata da barche storiche e viste mozzafiato sul mare.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-ponte.jpeg')">
+        <img alt="Ponte delle Corone Skeppsholmen" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-ponte.jpeg"/>
+      </div>
       <div class="diary-body">
         <div class="diary-head">
-          <h4>Ponte Skeppsholmsbron & Isola</h4>
+          <h4 onclick="openInfo('Ponte Skeppsholmsbron & Isola', 'Attraversiamo a piedi il famoso ponte Skeppsholmsbron, celebre per le sue corone dorate. Raggiungiamo l\'isolotto di Skeppsholmen, un\'oasi tranquilla circondata da barche storiche e viste mozzafiato sul mare.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-ponte.jpeg')">Ponte Skeppsholmsbron & Isola</h4>
           <button aria-label="Ascolta Ponte Skeppsholmen" class="audio-btn" data-audio-text="Attraversiamo a piedi il famoso ponte Skeppsholmsbron, celebre per le sue corone dorate. Raggiungiamo l'isolotto di Skeppsholmen, un'oasi tranquilla circondata da barche storiche e viste mozzafiato sul mare.">
             <i class="fa-solid fa-volume-high"></i>
           </button>
         </div>
         <p class="diary-short">Passeggiata sul celebre ponte con le corone dorate verso l'isolotto delle barche d'epoca.</p>
-        <button class="more-link" onclick="openInfo('Ponte Skeppsholmsbron & Isola', 'Attraversiamo a piedi il famoso ponte Skeppsholmsbron, celebre per le sue corone dorate. Raggiungiamo l\'isolotto di Skeppsholmen, un\'oasi tranquilla circondata da barche storiche e viste mozzafiato sul mare.')">
+        <button class="more-link" onclick="openInfo('Ponte Skeppsholmsbron & Isola', 'Attraversiamo a piedi il famoso ponte Skeppsholmsbron, celebre per le sue corone dorate. Raggiungiamo l\'isolotto di Skeppsholmen, un\'oasi tranquilla circondata da barche storiche e viste mozzafiato sul mare.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-ponte.jpeg')">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </article>
-
     <!-- Card 5: Moderna Museet & Paradiset -->
     <article class="diary-card safe-card">
-      <img alt="Moderna Museet e Paradiset" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-moderna.jpg"/>
+      <div class="diary-img-wrapper" onclick="openInfo('Moderna Museet & Giardino Paradiset', 'Visitiamo il Museo d\'Arte Moderna e non perdiamo assolutamente \'Paradiset\', l\'iconico giardino all\'aperto che ospita 16 monumentali sculture oniriche e coloratissime di Niki de Saint Phalle e Jean Tinguely. Pausa ideale al caffè del museo con vetrate e vista sulla città.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-moderna.jpg')">
+        <img alt="Moderna Museet e Paradiset" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-moderna.jpg"/>
+      </div>
       <div class="diary-body">
         <div class="diary-head">
-          <h4>Moderna Museet & Giardino "Paradiset"</h4>
+          <h4 onclick="openInfo('Moderna Museet & Giardino Paradiset', 'Visitiamo il Museo d\'Arte Moderna e non perdiamo assolutamente \'Paradiset\', l\'iconico giardino all\'aperto che ospita 16 monumentali sculture oniriche e coloratissime di Niki de Saint Phalle e Jean Tinguely. Pausa ideale al caffè del museo con vetrate e vista sulla città.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-moderna.jpg')">Moderna Museet & Giardino "Paradiset"</h4>
           <button aria-label="Ascolta Moderna Museet" class="audio-btn" data-audio-text="Visitiamo il Museo d'Arte Moderna e non perdiamo assolutamente 'Paradiset', l'iconico giardino all'aperto che ospita 16 monumentali sculture oniriche e coloratissime di Niki de Saint Phalle e Jean Tinguely. Pausa ideale al caffè del museo con vetrate e vista sulla città.">
             <i class="fa-solid fa-volume-high"></i>
           </button>
         </div>
         <p class="diary-short">Arte moderna, il fantastico giardino "Paradiset" di Niki de Saint Phalle e caffè con vista panoramica.</p>
-        <button class="more-link" onclick="openInfo('Moderna Museet & Giardino Paradiset', 'Visitiamo il Museo d\'Arte Moderna e non perdiamo assolutamente \'Paradiset\', l\'iconico giardino all\'aperto che ospita 16 monumentali sculture oniriche e coloratissime di Niki de Saint Phalle e Jean Tinguely. Pausa ideale al caffè del museo con vetrate e vista sulla città.')">
+        <button class="more-link" onclick="openInfo('Moderna Museet & Giardino Paradiset', 'Visitiamo il Museo d\'Arte Moderna e non perdiamo assolutamente \'Paradiset\', l\'iconico giardino all\'aperto che ospita 16 monumentali sculture oniriche e coloratissime di Niki de Saint Phalle e Jean Tinguely. Pausa ideale al caffè del museo con vetrate e vista sulla città.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-moderna.jpg')">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </article>
-
     <!-- Card 6: Museo ArkDes -->
     <article class="diary-card safe-card">
-      <img alt="ArkDes Museo Architettura" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-arkdes.jpg"/>
+      <div class="diary-img-wrapper" onclick="openInfo('Museo ArkDes (Architettura e Design)', 'Situato nello stesso complesso del Moderna Museet, ArkDes è il centro nazionale svedese per l\'architettura e il design. Tappa opzionale a seconda del livello di stanchezza del gruppo.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-arkdes.jpg')">
+        <img alt="ArkDes Museo Architettura" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-arkdes.jpg"/>
+      </div>
       <div class="diary-body">
         <div class="diary-head">
-          <h4>Museo ArkDes (Architettura e Design)</h4>
+          <h4 onclick="openInfo('Museo ArkDes (Architettura e Design)', 'Situato nello stesso complesso del Moderna Museet, ArkDes è il centro nazionale svedese per l\'architettura e il design. Tappa opzionale a seconda del livello di stanchezza del gruppo.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-arkdes.jpg')">Museo ArkDes (Architettura e Design)</h4>
           <button aria-label="Ascolta ArkDes" class="audio-btn" data-audio-text="Situato nello stesso complesso del Moderna Museet, ArkDes è il centro nazionale svedese per l'architettura e il design. Tappa opzionale a seconda del livello di stanchezza del gruppo.">
             <i class="fa-solid fa-volume-high"></i>
           </button>
         </div>
         <p class="diary-short">Il Museo del Design e dell'Architettura. Visita opzionale valutando le energie del gruppo.</p>
-        <button class="more-link" onclick="openInfo('Museo ArkDes (Architettura e Design)', 'Situato nello stesso complesso del Moderna Museet, ArkDes è il centro nazionale svedese per l\'architettura e il design. Tappa opzionale a seconda del livello di stanchezza del gruppo.')">
+        <button class="more-link" onclick="openInfo('Museo ArkDes (Architettura e Design)', 'Situato nello stesso complesso del Moderna Museet, ArkDes è il centro nazionale svedese per l\'architettura e il design. Tappa opzionale a seconda del livello di stanchezza del gruppo.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/2-arkdes.jpg')">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </article>
-
   </div>
-
   <!-- ========================================== -->
   <!--           7. BANNER SOS & NAVIGAZIONE      -->
   <!-- ========================================== -->
@@ -345,7 +356,6 @@
       <a href="giovedi-27-08-2026.html">Gio 27 →</a>
     </div>
   </div>
-
   <!-- ========================================== -->
   <!--           8. FOOTER / PIÈ DI PAGINA        -->
   <!-- ========================================== -->
@@ -356,19 +366,33 @@
     </div>
     <span>Area studente · Stoccolma 2026</span>
   </footer>
-
   <!-- ========================================== -->
   <!--           9. MODALI / POP-UP OVERLAY       -->
   <!-- ========================================== -->
   <!-- Pop-up Dettagli "Leggi di più" -->
   <div id="infoModal" onclick="closeModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
+      <div id="infoImageContainer" class="mb-4 rounded-2xl overflow-hidden hidden">
+        <img id="infoImage" src="" alt="Dettaglio tappa" class="w-full h-48 object-cover"/>
+      </div>
       <h3 class="font-black italic text-2xl mb-4 text-indigo-600 uppercase leading-tight" id="infoTitle"></h3>
       <p class="text-base font-medium leading-relaxed mb-6 text-gray-600" id="infoContent"></p>
       <button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeModal()">Ho capito!</button>
     </div>
   </div>
-
+  <!-- Pop-up Mappa Fullscreen -->
+  <div id="mapModal" onclick="closeMapModal()">
+    <div class="modal-card max-w-xl" onclick="event.stopPropagation()">
+      <div class="flex justify-between items-center mb-3">
+        <h3 class="font-black italic text-lg text-slate-900 uppercase">Mappa Itinerario</h3>
+        <button onclick="closeMapModal()" class="text-slate-400 text-xl font-black">&times;</button>
+      </div>
+      <div class="modal-map-container mb-4">
+        <div id="map-fullscreen"></div>
+      </div>
+      <button class="w-full bg-slate-900 text-white py-3 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeMapModal()">Chiudi Mappa</button>
+    </div>
+  </div>
   <!-- Pop-up Contatti di Emergenza SOS -->
   <div id="sosModal" onclick="closeSOSModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
@@ -400,7 +424,6 @@
       <button class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeSOSModal()">Chiudi</button>
     </div>
   </div>
-
   <!-- ========================================== -->
   <!--           10. LOGICA JAVASCRIPT            -->
   <!-- ========================================== -->
@@ -418,7 +441,6 @@
       { name: "Moderna Museet & Paradiset", lat: 59.3260, lng: 18.0847, visit: "Sculture di Niki de Saint Phalle e bar panoramico." },
       { name: "Museo ArkDes", lat: 59.3256, lng: 18.0858, visit: "Museo dell'Architettura e del Design (opzionale)." }
     ];
-
     // Coordinate per tracciare la linea della rotta
     const routePoints = [
       [hotel.lat, hotel.lng],
@@ -429,7 +451,6 @@
       [stops[4].lat, stops[4].lng],
       [stops[5].lat, stops[5].lng]
     ];
-
     // Etichette dei tempi di percorrenza a piedi tra le tappe
     const segmentTimes = [
       { lat: 59.3328, lng: 18.0676, text: "<i class='fa-solid fa-person-walking'></i> 14 min" },
@@ -439,7 +460,6 @@
       { lat: 59.3268, lng: 18.0831, text: "<i class='fa-solid fa-person-walking'></i> 4 min" },
       { lat: 59.3258, lng: 18.0852, text: "<i class='fa-solid fa-person-walking'></i> 1 min" }
     ];
-
     // Formula dell'Emiverseno (Haversine) per il calcolo della distanza esatta in metri
     function getDistanceMeters(lat1, lon1, lat2, lon2) {
       const R = 6371000;
@@ -451,15 +471,16 @@
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       return R * c;
     }
-
     // Calcolo del raggio massimo dall'hotel alla tappa più lontana
     const maxDistanceInMeters = Math.max(
       ...stops.map(stop => getDistanceMeters(hotel.lat, hotel.lng, stop.lat, stop.lng))
     );
-
     // Inizializzazione Mappa Leaflet
     const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+    
+    // Inizializzazione Mappa Fullscreen (Pop-up)
+    let fullMap = null;
 
     // Helper creazione icone personalizzate grandi
     function createGiantIcon(color, iconClass, pulse = false) {
@@ -469,7 +490,6 @@
         iconSize:[46,46], iconAnchor:[23,23]
       });
     }
-
     // 1. Cerchio dinamico calcolato attorno all'hotel
     const hotelCircle = L.circle([hotel.lat, hotel.lng], {
       color: '#3b82f6',
@@ -477,18 +497,14 @@
       fillOpacity: 0.35,
       radius: maxDistanceInMeters
     }).addTo(map);
-
     // 2. Linea del percorso tra i punti
     L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(map);
-
     // 3. Marker Hotel (Rosso)
     L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(map).bindPopup(`<strong>${hotel.name}</strong><br>Vasaplan 4`);
-
     // 4. Marker Tappe (Giallo/Arancio)
     stops.forEach(stop => { 
       L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(map).bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`); 
     });
-
     // 5. Etichette Tempi di Camminata
     segmentTimes.forEach(st => {
       L.marker([st.lat, st.lng], {
@@ -500,11 +516,81 @@
         })
       }).addTo(map);
     });
-
     // Reset vista mappa con adattamento bordi cerchio
     function resetMapView() { map.fitBounds(hotelCircle.getBounds().pad(0.1)); }
     resetMapView();
     window.addEventListener('load', () => setTimeout(() => map.invalidateSize(), 150));
+
+    // --- POP-UP MAPPA FULLSCREEN ---
+    function openMapModal() {
+      document.getElementById('mapModal').style.display = 'flex';
+      if (!fullMap) {
+        fullMap = L.map('map-fullscreen', { zoomControl: true }).setView([hotel.lat, hotel.lng], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(fullMap);
+        
+        L.circle([hotel.lat, hotel.lng], { color: '#3b82f6', fillColor: '#93c5fd', fillOpacity: 0.35, radius: maxDistanceInMeters }).addTo(fullMap);
+        L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(fullMap);
+        L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(fullMap).bindPopup(`<strong>${hotel.name}</strong>`);
+        
+        stops.forEach(stop => { 
+          L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(fullMap).bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`); 
+        });
+        
+        segmentTimes.forEach(st => {
+          L.marker([st.lat, st.lng], {
+            icon: L.divIcon({ className: '', html: `<div class="walk-label">${st.text}</div>`, iconSize: [60, 20], iconAnchor: [30, 10] })
+          }).addTo(fullMap);
+        });
+      }
+      setTimeout(() => {
+        fullMap.invalidateSize();
+        fullMap.fitBounds(hotelCircle.getBounds().pad(0.1));
+      }, 200);
+    }
+    function closeMapModal() {
+      document.getElementById('mapModal').style.display = 'none';
+    }
+
+    // --- AGGIORNAMENTO TIMELINE IN BASE ALL'ORARIO ---
+    function updateTimelineStatus() {
+      const rows = document.querySelectorAll('.timeline-row');
+      const now = new Date();
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+      const times = Array.from(rows).map(row => {
+        const [h, m] = row.dataset.time.split(':').map(Number);
+        return h * 60 + m;
+      });
+
+      rows.forEach((row, index) => {
+        const rowTime = times[index];
+        const nextTime = times[index + 1] || 24 * 60;
+
+        const dot = row.querySelector('.dot');
+        row.classList.remove('done', 'active', 'future');
+
+        if (currentMinutes >= rowTime && currentMinutes < nextTime) {
+          row.classList.add('active');
+          dot.style.background = '#f6a623';
+          dot.style.color = '#fff';
+          dot.innerHTML = '<i class="fa-solid fa-location-dot"></i>';
+        } else if (currentMinutes >= nextTime) {
+          row.classList.add('done');
+          dot.style.background = '#10b981';
+          dot.style.color = '#fff';
+          dot.innerHTML = '<i class="fa-solid fa-check"></i>';
+        } else {
+          row.classList.add('future');
+          dot.style.background = '#e2e8f0';
+          dot.style.color = '#94a3b8';
+          dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
+        }
+      });
+    }
+
+    // Esegui aggiornamento timeline all'avvio e ogni minuto
+    updateTimelineStatus();
+    setInterval(updateTimelineStatus, 60000);
 
     // --- SINTESI VOCALE AUDIO ---
     let currentUtterance = null, currentButton = null;
@@ -532,16 +618,26 @@
     window.addEventListener('beforeunload', stopSpeech);
 
     // --- GESTIONE MODALI E INTERAZIONI ---
-    function openInfo(title, text) { 
+    function openInfo(title, text, imgSrc = null) { 
       document.getElementById('infoTitle').innerText = title; 
       document.getElementById('infoContent').innerText = text; 
+      
+      const imgContainer = document.getElementById('infoImageContainer');
+      const imgEl = document.getElementById('infoImage');
+      
+      if (imgSrc) {
+        imgEl.src = imgSrc;
+        imgContainer.classList.remove('hidden');
+      } else {
+        imgContainer.classList.add('hidden');
+      }
+      
       document.getElementById('infoModal').style.display = 'flex'; 
     }
     function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
     function openSOSModal() { document.getElementById('sosModal').style.display = 'flex'; }
     function closeSOSModal() { document.getElementById('sosModal').style.display = 'none'; }
     function confermaPresenza() { document.getElementById('appello-box').classList.add('hidden-appello'); }
-
     // Invio Posizione WhatsApp per SOS
     function sendLocationWhatsApp(phone) {
       if (!navigator.geolocation) { alert('Geolocalizzazione non supportata.'); return; }
