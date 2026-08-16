@@ -11,26 +11,30 @@
   <link rel="apple-touch-icon" href="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
   <meta property="og:title" content="Giovedì 27.08.2026 - Viaggio a Stoccolma"/>
   <meta property="og:description" content="Itinerario giornaliero GIRE per la gita a Stoccolma con timeline, mappa e contatti SOS."/>
-  <meta property="og:url" content="https://gire-app.it/stoccolma/giovedi-27-08-2026.html"/>
+  <meta property="og:url" content="https://cl-000-welf.github.io/gire-landing-page/giovedi-27-08-2026.html"/>
   <meta property="og:type" content="website"/>
   <meta property="og:image" content="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
+  <meta property="og:image:secure_url" content="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
+  <meta property="og:image:type" content="image/png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Giovedì 27.08.2026 - Viaggio a Stoccolma"/>
+  <meta name="twitter:description" content="Itinerario giornaliero GIRE per la gita a Stoccolma con timeline, mappa e contatti SOS."/>
+  <meta name="twitter:image" content="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
   
-  <!-- Librerie Esterne -->
+  <!-- Librerie Esterne (Tailwind CSS, FontAwesome, Leaflet Mappe) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet"/>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
   <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
   
+  <!-- ========================================== -->
+  <!--           SEZIONE STILI CSS               -->
+  <!-- ========================================== -->
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; overflow-x: hidden; }
     .safe-card { background: white; border-radius: 1.9rem; border: 1px solid #E2E8F0; overflow: hidden; box-shadow: 0 10px 25px rgba(15,23,42,0.04); }
-    
-    /* MAPPA standard e pop-up */
     #map-student { height: 250px; border-radius: 1.35rem; z-index: 10; border: 2px solid white; box-shadow: 0 8px 18px rgba(0,0,0,0.05); }
-    #map-fullscreen { height: 100%; width: 100%; border-radius: 1.8rem; z-index: 10; }
     .map-shell { position: relative; }
-    .expand-map-btn { position: absolute; top: 10px; right: 10px; z-index: 500; background: white; border: 1px solid #E2E8F0; border-radius: 12px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.12); color: #334155; font-size: 14px; cursor: pointer; transition: transform 0.15s ease; }
-    .expand-map-btn:active { transform: scale(0.92); }
     .map-meta { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: end; margin-top: 12px; }
     .map-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 11px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: .03em; }
     .legend-block { line-height: 1.35; }
@@ -38,28 +42,27 @@
     .map-controls { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
     .map-controls button { background: white; border: 1px solid #E2E8F0; border-radius: 14px; min-width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(15,23,42,0.06); color: #334155; font-size: 14px; font-weight: 900; }
     .map-controls button.reset-btn { min-width: 64px; padding: 0 12px; gap: 6px; font-size: 12px; }
-
-    /* TIMELINE */
+    #push-alert { position: fixed; top: 20px; left: 20px; right: 20px; z-index: 9999; transform: translateY(-150%); transition: transform 0.6s cubic-bezier(0.175,0.885,0.32,1.275); }
+    #push-alert.show { transform: translateY(0); }
+    #appello-box { transition: all 0.6s ease; max-height: 300px; opacity: 1; margin-bottom: 1.5rem; }
+    #appello-box.hidden-appello { max-height: 0; opacity: 0; margin-bottom: 0; padding: 0; transform: scale(0.9); pointer-events: none; }
+    .pulse-me { animation: pulse-blue 2s infinite; border-radius: 50%; }
+    @keyframes pulse-blue { 0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.6); } 70% { box-shadow: 0 0 0 15px rgba(59,130,246,0); } 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); } }
+    #infoModal, #sosModal { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.92); z-index:10000; align-items:center; justify-content:center; padding:20px; backdrop-filter: blur(8px); }
+    .modal-card { background:white; border-radius:2.3rem; max-width: 420px; width:100%; padding: 2rem; box-shadow:0 22px 60px rgba(0,0,0,.2); overflow: hidden; }
     .timeline-line { position:absolute; left:13px; top:12px; bottom:12px; width:2px; background:#edf0f3; }
     .timeline-row { position:relative; display:flex; gap:14px; align-items:center; }
     .timeline-row + .timeline-row { margin-top: 26px; }
-    .dot { z-index:1; width:28px; height:28px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:4px solid white; box-shadow:0 2px 6px rgba(0,0,0,.08); font-size:10px; flex:0 0 auto; transition: all 0.4s ease; }
+    .dot { z-index:1; width:28px; height:28px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:4px solid white; box-shadow:0 2px 6px rgba(0,0,0,.08); font-size:10px; flex:0 0 auto; }
     .timeline-copy { min-width:0; }
     .timeline-title { font-size: .97rem; font-weight: 900; font-style: italic; line-height:1.1; color:#162038; }
     .timeline-time { font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .02em; color: #8a94a6; margin-top: 2px; }
-    .timeline-row.active .timeline-title { color:#d97706; }
-    .timeline-row.active .timeline-time { color:#d97706; font-weight: 900; }
-    .timeline-row.done .timeline-title { color:#64748b; text-decoration: line-through; }
-    .timeline-row.done .timeline-time { color:#94a3b8; }
-    .timeline-row.future .timeline-title { color:#334155; }
-
-    /* CARD DIARIO CON IMMAGINI OTTIMIZZATE */
+    .timeline-row.active .timeline-time { color:#d97706; }
+    .timeline-row.future .timeline-title, .timeline-row.future .timeline-time { color:#94a3b8; }
+    .timeline-row.done .timeline-title { color:#475569; }
+    .timeline-row.active .timeline-title { color:#162038; }
     .diary-card { overflow:hidden; }
-    .diary-img-container { width:100%; height:190px; overflow:hidden; position:relative; cursor:pointer; background:linear-gradient(135deg,#c7d2fe,#e2e8f0); }
-    .diary-img { width:100%; height:100%; object-fit:cover; object-position:center; display:block; transition: transform 0.4s ease; }
-    .diary-img-container:hover .diary-img { transform: scale(1.04); }
-    .diary-img-overlay { position:absolute; inset:0; background: linear-gradient(to top, rgba(15,23,42,0.3) 0%, transparent 40%); opacity:0; transition:opacity 0.3s ease; display:flex; align-items:flex-end; padding:12px; }
-    .diary-img-container:hover .diary-img-overlay { opacity:1; }
+    .diary-img { width:100%; height:176px; object-fit:cover; display:block; background:linear-gradient(135deg,#c7d2fe,#e2e8f0); }
     .diary-body { padding: 1.25rem; }
     .diary-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:.55rem; }
     .diary-head h4 { margin:0; font-weight:900; font-style:italic; text-transform:uppercase; color:#4f46e5; font-size:1.08rem; line-height:1.05; }
@@ -69,28 +72,33 @@
     .diary-short { font-size:1rem; line-height:1.7; color:#4b5563; margin: 0 0 1.2rem; }
     .more-link { border:none; background:none; color:#4f46e5; font-weight:900; text-transform:uppercase; font-size:.9rem; padding:0 0 .15rem; border-bottom:4px solid #dfe4ff; cursor:pointer; }
     .more-link i { margin-left: .35rem; }
-
-    /* MODALI POP-UP MIGLIORATE */
-    #infoModal, #sosModal, #mapModal { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.88); z-index:10000; align-items:center; justify-content:center; padding:16px; backdrop-filter: blur(10px); }
-    .modal-card { background:white; border-radius:2.5rem; max-width: 440px; width:100%; padding: 2rem; box-shadow:0 25px 50px -12px rgba(0, 0, 0, 0.25); position:relative; max-height: 90vh; overflow-y: auto; }
-    .close-modal-x { position:absolute; top:20px; right:20px; background:#f1f5f9; color:#64748b; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; border:none; font-weight:900; }
-
     .nav-row { display:flex; justify-content:space-between; gap:12px; margin-top: 18px; }
     .nav-row a, .nav-row span { min-width: 110px; text-align:center; text-decoration:none; background:white; border:1px solid #E2E8F0; border-radius: 1rem; padding: .8rem 1rem; font-weight: 800; color:#334155; }
     .walk-label { background: white; border: 1px solid #cbd5e1; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 800; color: #1e293b; box-shadow: 0 2px 8px rgba(0,0,0,.12); white-space: nowrap; text-align: center; }
     .walk-label i { color: #4f46e5; margin-right: 3px; }
-    
     footer.app-footer { margin-top: 28px; padding: 18px 8px 2px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #94a3b8; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
     footer.app-footer .footer-brand { display: flex; align-items: center; gap: 8px; color: #64748b; }
     footer.app-footer img { width: 20px; height: 20px; border-radius: 6px; }
-
-    .pulse-me { animation: pulse-blue 2s infinite; border-radius: 50%; }
-    @keyframes pulse-blue { 0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.6); } 70% { box-shadow: 0 0 0 15px rgba(59,130,246,0); } 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); } }
+    @media (max-width: 420px) { body { padding: 16px 16px 32px; } .safe-card { border-radius: 1.7rem; } #map-student { height: 262px; border-radius: 1.6rem; margin: -16px -16px 0px -16px; } .diary-body { padding: 1rem; } .diary-head h4 { font-size: 1rem; } .diary-short { font-size:.95rem; line-height: 1.55; } .nav-row a, .nav-row span { min-width: 96px; padding: .7rem .85rem; } .modal-card { padding: 1.5rem; border-radius: 2rem; } .map-meta { grid-template-columns: 1fr; } .map-controls { justify-content: flex-start; } }
   </style>
 </head>
 <body class="flex flex-col min-h-screen p-5 pb-10">
-
-  <!-- Header -->
+  
+  <!-- ========================================== -->
+  <!--           1. NOTIFICA PUSH POP-UP          -->
+  <!-- ========================================== -->
+  <div id="push-alert" class="bg-slate-900 text-white p-5 rounded-[2rem] shadow-2xl flex items-center gap-4 border border-white/20">
+    <div class="bg-indigo-500 h-10 w-10 rounded-full flex items-center justify-center shrink-0">
+      <i class="fa-solid fa-paper-plane text-white"></i>
+    </div>
+    <div>
+      <p class="text-[9px] font-black uppercase tracking-widest text-indigo-300">Docenti</p>
+      <p class="text-xs font-bold leading-tight">Giorno 3: Esplorazione Södermalm, Architettura & Tour Metro Art!</p>
+    </div>
+  </div>
+  <!-- ========================================== -->
+  <!--           2. INTESTAZIONE / HEADER         -->
+  <!-- ========================================== -->
   <header class="flex justify-between items-start mb-6 px-1 gap-3">
     <div class="flex items-start gap-2">
       <img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE" class="h-8 w-8 rounded-lg mt-1"/>
@@ -107,8 +115,9 @@
       </div>
     </div>
   </header>
-
-  <!-- Banner Programma -->
+  <!-- ========================================== -->
+  <!--           3. BANNER PROGRAMMA / APPELLO    -->
+  <!-- ========================================== -->
   <div id="appello-box" class="bg-indigo-600 rounded-[2.5rem] p-6 text-white shadow-xl flex items-center justify-between gap-4">
     <div>
       <p class="text-[9px] font-black uppercase text-indigo-200 mb-1 tracking-widest">Programma</p>
@@ -116,14 +125,12 @@
     </div>
     <button class="bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all" onclick="confermaPresenza()">OK</button>
   </div>
-
-  <!-- Mappa Standard con Tasto Fullscreen -->
+  <!-- ========================================== -->
+  <!--           4. SEZIONE MAPPA INTERATTIVA     -->
+  <!-- ========================================== -->
   <div class="safe-card p-4 mb-8">
     <div class="map-shell">
       <div id="map-student"></div>
-      <button class="expand-map-btn" onclick="openMapModal()" aria-label="Espandi Mappa">
-        <i class="fa-solid fa-expand"></i>
-      </button>
     </div>
     <div class="map-meta">
       <div class="map-legend">
@@ -145,43 +152,49 @@
       </div>
     </div>
   </div>
-
-  <!-- Timeline con Aggiornamento Dinamico per Orario -->
+  <!-- ========================================== -->
+  <!--           5. TIMELINE / PROGRAMMA GIORNO   -->
+  <!-- ========================================== -->
   <div class="safe-card p-6 mb-8">
     <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6 italic text-center">Programma giornata</h3>
-    <div class="relative" id="timeline-container">
+    <div class="relative">
       <div class="timeline-line"></div>
       
-      <div class="timeline-row" data-time="09:30">
-        <div class="dot"><i class="fa-solid fa-location-dot"></i></div>
+      <!-- Tappa 1 -->
+      <div class="timeline-row active" data-time="09:30">
+        <div class="dot" style="background:#f6a623;color:#fff"><i class="fa-solid fa-location-dot"></i></div>
         <div class="timeline-copy">
           <div class="timeline-title">Quartiere Södermalm (Giro libero & Spiaggia)</div>
           <div class="timeline-time">09:30</div>
         </div>
       </div>
-      <div class="timeline-row" data-time="12:30">
-        <div class="dot"><i class="fa-solid fa-clock"></i></div>
+      <!-- Tappa 2 -->
+      <div class="timeline-row future" data-time="12:30">
+        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
           <div class="timeline-title">Centralbadet (Terme Art Nouveau)</div>
           <div class="timeline-time">12:30</div>
         </div>
       </div>
-      <div class="timeline-row" data-time="14:00">
-        <div class="dot"><i class="fa-solid fa-clock"></i></div>
+      <!-- Tappa 3 -->
+      <div class="timeline-row future" data-time="14:00">
+        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
           <div class="timeline-title">Stockholms stadsbibliotek (Asplund 1928)</div>
           <div class="timeline-time">14:00</div>
         </div>
       </div>
-      <div class="timeline-row" data-time="15:30">
-        <div class="dot"><i class="fa-solid fa-clock"></i></div>
+      <!-- Tappa 4 -->
+      <div class="timeline-row future" data-time="15:30">
+        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
           <div class="timeline-title">Metro Art: T-Centralen & Kungsträdgården</div>
           <div class="timeline-time">15:30</div>
         </div>
       </div>
-      <div class="timeline-row" data-time="16:30">
-        <div class="dot"><i class="fa-solid fa-clock"></i></div>
+      <!-- Tappa 5 -->
+      <div class="timeline-row future" data-time="16:30">
+        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
         <div class="timeline-copy">
           <div class="timeline-title">Metro Art: Rådhuset & Solna Centrum</div>
           <div class="timeline-time">16:30</div>
@@ -189,19 +202,15 @@
       </div>
     </div>
   </div>
-
-  <!-- Card Diario con Immagini Cliccabili -->
+  <!-- ========================================== -->
+  <!--           6. CARDE DIARIO / SCHEDE TAPPE   -->
+  <!-- ========================================== -->
   <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic">I diari di viaggio</h3>
   <div class="space-y-6 mb-12">
     
-    <!-- Card 1 -->
+    <!-- Card 1: Södermalm -->
     <article class="diary-card safe-card">
-      <div class="diary-img-container" onclick="openInfo('Södermalm & Spiaggia Cittadina', 'Sotto Gamla Stan si trova Södermalm, l\'ex quartiere operaio oggi tra i più trendy e vivaci di Stoccolma. Fai un giro libero tra negozietti, piazze e bar alla moda. Esploriamo le aree verdi fino alla spiaggia urbana dove gli svedesi amano fare il bagno nelle acque cittadine!')">
-        <img alt="Södermalm Stoccolma" class="diary-img" src="../img/sodermalm.jpg" onerror="this.src='https://images.unsplash.com/photo-1509356843151-3e7d96241e11?auto=format&fit=crop&w=800&q=80'"/>
-        <div class="diary-img-overlay">
-          <span class="text-white text-xs font-black uppercase"><i class="fa-solid fa-magnifying-glass-plus mr-1"></i> Espandi</span>
-        </div>
-      </div>
+      <img alt="Södermalm Stoccolma" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-sodermalm.webp"/>
       <div class="diary-body">
         <div class="diary-head">
           <h4>Södermalm & Spiaggia Cittadina</h4>
@@ -210,20 +219,14 @@
           </button>
         </div>
         <p class="diary-short">Giro libero nell'ex quartiere operaio ora hipster tra boutique, piazze, bar e la spiaggia per i coraggiosi svedesi.</p>
-        <button class="more-link" onclick="openInfo('Södermalm & Spiaggia Cittadina', 'Sotto Gamla Stan si trova Södermalm, l\'ex quartiere operaio oggi tra i più trendy e vivaci di Stoccolma. Fai un giro libero tra negozietti, piazze e bar alla moda. Esploriamo le aree verdi fino alla spiaggia urbana dove gli svedesi amano fare il bagno nelle acque cittadine!')">
+        <button class="more-link" onclick="openInfo('Södermalm & Spiaggia Cittadina', 'Sotto Gamla Stan si trova Södermalm, l\'ex quartiere operaio oggi tra i più trendy e vivaci di Stoccolma. Fai un giro libero tra negozietti, piazze e bar alla moda. Esploriamo le aree verdi fino alla spiaggia urbana dove gli svedesi amano fare il bagno nelle acque cittadine!', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-sodermalm.webp')">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </article>
-
-    <!-- Card 2 -->
+    <!-- Card 2: Centralbadet -->
     <article class="diary-card safe-card">
-      <div class="diary-img-container" onclick="openInfo('Centralbadet', 'Rientrando verso la zona albergo scopriamo il Centralbadet, uno storico e suggestivo impianto termale nascosto in un giardino interno. Famoso per la sua splendida architettura Art Nouveau e le sue storiche piscine con bagno turco.')">
-        <img alt="Centralbadet Terme" class="diary-img" src="../img/centralbadet.jpg" onerror="this.src='https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=800&q=80'"/>
-        <div class="diary-img-overlay">
-          <span class="text-white text-xs font-black uppercase"><i class="fa-solid fa-magnifying-glass-plus mr-1"></i> Espandi</span>
-        </div>
-      </div>
+      <img alt="Centralbadet Terme Art Nouveau" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-centralbadet.avif?auto=format&fit=crop&w=800&q=80"/>
       <div class="diary-body">
         <div class="diary-head">
           <h4>Centralbadet</h4>
@@ -232,20 +235,14 @@
           </button>
         </div>
         <p class="diary-short">Visita dello storico complesso termale in stile Art Nouveau nascosto in un meraviglioso giardino interno.</p>
-        <button class="more-link" onclick="openInfo('Centralbadet', 'Rientrando verso la zona albergo scopriamo il Centralbadet, uno storico e suggestivo impianto termale nascosto in un giardino interno. Famoso per la sua splendida architettura Art Nouveau e le sue storiche piscine con bagno turco.')">
+        <button class="more-link" onclick="openInfo('Centralbadet', 'Rientrando verso la zona albergo scopriamo il Centralbadet, uno storico e suggestivo impianto termale nascosto in un giardino interno. Famoso per la sua splendida architettura Art Nouveau e le sue storiche piscine con bagno turco.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-centralbadet.avif?auto=format&fit=crop&w=800&q=80')">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </article>
-
-    <!-- Card 3 -->
+    <!-- Card 3: Stockholms Stadsbibliotek -->
     <article class="diary-card safe-card">
-      <div class="diary-img-container" onclick="openInfo('Stockholms Stadsbibliotek', 'Proseguiamo verso nord per ammirare la Stockholms Stadsbibliotek, eccelso capolavoro del modernismo svedese progettato dall\'architetto Gunnar Asplund nel 1928. Famosa per la sua spettacolare sala circolare con i libri disposti a 360 gradi a portata di mano.')">
-        <img alt="Biblioteca Civica" class="diary-img" src="../img/biblioteca.jpg" onerror="this.src='https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=800&q=80'"/>
-        <div class="diary-img-overlay">
-          <span class="text-white text-xs font-black uppercase"><i class="fa-solid fa-magnifying-glass-plus mr-1"></i> Espandi</span>
-        </div>
-      </div>
+      <img alt="Stockholms Stadsbibliotek" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-biblioteca.jpg"/>
       <div class="diary-body">
         <div class="diary-head">
           <h4>Stockholms Stadsbibliotek</h4>
@@ -254,20 +251,14 @@
           </button>
         </div>
         <p class="diary-short">Celebre capolavoro del modernismo di Asplund (1928) con l'incredibile sala circolare e scaffali a vista.</p>
-        <button class="more-link" onclick="openInfo('Stockholms Stadsbibliotek', 'Proseguiamo verso nord per ammirare la Stockholms Stadsbibliotek, eccelso capolavoro del modernismo svedese progettato dall\'architetto Gunnar Asplund nel 1928. Famosa per la sua spettacolare sala circolare con i libri disposti a 360 gradi a portata di mano.')">
+        <button class="more-link" onclick="openInfo('Stockholms Stadsbibliotek', 'Proseguiamo verso nord per ammirare la Stockholms Stadsbibliotek, eccelso capolavoro del modernismo svedese progettato dall\'architetto Gunnar Asplund nel 1928. Famosa per la sua spettacolare sala circolare con i libri disposti a 360 gradi a portata di mano.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-biblioteca.jpg')">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </article>
-
-    <!-- Card 4 -->
+    <!-- Card 4: Metro Art - Kungsträdgården -->
     <article class="diary-card safe-card">
-      <div class="diary-img-container" onclick="openInfo('Metro Art: T-Centralen & Kungsträdgården', 'Con il ticket 75 minuti iniziamo il tour della linea blu da T-Centralen. Raggiungiamo il capolinea est di Kungsträdgården: un vero e proprio sito archeologico sotterraneo con pavimentazione a scacchi, statue in marmo, colonne classiche e i resti del vecchio palazzo Makalös.')">
-        <img alt="Metro Kungstradgarden" class="diary-img" src="../img/kungstradgarden.jpg" onerror="this.src='https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=800&q=80'"/>
-        <div class="diary-img-overlay">
-          <span class="text-white text-xs font-black uppercase"><i class="fa-solid fa-magnifying-glass-plus mr-1"></i> Espandi</span>
-        </div>
-      </div>
+      <img alt="Metro Kungsträdgården" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-metro.jpg"/>
       <div class="diary-body">
         <div class="diary-head">
           <h4>Metro Art: T-Centralen & Kungsträdgården</h4>
@@ -276,20 +267,14 @@
           </button>
         </div>
         <p class="diary-short">Inizio del tour artistico sulla linea Blu: sito archeologico sotterraneo, scacchiera e resti del Palazzo Makalös.</p>
-        <button class="more-link" onclick="openInfo('Metro Art: T-Centralen & Kungsträdgården', 'Con il ticket 75 minuti iniziamo il tour della linea blu da T-Centralen. Raggiungiamo il capolinea est di Kungsträdgården: un vero e proprio sito archeologico sotterraneo con pavimentazione a scacchi, statue in marmo, colonne classiche e i resti del vecchio palazzo Makalös.')">
+        <button class="more-link" onclick="openInfo('Metro Art: T-Centralen & Kungsträdgården', 'Con il ticket 75 minuti iniziamo il tour della linea blu da T-Centralen. Raggiungiamo il capolinea est di Kungsträdgården: un vero e proprio sito archeologico sotterraneo con pavimentazione a scacchi, statue in marmo, colonne classiche e i resti del vecchio palazzo Makalös.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-metro.jpg')">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </article>
-
-    <!-- Card 5 -->
+    <!-- Card 5: Metro Art - Rådhuset & Solna Centrum -->
     <article class="diary-card safe-card">
-      <div class="diary-img-container" onclick="openInfo('Metro Art: Rådhuset & Solna Centrum', 'Torniamo verso ovest fermandoci a Rådhuset, con le sue suggestive caverne color salmone. Poi prendiamo il ramo verso Akalla per scendere a Solna Centrum, dove pareti e soffitti dipinti di rosso fuoco e verde bosco rievocano una foresta al tramonto con sagome di pini e uccelli.')">
-        <img alt="Metro Solna Centrum" class="diary-img" src="../img/solna.jpg" onerror="this.src='https://images.unsplash.com/photo-1508189860359-770d387551af?auto=format&fit=crop&w=800&q=80'"/>
-        <div class="diary-img-overlay">
-          <span class="text-white text-xs font-black uppercase"><i class="fa-solid fa-magnifying-glass-plus mr-1"></i> Espandi</span>
-        </div>
-      </div>
+      <img alt="Metro Solna Centrum" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-solna-centrum.jpg"/>
       <div class="diary-body">
         <div class="diary-head">
           <h4>Metro Art: Rådhuset & Solna Centrum</h4>
@@ -298,15 +283,15 @@
           </button>
         </div>
         <p class="diary-short">La stazione vulcanica di Rådhuset e le iconiche pareti rosso e verde al tramonto di Solna Centrum.</p>
-        <button class="more-link" onclick="openInfo('Metro Art: Rådhuset & Solna Centrum', 'Torniamo verso ovest fermandoci a Rådhuset, con le sue suggestive caverne color salmone. Poi prendiamo il ramo verso Akalla per scendere a Solna Centrum, dove pareti e soffitti dipinti di rosso fuoco e verde bosco rievocano una foresta al tramonto con sagome di pini e uccelli.')">
+        <button class="more-link" onclick="openInfo('Metro Art: Rådhuset & Solna Centrum', 'Torniamo verso ovest fermandoci a Rådhuset, con le sue suggestive caverne color salmone. Poi prendiamo il ramo verso Akalla per scendere a Solna Centrum, dove pareti e soffitti dipinti di rosso fuoco e verde bosco rievocano una foresta al tramonto con sagome di pini e uccelli.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/3-solna-centrum.jpg')">
           Leggi di più <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </article>
-
   </div>
-
-  <!-- Bottom Navigation -->
+  <!-- ========================================== -->
+  <!--           7. BANNER SOS & NAVIGAZIONE      -->
+  <!-- ========================================== -->
   <div class="mt-auto pt-2">
     <div class="bg-red-50 rounded-[2.5rem] p-6 border border-red-100 flex items-center justify-between shadow-sm gap-4">
       <div>
@@ -316,74 +301,76 @@
       </div>
       <button class="bg-red-600 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg shadow-red-200 active:scale-95 transition-all" onclick="openSOSModal()">SOS</button>
     </div>
-
+    <p class="text-center text-[8px] font-black text-gray-400 uppercase mt-4 tracking-widest italic leading-none">Premere solo in caso di vera emergenza</p>
+    
+    <!-- Link di navigazione tra le giornate -->
     <div class="nav-row">
       <a href="mercoledi-26-08-2026.html">← Mer 26</a>
-      <a href="venerdi-28-08-2026.html">Ven 28 →</a>
+      <span></span>
     </div>
   </div>
-
+  <!-- ========================================== -->
+  <!--           8. FOOTER / PIÈ DI PAGINA        -->
+  <!-- ========================================== -->
   <footer class="app-footer">
-    <div class="footer-brand"><img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE"/><span>GIRE</span></div>
+    <div class="footer-brand">
+      <img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE"/>
+      <span>GIRE</span>
+    </div>
     <span>Area studente · Stoccolma 2026</span>
   </footer>
-
-  <!-- MODALE INFO DIARIO MIGLIORATA -->
+  <!-- ========================================== -->
+  <!--           9. MODALI / POP-UP OVERLAY       -->
+  <!-- ========================================== -->
+  <!-- Pop-up Dettagli "Leggi di più" -->
   <div id="infoModal" onclick="closeModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
-      <button class="close-modal-x" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
-      <div class="mb-4 inline-block bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Dettaglio Tappa</div>
-      <h3 class="font-black italic text-2xl mb-4 text-slate-900 uppercase leading-tight" id="infoTitle"></h3>
-      <p class="text-base font-medium leading-relaxed mb-6 text-slate-600" id="infoContent"></p>
-      <button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all" onclick="closeModal()">Ho capito!</button>
+      <img id="infoImage" src="" alt="" class="w-full h-48 object-cover rounded-2xl mb-4 hidden"/>
+      <h3 class="font-black italic text-2xl mb-4 text-indigo-600 uppercase leading-tight" id="infoTitle"></h3>
+      <p class="text-base font-medium leading-relaxed mb-6 text-gray-600" id="infoContent"></p>
+      <button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeModal()">Ho capito!</button>
     </div>
   </div>
-
-  <!-- MODALE MAPPA A TUTTO SCHERMO -->
-  <div id="mapModal" onclick="closeMapModal()">
-    <div class="modal-card !max-w-3xl !h-[85vh] !p-4 flex flex-col" onclick="event.stopPropagation()">
-      <div class="flex justify-between items-center mb-3 px-2">
-        <h4 class="font-black italic text-slate-900 uppercase text-sm">Mappa Interattiva Fullscreen</h4>
-        <button class="close-modal-x !static" onclick="closeMapModal()"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="flex-1 w-full relative">
-        <div id="map-fullscreen"></div>
-      </div>
-      <div class="mt-3 flex justify-between items-center px-2">
-        <span class="text-[10px] font-bold text-slate-400 uppercase">Tocca i pin per i dettagli</span>
-        <button class="bg-slate-100 text-slate-700 px-4 py-2 rounded-xl text-xs font-black uppercase" onclick="resetMapFullView()">Reset Mappa</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODALE SOS -->
+  <!-- Pop-up Contatti di Emergenza SOS -->
   <div id="sosModal" onclick="closeSOSModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
-      <button class="close-modal-x" onclick="closeSOSModal()"><i class="fa-solid fa-xmark"></i></button>
       <p class="text-[10px] font-black uppercase tracking-widest text-red-500 mb-2">Contatti emergenza</p>
       <h3 class="font-black italic text-2xl mb-6 text-slate-900 uppercase">Chi vuoi chiamare?</h3>
       <div class="space-y-3 mb-4">
         <a class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4" href="tel:+393391801232">
-          <div><p class="text-sm font-black text-slate-900">Francesca Schiavi</p><p class="text-xs text-slate-500 font-bold">+39 339 180 1232</p></div>
+          <div>
+            <p class="text-sm font-black text-slate-900">Francesca Schiavi</p>
+            <p class="text-xs text-slate-500 font-bold">+39 339 180 1232</p>
+          </div>
           <i class="fa-solid fa-phone text-red-600"></i>
         </a>
         <button class="flex items-center justify-between w-full bg-emerald-50 hover:bg-emerald-100 transition rounded-2xl px-5 py-4" onclick="sendLocationWhatsApp('393391801232')">
-          <div class="text-left"><p class="text-sm font-black text-slate-900">Invia posizione WhatsApp</p><p class="text-xs text-slate-500 font-bold">a Francesca Schiavi</p></div>
+          <div class="text-left">
+            <p class="text-sm font-black text-slate-900">Invia posizione WhatsApp</p>
+            <p class="text-xs text-slate-500 font-bold">a Francesca Schiavi</p>
+          </div>
           <i class="fa-solid fa-location-dot text-emerald-600"></i>
         </button>
         <a class="flex items-center justify-between w-full bg-red-50 hover:bg-red-100 transition rounded-2xl px-5 py-4" href="tel:112">
-          <div><p class="text-sm font-black text-slate-900">Soccorso Svezia (112)</p><p class="text-xs text-slate-500 font-bold">Numero unico emergenze locale</p></div>
+          <div>
+            <p class="text-sm font-black text-slate-900">Soccorso Svezia (112)</p>
+            <p class="text-xs text-slate-500 font-bold">Numero unico emergenze locale</p>
+          </div>
           <i class="fa-solid fa-triangle-exclamation text-red-600"></i>
         </a>
       </div>
       <button class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeSOSModal()">Chiudi</button>
     </div>
   </div>
-
+  <!-- ========================================== -->
+  <!--           10. LOGICA JAVASCRIPT            -->
+  <!-- ========================================== -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    // Configurazione Punti Mappa
+    // Coordinate dell'Hotel C Stockholm
     const hotel = { name: "Hotel C Stockholm", lat: 59.3323, lng: 18.0583 };
+    
+    // Elenco delle tappe aggiornato al terzo giorno
     const stops = [
       { name: "Södermalm (Tantolunden Spiaggia)", lat: 59.3130, lng: 18.0510, visit: "Giro libero tra boutique, bar e la spiaggia urbana." },
       { name: "Centralbadet", lat: 59.3358, lng: 18.0601, visit: "Terme e piscine in stile Art Nouveau." },
@@ -392,7 +379,7 @@
       { name: "Metro Rådhuset", lat: 59.3307, lng: 18.0423, visit: "Stazione sotterranea vulcanica color salmone." },
       { name: "Metro Solna Centrum", lat: 59.3592, lng: 17.9991, visit: "Pareti e soffitti rosso e verde bosco al tramonto." }
     ];
-
+    // Coordinate per tracciare la linea della rotta
     const routePoints = [
       [hotel.lat, hotel.lng],
       [stops[0].lat, stops[0].lng],
@@ -402,7 +389,7 @@
       [stops[4].lat, stops[4].lng],
       [stops[5].lat, stops[5].lng]
     ];
-
+    // Etichette dei tempi di percorrenza (A piedi o in Metro)
     const segmentTimes = [
       { lat: 59.3226, lng: 18.0546, text: "<i class='fa-solid fa-subway'></i> 10 min" },
       { lat: 59.3244, lng: 18.0555, text: "<i class='fa-solid fa-person-walking'></i> 20 min" },
@@ -411,92 +398,69 @@
       { lat: 59.3308, lng: 18.0570, text: "<i class='fa-solid fa-subway'></i> 3 min" },
       { lat: 59.3450, lng: 18.0200, text: "<i class='fa-solid fa-subway'></i> 8 min" }
     ];
-
+    // Formula dell'Emiverseno (Haversine) per il calcolo della distanza esatta in metri
+    function getDistanceMeters(lat1, lon1, lat2, lon2) {
+      const R = 6371000;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+    // Calcolo del raggio massimo dall'hotel alla tappa più lontana
+    const maxDistanceInMeters = Math.max(
+      ...stops.map(stop => getDistanceMeters(hotel.lat, hotel.lng, stop.lat, stop.lng))
+    );
+    // Inizializzazione Mappa Leaflet
+    const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+    // Helper creazione icone personalizzate grandi
     function createGiantIcon(color, iconClass, pulse = false) {
       return L.divIcon({
         className: 'custom-icon',
-        html: `<div class="${pulse ? 'pulse-me' : ''}" style="background-color:${color}; width:44px; height:44px; border:4px solid white; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:16px; box-shadow:0 8px 15px rgba(0,0,0,0.15);"><i class="fa-solid ${iconClass}"></i></div>`,
-        iconSize:[44,44], iconAnchor:[22,22]
+        html: `<div class="${pulse ? 'pulse-me' : ''}" style="background-color:${color}; width:46px; height:46px; border:4px solid white; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:18px; box-shadow:0 8px 15px rgba(0,0,0,0.15);"><i class="fa-solid ${iconClass}"></i></div>`,
+        iconSize:[46,46], iconAnchor:[23,23]
       });
     }
-
-    // MAPPA STANDARD
-    const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
-
+    // 1. Cerchio dinamico calcolato attorno all'hotel
+    const hotelCircle = L.circle([hotel.lat, hotel.lng], {
+      color: '#3b82f6',
+      fillColor: '#93c5fd',
+      fillOpacity: 0.35,
+      radius: maxDistanceInMeters
+    }).addTo(map);
+    // 2. Linea del percorso tra i punti
     L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(map);
+    // 3. Marker Hotel (Rosso)
     L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(map).bindPopup(`<strong>${hotel.name}</strong><br>Vasaplan 4`);
-    stops.forEach(s => L.marker([s.lat, s.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(map).bindPopup(`<strong>${s.name}</strong><br>${s.visit}`));
-    segmentTimes.forEach(st => L.marker([st.lat, st.lng], { icon: L.divIcon({ className:'', html:`<div class="walk-label">${st.text}</div>`, iconSize:[60,20], iconAnchor:[30,10] }) }).addTo(map));
-
-    function resetMapView() { map.fitBounds(L.latLngBounds(routePoints).pad(0.2)); }
+    // 4. Marker Tappe (Giallo/Arancio)
+    stops.forEach(stop => { 
+      L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(map).bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`); 
+    });
+    // 5. Etichette Tempi di Percorrenza
+    segmentTimes.forEach(st => {
+      L.marker([st.lat, st.lng], {
+        icon: L.divIcon({
+          className: '',
+          html: `<div class="walk-label">${st.text}</div>`,
+          iconSize: [60, 20],
+          iconAnchor: [30, 10]
+        })
+      }).addTo(map);
+    });
+    // Reset vista mappa con adattamento bordi cerchio
+    function resetMapView() { map.fitBounds(hotelCircle.getBounds().pad(0.1)); }
     resetMapView();
-
-    // MAPPA FULLSCREEN IN MODALE
-    let mapFull = null;
-    function openMapModal() {
-      document.getElementById('mapModal').style.display = 'flex';
-      if (!mapFull) {
-        mapFull = L.map('map-fullscreen', { zoomControl: true }).setView([hotel.lat, hotel.lng], 12);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(mapFull);
-        L.polyline(routePoints, { color:'#4f46e5', weight:5, opacity:.8 }).addTo(mapFull);
-        L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(mapFull).bindPopup(`<strong>${hotel.name}</strong>`);
-        stops.forEach(s => L.marker([s.lat, s.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(mapFull).bindPopup(`<strong>${s.name}</strong><br>${s.visit}`));
-      }
-      setTimeout(() => { mapFull.invalidateSize(); resetMapFullView(); }, 200);
-    }
-    function closeMapModal() { document.getElementById('mapModal').style.display = 'none'; }
-    function resetMapFullView() { if(mapFull) mapFull.fitBounds(L.latLngBounds(routePoints).pad(0.2)); }
-
-    // SCRIPT DINAMICO COLORAZIONE TIMELINE IN BASE ALL'ORARIO
-    function updateTimelineState() {
-      const now = new Date();
-      const currentMinutes = now.getHours() * 60 + now.getMinutes();
-      const rows = document.querySelectorAll('.timeline-row');
-
-      rows.forEach((row, index) => {
-        const timeStr = row.getAttribute('data-time');
-        const [h, m] = timeStr.split(':').map(Number);
-        const rowMinutes = h * 60 + m;
-
-        let nextRowMinutes = Infinity;
-        if (index < rows.length - 1) {
-          const [nextH, nextM] = rows[index + 1].getAttribute('data-time').split(':').map(Number);
-          nextRowMinutes = nextH * 60 + nextM;
-        }
-
-        const dot = row.querySelector('.dot');
-        row.classList.remove('active', 'done', 'future');
-
-        if (currentMinutes >= rowMinutes && currentMinutes < nextRowMinutes) {
-          row.classList.add('active');
-          dot.style.background = '#d97706';
-          dot.style.color = '#ffffff';
-          dot.classList.add('pulse-me');
-        } else if (currentMinutes >= nextRowMinutes) {
-          row.classList.add('done');
-          dot.style.background = '#cbd5e1';
-          dot.style.color = '#475569';
-          dot.classList.remove('pulse-me');
-        } else {
-          row.classList.add('future');
-          dot.style.background = '#e2e8f0';
-          dot.style.color = '#94a3b8';
-          dot.classList.remove('pulse-me');
-        }
-      });
-    }
-
-    // Inizializza timeline ed esegui ogni minuto
-    updateTimelineState();
-    setInterval(updateTimelineState, 60000);
-
-    // Audio Sintesi Vocale
+    window.addEventListener('load', () => setTimeout(() => map.invalidateSize(), 150));
+    // --- SINTESI VOCALE AUDIO ---
     let currentUtterance = null, currentButton = null;
     function stopSpeech() { 
       if ('speechSynthesis' in window) window.speechSynthesis.cancel(); 
       if (currentButton) currentButton.classList.remove('playing'); 
-      currentUtterance = null; currentButton = null; 
+      currentUtterance = null; 
+      currentButton = null; 
     }
     document.querySelectorAll('.audio-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -513,24 +477,32 @@
         window.speechSynthesis.speak(msg);
       });
     });
-
-    // Modali
-    function openInfo(title, text) { 
+    window.addEventListener('beforeunload', stopSpeech);
+    // --- GESTIONE MODALI E INTERAZIONI ---
+    function openInfo(title, text, imgSrc) { 
       document.getElementById('infoTitle').innerText = title; 
       document.getElementById('infoContent').innerText = text; 
+      const imgElem = document.getElementById('infoImage');
+      if (imgSrc) {
+        imgElem.src = imgSrc;
+        imgElem.alt = title;
+        imgElem.classList.remove('hidden');
+      } else {
+        imgElem.classList.add('hidden');
+      }
       document.getElementById('infoModal').style.display = 'flex'; 
     }
     function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
     function openSOSModal() { document.getElementById('sosModal').style.display = 'flex'; }
     function closeSOSModal() { document.getElementById('sosModal').style.display = 'none'; }
     function confermaPresenza() { document.getElementById('appello-box').classList.add('hidden-appello'); }
-
+    // Invio Posizione WhatsApp per SOS
     function sendLocationWhatsApp(phone) {
       if (!navigator.geolocation) { alert('Geolocalizzazione non supportata.'); return; }
       navigator.geolocation.getCurrentPosition(p => {
         const msg = encodeURIComponent('SOS STUDENTE: https://maps.google.com/?q=' + p.coords.latitude + ',' + p.coords.longitude);
         window.location.href = 'https://wa.me/' + phone + '?text=' + msg;
-      }, () => { alert('Impossibile recuperare il GPS.'); });
+      }, () => { alert('Impossibile recuperare la posizione GPS.'); });
     }
   </script>
 </body>
