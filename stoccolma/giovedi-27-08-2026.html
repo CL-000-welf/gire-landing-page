@@ -546,50 +546,64 @@
       document.getElementById('mapModal').style.display = 'none';
     }
 
-    // --- AGGIORNAMENTO TIMELINE IN BASE ALL'ORARIO ---
-    function updateTimelineStatus() {
-      const rows = document.querySelectorAll('.timeline-row');
-      const now = new Date();
-      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+   // --- AGGIORNAMENTO TIMELINE IN BASE ALL'ORARIO ---
+  function updateTimelineStatus() {
+  const rows = document.querySelectorAll('.timeline-row');
+  const now = new Date();
+  
+  // Data target della gita: 26 Agosto 2026
+  const targetYear = 2026;
+  const targetMonth = 7; // I mesi in JavaScript vanno da 0 (Gen) a 11 (Dic), quindi Agosto è 7
+  const targetDay = 27;
 
-      let activeFound = false;
+  // Verifica se OGGI è esattamente il giorno della gita
+  const isTargetDay = (
+    now.getFullYear() === targetYear &&
+    now.getMonth() === targetMonth &&
+    now.getDate() === targetDay
+  );
 
-      // Scorriamo al contrario per individuare l'ultima tappa superata o corrente
-      const times = Array.from(rows).map(row => {
-        const [h, m] = row.dataset.time.split(':').map(Number);
-        return h * 60 + m;
-      });
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  const times = Array.from(rows).map(row => {
+    const [h, m] = row.dataset.time.split(':').map(Number);
+    return h * 60 + m;
+  });
 
-      rows.forEach((row, index) => {
-        const rowTime = times[index];
-        const nextTime = times[index + 1] || 24 * 60; // fino a fine giornata
+  rows.forEach((row, index) => {
+    const rowTime = times[index];
+    const nextTime = times[index + 1] || 24 * 60;
+    const dot = row.querySelector('.dot');
 
-        const dot = row.querySelector('.dot');
-        row.classList.remove('done', 'active', 'future');
+    row.classList.remove('done', 'active', 'future');
 
-        if (currentMinutes >= rowTime && currentMinutes < nextTime) {
-          // Tappa attuale
-          row.classList.add('active');
-          dot.style.background = '#f6a623';
-          dot.style.color = '#fff';
-          dot.innerHTML = '<i class="fa-solid fa-location-dot"></i>';
-          activeFound = true;
-        } else if (currentMinutes >= nextTime) {
-          // Tappa già completata
-          row.classList.add('done');
-          dot.style.background = '#10b981'; // Verde completato
-          dot.style.color = '#fff';
-          dot.innerHTML = '<i class="fa-solid fa-check"></i>';
-        } else {
-          // Tappa futura
-          row.classList.add('future');
-          dot.style.background = '#e2e8f0';
-          dot.style.color = '#94a3b8';
-          dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
-        }
-      });
+    // Se NON siamo nel giorno della gita, tutte le tappe restano grigie/future
+    if (!isTargetDay) {
+      row.classList.add('future');
+      dot.style.background = '#e2e8f0';
+      dot.style.color = '#94a3b8';
+      dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
+      return;
     }
 
+    // Se SIAMO nel giorno della gita, colora in base all'orario
+    if (currentMinutes >= rowTime && currentMinutes < nextTime) {
+      row.classList.add('active');
+      dot.style.background = '#f6a623';
+      dot.style.color = '#fff';
+      dot.innerHTML = '<i class="fa-solid fa-location-dot"></i>';
+    } else if (currentMinutes >= nextTime) {
+      row.classList.add('done');
+      dot.style.background = '#10b981';
+      dot.style.color = '#fff';
+      dot.innerHTML = '<i class="fa-solid fa-check"></i>';
+    } else {
+      row.classList.add('future');
+      dot.style.background = '#e2e8f0';
+      dot.style.color = '#94a3b8';
+      dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
+    }
+  });
+}
     // Esegui aggiornamento timeline all'avvio e ogni minuto
     updateTimelineStatus();
     setInterval(updateTimelineStatus, 60000);
