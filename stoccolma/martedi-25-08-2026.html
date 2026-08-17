@@ -589,63 +589,65 @@
       });
     }
 
-    // --- AGGIORNAMENTO TIMELINE IN BASE ALL'ORARIO ---
-    function updateTimelineStatus() {
-      const rows = document.querySelectorAll('.timeline-row');
-      const now = new Date();
-      
-      // Data della pagina: Martedì 25 Agosto 2026
-      const targetYear = 2026;
-      const targetMonth = 7; // Agosto (i mesi in JS vanno da 0 a 11)
-      const targetDay = 25;
+     // --- AGGIORNAMENTO TIMELINE IN BASE ALL'ORARIO ---
+  function updateTimelineStatus() {
+  const rows = document.querySelectorAll('.timeline-row');
+  const now = new Date();
+  
+  // Data target della gita: 26 Agosto 2026
+  const targetYear = 2026;
+  const targetMonth = 7; // I mesi in JavaScript vanno da 0 (Gen) a 11 (Dic), quindi Agosto è 7
+  const targetDay = 25;
 
-      const isTargetDay = (
-        now.getFullYear() === targetYear &&
-        now.getMonth() === targetMonth &&
-        now.getDate() === targetDay
-      );
+  // Verifica se OGGI è esattamente il giorno della gita
+  const isTargetDay = (
+    now.getFullYear() === targetYear &&
+    now.getMonth() === targetMonth &&
+    now.getDate() === targetDay
+  );
 
-      const currentMinutes = now.getHours() * 60 + now.getMinutes();
-      const times = Array.from(rows).map(row => {
-        const [h, m] = row.dataset.time.split(':').map(Number);
-        return h * 60 + m;
-      });
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  const times = Array.from(rows).map(row => {
+    const [h, m] = row.dataset.time.split(':').map(Number);
+    return h * 60 + m;
+  });
 
-      rows.forEach((row, index) => {
-        const rowTime = times[index];
-        const nextTime = times[index + 1] || 24 * 60;
-        const dot = row.querySelector('.dot');
+  rows.forEach((row, index) => {
+    const rowTime = times[index];
+    const nextTime = times[index + 1] || 24 * 60;
+    const dot = row.querySelector('.dot');
 
-        row.classList.remove('done', 'active', 'future');
+    row.classList.remove('done', 'active', 'future');
 
-        if (!isTargetDay) {
-          row.classList.add('future');
-          dot.style.background = '#e2e8f0';
-          dot.style.color = '#94a3b8';
-          dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
-          return;
-        }
-
-        if (currentMinutes >= rowTime && currentMinutes < nextTime) {
-          row.classList.add('active');
-          dot.style.background = '#f6a623';
-          dot.style.color = '#fff';
-          dot.innerHTML = '<i class="fa-solid fa-location-dot"></i>';
-        } else if (currentMinutes >= nextTime) {
-          row.classList.add('done');
-          dot.style.background = '#10b981';
-          dot.style.color = '#fff';
-          dot.innerHTML = '<i class="fa-solid fa-check"></i>';
-        } else {
-          row.classList.add('future');
-          dot.style.background = '#e2e8f0';
-          dot.style.color = '#94a3b8';
-          dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
-        }
-      });
+    // Se NON siamo nel giorno della gita, tutte le tappe restano grigie/future
+    if (!isTargetDay) {
+      row.classList.add('future');
+      dot.style.background = '#e2e8f0';
+      dot.style.color = '#94a3b8';
+      dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
+      return;
     }
 
-    // Avvio e aggiornamento ogni minuto
+    // Se SIAMO nel giorno della gita, colora in base all'orario
+    if (currentMinutes >= rowTime && currentMinutes < nextTime) {
+      row.classList.add('active');
+      dot.style.background = '#f6a623';
+      dot.style.color = '#fff';
+      dot.innerHTML = '<i class="fa-solid fa-location-dot"></i>';
+    } else if (currentMinutes >= nextTime) {
+      row.classList.add('done');
+      dot.style.background = '#10b981';
+      dot.style.color = '#fff';
+      dot.innerHTML = '<i class="fa-solid fa-check"></i>';
+    } else {
+      row.classList.add('future');
+      dot.style.background = '#e2e8f0';
+      dot.style.color = '#94a3b8';
+      dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
+    }
+  });
+}
+    // Esegui aggiornamento timeline all'avvio e ogni minuto
     updateTimelineStatus();
     setInterval(updateTimelineStatus, 60000);
   </script>
