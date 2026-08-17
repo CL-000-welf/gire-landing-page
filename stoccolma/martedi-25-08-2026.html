@@ -399,17 +399,24 @@
     </div>
   </div>
 
- <!-- Modale Metro Tunnelbana -->
+ <!-- Modale Metro Tunnelbana Dinamica -->
   <div id="metroModal" onclick="closeMetroModal()">
     <div class="modal-card-map" onclick="event.stopPropagation()">
       <div class="flex justify-between items-center mb-3 px-2">
-        <h3 class="font-black italic text-lg uppercase text-slate-800">Mappa Metro Stockholm</h3>
+        <h3 class="font-black italic text-lg uppercase text-slate-800">Mappa Metro Stockholm (Interattiva)</h3>
         <button onclick="closeMetroModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div class="overflow-auto max-h-[70vh] rounded-2xl border">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Stockholm_metro_map.png/1200px-Stockholm_metro_map.png" referrerpolicy="no-referrer" alt="Mappa Metro Stoccolma" class="min-w-[600px] w-full">
+      <div class="overflow-hidden rounded-2xl border h-[65vh] w-full">
+        <iframe 
+          src="https://www.openstreetmap.org/export/embed.html?bbox=17.8500%2C59.2500%2C18.2500%2C59.4300&amp;layer=transportmap" 
+          class="w-full h-full border-0 rounded-2xl"
+          loading="lazy">
+        </iframe>
       </div>
-      <button class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-black uppercase text-xs mt-3 active:scale-95 transition-all" onclick="closeMetroModal()">Chiudi Mappa Metro</button>
+      <div class="flex gap-2 mt-3">
+        <a href="https://www.openstreetmap.org/#map=12/59.3293/18.0686&layers=T" target="_blank" class="w-1/2 text-center bg-slate-100 text-slate-700 py-3 rounded-2xl font-bold uppercase text-xs hover:bg-slate-200 transition-all">Apri a schermo intero ↗</a>
+        <button class="w-1/2 bg-indigo-600 text-white py-3 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeMetroModal()">Chiudi Mappa</button>
+      </div>
     </div>
   </div>
 
