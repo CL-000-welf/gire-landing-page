@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+  <!-- 1. META TAGS E CONFIGURAZIONE DI BASE -->
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Martedì 25.08.2026 - Viaggio a Stoccolma</title>
   
-  <!-- SEO & OpenGraph Meta Tags -->
+  <!-- 2. SEO & OPENGRAPH META TAGS (Per anteprime social e condivisioni) -->
   <meta name="description" content="Itinerario giornaliero GIRE per la gita a Stoccolma con timeline, mappa e contatti SOS."/>
   <link rel="icon" type="image/png" href="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
   <link rel="apple-touch-icon" href="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
@@ -20,12 +21,14 @@
   <meta name="twitter:title" content="Martedì 25.08.2026 - Viaggio a Stoccolma"/>
   <meta name="twitter:description" content="Itinerario giornaliero GIRE per la gita a Stoccolma con timeline, mappa e contatti SOS."/>
   <meta name="twitter:image" content="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
-  <!-- Librerie Esterne -->
+
+  <!-- 3. LIBRERIE ESTERNE (Tailwind CSS, Google Fonts, Font Awesome, Leaflet) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet"/>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
   <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
-  <!-- Stili CSS -->
+
+  <!-- 4. STILI CSS PERSONALIZZATI E LAYOUT REGOLABILE -->
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; overflow-x: hidden; }
     .safe-card { background: white; border-radius: 1.9rem; border: 1px solid #E2E8F0; overflow: hidden; box-shadow: 0 10px 25px rgba(15,23,42,0.04); }
@@ -82,18 +85,19 @@
   </style>
 </head>
 <body class="flex flex-col min-h-screen p-5 pb-10">
-  <!-- 1. NOTIFICA PUSH POP-UP -->
+
+  <!-- 5. NOTIFICA PUSH POP-UP (Attivata automaticamente all'apertura) -->
   <div id="push-alert" class="bg-slate-900 text-white p-5 rounded-[2rem] shadow-2xl flex items-center gap-4 border border-white/20">
     <div class="bg-indigo-500 h-10 w-10 rounded-full flex items-center justify-center shrink-0">
       <i class="fa-solid fa-paper-plane text-white"></i>
     </div>
     <div>
       <p class="text-[9px] font-black uppercase tracking-widest text-indigo-300">Gire</p>
-      <p class="text-xs font-bold leading-tight">LAGOM ÄR BÄST<br>
-“La giusta misura è la cosa migliore.”</p>
+      <p class="text-xs font-bold leading-tight">LAGOM ÄR BÄST<br>“La giusta misura è la cosa migliore.”</p>
     </div>
   </div>
-  <!-- 2. INTESTAZIONE / HEADER -->
+
+  <!-- 6. INTESTAZIONE PRINCIPALE / HEADER -->
   <header class="flex justify-between items-start mb-6 px-1 gap-3">
     <div class="flex items-start gap-2">
       <img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE" class="h-8 w-8 rounded-lg mt-1"/>
@@ -110,7 +114,8 @@
       </div>
     </div>
   </header>
-  <!-- 3. BANNER PROGRAMMA / APPELLO -->
+
+  <!-- 7. BANNER DEL PROGRAMMA / CONFERMA APPELLO -->
   <div id="appello-box" class="bg-indigo-600 rounded-[2.5rem] p-6 text-white shadow-xl flex items-center justify-between gap-4">
     <div>
       <p class="text-[9px] font-black uppercase text-indigo-200 mb-1 tracking-widest">Programma</p>
@@ -118,7 +123,8 @@
     </div>
     <button class="bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all" onclick="confermaPresenza()">OK</button>
   </div>
-  <!-- 4. SEZIONE MAPPA INTERATTIVA -->
+
+  <!-- 8. SCHEDA MAPPA INTERATTIVA CON METEO LIVE -->
   <div class="safe-card p-4 mb-4">
     <div class="map-shell">
       <div id="map-student" onclick="openMapModal()" title="Clicca per ingrandire la mappa"></div>
@@ -145,7 +151,7 @@
     </div>
   </div>
 
-  <!-- STRUMENTI RAPIDI: METRO & CONVERTITORE SEK -->
+  <!-- 9. STRUMENTI RAPIDI: MAPPA METRO SL E CONVERTITORE SEK ↔ EUR -->
   <div class="grid grid-cols-2 gap-3 mb-8">
     <button onclick="openMetroModal()" class="safe-card p-3 flex items-center justify-between text-left active:scale-95 transition-all border border-indigo-100 bg-indigo-50/50">
       <div class="flex items-center gap-2">
@@ -167,7 +173,7 @@
     </div>
   </div>
 
-  <!-- 5. TIMELINE / PROGRAMMA GIORNO -->
+  <!-- 10. TIMELINE / PROGRAMMA ORARIO DINAMICO -->
   <div class="safe-card p-6 mb-8">
     <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6 italic text-center">Programma giornata</h3>
     <div class="relative">
@@ -217,7 +223,8 @@
       </div>
     </div>
   </div>
-  <!-- 6. CARDE DIARIO / SCHEDE TAPPE (INTERAMENTE CLICCABILI) -->
+
+  <!-- 11. CARDE DETTAGLIO TAPPE / DIARI DI VIAGGIO -->
   <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic">I diari di viaggio</h3>
   <div class="space-y-6 mb-12">
     
@@ -236,6 +243,7 @@
         </span>
       </div>
     </article>
+
     <article class="diary-card safe-card" onclick="openInfo('Gamla Stan tramite Ponte Vasabron', 'Ci dirigiamo verso la città vecchia attraversando il ponte Vasabron, perfetto per i pedoni e con una vista splendida. Evitiamo il Centralbron riservato alle auto. A Gamla Stan proseguiamo la visita guidata tra vicoli medievali e palazzi storici.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/vasabron.jpg')">
       <img alt="Gamla Stan" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/vasabron.jpg"/>
       <div class="diary-body">
@@ -251,6 +259,7 @@
         </span>
       </div>
     </article>
+
     <article class="diary-card safe-card" onclick="openInfo('Ponte Norrbro, Parlamento e Operan', 'Nel pomeriggio attraversiamo il ponte Norrbro, di fronte al Palazzo Reale, il più bello e storico della città, interamente pedonale. Passiamo sull\'isola del Parlamento e arriviamo davanti al Teatro dell\'Opera di fine \'800.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/norrbro.webp')">
       <img alt="Parlamento e Operan" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/norrbro.webp"/>
       <div class="diary-body">
@@ -266,6 +275,7 @@
         </span>
       </div>
     </article>
+
     <article class="diary-card safe-card" onclick="openInfo('Kungsträdgården & Museo Wetterling', 'Passeggiata nel Giardino del Re, uno dei parchi pubblici più famosi e vivaci di Stoccolma, seguita da una rapida sosta alla Wetterling Gallery, celebre galleria d\'arte contemporanea.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/giardino.jpeg')">
       <img alt="Kungsträdgården" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/giardino.jpeg"/>
       <div class="diary-body">
@@ -281,6 +291,7 @@
         </span>
       </div>
     </article>
+
     <article class="diary-card safe-card" onclick="openInfo('Piazza Östermalmstorg & Salu Hall', 'Raggiungiamo il quartiere elegante di Östermalm per visitare la storica Salu Hall, un fantastico mercato coperto del 1888 con le migliori specialità gastronomiche svedesi.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/salu-hall.jpg')">
       <img alt="Östermalmstorg Salu Hall" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/salu-hall.jpg"/>
       <div class="diary-body">
@@ -296,6 +307,7 @@
         </span>
       </div>
     </article>
+
     <article class="diary-card safe-card" onclick="openInfo('Crociera Arcipelago (Statua Gustav III)', 'Torniamo verso la riva di Gamla Stan per raggiungere l\'imbarco situato nei pressi della statua di Gustav III. Ci attende una favolosa crociera di due ore tra le isole dell\'arcipelago di Stoccolma.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/arcipelago.jpg')">
       <img alt="Crociera Arcipelago" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/arcipelago.jpg"/>
       <div class="diary-body">
@@ -313,7 +325,7 @@
     </article>
   </div>
 
-  <!-- SEZIONE INFO UTILI, TRASPORTI & GLOSSARIO -->
+  <!-- 12. SEZIONE INFO UTILI, TRASPORTI & GLOSSARIO EXPRESS -->
   <div class="safe-card p-5 mb-8 bg-slate-900 text-white">
     <div class="flex items-center gap-2 mb-4">
       <i class="fa-solid fa-circle-info text-indigo-400"></i>
@@ -336,7 +348,7 @@
     </div>
   </div>
 
-  <!-- 7. BANNER SOS & NAVIGAZIONE -->
+  <!-- 13. BANNER SOS ED EMERGENZA + NAVIGAZIONE TRA GIORNI -->
   <div class="mt-auto pt-2">
     <div class="bg-red-50 rounded-[2.5rem] p-6 border border-red-100 flex items-center justify-between shadow-sm gap-4">
       <div>
@@ -353,7 +365,8 @@
       <a href="mercoledi-26-08-2026.html">Mer 26 →</a>
     </div>
   </div>
-  <!-- 8. FOOTER / PIÈ DI PAGINA -->
+
+  <!-- 14. FOOTER / PIÈ DI PAGINA -->
   <footer class="app-footer">
     <div class="footer-brand">
       <img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE"/>
@@ -361,8 +374,10 @@
     </div>
     <span>Area studente · Stoccolma 2026</span>
   </footer>
-  <!-- 9. MODALI / POP-UP OVERLAY -->
-  <!-- Modale Dettaglio Tappa con Immagine integrata -->
+
+  <!-- 15. MODALI OVERLAY (Info Tappa, Mappa Ingrandita, Metro e SOS) -->
+  
+  <!-- Modale Dettaglio Tappa -->
   <div id="infoModal" onclick="closeModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
       <img id="infoImage" src="" alt="" class="w-full h-48 object-cover rounded-2xl mb-4 hidden"/>
@@ -371,6 +386,7 @@
       <button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeModal()">Ho capito!</button>
     </div>
   </div>
+
   <!-- Modale Mappa Ingrandita -->
   <div id="mapModal" onclick="closeMapModal()">
     <div class="modal-card-map" onclick="event.stopPropagation()">
@@ -382,6 +398,7 @@
       <button class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-black uppercase text-xs mt-3 active:scale-95 transition-all" onclick="closeMapModal()">Chiudi Mappa</button>
     </div>
   </div>
+
   <!-- Modale Metro Tunnelbana -->
   <div id="metroModal" onclick="closeMetroModal()">
     <div class="modal-card-map" onclick="event.stopPropagation()">
@@ -395,7 +412,8 @@
       <button class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-black uppercase text-xs mt-3 active:scale-95 transition-all" onclick="closeMetroModal()">Chiudi Mappa Metro</button>
     </div>
   </div>
-  <!-- Modale SOS -->
+
+  <!-- Modale SOS / Chiamate rapide -->
   <div id="sosModal" onclick="closeSOSModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
       <p class="text-[10px] font-black uppercase tracking-widest text-red-500 mb-2">Contatti emergenza</p>
@@ -426,9 +444,11 @@
       <button class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeSOSModal()">Chiudi</button>
     </div>
   </div>
-  <!-- 10. LOGICA JAVASCRIPT -->
+
+  <!-- 16. LOGICA JAVASCRIPT INTEGRATA -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
+    // INIZIALIZZAZIONE PAGINA (Notifica Push & Meteo Live)
     window.addEventListener('load', () => {
       setTimeout(() => {
         const pushAlert = document.getElementById('push-alert');
@@ -442,7 +462,7 @@
       fetchLiveWeather();
     });
 
-    // METEO DINAMICO
+    // API METEO IN TEMPO REALE (Open-Meteo per Stoccolma)
     async function fetchLiveWeather() {
       const weatherEl = document.getElementById('live-weather');
       try {
@@ -459,7 +479,7 @@
       }
     }
 
-    // CONVERTITORE VALUTA
+    // CONVERTITORE VALUTA SEK -> EUR
     function convertSekToEur() {
       const input = document.getElementById('sekInput').value;
       const result = document.getElementById('eurResult');
@@ -468,14 +488,13 @@
       result.innerText = `${eur} €`;
     }
 
-    // MODALE METRO
+    // GESTIONE MODALE METRO
     function openMetroModal() { document.getElementById('metroModal').style.display = 'flex'; }
     function closeMetroModal() { document.getElementById('metroModal').style.display = 'none'; }
 
-    // Coordinate Hotel
+    // CONFIGURAZIONE COORDINATE MAPPA (MARTEDÌ)
     const hotel = { name: "Hotel C Stockholm", lat: 59.3323, lng: 18.0583, label: "Hotel C Stockholm" };
     
-    // Tappe del giorno
     const stops = [
       { name: "Municipio (Stadshuset)", lat: 59.3275, lng: 18.0543, visit: "Visita Sala Oro e Sala Blu." },
       { name: "Gamla Stan (Vasabron)", lat: 59.3257, lng: 18.0686, visit: "Città vecchia attraverso il ponte pedonale." },
@@ -484,6 +503,7 @@
       { name: "Östermalmstorg & Salu Hall", lat: 59.3360, lng: 18.0780, visit: "Mercato al coperto gastronomico." },
       { name: "Imbarco Crociera (Gustav III)", lat: 59.3262, lng: 18.0745, visit: "Partenza crociera 2 ore arcipelago." }
     ];
+
     const routePoints = [
       [hotel.lat, hotel.lng],
       [stops[0].lat, stops[0].lng],
@@ -493,6 +513,7 @@
       [stops[4].lat, stops[4].lng],
       [stops[5].lat, stops[5].lng]
     ];
+
     const segmentTimes = [
       { lat: 59.3299, lng: 18.0563, text: "<i class='fa-solid fa-person-walking'></i> 10 min" },
       { lat: 59.3266, lng: 18.0614, text: "<i class='fa-solid fa-person-walking'></i> 12 min" },
@@ -501,6 +522,8 @@
       { lat: 59.3328, lng: 18.0741, text: "<i class='fa-solid fa-person-walking'></i> 10 min" },
       { lat: 59.3311, lng: 18.0762, text: "<i class='fa-solid fa-person-walking'></i> 14 min" }
     ];
+
+    // CALCOLO DISTANZE E RAGGIO
     function getDistanceMeters(lat1, lon1, lat2, lon2) {
       const R = 6371000;
       const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -511,12 +534,15 @@
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       return R * c;
     }
+
     const maxDistanceInMeters = Math.max(
       ...stops.map(stop => getDistanceMeters(hotel.lat, hotel.lng, stop.lat, stop.lng))
     );
-    // Mappa Principale
+
+    // INIZIALIZZAZIONE MAPPA LEAFLET
     const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+
     function createGiantIcon(color, iconClass, pulse = false) {
       return L.divIcon({
         className: 'custom-icon',
@@ -524,7 +550,7 @@
         iconSize:[46,46], iconAnchor:[23,23]
       });
     }
-    // Popolamento Mappa Principale
+
     function renderMapElements(targetMap) {
       const hotelCircle = L.circle([hotel.lat, hotel.lng], {
         color: '#3b82f6',
@@ -532,12 +558,14 @@
         fillOpacity: 0.35,
         radius: maxDistanceInMeters
       }).addTo(targetMap);
+
       L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(targetMap);
       L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(targetMap).bindPopup(`<strong>${hotel.name}</strong><br>Vasaplan 4`);
       
       stops.forEach(stop => { 
         L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(targetMap).bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`); 
       });
+
       segmentTimes.forEach(st => {
         L.marker([st.lat, st.lng], {
           icon: L.divIcon({
@@ -550,11 +578,13 @@
       });
       return hotelCircle;
     }
+
     const hotelCircleMain = renderMapElements(map);
     function resetMapView() { map.fitBounds(hotelCircleMain.getBounds().pad(0.1)); }
     resetMapView();
     window.addEventListener('load', () => setTimeout(() => map.invalidateSize(), 150));
-    // Mappa Modale (Ingrandita)
+
+    // GESTIONE MAPPA ESPANSA (MODALE)
     let modalMap = null;
     let modalHotelCircle = null;
     function openMapModal() {
@@ -571,7 +601,7 @@
     }
     function closeMapModal() { document.getElementById('mapModal').style.display = 'none'; }
     
-    // Sintesi Vocale
+    // INTEGRAZIONE SINTESI VOCALE (SPEECH SYNTHESIS)
     let currentUtterance = null, currentButton = null;
     function stopSpeech() { 
       if ('speechSynthesis' in window) window.speechSynthesis.cancel(); 
@@ -579,6 +609,7 @@
       currentUtterance = null; 
       currentButton = null; 
     }
+
     document.querySelectorAll('.audio-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -605,7 +636,7 @@
     });
     window.addEventListener('beforeunload', stopSpeech);
 
-    // Gestione Modali Dettagli e SOS
+    // FUNZIONALITÀ INTERATTIVE (Apertura Dettagli, SOS, GPS WhatsApp)
     function openInfo(title, text, imgSrc = '') { 
       document.getElementById('infoTitle').innerText = title; 
       document.getElementById('infoContent').innerText = text; 
@@ -622,6 +653,7 @@
     function openSOSModal() { document.getElementById('sosModal').style.display = 'flex'; }
     function closeSOSModal() { document.getElementById('sosModal').style.display = 'none'; }
     function confermaPresenza() { document.getElementById('appello-box').classList.add('hidden-appello'); }
+
     function sendLocationWhatsApp(phone) {
       if (!navigator.geolocation) { alert('Geolocalizzazione non supportata dal dispositivo.'); return; }
       navigator.geolocation.getCurrentPosition(p => {
@@ -632,13 +664,13 @@
       });
     }
 
-    // --- AGGIORNAMENTO TIMELINE IN BASE ALL'ORARIO ---
+    // LOGICA DI AGGIORNAMENTO DINAMICO TIMELINE ORARIA
     function updateTimelineStatus() {
       const rows = document.querySelectorAll('.timeline-row');
       const now = new Date();
       
       const targetYear = 2026;
-      const targetMonth = 7;
+      const targetMonth = 7; // Agosto (0-indexed)
       const targetDay = 25;
 
       const isTargetDay = (
@@ -646,16 +678,21 @@
         now.getMonth() === targetMonth &&
         now.getDate() === targetDay
       );
+
       const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
       const times = Array.from(rows).map(row => {
         const [h, m] = row.dataset.time.split(':').map(Number);
         return h * 60 + m;
       });
+
       rows.forEach((row, index) => {
         const rowTime = times[index];
         const nextTime = times[index + 1] || 24 * 60;
         const dot = row.querySelector('.dot');
+
         row.classList.remove('done', 'active', 'future');
+
         if (!isTargetDay) {
           row.classList.add('future');
           dot.style.background = '#e2e8f0';
@@ -663,6 +700,7 @@
           dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
           return;
         }
+
         if (currentMinutes >= rowTime && currentMinutes < nextTime) {
           row.classList.add('active');
           dot.style.background = '#f6a623';
@@ -681,6 +719,7 @@
         }
       });
     }
+
     updateTimelineStatus();
     setInterval(updateTimelineStatus, 60000);
   </script>
