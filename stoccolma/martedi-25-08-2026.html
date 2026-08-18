@@ -392,36 +392,44 @@
       </div>
     </div>
   </div>
- <!-- ========================================== -->
- <!-- SEZIONE DOVE MANGIARE & FIKA               -->
- <!-- ========================================== -->
+ <!-- =================================================== -->
+ <!-- SEZIONE DOVE MANGIARE & FIKA (SLIDER ORIZZONTALE)   -->
+ <!-- =================================================== -->
 <section class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 mb-6">
-  <div class="flex items-center justify-between mb-4">
+  <div class="flex items-center justify-between mb-3">
     <div class="flex items-center gap-2.5">
       <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg">
         <i class="fa-solid fa-utensils"></i>
       </div>
       <div>
         <h3 class="font-black text-slate-900 text-base leading-tight">Dove Mangiare & Fika</h3>
-        <p class="text-[11px] font-bold text-slate-400">Locali consigliati nella zona di oggi</p>
+        <p class="text-[11px] font-bold text-slate-400">Scorri i consigli nella zona di oggi</p>
       </div>
     </div>
-    <button onclick="getNearbyFood()" class="bg-amber-50 text-amber-700 text-xs font-black px-3 py-1.5 rounded-xl flex items-center gap-1.5 hover:bg-amber-100 transition-all">
+    <button onclick="getNearbyFood()" class="bg-amber-50 text-amber-700 text-xs font-black px-3 py-1.5 rounded-xl flex items-center gap-1.5 hover:bg-amber-100 transition-all shrink-0">
       <i class="fa-solid fa-location-crosshairs text-amber-600"></i> Vicino a me
     </button>
   </div>
 
   <!-- Filtri Categoria -->
   <div class="flex gap-2 overflow-x-auto pb-2 mb-3 no-scrollbar text-[11px] font-black">
-    <button onclick="filterFood('all')" id="food-btn-all" class="px-3 py-1.5 rounded-xl bg-slate-900 text-white whitespace-nowrap">Tutti</button>
-    <button onclick="filterFood('fika')" id="food-btn-fika" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 whitespace-nowrap">☕ Fika & Dolci</button>
-    <button onclick="filterFood('svedese')" id="food-btn-svedese" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 whitespace-nowrap">🧆 Tipico Svedese</button>
-    <button onclick="filterFood('quick')" id="food-btn-quick" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 whitespace-nowrap">🍔 Rapido / Economico</button>
+    <button onclick="filterFood('all')" id="food-btn-all" class="px-3 py-1.5 rounded-xl bg-slate-900 text-white whitespace-nowrap flex items-center gap-1.5 shrink-0">
+      <i class="fa-solid fa-layer-group"></i> Tutti
+    </button>
+    <button onclick="filterFood('fika')" id="food-btn-fika" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 whitespace-nowrap flex items-center gap-1.5 shrink-0">
+      <i class="fa-solid fa-mug-hot"></i> Fika & Dolci
+    </button>
+    <button onclick="filterFood('svedese')" id="food-btn-svedese" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 whitespace-nowrap flex items-center gap-1.5 shrink-0">
+      <i class="fa-solid fa-bowl-food"></i> Tipico Svedese
+    </button>
+    <button onclick="filterFood('quick')" id="food-btn-quick" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 whitespace-nowrap flex items-center gap-1.5 shrink-0">
+      <i class="fa-solid fa-burger"></i> Rapido / Economico
+    </button>
   </div>
 
-  <!-- Contenitore Schede Ristoranti -->
-  <div id="food-list-container" class="space-y-3">
-    <!-- I locali verranno generati dinamicamente via JS -->
+  <!-- Contenitore Carousel Orizzontale -->
+  <div id="food-list-container" class="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 no-scrollbar">
+    <!-- Le schede verranno inserite dinamicamente affiancate -->
   </div>
 </section>
   
@@ -1488,17 +1496,18 @@ document.addEventListener('DOMContentLoaded', () => {
   updateDayContent('mar'); // <-- Dice alla pagina di prendere i dati di MARTEDÌ
 });
 
-    // --- DATABASE RISTORANTI & CAFFÈ ---
+// --- DATABASE RISTORANTI & CAFFÈ ---
 const foodPlaces = [
   {
     id: 1,
     name: "Café Satir (Nationalmuseum)",
     type: "fika",
-    typeLabel: "☕ Fika & Caffè",
+    icon: "fa-mug-hot",
+    typeLabel: "Fika & Caffè",
     price: "€€",
     lat: 59.3283,
     lng: 18.0781,
-    desc: "Ottimo caffè e kanelbullar (girelle al cannella) dentro il bellissimo atrio del museo.",
+    desc: "Ottimo caffè e kanelbullar (girelle alla cannella) dentro l'atrio del museo.",
     tip: "Consigliato per la pausetta Fika a metà mattina.",
     address: "Södra Blasieholmshamnen 2"
   },
@@ -1506,82 +1515,92 @@ const foodPlaces = [
     id: 2,
     name: "Tradition",
     type: "svedese",
-    typeLabel: "🧆 Tipico Svedese",
+    icon: "fa-bowl-food",
+    typeLabel: "Tipico Svedese",
     price: "€€€",
     lat: 59.3255,
     lng: 18.0731,
-    desc: "Specializzato in cucina tradizionale svedese (Köttbullar, aringhe, renna) in chiave moderna.",
-    tip: "Prenotazione raccomandata a cena. Polpette svedesi eccezionali!",
+    desc: "Cucina tradizionale svedese (Köttbullar, aringhe, renna) in chiave moderna.",
+    tip: "Polpette svedesi eccezionali! Consigliata la prenotazione.",
     address: "Österlånggatan 1"
   },
   {
     id: 3,
     name: "K25 Food Hall",
     type: "quick",
-    typeLabel: "🍔 Rapido / Economico",
+    icon: "fa-burger",
+    typeLabel: "Rapido / Economico",
     price: "€",
     lat: 59.3364,
     lng: 18.0645,
     desc: "Food court moderna con oltre 10 stand (hamburger, asiatico, burrito, falafel).",
-    tip: "Perfetto per un pranzo veloce ed economico a due passi dal centro.",
+    tip: "Perfetto per un pranzo veloce ed economico in centro.",
     address: "Kungsgatan 25"
   },
   {
     id: 4,
     name: "Vete-Katten",
     type: "fika",
-    typeLabel: "☕ Fika & Dolci",
+    icon: "fa-cake-candles",
+    typeLabel: "Fika & Dolci",
     price: "€€",
     lat: 59.3341,
     lng: 18.0583,
-    desc: "La pasticceria storica più famosa di Stoccolma (dal 1928), un labirinto di sale vintage.",
-    tip: "Prova la Princess tårta (torta principessa verde) o i kardemummabulle.",
+    desc: "La pasticceria storica più famosa di Stoccolma (dal 1928), tra sale vintage.",
+    tip: "Prova la Princess tårta o i kardemummabulle.",
     address: "Kungsgatan 55"
   },
   {
     id: 5,
     name: "Strömmingsvagnen",
     type: "quick",
-    typeLabel: "🧆 Tipico / Rapido",
+    icon: "fa-fish",
+    typeLabel: "Tipico / Rapido",
     price: "€",
     lat: 59.3198,
     lng: 18.0722,
-    desc: "Chiosco storico di aringa fritta al momento servita su pane di segale o con purè.",
-    tip: "Street food svedese super tipico, gustoso ed economico a Slussen.",
+    desc: "Chiosco storico di aringa fritta servita su pane di segale o con purè.",
+    tip: "Street food svedese super tipico, gustoso ed economico.",
     address: "Ryssgården, Slussen"
   }
 ];
 
 let currentFoodFilter = 'all';
 
-// Renderizza i ristoranti nel container
+// Renderizza i ristoranti come card orizzontali
 function renderFoodList(places = foodPlaces) {
   const container = document.getElementById('food-list-container');
   if (!container) return;
 
   if (places.length === 0) {
-    container.innerHTML = `<p class="text-xs font-bold text-slate-400 text-center py-4">Nessun locale trovato per questa categoria.</p>`;
+    container.innerHTML = `<p class="text-xs font-bold text-slate-400 text-center py-4 w-full">Nessun locale trovato per questa categoria.</p>`;
     return;
   }
 
   container.innerHTML = places.map(place => {
-    const distText = place.distance ? `<span class="text-amber-600 font-black"><i class="fa-solid fa-location-arrow"></i> ${place.distance < 1000 ? place.distance + ' m' : (place.distance/1000).toFixed(1) + ' km'}</span> • ` : '';
+    const distText = place.distance 
+      ? `<span class="text-amber-600 font-black"><i class="fa-solid fa-location-arrow"></i> ${place.distance < 1000 ? place.distance + ' m' : (place.distance/1000).toFixed(1) + ' km'}</span> • ` 
+      : '';
     
     return `
-      <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col justify-between gap-2">
+      <div class="w-[82%] sm:w-[280px] shrink-0 snap-align-start p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col justify-between gap-2 shadow-xs">
         <div>
           <div class="flex justify-between items-start gap-2 mb-1">
-            <h4 class="font-black text-sm text-slate-900 leading-tight">${place.name}</h4>
-            <span class="bg-amber-100 text-amber-800 text-[10px] font-black px-2 py-0.5 rounded-md whitespace-nowrap">${place.price}</span>
+            <h4 class="font-black text-sm text-slate-900 leading-tight line-clamp-1">${place.name}</h4>
+            <span class="bg-amber-100 text-amber-800 text-[10px] font-black px-2 py-0.5 rounded-md whitespace-nowrap shrink-0">${place.price}</span>
           </div>
-          <p class="text-xs text-slate-600 mb-1.5">${place.desc}</p>
-          <div class="bg-white/80 p-2 rounded-xl text-[11px] text-amber-900 border border-amber-100/60 font-medium">
-            💡 <strong>Tip:</strong> ${place.tip}
+          <p class="text-xs text-slate-600 mb-2 line-clamp-2">${place.desc}</p>
+          <div class="bg-white p-2 rounded-xl text-[11px] text-amber-900 border border-amber-100 font-medium flex items-start gap-2">
+            <i class="fa-solid fa-lightbulb text-amber-500 mt-0.5 shrink-0"></i>
+            <div class="line-clamp-2"><strong>Tip:</strong> ${place.tip}</div>
           </div>
         </div>
-        <div class="flex justify-between items-center pt-1 border-t border-slate-200/50 text-[11px] font-bold text-slate-500">
-          <div>${distText}<span>${place.typeLabel}</span></div>
-          <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name + ' ' + place.address + ' Stockholm')}" target="_blank" class="text-indigo-600 hover:text-indigo-800 font-black flex items-center gap-1">
+        <div class="flex justify-between items-center pt-2 border-t border-slate-200/60 text-[11px] font-bold text-slate-500">
+          <div class="flex items-center gap-1.5 truncate">
+            ${distText}
+            <span class="flex items-center gap-1 truncate"><i class="fa-solid ${place.icon} text-slate-400"></i> ${place.typeLabel}</span>
+          </div>
+          <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name + ' ' + place.address + ' Stockholm')}" target="_blank" class="text-indigo-600 hover:text-indigo-800 font-black flex items-center gap-1 shrink-0 ml-1">
             Mappa <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
           </a>
         </div>
@@ -1594,14 +1613,15 @@ function renderFoodList(places = foodPlaces) {
 function filterFood(type) {
   currentFoodFilter = type;
   
-  // Aggiorna stile bottoni
-  ['all', 'fika', 'svedese', 'quick'].forEach(t => {
+  const buttons = ['all', 'fika', 'svedese', 'quick'];
+
+  buttons.forEach(t => {
     const btn = document.getElementById(`food-btn-${t}`);
     if (btn) {
       if (t === type) {
-        btn.className = "px-3 py-1.5 rounded-xl bg-slate-900 text-white whitespace-nowrap";
+        btn.className = "px-3 py-1.5 rounded-xl bg-slate-900 text-white whitespace-nowrap flex items-center gap-1.5 shrink-0";
       } else {
-        btn.className = "px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 whitespace-nowrap";
+        btn.className = "px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 whitespace-nowrap flex items-center gap-1.5 shrink-0";
       }
     }
   });
@@ -1617,7 +1637,7 @@ function filterFood(type) {
 // Trova i locali più vicini alla posizione GPS dell'utente
 function getNearbyFood() {
   const container = document.getElementById('food-list-container');
-  container.innerHTML = `<p class="text-xs font-black text-amber-600 text-center py-4"><i class="fa-solid fa-spinner fa-spin"></i> Calcolo locali più vicini a te...</p>`;
+  container.innerHTML = `<p class="text-xs font-black text-amber-600 text-center py-4 w-full"><i class="fa-solid fa-spinner fa-spin"></i> Calcolo locali più vicini a te...</p>`;
 
   if (!navigator.geolocation) {
     alert("Geolocalizzazione non supportata dal tuo browser.");
@@ -1630,22 +1650,22 @@ function getNearbyFood() {
       const userLat = pos.coords.latitude;
       const userLng = pos.coords.longitude;
 
-      // Calcola le distanze
       const placesWithDist = foodPlaces.map(place => {
         const dist = getDistanceMeters(userLat, userLng, place.lat, place.lng);
         return { ...place, distance: Math.round(dist) };
       });
 
-      // Ordina dal più vicino al più lontano
       placesWithDist.sort((a, b) => a.distance - b.distance);
 
-      // Applica eventuale filtro categoria attivo
       if (currentFoodFilter !== 'all') {
         const filtered = placesWithDist.filter(p => p.type === currentFoodFilter);
         renderFoodList(filtered);
       } else {
         renderFoodList(placesWithDist);
       }
+      
+      // Riporta lo scroll del container all'inizio a sinistra
+      container.scrollLeft = 0;
     },
     () => {
       alert("Impossibile accedere alla tua posizione GPS.");
@@ -1654,7 +1674,7 @@ function getNearbyFood() {
   );
 }
 
-// Inizializzazione al caricamento della pagina
+// Inizializzazione al caricamento
 document.addEventListener('DOMContentLoaded', () => {
   renderFoodList();
 });
