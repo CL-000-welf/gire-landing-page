@@ -218,8 +218,9 @@
       </div>
     </div>
   </div>
-
-  <!-- BOTTONI RAPIDI: METRO & CAMBIO VALUTA -->
+  <!-- ========================================== -->
+  <!-- BOTTONI RAPIDI: METRO & CAMBIO VALUTA      -->
+  <!-- ========================================== -->
 <div class="grid grid-cols-2 gap-3 mb-8">
   <button onclick="openMetroModal()" class="bg-white border border-slate-200 rounded-3xl p-4 flex items-center gap-3 shadow-sm active:scale-95 transition-all text-left">
     <div class="bg-blue-600 text-white w-10 h-10 rounded-2xl flex items-center justify-center font-black text-lg shrink-0">
@@ -243,8 +244,9 @@
     </div>
   </button>
 </div>
-
+<!-- ========================================================= -->
 <!-- MODALE CAMBIO RAPIDO SEK / EUR (PROPORZIONATO A 3 GIORNI) -->
+<!-- ========================================================= -->
 <div id="currencyModal" class="hidden fixed inset-0 bg-slate-900/90 z-[10000] items-center justify-center p-4 backdrop-blur-md" onclick="closeCurrencyModal()">
   <div class="bg-white rounded-[2.5rem] max-w-md w-full p-6 shadow-2xl relative" onclick="event.stopPropagation()">
     <div class="flex justify-between items-center mb-4">
@@ -293,8 +295,9 @@
     <button onclick="closeCurrencyModal()" class="w-full bg-emerald-600 text-white py-4 rounded-2xl font-black uppercase text-xs shadow-lg shadow-emerald-200 active:scale-95 transition-all">Fatto</button>
   </div>
 </div>
-
-<!-- MODALE TRASPORTI METRO & GPS LIVE -->
+<!-- ========================================== -->
+<!-- MODALE TRASPORTI METRO & GPS LIVE          -->
+<!-- ========================================== -->
 <div id="metroModal" class="hidden fixed inset-0 bg-slate-900/90 z-[10000] items-center justify-center p-4 backdrop-blur-md" onclick="closeMetroModal()">
   <div class="bg-white rounded-[2.5rem] max-w-lg w-full p-6 shadow-2xl relative max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
     <div class="flex justify-between items-center mb-3">
@@ -337,8 +340,9 @@
     <button onclick="closeMetroModal()" class="w-full bg-slate-900 text-white py-3.5 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all mt-auto">Chiudi</button>
   </div>
 </div>
-
-  <!-- 5. TIMELINE / PROGRAMMA GIORNO -->
+  <!-- ========================================== -->
+  <!-- 5. TIMELINE / PROGRAMMA GIORNO             -->
+  <!-- ========================================== -->
   <div class="safe-card p-6 mb-8">
     <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6 italic text-center">Programma giornata</h3>
     <div class="relative">
@@ -388,8 +392,9 @@
       </div>
     </div>
   </div>
-
-  <!-- 6. CARDE DIARIO / SCHEDE TAPPE (INTERAMENTE CLICCABILI) -->
+  <!-- ====================================================== -->
+  <!-- 6. CARD DIARIO / SCHEDE TAPPE (INTERAMENTE CLICCABILI) -->
+  <!-- ====================================================== -->
   <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic">I diari di viaggio</h3>
   <div class="space-y-6 mb-12">
     
@@ -489,6 +494,102 @@
       </div>
     </article>
   </div>
+  <!-- ================================================ -->
+  <!-- SEZIONE INFO UTILI & GLOSSARIO AUDIO INTERATTIVO -->
+  <!-- ================================================ -->
+<div class="bg-slate-900 text-white rounded-[2.5rem] p-6 shadow-xl mb-8 relative overflow-hidden">
+  
+  <!-- Header Sezione -->
+  <div class="flex items-center gap-3 mb-5 border-b border-slate-800 pb-4">
+    <div class="w-10 h-10 rounded-2xl bg-indigo-600/30 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-lg">
+      <i class="fa-solid fa-circle-info"></i>
+    </div>
+    <div>
+      <p class="text-[9px] font-black uppercase tracking-widest text-indigo-400">Guida Rapida</p>
+      <h3 class="font-black italic text-lg uppercase leading-tight">Info Utili & Glossario</h3>
+    </div>
+  </div>
+
+  <!-- 1. INFO UTILI (Accordion / Tab Espandibili) -->
+  <div class="space-y-3 mb-6">
+    <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl overflow-hidden">
+      <button onclick="toggleInfoAccordion('info-payments')" class="w-full p-4 flex justify-between items-center text-left">
+        <span class="font-black text-xs uppercase tracking-wide flex items-center gap-2 text-indigo-300">
+          <i class="fa-solid fa-credit-card"></i> Pagamenti & Metro SL
+        </span>
+        <i id="icon-info-payments" class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform"></i>
+      </button>
+      <div id="info-payments" class="px-4 pb-4 text-xs font-medium text-slate-300 leading-relaxed hidden border-t border-slate-700/40 pt-3">
+        A Stoccolma il contante non si usa praticamente mai. Per la metropolitana e i bus (SL), basta avvicinare la carta contactless o lo smartphone direttamente ai tornelli.
+      </div>
+    </div>
+
+    <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl overflow-hidden">
+      <button onclick="toggleInfoAccordion('info-tips')" class="w-full p-4 flex justify-between items-center text-left">
+        <span class="font-black text-xs uppercase tracking-wide flex items-center gap-2 text-indigo-300">
+          <i class="fa-solid fa-plug"></i> Prese & Acqua
+        </span>
+        <i id="icon-info-tips" class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform"></i>
+      </button>
+      <div id="info-tips" class="px-4 pb-4 text-xs font-medium text-slate-300 leading-relaxed hidden border-t border-slate-700/40 pt-3">
+        Le prese elettriche sono di Tipo F (Schuko) da 230V. L'acqua del rubinetto a Stoccolma è tra le più pure d'Europa: porta una borraccia da riempire!
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. GLOSSARIO EXPRESS INTERATTIVO (Con Pronuncia Audio) -->
+  <div class="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-4">
+    <div class="flex justify-between items-center mb-3">
+      <h4 class="font-black text-xs uppercase tracking-wider text-slate-300 flex items-center gap-2">
+        <i class="fa-solid fa-comments text-indigo-400"></i> Glossario Express (Svedese)
+      </h4>
+      <span class="text-[9px] font-bold text-slate-400">Premi per ascoltare <i class="fa-solid fa-volume-high text-indigo-400"></i></span>
+    </div>
+
+    <div class="grid grid-cols-2 gap-2">
+      <!-- Card Parola Pronunciabile -->
+      <button onclick="speakSwedish('Hej')" class="bg-slate-800 hover:bg-slate-700 border border-slate-700/80 p-3 rounded-xl flex items-center justify-between active:scale-95 transition-all text-left">
+        <div>
+          <h5 class="font-black text-sm text-white">Hej!</h5>
+          <p class="text-[10px] font-bold text-slate-400">Ciao</p>
+        </div>
+        <div class="w-7 h-7 rounded-lg bg-indigo-600/30 flex items-center justify-center text-indigo-400 text-xs">
+          <i class="fa-solid fa-volume-high"></i>
+        </div>
+      </button>
+
+      <button onclick="speakSwedish('Tack')" class="bg-slate-800 hover:bg-slate-700 border border-slate-700/80 p-3 rounded-xl flex items-center justify-between active:scale-95 transition-all text-left">
+        <div>
+          <h5 class="font-black text-sm text-white">Tack!</h5>
+          <p class="text-[10px] font-bold text-slate-400">Grazie</p>
+        </div>
+        <div class="w-7 h-7 rounded-lg bg-indigo-600/30 flex items-center justify-center text-indigo-400 text-xs">
+          <i class="fa-solid fa-volume-high"></i>
+        </div>
+      </button>
+
+      <button onclick="speakSwedish('Fika')" class="bg-slate-800 hover:bg-slate-700 border border-slate-700/80 p-3 rounded-xl flex items-center justify-between active:scale-95 transition-all text-left">
+        <div>
+          <h5 class="font-black text-sm text-white">Fika</h5>
+          <p class="text-[10px] font-bold text-slate-400">Pausa caffè/dolce</p>
+        </div>
+        <div class="w-7 h-7 rounded-lg bg-indigo-600/30 flex items-center justify-center text-indigo-400 text-xs">
+          <i class="fa-solid fa-volume-high"></i>
+        </div>
+      </button>
+
+      <button onclick="speakSwedish('Ja, Nej')" class="bg-slate-800 hover:bg-slate-700 border border-slate-700/80 p-3 rounded-xl flex items-center justify-between active:scale-95 transition-all text-left">
+        <div>
+          <h5 class="font-black text-sm text-white">Ja / Nej</h5>
+          <p class="text-[10px] font-bold text-slate-400">Sì / No</p>
+        </div>
+        <div class="w-7 h-7 rounded-lg bg-indigo-600/30 flex items-center justify-center text-indigo-400 text-xs">
+          <i class="fa-solid fa-volume-high"></i>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
 
   <!-- 7. BANNER SOS & NAVIGAZIONE -->
   <div class="mt-auto pt-2">
@@ -1194,6 +1295,37 @@ function getUserNearestStation() {
       box.innerHTML = '<p class="text-xs font-bold text-red-500">Errore GPS. Attiva la posizione nel browser.</p>';
     }
   );
+}
+
+    // --- ACCORDION INFO UTILI ---
+function toggleInfoAccordion(id) {
+  const content = document.getElementById(id);
+  const icon = document.getElementById(`icon-${id}`);
+  
+  if (content.classList.contains('hidden')) {
+    content.classList.remove('hidden');
+    icon.style.transform = 'rotate(180deg)';
+  } else {
+    content.classList.add('hidden');
+    icon.style.transform = 'rotate(0deg)';
+  }
+}
+
+// --- SINTESI VOCALE PRONUNCIA SVEDESE (SpeechSynthesis API) ---
+function speakSwedish(text) {
+  if (!('speechSynthesis' in window)) {
+    alert("Sintesi vocale non supportata sul tuo dispositivo.");
+    return;
+  }
+
+  // Interrompe eventuali riproduzioni precedenti
+  window.speechSynthesis.cancel();
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'sv-SE'; // Imposta lingua Svedese
+  utterance.rate = 0.85;    // Velocità di lettura leggermente rallentata per chiarezza
+
+  window.speechSynthesis.speak(utterance);
 }
     
   </script>
