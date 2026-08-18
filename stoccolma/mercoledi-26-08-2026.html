@@ -93,6 +93,14 @@
     .nav-row a, .nav-row span { min-width: 110px; text-align:center; text-decoration:none; background:white; border:1px solid #E2E8F0; border-radius: 1rem; padding: .8rem 1rem; font-weight: 800; color:#334155; }
     .walk-label { background: white; border: 1px solid #cbd5e1; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 800; color: #1e293b; box-shadow: 0 2px 8px rgba(0,0,0,.12); white-space: nowrap; text-align: center; }
     .walk-label i { color: #4f46e5; margin-right: 3px; }
+
+#weather-banner {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+#weather-banner .fa-spin {
+  animation: spin 1s linear infinite;
+}
+    
     footer.app-footer { margin-top: 28px; padding: 18px 8px 2px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #94a3b8; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
     footer.app-footer .footer-brand { display: flex; align-items: center; gap: 8px; color: #64748b; }
     footer.app-footer img { width: 20px; height: 20px; border-radius: 6px; }
@@ -149,6 +157,51 @@ Buongiorno! Oggi scopriamo la città tra le acque.</p>
     </div>
     <button class="bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all" onclick="confermaPresenza()">OK</button>
   </div>
+
+<!-- CARD METEO CON SFONDO E GRAFICA DINAMICA -->
+<div id="weather-card-bg" class="bg-gradient-to-br from-sky-400 via-sky-500 to-blue-600 text-white rounded-[2rem] p-5 shadow-lg relative overflow-hidden mb-6 transition-all duration-500">
+  
+  <!-- Sfondo Grafico Dinamico (Icone sfumate in trasparenza) -->
+  <div id="weather-bg-pattern" class="absolute -right-4 -bottom-6 text-white/10 text-9xl pointer-events-none transition-all duration-500">
+    <i class="fa-solid fa-sun"></i>
+  </div>
+
+  <!-- Header Card Meteo -->
+  <div class="flex justify-between items-start mb-2 relative z-10">
+    <span class="bg-white/25 backdrop-blur-md text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full text-white">
+      Meteo Stoccolma Live
+    </span>
+    <!-- Icona Principale -->
+    <div id="weather-icon-live" class="text-yellow-300 text-3xl drop-shadow">
+      <i class="fa-solid fa-sun"></i>
+    </div>
+  </div>
+
+  <!-- Main Temp & Condizione -->
+  <div class="flex justify-between items-baseline mb-4 relative z-10">
+    <div class="flex items-baseline gap-2">
+      <span id="weather-temp-live" class="text-4xl font-black tracking-tight">--°C</span>
+      <span id="weather-desc-live" class="text-sm font-extrabold opacity-90">Aggiornamento...</span>
+    </div>
+    <div class="text-right">
+      <span id="weather-feels-live" class="text-xs font-extrabold opacity-85">Percepita --°</span>
+    </div>
+  </div>
+
+  <!-- Divider Line -->
+  <div class="border-t border-white/20 my-3 relative z-10"></div>
+
+  <!-- Box Consiglio Outfit / Info -->
+  <div class="flex items-center gap-3 text-xs font-bold leading-tight opacity-95 relative z-10">
+    <div class="shrink-0 text-base" id="weather-advice-icon">
+      <i class="fa-solid fa-shirt"></i>
+    </div>
+    <p id="weather-advice-live">
+      Caricamento consigli meteo...
+    </p>
+  </div>
+</div>
+  
   <!-- ========================================== -->
   <!--           4. SEZIONE MAPPA INTERATTIVA     -->
   <!-- ========================================== -->
@@ -702,105 +755,195 @@ Buongiorno! Oggi scopriamo la città tra le acque.</p>
       }, () => { alert('Impossibile recuperare la posizione GPS.'); });
     }
 
-// --- GESTIONE SWIPE TO DISMISS BANNER NOTIFICA (#push-alert) ---
-(function initSwipeToDismiss() {
+// --- SWIPE UP PER SCOMPARSA NOTIFICA (STILE NATIVO) ---
+(function initPushAlertSwipe() {
   const alertBox = document.getElementById('push-alert');
   if (!alertBox) return;
 
-  let startX = 0, startY = 0;
-  let currentX = 0, currentY = 0;
-  let isSwiping = false;
+  let startY = 0;
+  let currentY = 0;
+  let isDragging = false;
 
-  const onStart = (e) => {
+  const handleStart = (e) => {
+    // Si attiva solo se il banner è attualmente visibile
     if (!alertBox.classList.contains('show')) return;
     
-    // Recupera le coordinate di partenza (touch o mouse)
-    const touch = e.touches ? e.touches[0] : e;
-    startX = touch.clientX;
-    startY = touch.clientY;
-    currentX = startX;
+    isDragging = true;
+    startY = e.touches ? e.touches[0].clientY : e.clientY;
     currentY = startY;
     
-    isSwiping = true;
-    alertBox.style.transition = 'none'; // Rimuove il delay durante il trascinamento
+    // Disabilita la transizione CSS per far seguire il dito in tempo reale
+    alertBox.style.transition = 'none';
   };
 
-  const onMove = (e) => {
-    if (!isSwiping) return;
+  const handleMove = (e) => {
+    if (!isDragging) return;
     
-    const touch = e.touches ? e.touches[0] : e;
-    currentX = touch.clientX;
-    currentY = touch.clientY;
+    currentY = e.touches ? e.touches[0].clientY : e.clientY;
+    const deltaY = currentY - startY;
 
-    const diffX = currentX - startX;
-    const diffY = currentY - startY;
-
-    // Se si trascina verso l'alto (diffY < 0) o lateralmente (diffX != 0)
-    if (diffY < 0 || Math.abs(diffX) > Math.abs(diffY)) {
-      // Applica lo spostamento in tempo reale sul banner
-      const moveX = diffX;
-      const moveY = Math.min(0, diffY); // Solo verso l'alto per Y
+    // Consentiamo solo il movimento verso l'alto (deltaY negativo)
+    if (deltaY < 0) {
+      // Previeni lo scroll della pagina mentre trascini il banner
+      if (e.cancelable) e.preventDefault();
       
-      alertBox.style.transform = `translate(${moveX}px, ${moveY}px)`;
-      
-      // Calcola la trasparenza in base alla distanza di scorrimento
-      const distance = Math.sqrt(moveX * moveX + moveY * moveY);
-      const opacity = Math.max(0, 1 - distance / 150);
-      alertBox.style.opacity = opacity;
+      // Applica lo spostamento in alto e sfuma leggermente l'opacità
+      alertBox.style.transform = `translateY(${deltaY}px)`;
+      alertBox.style.opacity = Math.max(0, 1 + deltaY / 100);
     }
   };
 
-  const onEnd = () => {
-    if (!isSwiping) return;
-    isSwiping = false;
+  const handleEnd = () => {
+    if (!isDragging) return;
+    isDragging = false;
 
-    const diffX = currentX - startX;
-    const diffY = currentY - startY;
+    const deltaY = currentY - startY;
 
-    // Soglia minima di 50px per considerare lo swipe valido (in su, a destra o a sinistra)
-    const dismissedUp = diffY < -50;
-    const dismissedSide = Math.abs(diffX) > 60;
+    // Ripristina una transizione fluida per la chiusura o il ripristino
+    alertBox.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
 
-    if (dismissedUp || dismissedSide) {
-      // Ripristina la transizione per far scivolare via il banner fluidamente
-      alertBox.style.transition = 'all 0.3s ease-out';
-      
-      // Direzione di uscita
-      const exitX = diffX > 0 ? '120%' : (diffX < 0 ? '-120%' : '0px');
-      const exitY = diffY < 0 ? '-150%' : '0px';
-
-      alertBox.style.transform = `translate(${exitX}, ${exitY})`;
+    // Se è stato trascinato verso l'alto di almeno 30px, chiudi la notifica
+    if (deltaY < -30) {
+      alertBox.style.transform = 'translateY(-150%)';
       alertBox.style.opacity = '0';
 
-      // Reset definitivo e rimozione classe dopo l'animazione
       setTimeout(() => {
         alertBox.classList.remove('show');
+        // Reset per le successive apparizioni
         alertBox.style.transform = '';
         alertBox.style.opacity = '';
         alertBox.style.transition = '';
       }, 300);
     } else {
-      // Se lo swipe è troppo breve, il banner torna dolcemente in posizione
-      alertBox.style.transition = 'all 0.2s ease-out';
-      alertBox.style.transform = 'translate(0px, 0px)';
+      // Se lo swipe è troppo corto, torna alla posizione originale
+      alertBox.style.transform = 'translateY(0)';
       alertBox.style.opacity = '1';
-      
+
       setTimeout(() => {
         alertBox.style.transition = '';
-      }, 200);
+      }, 300);
     }
   };
 
-  // Eventi Touch (Mobile)
-  alertBox.addEventListener('touchstart', onStart, { passive: true });
-  alertBox.addEventListener('touchmove', onMove, { passive: true });
-  alertBox.addEventListener('touchend', onEnd);
+  // Listener Eventi Touch (Mobile)
+  alertBox.addEventListener('touchstart', handleStart, { passive: false });
+  alertBox.addEventListener('touchmove', handleMove, { passive: false });
+  alertBox.addEventListener('touchend', handleEnd);
 
-  // Eventi Mouse (Desktop/Test)
-  alertBox.addEventListener('mousedown', onStart);
-  window.addEventListener('mousemove', onMove);
-  window.addEventListener('mouseup', onEnd);
+  // Listener Eventi Mouse (Desktop/Test)
+  alertBox.addEventListener('mousedown', handleStart);
+  window.addEventListener('mousemove', handleMove);
+  window.addEventListener('mouseup', handleEnd);
 })();
+
+// --- CARICAMENTO METEO CON SFONDO E GRAFICA DINAMICA ---
+async function fetchExactWeather() {
+  const lat = 59.3323;
+  const lng = 18.0583;
+
+  try {
+    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true&hourly=apparent_temperature`);
+    const data = await res.json();
+
+    if (data && data.current_weather) {
+      const temp = Math.round(data.current_weather.temperature);
+      const code = data.current_weather.weathercode;
+      const apparentTemp = data.hourly?.apparent_temperature ? Math.round(data.hourly.apparent_temperature[new Date().getHours()]) : temp;
+
+      // Mappatura completa: Meteo, Gradienti Sfondo, Icona Sfondo, Icona Main, Consiglio e Icona Outfit
+      const weatherMap = {
+        0: { 
+          desc: 'Soleggiato', 
+          icon: 'fa-sun', 
+          bgClass: 'from-sky-400 via-sky-500 to-blue-600',
+          bgPattern: 'fa-sun',
+          advice: 'Meteo perfetto: consigliata giacca leggera o felpa per la sera.', 
+          adviceIcon: 'fa-shirt' 
+        },
+        1: { 
+          desc: 'Preval. Sereno', 
+          icon: 'fa-cloud-sun', 
+          bgClass: 'from-sky-400 via-blue-500 to-indigo-600',
+          bgPattern: 'fa-cloud-sun',
+          advice: 'Tempo ottimo, porta una felpa per i momenti all\'ombra.', 
+          adviceIcon: 'fa-shirt' 
+        },
+        2: { 
+          desc: 'Parz. Nuvoloso', 
+          icon: 'fa-cloud-sun', 
+          bgClass: 'from-slate-400 via-sky-500 to-blue-600',
+          bgPattern: 'fa-cloud',
+          advice: 'Nubi passeggere: ideale vestirsi a strati.', 
+          adviceIcon: 'fa-shirt' 
+        },
+        3: { 
+          desc: 'Coperto', 
+          icon: 'fa-cloud', 
+          bgClass: 'from-slate-500 via-slate-600 to-slate-700',
+          bgPattern: 'fa-cloud',
+          advice: 'Cielo coperto: consigliata giacca antivento.', 
+          adviceIcon: 'fa-vest' 
+        },
+        51: { 
+          desc: 'Pioggerella', 
+          icon: 'fa-cloud-rain', 
+          bgClass: 'from-blue-600 via-slate-600 to-slate-800',
+          bgPattern: 'fa-cloud-rain',
+          advice: 'Pioggia leggera: porta un ombrello pieghevole o k-way.', 
+          adviceIcon: 'fa-umbrella' 
+        },
+        61: { 
+          desc: 'Pioggia', 
+          icon: 'fa-cloud-showers-heavy', 
+          bgClass: 'from-slate-700 via-blue-800 to-slate-900',
+          bgPattern: 'fa-cloud-showers-heavy',
+          advice: 'Pioggia in corso: consigliato ombrello e scarpe impermeabili.', 
+          adviceIcon: 'fa-umbrella' 
+        },
+        95: { 
+          desc: 'Temporale', 
+          icon: 'fa-cloud-bolt', 
+          bgClass: 'from-slate-800 via-purple-900 to-slate-950',
+          bgPattern: 'fa-cloud-bolt',
+          advice: 'Temporale: consigliato riparo al coperto e k-way.', 
+          adviceIcon: 'fa-umbrella' 
+        }
+      };
+
+      const info = weatherMap[code] || { 
+        desc: 'Soleggiato', 
+        icon: 'fa-sun', 
+        bgClass: 'from-sky-400 via-sky-500 to-blue-600',
+        bgPattern: 'fa-sun',
+        advice: 'Meteo piacevole: consigliata giacca leggera a portata di mano.', 
+        adviceIcon: 'fa-shirt' 
+      };
+
+      // Aggiornamento gradiente e sfondo grafico
+      const cardEl = document.getElementById('weather-card-bg');
+      cardEl.className = `bg-gradient-to-br ${info.bgClass} text-white rounded-[2rem] p-5 shadow-lg relative overflow-hidden mb-6 transition-all duration-500`;
+      document.getElementById('weather-bg-pattern').innerHTML = `<i class="fa-solid ${info.bgPattern}"></i>`;
+
+      // Aggiornamento testi e icone
+      document.getElementById('weather-temp-live').innerText = `${temp}°C`;
+      document.getElementById('weather-desc-live').innerText = info.desc;
+      document.getElementById('weather-feels-live').innerText = `Percepita ${apparentTemp}°`;
+      document.getElementById('weather-advice-live').innerText = info.advice;
+      document.getElementById('weather-icon-live').innerHTML = `<i class="fa-solid ${info.icon}"></i>`;
+      document.getElementById('weather-advice-icon').innerHTML = `<i class="fa-solid ${info.adviceIcon}"></i>`;
+    }
+  } catch (e) {
+    // Fallback di sicurezza in caso di offline
+    document.getElementById('weather-temp-live').innerText = '19°C';
+    document.getElementById('weather-desc-live').innerText = 'Soleggiato';
+    document.getElementById('weather-feels-live').innerText = 'Percepita 20°';
+    document.getElementById('weather-advice-live').innerText = 'Meteo perfetto: consigliata giacca leggera o felpa per la sera.';
+    document.getElementById('weather-icon-live').innerHTML = '<i class="fa-solid fa-sun"></i>';
+    document.getElementById('weather-advice-icon').innerHTML = '<i class="fa-solid fa-shirt"></i>';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', fetchExactWeather);
     
   </script>
 </body>
