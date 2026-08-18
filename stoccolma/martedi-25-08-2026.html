@@ -669,46 +669,87 @@
   const alertBox = document.getElementById('push-alert');
   if (!alertBox) return;
 
-  let startY = 0, currentY = 0, isSwiping = false;
+  let startX = 0, startY = 0;
+  let currentX = 0, currentY = 0;
+  let isSwiping = false;
 
   const onStart = (e) => {
     if (!alertBox.classList.contains('show')) return;
-    startY = e.touches ? e.touches[0].clientY : e.clientY;
+    
+    // Recupera le coordinate di partenza (touch o mouse)
+    const touch = e.touches ? e.touches[0] : e;
+    startX = touch.clientX;
+    startY = touch.clientY;
+    currentX = startX;
+    currentY = startY;
+    
     isSwiping = true;
-    alertBox.classList.add('swiping');
+    alertBox.style.transition = 'none'; // Rimuove il delay durante il trascinamento
   };
 
   const onMove = (e) => {
     if (!isSwiping) return;
-    currentY = e.touches ? e.touches[0].clientY : e.clientY;
+    
+    const touch = e.touches ? e.touches[0] : e;
+    currentX = touch.clientX;
+    currentY = touch.clientY;
+
+    const diffX = currentX - startX;
     const diffY = currentY - startY;
 
-    // Consentiamo solo il trascinamento verso l'alto (dismiss)
-    if (diffY < 0) {
-      alertBox.style.transform = `translateY(${diffY}px)`;
-      alertBox.style.opacity = `${1 - Math.abs(diffY) / 120}`;
+    // Se si trascina verso l'alto (diffY < 0) o lateralmente (diffX != 0)
+    if (diffY < 0 || Math.abs(diffX) > Math.abs(diffY)) {
+      // Applica lo spostamento in tempo reale sul banner
+      const moveX = diffX;
+      const moveY = Math.min(0, diffY); // Solo verso l'alto per Y
+      
+      alertBox.style.transform = `translate(${moveX}px, ${moveY}px)`;
+      
+      // Calcola la trasparenza in base alla distanza di scorrimento
+      const distance = Math.sqrt(moveX * moveX + moveY * moveY);
+      const opacity = Math.max(0, 1 - distance / 150);
+      alertBox.style.opacity = opacity;
     }
   };
 
   const onEnd = () => {
     if (!isSwiping) return;
     isSwiping = false;
-    alertBox.classList.remove('swiping');
+
+    const diffX = currentX - startX;
     const diffY = currentY - startY;
 
-    // Se è stato trascinato verso l'alto di oltre 40px, chiudi il banner
-    if (diffY < -40) {
-      alertBox.style.transform = 'translateY(-150%)';
+    // Soglia minima di 50px per considerare lo swipe valido (in su, a destra o a sinistra)
+    const dismissedUp = diffY < -50;
+    const dismissedSide = Math.abs(diffX) > 60;
+
+    if (dismissedUp || dismissedSide) {
+      // Ripristina la transizione per far scivolare via il banner fluidamente
+      alertBox.style.transition = 'all 0.3s ease-out';
+      
+      // Direzione di uscita
+      const exitX = diffX > 0 ? '120%' : (diffX < 0 ? '-120%' : '0px');
+      const exitY = diffY < 0 ? '-150%' : '0px';
+
+      alertBox.style.transform = `translate(${exitX}, ${exitY})`;
       alertBox.style.opacity = '0';
+
+      // Reset definitivo e rimozione classe dopo l'animazione
       setTimeout(() => {
         alertBox.classList.remove('show');
         alertBox.style.transform = '';
         alertBox.style.opacity = '';
-      }, 400);
+        alertBox.style.transition = '';
+      }, 300);
     } else {
-      // Ripristina la posizione originale se il gesto non basta
-      alertBox.style.transform = '';
-      alertBox.style.opacity = '';
+      // Se lo swipe è troppo breve, il banner torna dolcemente in posizione
+      alertBox.style.transition = 'all 0.2s ease-out';
+      alertBox.style.transform = 'translate(0px, 0px)';
+      alertBox.style.opacity = '1';
+      
+      setTimeout(() => {
+        alertBox.style.transition = '';
+      }, 200);
     }
   };
 
@@ -717,7 +758,7 @@
   alertBox.addEventListener('touchmove', onMove, { passive: true });
   alertBox.addEventListener('touchend', onEnd);
 
-  // Eventi Mouse (Desktop/Testing)
+  // Eventi Mouse (Desktop/Test)
   alertBox.addEventListener('mousedown', onStart);
   window.addEventListener('mousemove', onMove);
   window.addEventListener('mouseup', onEnd);
