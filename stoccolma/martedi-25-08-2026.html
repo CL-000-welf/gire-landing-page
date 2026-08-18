@@ -1134,31 +1134,26 @@
   window.addEventListener('mouseup', handleEnd);
 })();
 
-    // --- CARICAMENTO METEO CON SFONDO E GRAFICA DINAMICA ---
-// --- CARICAMENTO METEO CON SFONDO E GRAFICA DINAMICA (GIORNO / NOTTE) ---
+ // --- CARICAMENTO METEO CON SFONDO E GRAFICA DINAMICA (GIORNO / NOTTE) ---
 async function fetchExactWeather() {
   const lat = 59.3323;
   const lng = 18.0583;
 
   try {
-    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true&hourly=apparent_temperature&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto`);
+    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true&hourly=apparent_temperature&daily=temperature_2m_max,temperature_2m_min&timezone=auto`);
     const data = await res.json();
 
     if (data && data.current_weather) {
       const temp = Math.round(data.current_weather.temperature);
       const code = data.current_weather.weathercode;
-      const apparentTemp = data.hourly?.apparent_temperature ? Math.round(data.hourly.apparent_temperature[new Date().getHours()]) : temp;
+      const isNight = data.current_weather.is_day === 0;
+      
+      const currentHour = new Date().getHours();
+      const apparentTemp = data.hourly?.apparent_temperature ? Math.round(data.hourly.apparent_temperature[currentHour]) : temp;
       
       const minTemp = data.daily?.temperature_2m_min?.[0] !== undefined ? Math.round(data.daily.temperature_2m_min[0]) : null;
       const maxTemp = data.daily?.temperature_2m_max?.[0] !== undefined ? Math.round(data.daily.temperature_2m_max[0]) : null;
 
-      // Controllo se è notte confrontando l'ora attuale con alba e tramonto
-      const now = new Date();
-      const sunrise = data.daily?.sunrise?.[0] ? new Date(data.daily.sunrise[0]) : null;
-      const sunset = data.daily?.sunset?.[0] ? new Date(data.daily.sunset[0]) : null;
-      const isNight = sunrise && sunset ? (now < sunrise || now > sunset) : (now.getHours() >= 21 || now.getHours() < 6);
-
-      // Mappatura meteo con varianti Giorno e Notte
       const weatherMap = {
         0: { 
           desc: isNight ? 'Sereno (Notte)' : 'Soleggiato', 
@@ -1258,31 +1253,6 @@ async function fetchExactWeather() {
 }
 
 document.addEventListener('DOMContentLoaded', fetchExactWeather);
-      // Aggiornamento gradiente e sfondo grafico
-      const cardEl = document.getElementById('weather-card-bg');
-      cardEl.className = `bg-gradient-to-br ${info.bgClass} text-white rounded-[2rem] p-5 shadow-lg relative overflow-hidden mb-6 transition-all duration-500`;
-      document.getElementById('weather-bg-pattern').innerHTML = `<i class="fa-solid ${info.bgPattern}"></i>`;
-
-      // Aggiornamento testi e icone
-      document.getElementById('weather-temp-live').innerText = `${temp}°C`;
-      document.getElementById('weather-desc-live').innerText = info.desc;
-      document.getElementById('weather-feels-live').innerText = `Percepita ${apparentTemp}°`;
-      document.getElementById('weather-advice-live').innerText = info.advice;
-      document.getElementById('weather-icon-live').innerHTML = `<i class="fa-solid ${info.icon}"></i>`;
-      document.getElementById('weather-advice-icon').innerHTML = `<i class="fa-solid ${info.adviceIcon}"></i>`;
-    }
-  } catch (e) {
-    // Fallback di sicurezza in caso di offline
-    document.getElementById('weather-temp-live').innerText = '19°C';
-    document.getElementById('weather-desc-live').innerText = 'Soleggiato';
-    document.getElementById('weather-feels-live').innerText = 'Percepita 20°';
-    document.getElementById('weather-advice-live').innerText = 'Meteo perfetto: consigliata giacca leggera o felpa per la sera.';
-    document.getElementById('weather-icon-live').innerHTML = '<i class="fa-solid fa-sun"></i>';
-    document.getElementById('weather-advice-icon').innerHTML = '<i class="fa-solid fa-shirt"></i>';
-  }
-}
-
-document.addEventListener('DOMContentLoaded', fetchExactWeather);
 
 // --- LOGICA CAMBIO VALUTA (SEK -> EUR fino a 1000€ / 11500 SEK) ---
 const exchangeRate = 0.087; // 1 SEK ≈ 0.087 EUR
@@ -1320,7 +1290,6 @@ function calculateCurrency(sekVal) {
   document.getElementById('conv-eur').innerText = `${eur} €`;
   document.getElementById('conv-sek-label').innerText = `${sek} Kronor Svedesi (SEK)`;
 }
-
    
 // --- LOGICA MODALE METRO SL CON LEAFLET IN-APP ---
 let metroMapInstance = null;
