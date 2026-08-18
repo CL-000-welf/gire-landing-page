@@ -636,6 +636,33 @@
     </div>
   </div>
 
+  <!-- MODALE MAPPA RISTORANTE IN-APP -->
+<div id="foodMapModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+  <div class="bg-white w-full max-w-lg rounded-3xl p-5 shadow-2xl relative flex flex-col max-h-[90vh]">
+    <div class="flex justify-between items-start mb-3">
+      <div>
+        <span id="food-modal-type" class="text-[10px] font-black uppercase text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">Ristorante</span>
+        <h3 id="food-modal-title" class="text-lg font-black text-slate-900 leading-tight mt-1">Nome Ristorante</h3>
+        <p id="food-modal-address" class="text-xs font-medium text-slate-500"><i class="fa-solid fa-location-dot text-indigo-500"></i> Indirizzo...</p>
+      </div>
+      <button onclick="closeFoodMapModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center hover:bg-slate-200 text-sm">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="w-full h-64 sm:h-80 rounded-2xl overflow-hidden border border-slate-200 mb-3 bg-slate-100 relative">
+      <div id="food-leaflet-map" class="w-full h-full"></div>
+    </div>
+
+    <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+      <div id="food-modal-dist" class="text-xs font-bold text-slate-600"></div>
+      <button onclick="closeFoodMapModal()" class="bg-slate-900 text-white font-black text-xs px-5 py-2.5 rounded-xl">
+        Chiudi
+      </button>
+    </div>
+  </div>
+</div>
+  
   <!-- Modale SOS -->
   <div id="sosModal" onclick="closeSOSModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
@@ -1496,38 +1523,6 @@ document.addEventListener('DOMContentLoaded', () => {
   renderGlossary(0);
   updateDayContent('mar'); // <-- Dice alla pagina di prendere i dati di MARTEDÌ
 });
-
-//-- MODALE MAPPA RISTORANTE IN-APP --
-<div id="foodMapModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-  <div class="bg-white w-full max-w-lg rounded-3xl p-5 shadow-2xl relative flex flex-col max-h-[90vh]">
-    <!-- Header Modale -->
-    <div class="flex justify-between items-start mb-3">
-      <div>
-        <span id="food-modal-type" class="text-[10px] font-black uppercase text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">Ristorante</span>
-        <h3 id="food-modal-title" class="text-lg font-black text-slate-900 leading-tight mt-1">Nome Ristorante</h3>
-        <p id="food-modal-address" class="text-xs font-medium text-slate-500"><i class="fa-solid fa-location-dot text-indigo-500"></i> Indirizzo...</p>
-      </div>
-      <button onclick="closeFoodMapModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center hover:bg-slate-200 text-sm">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-
-    <!-- Mappa Leaflet Integrata -->
-    <div class="w-full h-64 sm:h-80 rounded-2xl overflow-hidden border border-slate-200 mb-3 bg-slate-100 relative">
-      <div id="food-leaflet-map" class="w-full h-full"></div>
-    </div>
-
-    <!-- Footer info / azione -->
-    <div class="flex items-center justify-between pt-2 border-t border-slate-100">
-      <div id="food-modal-dist" class="text-xs font-bold text-slate-600">
-        <!-- Distanza GPS inserita via JS -->
-      </div>
-      <button onclick="closeFoodMapModal()" class="bg-slate-900 text-white font-black text-xs px-5 py-2.5 rounded-xl">
-        Chiudi
-      </button>
-    </div>
-  </div>
-</div>
     
 // --- DATABASE RISTORANTI & CAFFÈ ---
 const foodPlaces = [
