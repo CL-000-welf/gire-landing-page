@@ -409,6 +409,48 @@ Buongiorno! Oggi scopriamo la città tra le acque.</p>
       </div>
     </div>
   </div>
+
+ <!-- =================================================== -->
+ <!-- SEZIONE DOVE MANGIARE & FIKA (SLIDER ORIZZONTALE)   -->
+ <!-- =================================================== -->
+<section class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 mb-6">
+  <div class="flex items-center justify-between mb-3">
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg">
+        <i class="fa-solid fa-utensils"></i>
+      </div>
+      <div>
+        <h3 class="font-black text-slate-900 text-base leading-tight">Dove Mangiare & Fika</h3>
+        <p class="text-[11px] font-bold text-slate-400">Scorri i consigli nella zona di oggi</p>
+      </div>
+    </div>
+    <button onclick="getNearbyFood()" class="bg-amber-50 text-amber-700 text-xs font-black px-3 py-1.5 rounded-xl flex items-center gap-1.5 hover:bg-amber-100 transition-all shrink-0">
+      <i class="fa-solid fa-location-crosshairs text-amber-600"></i> Vicino a me
+    </button>
+  </div>
+
+  <!-- Filtri Categoria con Icone Font Awesome -->
+  <div class="flex gap-2 overflow-x-auto pb-2 mb-3 no-scrollbar text-[11px] font-black">
+    <button onclick="filterFood('all')" id="food-btn-all" class="px-3 py-1.5 rounded-xl bg-slate-900 text-white whitespace-nowrap flex items-center gap-1.5 shrink-0">
+      <i class="fa-solid fa-layer-group"></i> Tutti
+    </button>
+    <button onclick="filterFood('fika')" id="food-btn-fika" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 whitespace-nowrap flex items-center gap-1.5 shrink-0">
+      <i class="fa-solid fa-mug-hot"></i> Fika & Dolci
+    </button>
+    <button onclick="filterFood('svedese')" id="food-btn-svedese" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 whitespace-nowrap flex items-center gap-1.5 shrink-0">
+      <i class="fa-solid fa-bowl-food"></i> Tipico Svedese
+    </button>
+    <button onclick="filterFood('quick')" id="food-btn-quick" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 whitespace-nowrap flex items-center gap-1.5 shrink-0">
+      <i class="fa-solid fa-burger"></i> Rapido / Economico
+    </button>
+  </div>
+
+  <!-- Contenitore Carousel Orizzontale -->
+  <div id="food-list-container" class="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 no-scrollbar">
+    <!-- Le schede verranno inserite dinamicamente affiancate -->
+  </div>
+</section>
+  
   <!-- ========================================== -->
   <!--           6. CARD DIARIO / SCHEDE TAPPE   -->
   <!-- ========================================== -->
@@ -633,6 +675,33 @@ Buongiorno! Oggi scopriamo la città tra le acque.</p>
       <button class="w-full bg-slate-900 text-white py-3 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeMapModal()">Chiudi Mappa</button>
     </div>
   </div>
+
+  <!-- MODALE MAPPA RISTORANTE IN-APP -->
+<div id="foodMapModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+  <div class="bg-white w-full max-w-lg rounded-3xl p-5 shadow-2xl relative flex flex-col max-h-[90vh]">
+    <div class="flex justify-between items-start mb-3">
+      <div>
+        <span id="food-modal-type" class="text-[10px] font-black uppercase text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">Ristorante</span>
+        <h3 id="food-modal-title" class="text-lg font-black text-slate-900 leading-tight mt-1">Nome Ristorante</h3>
+        <p id="food-modal-address" class="text-xs font-medium text-slate-500"><i class="fa-solid fa-location-dot text-indigo-500"></i> Indirizzo...</p>
+      </div>
+      <button onclick="closeFoodMapModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center hover:bg-slate-200 text-sm">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="w-full h-64 sm:h-80 rounded-2xl overflow-hidden border border-slate-200 mb-3 bg-slate-100 relative">
+      <div id="food-leaflet-map" class="w-full h-full"></div>
+    </div>
+
+    <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+      <div id="food-modal-dist" class="text-xs font-bold text-slate-600"></div>
+      <button onclick="closeFoodMapModal()" class="bg-slate-900 text-white font-black text-xs px-5 py-2.5 rounded-xl">
+        Chiudi
+      </button>
+    </div>
+  </div>
+</div>
   
   <!-- Pop-up Contatti di Emergenza SOS -->
   <div id="sosModal" onclick="closeSOSModal()">
@@ -1489,6 +1558,245 @@ function toggleInfoAccordion(id) {
 document.addEventListener('DOMContentLoaded', () => {
   renderGlossary(0);
   updateDayContent('mer'); // <-- Dice alla pagina di prendere i dati di MERCOLEDÌ
+});
+
+    // --- DATABASE RISTORANTI & CAFFÈ ---
+const foodPlaces = [
+  {
+    id: 1,
+    name: "Café Satir (Nationalmuseum)",
+    type: "fika",
+    icon: "fa-mug-hot",
+    typeLabel: "Fika & Caffè",
+    price: "€€",
+    lat: 59.3283,
+    lng: 18.0781,
+    desc: "Ottimo caffè e kanelbullar dentro l'atrio del museo.",
+    tip: "Consigliato per la pausetta Fika a metà mattina.",
+    address: "Södra Blasieholmshamnen 2"
+  },
+  {
+    id: 2,
+    name: "Tradition",
+    type: "svedese",
+    icon: "fa-bowl-food",
+    typeLabel: "Tipico Svedese",
+    price: "€€€",
+    lat: 59.3255,
+    lng: 18.0731,
+    desc: "Cucina tradizionale svedese (Köttbullar, aringhe, renna).",
+    tip: "Polpette svedesi eccezionali! Consigliata la prenotazione.",
+    address: "Österlånggatan 1"
+  },
+  {
+    id: 3,
+    name: "K25 Food Hall",
+    type: "quick",
+    icon: "fa-burger",
+    typeLabel: "Rapido / Economico",
+    price: "€",
+    lat: 59.3364,
+    lng: 18.0645,
+    desc: "Food court moderna con oltre 10 stand (hamburger, asiatico, burrito, falafel).",
+    tip: "Perfetto per un pranzo veloce ed economico in centro.",
+    address: "Kungsgatan 25"
+  },
+  {
+    id: 4,
+    name: "Vete-Katten",
+    type: "fika",
+    icon: "fa-cake-candles",
+    typeLabel: "Fika & Dolci",
+    price: "€€",
+    lat: 59.3341,
+    lng: 18.0583,
+    desc: "La pasticceria storica più famosa di Stoccolma (dal 1928), tra sale vintage.",
+    tip: "Prova la Princess tårta o i kardemummabulle.",
+    address: "Kungsgatan 55"
+  },
+  {
+    id: 5,
+    name: "Strömmingsvagnen",
+    type: "quick",
+    icon: "fa-fish",
+    typeLabel: "Tipico / Rapido",
+    price: "€",
+    lat: 59.3198,
+    lng: 18.0722,
+    desc: "Chiosco storico di aringa fritta servita su pane di segale o con purè.",
+    tip: "Street food svedese super tipico, gustoso ed economico.",
+    address: "Ryssgården, Slussen"
+  }
+];
+
+let currentFoodFilter = 'all';
+let foodMapInstance = null;
+let foodMarker = null;
+let foodUserMarker = null;
+
+// Renderizza i ristoranti come card orizzontali
+function renderFoodList(places = foodPlaces) {
+  const container = document.getElementById('food-list-container');
+  if (!container) return;
+
+  if (places.length === 0) {
+    container.innerHTML = `<p class="text-xs font-bold text-slate-400 text-center py-4 w-full">Nessun locale trovato per questa categoria.</p>`;
+    return;
+  }
+
+  container.innerHTML = places.map(place => {
+    const distText = place.distance 
+      ? `<span class="text-amber-600 font-black"><i class="fa-solid fa-location-arrow"></i> ${place.distance < 1000 ? place.distance + ' m' : (place.distance/1000).toFixed(1) + ' km'}</span> • ` 
+      : '';
+    
+    return `
+      <div class="w-[82%] sm:w-[280px] shrink-0 snap-align-start p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col justify-between gap-2 shadow-xs">
+        <div>
+          <div class="flex justify-between items-start gap-2 mb-1">
+            <h4 class="font-black text-sm text-slate-900 leading-tight line-clamp-1">${place.name}</h4>
+            <span class="bg-amber-100 text-amber-800 text-[10px] font-black px-2 py-0.5 rounded-md whitespace-nowrap shrink-0">${place.price}</span>
+          </div>
+          <p class="text-xs text-slate-600 mb-2 line-clamp-2">${place.desc}</p>
+          <div class="bg-white p-2 rounded-xl text-[11px] text-amber-900 border border-amber-100 font-medium flex items-start gap-2">
+            <i class="fa-solid fa-lightbulb text-amber-500 mt-0.5 shrink-0"></i>
+            <div class="line-clamp-2"><strong>Tip:</strong> ${place.tip}</div>
+          </div>
+        </div>
+        <div class="flex justify-between items-center pt-2 border-t border-slate-200/60 text-[11px] font-bold text-slate-500">
+          <div class="flex items-center gap-1.5 truncate">
+            ${distText}
+            <span class="flex items-center gap-1 truncate"><i class="fa-solid ${place.icon} text-slate-400"></i> ${place.typeLabel}</span>
+          </div>
+          <button onclick="openFoodMap(${place.id})" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-black px-2.5 py-1 rounded-lg flex items-center gap-1 shrink-0 ml-1 transition-all">
+            <i class="fa-solid fa-map-pin"></i> Mappa
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Filtra i ristoranti per categoria
+function filterFood(type) {
+  currentFoodFilter = type;
+  const buttons = ['all', 'fika', 'svedese', 'quick'];
+
+  buttons.forEach(t => {
+    const btn = document.getElementById(`food-btn-${t}`);
+    if (btn) {
+      if (t === type) {
+        btn.className = "px-3 py-1.5 rounded-xl bg-slate-900 text-white whitespace-nowrap flex items-center gap-1.5 shrink-0";
+      } else {
+        btn.className = "px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 whitespace-nowrap flex items-center gap-1.5 shrink-0";
+      }
+    }
+  });
+
+  if (type === 'all') {
+    renderFoodList(foodPlaces);
+  } else {
+    const filtered = foodPlaces.filter(p => p.type === type || (type === 'svedese' && p.type === 'quick'));
+    renderFoodList(filtered);
+  }
+}
+
+// Trova i locali più vicini alla posizione GPS dell'utente
+function getNearbyFood() {
+  const container = document.getElementById('food-list-container');
+  container.innerHTML = `<p class="text-xs font-black text-amber-600 text-center py-4 w-full"><i class="fa-solid fa-spinner fa-spin"></i> Calcolo locali più vicini a te...</p>`;
+
+  if (!navigator.geolocation) {
+    alert("Geolocalizzazione non supportata dal tuo browser.");
+    renderFoodList();
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const userLat = pos.coords.latitude;
+      const userLng = pos.coords.longitude;
+
+      const placesWithDist = foodPlaces.map(place => {
+        const dist = getDistanceMeters(userLat, userLng, place.lat, place.lng);
+        return { ...place, distance: Math.round(dist) };
+      });
+
+      placesWithDist.sort((a, b) => a.distance - b.distance);
+
+      if (currentFoodFilter !== 'all') {
+        const filtered = placesWithDist.filter(p => p.type === currentFoodFilter);
+        renderFoodList(filtered);
+      } else {
+        renderFoodList(placesWithDist);
+      }
+      
+      container.scrollLeft = 0;
+    },
+    () => {
+      alert("Impossibile accedere alla tua posizione GPS.");
+      renderFoodList();
+    }
+  );
+}
+
+// Apri Modale Mappa per il Ristorante
+function openFoodMap(placeId) {
+  const place = foodPlaces.find(p => p.id === placeId);
+  if (!place) return;
+
+  document.getElementById('food-modal-title').innerText = place.name;
+  document.getElementById('food-modal-type').innerText = place.typeLabel;
+  document.getElementById('food-modal-address').innerHTML = `<i class="fa-solid fa-location-dot text-indigo-500"></i> ${place.address}`;
+  document.getElementById('food-modal-dist').innerHTML = place.distance ? `<i class="fa-solid fa-person-walking text-amber-600"></i> Distanza: <strong>${place.distance < 1000 ? place.distance + ' m' : (place.distance/1000).toFixed(1) + ' km'}</strong>` : '';
+
+  const modal = document.getElementById('foodMapModal');
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+
+  setTimeout(() => {
+    if (!foodMapInstance) {
+      foodMapInstance = L.map('food-leaflet-map').setView([place.lat, place.lng], 16);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+      }).addTo(foodMapInstance);
+    } else {
+      foodMapInstance.setView([place.lat, place.lng], 16);
+    }
+
+    foodMapInstance.invalidateSize();
+
+    if (foodMarker) foodMapInstance.removeLayer(foodMarker);
+    if (foodUserMarker) foodMapInstance.removeLayer(foodUserMarker);
+
+    foodMarker = L.marker([place.lat, place.lng]).addTo(foodMapInstance)
+      .bindPopup(`<b>${place.name}</b><br>${place.address}`).openPopup();
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        const uLat = pos.coords.latitude;
+        const uLng = pos.coords.longitude;
+
+        foodUserMarker = L.marker([uLat, uLng]).addTo(foodMapInstance)
+          .bindPopup("<b>Tu sei qui</b>");
+
+        const bounds = L.latLngBounds([[uLat, uLng], [place.lat, place.lng]]);
+        foodMapInstance.fitBounds(bounds, { padding: [40, 40] });
+      }, () => {});
+    }
+  }, 100);
+}
+
+// Chiudi Modale Mappa Ristorante
+function closeFoodMapModal() {
+  const modal = document.getElementById('foodMapModal');
+  modal.classList.add('hidden');
+  modal.classList.remove('flex');
+}
+
+// Inizializza al caricamento della pagina
+document.addEventListener('DOMContentLoaded', () => {
+  renderFoodList();
 });
     
   </script>
