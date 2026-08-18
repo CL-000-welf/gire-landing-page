@@ -267,14 +267,14 @@
    <!-- Scelte Rapide Tagli Turistici -->
     <p class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-2">Seleziona Corone (SEK):</p>
     <div class="grid grid-cols-3 gap-2 mb-4">
-      <button data-value="50" onclick="setSekValue(50)" class="preset-btn border py-2.5 rounded-xl font-black text-xs active:scale-95 transition-all">50 SEK (~4€)</button>
-      <button data-value="100" onclick="setSekValue(100)" class="preset-btn border py-2.5 rounded-xl font-black text-xs active:scale-95 transition-all">100 SEK (~9€)</button>
-      <button data-value="200" onclick="setSekValue(200)" class="preset-btn border py-2.5 rounded-xl font-black text-xs active:scale-95 transition-all">200 SEK (~17€)</button>
-      <button data-value="500" onclick="setSekValue(500)" class="preset-btn border py-2.5 rounded-xl font-black text-xs active:scale-95 transition-all">500 SEK (~43€)</button>
-      <button data-value="1000" onclick="setSekValue(1000)" class="preset-btn border py-2.5 rounded-xl font-black text-xs active:scale-95 transition-all">1000 SEK (~87€)</button>
-      <button data-value="2500" onclick="setSekValue(2500)" class="preset-btn border py-2.5 rounded-xl font-black text-xs active:scale-95 transition-all">2500 SEK (~217€)</button>
+      <button data-value="50" onclick="setSekValue(50)" class="preset-btn border py-3 rounded-xl font-black text-xs active:scale-95 transition-all">50 SEK</button>
+      <button data-value="100" onclick="setSekValue(100)" class="preset-btn border py-3 rounded-xl font-black text-xs active:scale-95 transition-all">100 SEK</button>
+      <button data-value="200" onclick="setSekValue(200)" class="preset-btn border py-3 rounded-xl font-black text-xs active:scale-95 transition-all">200 SEK</button>
+      <button data-value="500" onclick="setSekValue(500)" class="preset-btn border py-3 rounded-xl font-black text-xs active:scale-95 transition-all">500 SEK</button>
+      <button data-value="1000" onclick="setSekValue(1000)" class="preset-btn border py-3 rounded-xl font-black text-xs active:scale-95 transition-all">1000 SEK</button>
+      <button data-value="2500" onclick="setSekValue(2500)" class="preset-btn border py-3 rounded-xl font-black text-xs active:scale-95 transition-all">2500 SEK</button>
     </div>
-
+    
     <!-- Slider Fino a 2500 SEK (~220€) -->
     <input id="sek-range" type="range" min="10" max="2500" value="500" step="10" class="w-full accent-emerald-500 mb-2" oninput="updateCurrencyFromRange(this.value)">
     <div class="flex justify-between text-[9px] font-black text-slate-400 mb-4 uppercase">
