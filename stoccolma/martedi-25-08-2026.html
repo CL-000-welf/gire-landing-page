@@ -244,7 +244,7 @@
   </button>
 </div>
 
-<!-- MODALE CAMBIO RAPIDO SEK / EUR (FINO A 1000€) -->
+<!-- MODALE CAMBIO RAPIDO SEK / EUR (PROPORZIONATO A 3 GIORNI) -->
 <div id="currencyModal" class="hidden fixed inset-0 bg-slate-900/90 z-[10000] items-center justify-center p-4 backdrop-blur-md" onclick="closeCurrencyModal()">
   <div class="bg-white rounded-[2.5rem] max-w-md w-full p-6 shadow-2xl relative" onclick="event.stopPropagation()">
     <div class="flex justify-between items-center mb-4">
@@ -258,34 +258,34 @@
     <!-- Banner Risultato Conversione -->
     <div class="bg-emerald-500 text-white rounded-3xl p-5 text-center shadow-lg mb-6">
       <p class="text-[9px] font-black uppercase tracking-widest text-emerald-100 mb-1">Importo Convertito</p>
-      <h2 id="conv-eur" class="text-4xl font-black italic tracking-tight">0.00 €</h2>
-      <p id="conv-sek-label" class="text-xs font-extrabold text-emerald-100 mt-1">0 Kronor Svedesi (SEK)</p>
+      <h2 id="conv-eur" class="text-4xl font-black italic tracking-tight">43.50 €</h2>
+      <p id="conv-sek-label" class="text-xs font-extrabold text-emerald-100 mt-1">500 Kronor Svedesi (SEK)</p>
     </div>
 
-    <!-- Scelte Rapide Tagli -->
+    <!-- Scelte Rapide Tagli Turistici -->
     <p class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-2">Seleziona Corone (SEK):</p>
     <div class="grid grid-cols-3 gap-2 mb-4">
-      <button onclick="setSekValue(200)" class="bg-slate-50 border border-slate-200 py-2.5 rounded-xl font-black text-xs text-slate-700 active:scale-95">200 SEK</button>
-      <button onclick="setSekValue(500)" class="bg-slate-50 border border-slate-200 py-2.5 rounded-xl font-black text-xs text-slate-700 active:scale-95">500 SEK</button>
-      <button onclick="setSekValue(1000)" class="bg-slate-50 border border-slate-200 py-2.5 rounded-xl font-black text-xs text-slate-700 active:scale-95">1000 SEK</button>
-      <button onclick="setSekValue(2500)" class="bg-slate-50 border border-slate-200 py-2.5 rounded-xl font-black text-xs text-slate-700 active:scale-95">2500 SEK</button>
-      <button onclick="setSekValue(5000)" class="bg-slate-50 border border-slate-200 py-2.5 rounded-xl font-black text-xs text-slate-700 active:scale-95">5000 SEK</button>
-      <button onclick="setSekValue(11500)" class="bg-slate-50 border border-slate-200 py-2.5 rounded-xl font-black text-xs text-slate-700 active:scale-95">11500 SEK (~1000€)</button>
+      <button onclick="setSekValue(50)" class="bg-slate-50 border border-slate-200 py-2.5 rounded-xl font-black text-xs text-slate-700 active:scale-95">50 SEK (~4€)</button>
+      <button onclick="setSekValue(100)" class="bg-slate-50 border border-slate-200 py-2.5 rounded-xl font-black text-xs text-slate-700 active:scale-95">100 SEK (~9€)</button>
+      <button onclick="setSekValue(200)" class="bg-slate-50 border border-slate-200 py-2.5 rounded-xl font-black text-xs text-slate-700 active:scale-95">200 SEK (~17€)</button>
+      <button onclick="setSekValue(500)" class="bg-slate-50 border border-slate-200 py-2.5 rounded-xl font-black text-xs text-slate-700 active:scale-95">500 SEK (~43€)</button>
+      <button onclick="setSekValue(1000)" class="bg-slate-50 border border-slate-200 py-2.5 rounded-xl font-black text-xs text-slate-700 active:scale-95">1000 SEK (~87€)</button>
+      <button onclick="setSekValue(2500)" class="bg-slate-50 border border-slate-200 py-2.5 rounded-xl font-black text-xs text-slate-700 active:scale-95">2500 SEK (~217€)</button>
     </div>
 
-    <!-- Slider Fino a 1000€ (~11.500 SEK) -->
-    <input id="sek-range" type="range" min="10" max="11500" value="1500" step="10" class="w-full accent-emerald-500 mb-2" oninput="updateCurrencyFromRange(this.value)">
+    <!-- Slider Fino a 2500 SEK (~220€) -->
+    <input id="sek-range" type="range" min="10" max="2500" value="500" step="10" class="w-full accent-emerald-500 mb-2" oninput="updateCurrencyFromRange(this.value)">
     <div class="flex justify-between text-[9px] font-black text-slate-400 mb-4 uppercase">
-      <span>10 SEK</span>
-      <span>5750 SEK (~500€)</span>
-      <span>11500 SEK (~1000€)</span>
+      <span>10 SEK (~1€)</span>
+      <span>1250 SEK (~108€)</span>
+      <span>2500 SEK (~217€)</span>
     </div>
 
     <!-- Input Manuale -->
     <div class="bg-slate-50 rounded-2xl p-3 flex justify-between items-center border border-slate-200 mb-5">
       <span class="text-xs font-black text-slate-500">Cifra personalizzata:</span>
       <div class="flex items-center gap-1">
-        <input id="sek-input" type="number" value="1500" class="w-24 bg-transparent text-right font-black text-emerald-600 focus:outline-none" oninput="updateCurrencyFromInput(this.value)">
+        <input id="sek-input" type="number" value="500" class="w-24 bg-transparent text-right font-black text-emerald-600 focus:outline-none" oninput="updateCurrencyFromInput(this.value)">
         <span class="text-xs font-black text-slate-700">SEK</span>
       </div>
     </div>
