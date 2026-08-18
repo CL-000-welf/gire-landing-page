@@ -333,7 +333,7 @@
     </div>
 
     <!-- Content 2: Piantina Rete (metro.png) con Zoom Leaflet integrato -->
-<div id="metro-map-content" class="hidden overflow-hidden rounded-2xl border border-slate-200 mb-4 bg-slate-900 h-64 sm:h-80 w-full relative">
+<div id="metro-map-content" class="hidden overflow-hidden rounded-2xl border border-slate-200 mb-4 bg-slate-50 h-64 sm:h-80 w-full relative">
   <div id="metro-image-viewer" class="w-full h-full"></div>
 </div>
 
@@ -1150,12 +1150,11 @@ function initMetroImageViewer() {
   const imgUrl = "https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/metro.png";
   
   if (!metroImgMapInstance) {
-    // Inizializza Leaflet usando CRS.Simple (sistema a coordinate di pixel)
     metroImgMapInstance = L.map('metro-image-viewer', {
       crs: L.CRS.Simple,
       minZoom: -2,
-      maxZoom: 2,
-      zoomSnap: 0.25,
+      maxZoom: 3,
+      zoomSnap: 0.1, // Zoom più fluido e preciso
       attributionControl: false
     });
 
@@ -1167,11 +1166,18 @@ function initMetroImageViewer() {
       const bounds = [[0, 0], [h, w]];
       
       L.imageOverlay(imgUrl, bounds).addTo(metroImgMapInstance);
-      metroImgMapInstance.fitBounds(bounds);
       
+      // Calcola lo zoom per riempire l'intero contenitore (effetto object-fit: cover)
+      const container = metroImgMapInstance.getContainer();
+      const scaleX = container.clientWidth / w;
+      const scaleY = container.clientHeight / h;
+      const fillZoom = metroImgMapInstance.getScaleZoom(Math.max(scaleX, scaleY), 0);
+      
+      metroImgMapInstance.setView([h / 2, w / 2], fillZoom);
+
       setTimeout(() => {
         metroImgMapInstance.invalidateSize();
-        metroImgMapInstance.fitBounds(bounds);
+        metroImgMapInstance.setView([h / 2, w / 2], fillZoom);
       }, 150);
     };
   } else {
