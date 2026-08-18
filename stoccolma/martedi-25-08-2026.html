@@ -4,10 +4,15 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Martedì 25.08.2026 - Viaggio a Stoccolma</title>
-
-  <meta name="description" content="Itinerario giornaliero GIRE per la gita a Stoccolma con timeline, mappa interattiva e convertitore valuta."/>
+  
+  <meta name="description" content="Itinerario giornaliero GIRE per la gita a Stoccolma con timeline, mappa e contatti SOS."/>
   <link rel="icon" type="image/png" href="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
   <link rel="apple-touch-icon" href="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
+  <meta property="og:title" content="Martedì 25.08.2026 - Viaggio a Stoccolma"/>
+  <meta property="og:description" content="Itinerario giornaliero GIRE per la gita a Stoccolma con timeline, mappa e contatti SOS."/>
+  <meta property="og:url" content="https://cl-000-welf.github.io/gire-landing-page/martedi-25-08-2026.html"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image" content="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/municipio.jpg"/>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet"/>
@@ -15,28 +20,36 @@
   <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
 
   <style>
-    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; overflow-x: hidden; }
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; -webkit-tap-highlight-color: transparent; }
+    
+    /* Card Contenitori */
     .safe-card { background: white; border-radius: 1.9rem; border: 1px solid #E2E8F0; overflow: hidden; box-shadow: 0 10px 25px rgba(15,23,42,0.04); }
     
-    /* Mappa principale della giornata */
-    #map-student { height: 240px; border-radius: 1.35rem; z-index: 10; border: 2px solid white; box-shadow: 0 8px 18px rgba(0,0,0,0.05); }
-    
-    /* Mappe nei modali */
-    #metro-map-container, #map-modal-container { height: 50vh; width: 100%; border-radius: 1.25rem; }
+    /* Mappa Principale e Mappa Metro Modale */
+    #map-student { height: 250px; border-radius: 1.35rem; z-index: 10; border: 2px solid white; box-shadow: 0 8px 18px rgba(0,0,0,0.05); }
+    #metro-map-container, #map-modal-container { height: 48vh; width: 100%; border-radius: 1.25rem; }
 
-    /* Modali Full Screen UX Mobile */
+    /* Modali Full Screen Mobile */
     #infoModal, #sosModal, #mapModal, #metroModal, #currencyModal { 
       display:none; position:fixed; inset:0; background:rgba(15,23,42,0.85); z-index:10000; 
       align-items:center; justify-content:center; padding:16px; backdrop-filter: blur(8px); 
     }
     .modal-card { background:white; border-radius:2rem; max-width: 480px; width:100%; padding: 1.5rem; box-shadow:0 22px 60px rgba(0,0,0,.25); max-height: 90vh; overflow-y: auto; }
 
-    /* Selettore stile iPhone Roller / Wheel per la Valuta */
-    .wheel-picker-container { display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+    /* Notifica Push con Gestione Swipe (Trascinamento Dito) */
+    #push-alert { 
+      position: fixed; top: 16px; left: 16px; right: 16px; z-index: 9999; 
+      transform: translateY(-180%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s; 
+      touch-action: pan-y pan-x; cursor: grab;
+    }
+    #push-alert.show { transform: translateY(0); }
+    #push-alert.dismissing { opacity: 0; transform: translateY(-100%) scale(0.9); transition: all 0.3s ease-out; }
+
+    /* Selettore Cambio Valuta stile Chip */
     .quick-chip { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 999px; padding: 6px 14px; font-weight: 800; font-size: 12px; color: #334155; cursor: pointer; transition: all 0.2s; }
     .quick-chip.active, .quick-chip:active { background: #10b981; color: white; border-color: #10b981; }
 
-    /* Stili Timeline */
+    /* Timeline Programma */
     .timeline-line { position:absolute; left:13px; top:12px; bottom:12px; width:2px; background:#edf0f3; }
     .timeline-row { position:relative; display:flex; gap:14px; align-items:center; }
     .timeline-row + .timeline-row { margin-top: 24px; }
@@ -44,9 +57,8 @@
     .timeline-title { font-size: .95rem; font-weight: 900; font-style: italic; line-height:1.1; color:#162038; }
     .timeline-time { font-size: .72rem; font-weight: 800; text-transform: uppercase; color: #8a94a6; margin-top: 2px; }
 
-    /* Notifica Push Pop-Up */
-    #push-alert { position: fixed; top: 16px; left: 16px; right: 16px; z-index: 9999; transform: translateY(-150%); transition: transform 0.6s cubic-bezier(0.175,0.885,0.32,1.275); }
-    #push-alert.show { transform: translateY(0); }
+    /* Stili dello stato Presenza Ok */
+    .hidden-presenza { display: none !important; }
   </style>
 </head>
 <body class="flex flex-col min-h-screen p-4 pb-12">
@@ -57,13 +69,18 @@
         <i class="fa-solid fa-lightbulb text-white text-base"></i>
       </div>
       <div>
-        <p class="text-[9px] font-black uppercase tracking-widest text-indigo-300">Curiosità Svedese</p>
+        <p class="text-[9px] font-black uppercase tracking-widest text-indigo-300">Pillola del Giorno (Trascina per chiudere)</p>
         <p id="curiosityText" class="text-xs font-bold leading-tight">"LAGOM ÄR BÄST" – La giusta misura è la cosa migliore.</p>
       </div>
     </div>
-    <button onclick="changeCuriosity()" class="bg-indigo-600 text-white p-2 rounded-xl text-xs font-bold shrink-0 hover:bg-indigo-700 active:scale-95 transition-all" title="Nuova pillola">
-      <i class="fa-solid fa-rotate"></i>
-    </button>
+    <div class="flex items-center gap-1 shrink-0">
+      <button onclick="changeCuriosity(event)" class="bg-indigo-600 text-white p-2.5 rounded-xl text-xs font-bold hover:bg-indigo-700 active:scale-95 transition-all" title="Nuova pillola">
+        <i class="fa-solid fa-rotate"></i>
+      </button>
+      <button onclick="dismissNotification()" class="text-slate-400 hover:text-white p-2 text-sm" title="Chiudi">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
   </div>
 
   <header class="flex justify-between items-start mb-5 px-1 gap-3">
@@ -83,18 +100,18 @@
     </div>
   </header>
 
-  <div id="appello-box" class="bg-indigo-600 rounded-[2rem] p-5 text-white shadow-xl mb-4 transition-all">
+  <div id="presenza-box" class="bg-indigo-600 rounded-[2rem] p-5 text-white shadow-xl mb-4 transition-all">
     <div class="flex items-center justify-between gap-3">
       <div>
         <p class="text-[9px] font-black uppercase text-indigo-200 mb-1 tracking-widest">Programma di Oggi</p>
         <h3 class="font-black text-sm italic tracking-tighter uppercase leading-tight md:text-base">Municipio, Gamla Stan e Crociera Arcipelago</h3>
       </div>
-      <button id="btnAppello" class="bg-white text-indigo-600 px-4 py-3 rounded-xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all shrink-0" onclick="confermaPresenza()">
-        Appello OK
+      <button id="btnPresenza" class="bg-white text-indigo-600 px-4 py-3 rounded-xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all shrink-0" onclick="confermaPresenza()">
+        Presenza OK
       </button>
     </div>
-    <div id="appelloStatus" class="hidden mt-3 pt-3 border-t border-indigo-500/50 text-[11px] font-bold text-indigo-100 flex items-center gap-2">
-      <i class="fa-solid fa-circle-check text-emerald-300"></i> Presenza registrata per la giornata di martedì!
+    <div id="presenzaStatus" class="hidden mt-3 pt-3 border-t border-indigo-500/50 text-[11px] font-bold text-indigo-100 flex items-center gap-2">
+      <i class="fa-solid fa-circle-check text-emerald-300"></i> Presenza confermata per martedì!
     </div>
   </div>
 
@@ -124,7 +141,7 @@
   <div class="safe-card p-4 mb-4">
     <div id="map-student" onclick="openMapModal()" title="Ingrandisci mappa"></div>
     <div class="flex justify-between items-center mt-3 text-xs font-black text-slate-500 uppercase">
-      <span><i class="fa-solid fa-location-dot text-indigo-600"></i> Tappe del giorno</span>
+      <span><i class="fa-solid fa-location-dot text-indigo-600"></i> Tappe della giornata</span>
       <button onclick="openMapModal()" class="text-indigo-600 font-bold hover:underline flex items-center gap-1">
         <i class="fa-solid fa-expand"></i> Schermo intero
       </button>
@@ -196,15 +213,62 @@
     </div>
   </div>
 
-  <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 px-1 italic">Schede & Dettagli</h3>
+  <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 px-1 italic">Tappe & Dettagli Storici</h3>
   <div class="space-y-4 mb-8">
-    <article class="safe-card p-4 flex gap-4 items-center cursor-pointer active:scale-98 transition-all" onclick="openInfo('Municipio Stadshuset', 'Partiamo dall\'hotel per visitare il municipio di Stoccolma e le sue sale dei Nobel.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/municipio.jpg')">
+    
+    <article class="safe-card p-4 flex gap-4 items-center cursor-pointer active:scale-98 transition-all" onclick="openInfo('Municipio (Stadshuset)', 'Costruito tra il 1911 e il 1921 con otto milioni di mattoni rossi. Ospita il banchetto dei Premi Nobel nella Sala Blu e la magnificente Sala Oro rivestita con 18 milioni di tessere dorate.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/municipio.jpg')">
       <img src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/municipio.jpg" class="w-20 h-20 rounded-2xl object-cover shrink-0 bg-slate-100" alt="Municipio"/>
       <div class="flex-1">
-        <h4 class="font-black italic uppercase text-indigo-600 text-sm leading-tight mb-1">Municipio (Stadshuset)</h4>
-        <p class="text-xs text-slate-500 line-clamp-2">Visita guidata alla Sala Blu e Sala Oro dei Premi Nobel.</p>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="text-[9px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-md font-bold uppercase">09:00</span>
+          <button onclick="event.stopPropagation(); speakText('Municipio Stadshuset: Costruito con otto milioni di mattoni rossi, ospita il banchetto dei Premi Nobel.');" class="text-indigo-600 text-xs hover:text-indigo-800" title="Ascolta sintesi vocale">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+        </div>
+        <h4 class="font-black italic uppercase text-slate-800 text-sm leading-tight mb-1">Municipio (Stadshuset)</h4>
+        <p class="text-xs text-slate-500 line-clamp-2">Sala Blu dei Premi Nobel e Sala Oro vettoriale.</p>
       </div>
     </article>
+
+    <article class="safe-card p-4 flex gap-4 items-center cursor-pointer active:scale-98 transition-all" onclick="openInfo('Gamla Stan (Città Vecchia)', 'Il nucleo medievale originale di Stoccolma, fondato nel XIII secolo. Caratterizzato da vicoli stretti come Mårten Trotzigs Gränd e il celebre Palazzo Reale.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/gamlastan.jpg')">
+      <img src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/gamlastan.jpg" class="w-20 h-20 rounded-2xl object-cover shrink-0 bg-slate-100" alt="Gamla Stan" onerror="this.src='https://images.unsplash.com/photo-1509356843151-3e7d96241e11?w=300'"/>
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="text-[9px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-md font-bold uppercase">10:30</span>
+          <button onclick="event.stopPropagation(); speakText('Gamla Stan: Il centro storico medievale di Stoccolma risalente al tredicesimo secolo.');" class="text-amber-600 text-xs hover:text-amber-800" title="Ascolta sintesi vocale">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+        </div>
+        <h4 class="font-black italic uppercase text-slate-800 text-sm leading-tight mb-1">Gamla Stan</h4>
+        <p class="text-xs text-slate-500 line-clamp-2">Centro storico medievale, vicoli e Palazzo Reale.</p>
+      </div>
+    </article>
+
+    <article class="safe-card p-4 flex gap-4 items-center cursor-pointer active:scale-98 transition-all" onclick="openInfo('Crociera dell\'Arcipelago', 'Partenza accanto alla statua di Re Gustav III per la crociera fra le oltre 30.000 isole dell\'arcipelago di Stoccolma.', 'https://images.unsplash.com/photo-1509356843151-3e7d96241e11?w=300')">
+      <img src="https://images.unsplash.com/photo-1509356843151-3e7d96241e11?w=300" class="w-20 h-20 rounded-2xl object-cover shrink-0 bg-slate-100" alt="Crociera"/>
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="text-[9px] bg-sky-100 text-sky-700 px-2 py-0.5 rounded-md font-bold uppercase">18:00</span>
+          <button onclick="event.stopPropagation(); speakText('Crociera dell Arcipelago: Un tour in barca attraverso le magnifiche isole di Stoccolma.');" class="text-sky-600 text-xs hover:text-sky-800" title="Ascolta sintesi vocale">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+        </div>
+        <h4 class="font-black italic uppercase text-slate-800 text-sm leading-tight mb-1">Crociera Arcipelago</h4>
+        <p class="text-xs text-slate-500 line-clamp-2">Navigazione panoramica al tramonto.</p>
+      </div>
+    </article>
+
+  </div>
+
+  <div id="mapModal" onclick="closeMapModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="flex justify-between items-center mb-3">
+        <h3 class="font-black italic text-lg uppercase text-slate-800">Mappa Martedì</h3>
+        <button onclick="closeMapModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="map-modal-container"></div>
+      <button class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-black uppercase text-xs mt-3" onclick="closeMapModal()">Chiudi</button>
+    </div>
   </div>
 
   <div id="metroModal" onclick="closeMetroModal()">
@@ -212,7 +276,7 @@
       <div class="flex justify-between items-center mb-3">
         <div>
           <p class="text-[9px] font-black uppercase text-indigo-600">Trasporti Stoccolma</p>
-          <h3 class="font-black italic text-lg uppercase text-slate-800 leading-none">Metro SL & GPS Live</h3>
+          <h3 class="font-black italic text-lg uppercase text-slate-800 leading-none">Metro SL & Posizione</h3>
         </div>
         <button onclick="closeMetroModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold p-1"><i class="fa-solid fa-xmark"></i></button>
       </div>
@@ -222,20 +286,20 @@
           <i class="fa-solid fa-location-crosshairs mr-1"></i> Vicino a te
         </button>
         <button id="btnTabImg" onclick="switchMetroTab('img')" class="flex-1 bg-slate-100 text-slate-600 py-2 rounded-xl text-xs font-black uppercase">
-          <i class="fa-solid fa-map mr-1"></i> Piantina Rete
+          <i class="fa-solid fa-map mr-1"></i> Schema Rete
         </button>
       </div>
 
       <div id="tabGpsContent">
         <div id="metro-map-container" class="rounded-2xl border"></div>
         <div class="mt-2 text-[11px] text-slate-500 font-semibold flex justify-between items-center">
-          <span><i class="fa-solid fa-circle-info text-indigo-500"></i> Trova le stazioni T-Bana attorno a te</span>
+          <span><i class="fa-solid fa-circle-info text-indigo-500"></i> Stazioni T-Bana attorno alla tua posizione</span>
           <button onclick="getUserMetroLocation()" class="text-indigo-600 font-bold underline"><i class="fa-solid fa-rotate"></i> Aggiorna GPS</button>
         </div>
       </div>
 
       <div id="tabImgContent" class="hidden">
-        <div class="overflow-auto max-h-[50vh] rounded-2xl border bg-slate-900">
+        <div class="overflow-auto max-h-[48vh] rounded-2xl border bg-slate-900">
           <img src="img/metro.png" alt="Mappa Metro Stoccolma" class="min-w-[500px] w-full" onerror="this.src='https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/metro.jpeg'">
         </div>
       </div>
@@ -280,7 +344,7 @@
       </div>
 
       <div class="flex items-center gap-2 border p-2.5 rounded-xl bg-slate-50 mb-4">
-        <span class="text-xs font-bold text-slate-500">Cifra personalizzata:</span>
+        <span class="text-xs font-bold text-slate-500">Cifra esatta:</span>
         <input type="number" id="modalSekInput" value="100" class="w-full bg-transparent font-black text-right text-sm outline-none text-emerald-700" oninput="onSekInputChange(this.value)">
         <span class="text-xs font-bold text-slate-700">SEK</span>
       </div>
@@ -292,7 +356,7 @@
   <div id="infoModal" onclick="closeModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
       <h3 id="infoTitle" class="font-black italic uppercase text-lg text-indigo-600 mb-2"></h3>
-      <img id="infoImage" src="" class="w-full h-40 object-cover rounded-2xl mb-3 hidden" alt="Dettaglio"/>
+      <img id="infoImage" src="" class="w-full h-44 object-cover rounded-2xl mb-3 hidden" alt="Dettaglio"/>
       <p id="infoContent" class="text-xs leading-relaxed text-slate-600 mb-4"></p>
       <button class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-black uppercase text-xs" onclick="closeModal()">Chiudi</button>
     </div>
@@ -301,48 +365,102 @@
   <div id="sosModal" onclick="closeSOSModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
       <h3 class="font-black italic uppercase text-lg text-red-600 mb-2"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Emergenza SOS</h3>
-      <p class="text-xs text-slate-600 mb-4">Invia la tua posizione GPS immediata via WhatsApp ai docenti responsabili.</p>
+      <p class="text-xs text-slate-600 mb-4">Invia subito la tua posizione GPS aggiornata via WhatsApp ai docenti accompagnatori.</p>
       <div class="space-y-2 mb-4">
-        <button onclick="sendLocationWhatsApp('+393000000000')" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2">
-          <i class="fa-brands fa-whatsapp"></i> Invia Posizione a Prof. Responsabile
+        <button onclick="sendLocationWhatsApp('+393000000000')" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-md">
+          <i class="fa-brands fa-whatsapp text-sm"></i> Invia Posizione GPS a Docente
         </button>
       </div>
       <button class="w-full bg-slate-200 text-slate-700 py-3 rounded-2xl font-black uppercase text-xs" onclick="closeSOSModal()">Annulla</button>
     </div>
   </div>
 
+  <footer class="mt-auto pt-6 text-center border-t border-slate-200 text-slate-400">
+    <p class="text-[10px] font-black uppercase tracking-widest mb-1">GIRE - Gruppo Italiano Ricerche Educative</p>
+    <p class="text-[9px] font-semibold">Stoccolma 2026 · Tutti i diritti riservati</p>
+  </footer>
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    const SEK_RATE = 0.087; // Tasso di cambio indicativo SEK -> EUR
+    const SEK_RATE = 0.087; // Tasso indicativo SEK -> EUR
 
-    // Array di curiosità svedesi per la pillola interattiva
+    // 1. Gestione Sintesi Vocale (Text-To-Speech)
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'it-IT';
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert('Sintesi vocale non supportata su questo dispositivo.');
+      }
+    }
+
+    // 2. Notifica Push con Curiosità & Gestione Swipe (Trascinamento col Dito)
     const curiosities = [
       '"LAGOM ÄR BÄST" – La giusta misura è la cosa migliore.',
-      '"FIKA" – La pausa caffè svedese con dolce al cardamomo (Kanelbulle).',
-      '"ALLEMANSRÄTTEN" – Il diritto di chiunque di esplorare liberamente la natura.',
-      '"T-BANA" – Le stazioni della metro di Stoccolma sono considerate la galleria d\'arte più lunga del mondo!'
+      '"FIKA" – La famosa pausa caffè svedese con dolce al cardamomo.',
+      '"ALLEMANSRÄTTEN" – Il diritto di chiunque di esplorare la natura liberamente.',
+      '"T-BANA" – La metropolitana di Stoccolma è una galleria d\'arte sotterranea!'
     ];
     let curIdx = 0;
 
-    function changeCuriosity() {
+    function changeCuriosity(e) {
+      if (e) e.stopPropagation();
       curIdx = (curIdx + 1) % curiosities.length;
       document.getElementById('curiosityText').innerText = curiosities[curIdx];
     }
 
-    // Gestione Appello Interattivo
-    function confermaPresenza() {
-      document.getElementById('btnAppello').classList.add('hidden');
-      document.getElementById('appelloStatus').classList.remove('hidden');
+    function dismissNotification() {
+      const alertEl = document.getElementById('push-alert');
+      alertEl.classList.add('dismissing');
+      setTimeout(() => alertEl.remove(), 300);
     }
 
-    // Inizializzazione Mappa Principale
+    // Swipe Gesture per la Notifica
+    let startX = 0, startY = 0;
+    const alertBox = document.getElementById('push-alert');
+
+    alertBox.addEventListener('touchstart', e => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    }, {passive: true});
+
+    alertBox.addEventListener('touchend', e => {
+      let diffX = e.changedTouches[0].clientX - startX;
+      let diffY = e.changedTouches[0].clientY - startY;
+      if (Math.abs(diffX) > 60 || diffY < -50) {
+        dismissNotification();
+      }
+    }, {passive: true});
+
+    // 3. Gestione Conferma Presenza
+    function confermaPresenza() {
+      document.getElementById('btnPresenza').classList.add('hidden');
+      document.getElementById('presenzaStatus').classList.remove('hidden');
+    }
+
+    // 4. Mappa Principale della Giornata
     let map = L.map('map-student', { zoomControl: false }).setView([59.3293, 18.0686], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map);
-    
-    // Pin Municipio
     L.marker([59.3275, 18.0543]).addTo(map).bindPopup('<b>Municipio (Stadshuset)</b>');
 
-    // Metro Map con Geolocalizzazione
+    // Modale Mappe Ingrandita
+    let mapModalObj = null;
+    function openMapModal() {
+      document.getElementById('mapModal').style.display = 'flex';
+      setTimeout(() => {
+        if (!mapModalObj) {
+          mapModalObj = L.map('map-modal-container').setView([59.3293, 18.0686], 13);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(mapModalObj);
+          L.marker([59.3275, 18.0543]).addTo(mapModalObj).bindPopup('<b>Municipio (Stadshuset)</b>');
+        }
+        mapModalObj.invalidateSize();
+      }, 200);
+    }
+    function closeMapModal() { document.getElementById('mapModal').style.display = 'none'; }
+
+    // 5. Metro Map con Geolocalizzazione GPS
     let metroMap = null;
     let userMarker = null;
 
@@ -353,17 +471,16 @@
           metroMap = L.map('metro-map-container', { zoomControl: true }).setView([59.3293, 18.0686], 13);
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(metroMap);
           
-          // Aggiungi stazioni metro principali T-Centralen, Gamla Stan, Slussen
           const metroStations = [
-            { name: "T-Centralen (Nodo principale)", lat: 59.3314, lon: 18.0613 },
-            { name: "Gamla Stan (Linea Rossa/Verde)", lat: 59.3233, lon: 18.0683 },
-            { name: "Kungsträdgården (Capolinea Linea Blu)", lat: 59.3308, lon: 18.0717 }
+            { name: "T-Centralen (Stazione Centrale)", lat: 59.3314, lon: 18.0613 },
+            { name: "Gamla Stan (Linea Rossa e Verde)", lat: 59.3233, lon: 18.0683 },
+            { name: "Kungsträdgården (Linea Blu)", lat: 59.3308, lon: 18.0717 }
           ];
 
           metroStations.forEach(s => {
             L.circleMarker([s.lat, s.lon], { radius: 8, fillColor: "#2563eb", color: "#ffffff", weight: 2, opacity: 1, fillOpacity: 0.9 })
               .addTo(metroMap)
-              .bindPopup(`<b>${s.name}</b><br><a href="https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lon}" target="_blank" style="color:#2563eb;font-weight:bold;">Indicazioni A Piedi ↗</a>`);
+              .bindPopup(`<b>${s.name}</b><br><a href="https://www.google.com/maps/dir/?api=1&destination=$${s.lat},${s.lon}" target="_blank" style="color:#2563eb;font-weight:bold;">Indicazioni A Piedi ↗</a>`);
           });
         }
         metroMap.invalidateSize();
@@ -379,8 +496,6 @@
           if (userMarker) metroMap.removeLayer(userMarker);
           userMarker = L.marker([lat, lon]).addTo(metroMap).bindPopup("<b>Tu sei qui</b>").openPopup();
           metroMap.setView([lat, lon], 14);
-        }, () => {
-          console.log("GPS non attivo o permesso negato.");
         });
       }
     }
@@ -402,7 +517,7 @@
       }
     }
 
-    // Logica Modale Convertitore Valuta
+    // 6. Convertitore Valuta
     function openCurrencyModal() { document.getElementById('currencyModal').style.display = 'flex'; }
     function closeCurrencyModal() { document.getElementById('currencyModal').style.display = 'none'; }
 
@@ -413,7 +528,6 @@
       document.getElementById('modalSekInput').value = sekVal;
       document.getElementById('sekRange').value = sekVal;
 
-      // Aggiorna chip attivo
       document.querySelectorAll('.quick-chip').forEach(chip => {
         if (parseInt(chip.innerText) === parseInt(sekVal)) chip.classList.add('active');
         else chip.classList.remove('active');
@@ -424,7 +538,7 @@
     function onSekSliderChange(val) { updateCurrencyDisplay(val); }
     function onSekInputChange(val) { if(val >= 0) updateCurrencyDisplay(val); }
 
-    // Modali Generici Info & SOS
+    // 7. Modali Generici Info & SOS
     function openInfo(title, text, imgSrc = '') {
       document.getElementById('infoTitle').innerText = title;
       document.getElementById('infoContent').innerText = text;
@@ -444,7 +558,7 @@
       });
     }
 
-    // Mostra Push Alert all'avvio
+    // Mostra la notifica push iniziale dopo 1 secondo
     window.addEventListener('load', () => {
       setTimeout(() => { document.getElementById('push-alert').classList.add('show'); }, 1000);
     });
