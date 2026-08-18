@@ -341,10 +341,10 @@ Buongiorno! Oggi scopriamo la città tra le acque.</p>
       <div id="metro-leaflet-map" class="w-full h-52 rounded-2xl border border-slate-200 overflow-hidden hidden"></div>
     </div>
 
-    <!-- Content 2: Piantina Rete (metro.png) -->
-    <div id="metro-map-content" class="hidden overflow-hidden rounded-2xl border border-slate-200 mb-4 bg-slate-50 flex-grow">
-      <img src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/metro.png" alt="Mappa Tunnelbana Stoccolma" class="w-full h-auto object-contain max-h-[50vh] rounded-2xl mx-auto">
-    </div>
+    <!-- Content 2: Piantina Rete (metro.png) con Zoom Leaflet integrato -->
+<div id="metro-map-content" class="hidden overflow-hidden rounded-2xl border border-slate-200 mb-4 bg-slate-50 h-64 sm:h-80 w-full relative">
+  <div id="metro-image-viewer" class="w-full h-full"></div>
+</div>
 
     <button onclick="closeMetroModal()" class="w-full bg-slate-900 text-white py-3.5 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all mt-auto">Chiudi</button>
   </div>
@@ -1158,6 +1158,7 @@ function calculateCurrency(sekVal) {
 
 // --- LOGICA MODALE METRO SL CON LEAFLET IN-APP ---
 let metroMapInstance = null;
+let metroImgMapInstance = null; // Instanza per lo zoom dell'immagine PNG
 let userMarker = null;
 let stationMarker = null;
 let polylineRoute = null;
@@ -1181,6 +1182,47 @@ function closeMetroModal() {
   document.getElementById('metroModal').classList.remove('flex');
 }
 
+function initMetroImageViewer() {
+  const imgUrl = "https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/metro.webp";
+  
+  if (!metroImgMapInstance) {
+    metroImgMapInstance = L.map('metro-image-viewer', {
+      crs: L.CRS.Simple,
+      minZoom: -2,
+      maxZoom: 3,
+      zoomSnap: 0.1, // Zoom più fluido e preciso
+      attributionControl: false
+    });
+
+    const img = new Image();
+    img.src = imgUrl;
+    img.onload = function() {
+      const w = this.width || 1000;
+      const h = this.height || 1000;
+      const bounds = [[0, 0], [h, w]];
+      
+      L.imageOverlay(imgUrl, bounds).addTo(metroImgMapInstance);
+      
+      // Calcola lo zoom per riempire l'intero contenitore (effetto object-fit: cover)
+      const container = metroImgMapInstance.getContainer();
+      const scaleX = container.clientWidth / w;
+      const scaleY = container.clientHeight / h;
+      const fillZoom = metroImgMapInstance.getScaleZoom(Math.max(scaleX, scaleY), 0);
+      
+      metroImgMapInstance.setView([h / 2, w / 2], fillZoom);
+
+      setTimeout(() => {
+        metroImgMapInstance.invalidateSize();
+        metroImgMapInstance.setView([h / 2, w / 2], fillZoom);
+      }, 150);
+    };
+  } else {
+    setTimeout(() => {
+      metroImgMapInstance.invalidateSize();
+    }, 150);
+  }
+}
+
 function switchMetroTab(tab) {
   const gpsBtn = document.getElementById('tab-gps');
   const mapBtn = document.getElementById('tab-map');
@@ -1198,6 +1240,9 @@ function switchMetroTab(tab) {
     gpsBtn.className = "py-2.5 rounded-xl font-black text-xs uppercase text-slate-500 transition-all flex items-center justify-center gap-2";
     mapContent.classList.remove('hidden');
     gpsContent.classList.add('hidden');
+    
+    // Inizializza/Aggiorna il visualizzatore interattivo dell'immagine
+    initMetroImageViewer();
   }
 }
 
