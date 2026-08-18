@@ -41,8 +41,20 @@
     .map-controls { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
     .map-controls button { background: white; border: 1px solid #E2E8F0; border-radius: 14px; min-width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(15,23,42,0.06); color: #334155; font-size: 14px; font-weight: 900; }
     .map-controls button.reset-btn { min-width: 64px; padding: 0 12px; gap: 6px; font-size: 12px; }
-    #push-alert { position: fixed; top: 20px; left: 20px; right: 20px; z-index: 9999; transform: translateY(-150%); transition: transform 0.6s cubic-bezier(0.175,0.885,0.32,1.275); }
-    #push-alert.show { transform: translateY(0); }
+    #push-alert { 
+  position: fixed; 
+  top: 20px; 
+  left: 20px; 
+  right: 20px; 
+  z-index: 9999; 
+  transform: translateY(-150%); 
+  transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275); 
+  touch-action: pan-y; 
+  user-select: none;
+  cursor: grab;
+}
+#push-alert.show { transform: translateY(0); }
+#push-alert.swiping { transition: none !important; }
     #appello-box { transition: all 0.6s ease; max-height: 300px; opacity: 1; margin-bottom: 1.5rem; }
     #appello-box.hidden-appello { max-height: 0; opacity: 0; margin-bottom: 0; padding: 0; transform: scale(0.9); pointer-events: none; }
     .pulse-me { animation: pulse-blue 2s infinite; border-radius: 50%; }
@@ -86,7 +98,8 @@
 <body class="flex flex-col min-h-screen p-5 pb-10">
 
   <!-- 1. NOTIFICA PUSH POP-UP -->
-  <div id="push-alert" class="bg-slate-900 text-white p-5 rounded-[2rem] shadow-2xl flex items-center gap-4 border border-white/20">
+ <div id="push-alert" class="bg-slate-900 text-white p-5 rounded-[2rem] shadow-2xl flex items-center gap-4 border border-white/20 relative overflow-hidden">
+  <div class="absolute top-2 left-1/2 -translate-x-1/2 w-8 h-1 bg-white/20 rounded-full"></div>
     <div class="bg-indigo-500 h-10 w-10 rounded-full flex items-center justify-center shrink-0">
       <i class="fa-solid fa-paper-plane text-white"></i>
     </div>
@@ -650,6 +663,66 @@
     // Esegui aggiornamento timeline all'avvio e ogni minuto
     updateTimelineStatus();
     setInterval(updateTimelineStatus, 60000);
+
+    // --- GESTIONE SWIPE TO DISMISS BANNER NOTIFICA (#push-alert) ---
+(function initSwipeToDismiss() {
+  const alertBox = document.getElementById('push-alert');
+  if (!alertBox) return;
+
+  let startY = 0, currentY = 0, isSwiping = false;
+
+  const onStart = (e) => {
+    if (!alertBox.classList.contains('show')) return;
+    startY = e.touches ? e.touches[0].clientY : e.clientY;
+    isSwiping = true;
+    alertBox.classList.add('swiping');
+  };
+
+  const onMove = (e) => {
+    if (!isSwiping) return;
+    currentY = e.touches ? e.touches[0].clientY : e.clientY;
+    const diffY = currentY - startY;
+
+    // Consentiamo solo il trascinamento verso l'alto (dismiss)
+    if (diffY < 0) {
+      alertBox.style.transform = `translateY(${diffY}px)`;
+      alertBox.style.opacity = `${1 - Math.abs(diffY) / 120}`;
+    }
+  };
+
+  const onEnd = () => {
+    if (!isSwiping) return;
+    isSwiping = false;
+    alertBox.classList.remove('swiping');
+    const diffY = currentY - startY;
+
+    // Se è stato trascinato verso l'alto di oltre 40px, chiudi il banner
+    if (diffY < -40) {
+      alertBox.style.transform = 'translateY(-150%)';
+      alertBox.style.opacity = '0';
+      setTimeout(() => {
+        alertBox.classList.remove('show');
+        alertBox.style.transform = '';
+        alertBox.style.opacity = '';
+      }, 400);
+    } else {
+      // Ripristina la posizione originale se il gesto non basta
+      alertBox.style.transform = '';
+      alertBox.style.opacity = '';
+    }
+  };
+
+  // Eventi Touch (Mobile)
+  alertBox.addEventListener('touchstart', onStart, { passive: true });
+  alertBox.addEventListener('touchmove', onMove, { passive: true });
+  alertBox.addEventListener('touchend', onEnd);
+
+  // Eventi Mouse (Desktop/Testing)
+  alertBox.addEventListener('mousedown', onStart);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onEnd);
+})();
+    
   </script>
 </body>
 </html>
