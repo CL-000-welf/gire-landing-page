@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Martedì 25.08.2026 - Viaggio a Stoccolma</title>
   
+  <!-- SEO & OpenGraph Meta Tags -->
   <meta name="description" content="Itinerario giornaliero GIRE per la gita a Stoccolma con timeline, mappa e contatti SOS."/>
   <link rel="icon" type="image/png" href="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
   <link rel="apple-touch-icon" href="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
@@ -20,11 +21,13 @@
   <meta name="twitter:description" content="Itinerario giornaliero GIRE per la gita a Stoccolma con timeline, mappa e contatti SOS."/>
   <meta name="twitter:image" content="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
 
+  <!-- Librerie Esterne -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet"/>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
   <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
 
+  <!-- Stili CSS -->
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; overflow-x: hidden; }
     .safe-card { background: white; border-radius: 1.9rem; border: 1px solid #E2E8F0; overflow: hidden; box-shadow: 0 10px 25px rgba(15,23,42,0.04); }
@@ -34,27 +37,23 @@
     .map-meta { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: end; margin-top: 12px; }
     .map-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 11px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: .03em; }
     .legend-block { line-height: 1.35; }
-    .legend-weather { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; background: #eff6ff; color: #0369a1; border-radius: 999px; padding: 5px 10px;
-      font-size: 10px; font-weight: 900; box-shadow: 0 2px 8px rgba(15,23,42,0.05); }
+    .legend-weather { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; background: #eff6ff; color: #0369a1; border-radius: 999px; padding: 5px 10px; font-size: 10px; font-weight: 900; box-shadow: 0 2px 8px rgba(15,23,42,0.05); }
     .map-controls { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
-    .map-controls button { background: white; border: 1px solid #E2E8F0; border-radius: 14px; min-width: 42px; height: 42px; display: flex; align-items: center;
-      justify-content: center; box-shadow: 0 2px 8px rgba(15,23,42,0.06); color: #334155; font-size: 14px; font-weight: 900; }
+    .map-controls button { background: white; border: 1px solid #E2E8F0; border-radius: 14px; min-width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(15,23,42,0.06); color: #334155; font-size: 14px; font-weight: 900; }
     .map-controls button.reset-btn { min-width: 64px; padding: 0 12px; gap: 6px; font-size: 12px; }
     #push-alert { position: fixed; top: 20px; left: 20px; right: 20px; z-index: 9999; transform: translateY(-150%); transition: transform 0.6s cubic-bezier(0.175,0.885,0.32,1.275); }
     #push-alert.show { transform: translateY(0); }
     #appello-box { transition: all 0.6s ease; max-height: 300px; opacity: 1; margin-bottom: 1.5rem; }
     #appello-box.hidden-appello { max-height: 0; opacity: 0; margin-bottom: 0; padding: 0; transform: scale(0.9); pointer-events: none; }
     .pulse-me { animation: pulse-blue 2s infinite; border-radius: 50%; }
-    @keyframes pulse-blue { 0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.6); } 70% { box-shadow: 0 0 0 15px rgba(59,130,246,0);
-    } 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); } }
+    @keyframes pulse-blue { 0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.6); } 70% { box-shadow: 0 0 0 15px rgba(59,130,246,0); } 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); } }
     #infoModal, #sosModal, #mapModal { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.92); z-index:10000; align-items:center; justify-content:center; padding:20px; backdrop-filter: blur(8px); }
     .modal-card { background:white; border-radius:2.3rem; max-width: 420px; width:100%; padding: 2rem; box-shadow:0 22px 60px rgba(0,0,0,.2); max-height: 90vh; overflow-y: auto; }
     .modal-card-map { background:white; border-radius:2.3rem; max-width: 600px; width:100%; padding: 1.25rem; box-shadow:0 22px 60px rgba(0,0,0,.2); }
     .timeline-line { position:absolute; left:13px; top:12px; bottom:12px; width:2px; background:#edf0f3; }
     .timeline-row { position:relative; display:flex; gap:14px; align-items:center; }
     .timeline-row + .timeline-row { margin-top: 26px; }
-    .dot { z-index:1; width:28px; height:28px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:4px solid white; box-shadow:0 2px 6px rgba(0,0,0,.08); font-size:10px; flex:0 0 auto;
-    }
+    .dot { z-index:1; width:28px; height:28px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:4px solid white; box-shadow:0 2px 6px rgba(0,0,0,.08); font-size:10px; flex:0 0 auto; }
     .timeline-copy { min-width:0; }
     .timeline-title { font-size: .97rem; font-weight: 900; font-style: italic; line-height:1.1; color:#162038; }
     .timeline-time { font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .02em; color: #8a94a6; margin-top: 2px; }
@@ -68,31 +67,25 @@
     .diary-body { padding: 1.25rem; }
     .diary-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:.55rem; }
     .diary-head h4 { margin:0; font-weight:900; font-style:italic; text-transform:uppercase; color:#4f46e5; font-size:1.08rem; line-height:1.05; }
-    .audio-btn { background:#eef2ff; color:#4f46e5; width:42px; height:42px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:none; cursor:pointer; flex:0 0 auto;
-      transition:transform .15s ease, background .2s ease; }
+    .audio-btn { background:#eef2ff; color:#4f46e5; width:42px; height:42px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:none; cursor:pointer; flex:0 0 auto; transition:transform .15s ease, background .2s ease; }
     .audio-btn.playing { background:#4f46e5; color:white; }
     .audio-btn:active { transform:scale(.93); }
     .diary-short { font-size:1rem; line-height:1.7; color:#4b5563; margin: 0 0 1.2rem; }
     .more-link { border:none; background:none; color:#4f46e5; font-weight:900; text-transform:uppercase; font-size:.9rem; padding:0 0 .15rem; border-bottom:4px solid #dfe4ff; cursor:pointer; }
     .more-link i { margin-left: .35rem; }
     .nav-row { display:flex; justify-content:space-between; gap:12px; margin-top: 18px; }
-    .nav-row a, .nav-row span { min-width: 110px; text-align:center; text-decoration:none; background:white; border:1px solid #E2E8F0; border-radius: 1rem; padding: .8rem 1rem; font-weight: 800;
-      color:#334155; }
-    .walk-label { background: white; border: 1px solid #cbd5e1; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 800; color: #1e293b;
-      box-shadow: 0 2px 8px rgba(0,0,0,.12); white-space: nowrap; text-align: center; }
+    .nav-row a, .nav-row span { min-width: 110px; text-align:center; text-decoration:none; background:white; border:1px solid #E2E8F0; border-radius: 1rem; padding: .8rem 1rem; font-weight: 800; color:#334155; }
+    .walk-label { background: white; border: 1px solid #cbd5e1; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 800; color: #1e293b; box-shadow: 0 2px 8px rgba(0,0,0,.12); white-space: nowrap; text-align: center; }
     .walk-label i { color: #4f46e5; margin-right: 3px; }
-    footer.app-footer { margin-top: 28px; padding: 18px 8px 2px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 12px;
-      color: #94a3b8; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
+    footer.app-footer { margin-top: 28px; padding: 18px 8px 2px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #94a3b8; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
     footer.app-footer .footer-brand { display: flex; align-items: center; gap: 8px; color: #64748b; }
     footer.app-footer img { width: 20px; height: 20px; border-radius: 6px; }
-    @media (max-width: 420px) { body { padding: 16px 16px 32px; } .safe-card { border-radius: 1.7rem; } #map-student { height: 262px;
-      border-radius: 1.6rem; margin: -16px -16px 0px -16px; } .diary-body { padding: 1rem; } .diary-head h4 { font-size: 1rem;
-      } .diary-short { font-size:.95rem; line-height: 1.55; } .nav-row a, .nav-row span { min-width: 96px; padding: .7rem .85rem;
-      } .modal-card { padding: 1.5rem; border-radius: 2rem; } .map-meta { grid-template-columns: 1fr; } .map-controls { justify-content: flex-start; } }
+    @media (max-width: 420px) { body { padding: 16px 16px 32px; } .safe-card { border-radius: 1.7rem; } #map-student { height: 262px; border-radius: 1.6rem; margin: -16px -16px 0px -16px; } .diary-body { padding: 1rem; } .diary-head h4 { font-size: 1rem; } .diary-short { font-size:.95rem; line-height: 1.55; } .nav-row a, .nav-row span { min-width: 96px; padding: .7rem .85rem; } .modal-card { padding: 1.5rem; border-radius: 2rem; } .map-meta { grid-template-columns: 1fr; } .map-controls { justify-content: flex-start; } }
   </style>
 </head>
 <body class="flex flex-col min-h-screen p-5 pb-10">
 
+  <!-- 1. NOTIFICA PUSH POP-UP -->
   <div id="push-alert" class="bg-slate-900 text-white p-5 rounded-[2rem] shadow-2xl flex items-center gap-4 border border-white/20">
     <div class="bg-indigo-500 h-10 w-10 rounded-full flex items-center justify-center shrink-0">
       <i class="fa-solid fa-paper-plane text-white"></i>
@@ -100,10 +93,11 @@
     <div>
       <p class="text-[9px] font-black uppercase tracking-widest text-indigo-300">Gire</p>
       <p class="text-xs font-bold leading-tight">LAGOM ÄR BÄST<br>
-      “La giusta misura è la cosa migliore.”</p>
+“La giusta misura è la cosa migliore.”</p>
     </div>
   </div>
 
+  <!-- 2. INTESTAZIONE / HEADER -->
   <header class="flex justify-between items-start mb-6 px-1 gap-3">
     <div class="flex items-start gap-2">
       <img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE" class="h-8 w-8 rounded-lg mt-1"/>
@@ -121,6 +115,7 @@
     </div>
   </header>
 
+  <!-- 3. BANNER PROGRAMMA / APPELLO -->
   <div id="appello-box" class="bg-indigo-600 rounded-[2.5rem] p-6 text-white shadow-xl flex items-center justify-between gap-4">
     <div>
       <p class="text-[9px] font-black uppercase text-indigo-200 mb-1 tracking-widest">Programma</p>
@@ -129,6 +124,7 @@
     <button class="bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all" onclick="confermaPresenza()">OK</button>
   </div>
 
+  <!-- 4. SEZIONE MAPPA INTERATTIVA -->
   <div class="safe-card p-4 mb-8">
     <div class="map-shell">
       <div id="map-student" onclick="openMapModal()" title="Clicca per ingrandire la mappa"></div>
@@ -155,11 +151,12 @@
     </div>
   </div>
 
+  <!-- 5. TIMELINE / PROGRAMMA GIORNO -->
   <div class="safe-card p-6 mb-8">
     <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6 italic text-center">Programma giornata</h3>
     <div class="relative">
       <div class="timeline-line"></div>
-
+      
       <div class="timeline-row active" data-time="09:00">
         <div class="dot" style="background:#f6a623;color:#fff"><i class="fa-solid fa-location-dot"></i></div>
         <div class="timeline-copy">
@@ -205,9 +202,10 @@
     </div>
   </div>
 
+  <!-- 6. CARDE DIARIO / SCHEDE TAPPE (INTERAMENTE CLICCABILI) -->
   <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic">I diari di viaggio</h3>
   <div class="space-y-6 mb-12">
-
+    
     <article class="diary-card safe-card" onclick="openInfo('Municipio (Stadshuset) - Sala Oro e Blu', 'Partiamo a piedi dall\'hotel in zona Norrmalm per visitare il municipio di Stoccolma. Visiteremo la celebre Sala Blu, sede del banchetto dei Premi Nobel, e la spettacolare Sala Oro rivestita da oltre 18 milioni di tessere di mosaico.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/municipio.jpg')">
       <img alt="Municipio Stadshuset" class="diary-img" src="https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/municipio.jpg"/>
       <div class="diary-body">
@@ -303,419 +301,262 @@
         </span>
       </div>
     </article>
-
   </div>
 
+  <!-- 7. BANNER SOS & NAVIGAZIONE -->
   <div class="mt-auto pt-2">
     <div class="bg-red-50 rounded-[2.5rem] p-6 border border-red-100 flex items-center justify-between shadow-sm gap-4">
       <div>
         <p class="text-[9px] font-black uppercase text-red-600 mb-1 tracking-widest">Gire Safe Mode</p>
-        <h3 class="font-black text-sm italic tracking-tighter uppercase text-slate-800 leading-tight">Serve aiuto immediato?</h3>
+        <h3 class="font-black text-sm italic tracking-tighter uppercase leading-tight text-slate-900">Hai bisogno di aiuto?</h3>
+        <p class="text-[8px] font-bold text-red-400 uppercase mt-1 leading-none">Invia posizione GPS al capo gruppo</p>
       </div>
-      <button onclick="openSOSModal()" class="bg-red-600 text-white px-5 py-3 rounded-2xl font-black uppercase text-[10px] tracking-wider shrink-0 shadow-md active:scale-95 transition-all">SOS Contatti</button>
+      <button class="bg-red-600 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg shadow-red-200 active:scale-95 transition-all" onclick="openSOSModal()">SOS</button>
     </div>
-
+    <p class="text-center text-[8px] font-black text-gray-400 uppercase mt-4 tracking-widest italic leading-none">Premere solo in caso di vera emergenza</p>
+    
     <div class="nav-row">
-      <a href="https://cl-000-welf.github.io/gire-landing-page/lunedi-24-08-2026.html"><i class="fa-solid fa-arrow-left"></i> Lun 24</a>
-      <span class="border-indigo-600 text-indigo-600 bg-indigo-50">Mar 25</span>
-      <a href="https://cl-000-welf.github.io/gire-landing-page/mercoledi-26-08-2026.html">Mer 26 <i class="fa-solid fa-arrow-right"></i></a>
-    </div>
-
-    <footer class="app-footer">
-      <div class="footer-brand">
-        <img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE Logo"/>
-        <span>GIRE &bull; Stockholm '26</span>
-      </div>
-      <div>v2.4 Live</div>
-    </footer>
-  </div>
-
-  <div id="infoModal" onclick="if(event.target===this)closeModal()">
-    <div class="modal-card">
-      <h3 id="infoTitle" class="font-black text-xl italic uppercase tracking-tighter text-indigo-600 mb-4"></h3>
-      <img id="infoImage" src="" alt="Dettaglio Tappa" class="w-full h-48 object-cover rounded-2xl mb-4 hidden border border-slate-100 shadow-sm"/>
-      <p id="infoContent" class="text-sm text-slate-600 leading-relaxed mb-6 font-medium"></p>
-      <button onclick="closeModal()" class="w-full bg-slate-900 text-white font-black uppercase py-4 rounded-2xl text-xs tracking-wider">Chiudi</button>
+      <span></span>
+      <a href="mercoledi-26-08-2026.html">Mer 26 →</a>
     </div>
   </div>
 
-  <div id="mapModal" onclick="if(event.target===this)closeMapModal()">
-    <div class="modal-card-map">
-      <div class="flex justify-between items-center mb-3">
-        <h3 class="font-black text-sm italic uppercase tracking-wider text-slate-800"><i class="fa-solid fa-map-location-dot text-indigo-600 mr-2"></i>Mappa Percorso Ingrandita</h3>
-        <button onclick="closeMapModal()" class="text-slate-400 hover:text-slate-700 font-bold text-lg px-2">&times;</button>
+  <!-- 8. FOOTER / PIÈ DI PAGINA -->
+  <footer class="app-footer">
+    <div class="footer-brand">
+      <img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE"/>
+      <span>GIRE</span>
+    </div>
+    <span>Area studente · Stoccolma 2026</span>
+  </footer>
+
+  <!-- 9. MODALI / POP-UP OVERLAY -->
+  <!-- Modale Dettaglio Tappa con Immagine integrata -->
+  <div id="infoModal" onclick="closeModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <img id="infoImage" src="" alt="" class="w-full h-48 object-cover rounded-2xl mb-4 hidden"/>
+      <h3 class="font-black italic text-2xl mb-4 text-indigo-600 uppercase leading-tight" id="infoTitle"></h3>
+      <p class="text-base font-medium leading-relaxed mb-6 text-gray-600" id="infoContent"></p>
+      <button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeModal()">Ho capito!</button>
+    </div>
+  </div>
+
+  <!-- Modale Mappa Ingrandita -->
+  <div id="mapModal" onclick="closeMapModal()">
+    <div class="modal-card-map" onclick="event.stopPropagation()">
+      <div class="flex justify-between items-center mb-3 px-2">
+        <h3 class="font-black italic text-lg uppercase text-slate-800">Mappa Percorso</h3>
+        <button onclick="closeMapModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div id="map-modal-container"></div>
-      <button onclick="closeMapModal()" class="w-full bg-slate-900 text-white font-black uppercase py-3 rounded-xl text-xs tracking-wider mt-3">Chiudi Mappa</button>
+      <button class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-black uppercase text-xs mt-3 active:scale-95 transition-all" onclick="closeMapModal()">Chiudi Mappa</button>
     </div>
   </div>
 
-  <div id="sosModal" onclick="if(event.target===this)closeSOSModal()">
-    <div class="modal-card border-2 border-red-500">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="bg-red-500 text-white h-10 w-10 rounded-full flex items-center justify-center shrink-0">
-          <i class="fa-solid fa-triangle-exclamation text-lg"></i>
-        </div>
-        <div>
-          <h3 class="font-black text-lg italic uppercase tracking-tighter text-slate-900 leading-none">Contatti SOS</h3>
-          <p class="text-[10px] font-bold text-red-600 uppercase tracking-wider">Emergenza & Assistenza</p>
-        </div>
-      </div>
-      
-      <p class="text-xs text-slate-600 mb-4">In caso di smarrimento o emergenza, contatta subito i docenti accompagnatori o usa i tasti rapidi.</p>
-      
-      <div class="space-y-3 mb-6">
-        <a href="tel:+393000000000" class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200 text-slate-800 font-bold text-xs hover:bg-slate-100">
-          <span><i class="fa-solid fa-phone text-indigo-600 mr-2"></i> Docente Referente</span>
-          <span class="text-indigo-600">Chiama</span>
+  <!-- Modale SOS -->
+  <div id="sosModal" onclick="closeSOSModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <p class="text-[10px] font-black uppercase tracking-widest text-red-500 mb-2">Contatti emergenza</p>
+      <h3 class="font-black italic text-2xl mb-6 text-slate-900 uppercase">Chi vuoi chiamare?</h3>
+      <div class="space-y-3 mb-4">
+        <a class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4" href="tel:+393391801232">
+          <div>
+            <p class="text-sm font-black text-slate-900">Francesca Schiavi</p>
+            <p class="text-xs text-slate-500 font-bold">+39 339 180 1232</p>
+          </div>
+          <i class="fa-solid fa-phone text-red-600"></i>
         </a>
-        
-        <button onclick="sendLocationWhatsApp('+393000000000')" class="w-full flex items-center justify-between p-3 bg-green-50 rounded-xl border border-green-200 text-green-900 font-bold text-xs hover:bg-green-100">
-          <span><i class="fa-brands fa-whatsapp text-green-600 mr-2"></i> Invia Posizione GPS</span>
-          <span class="text-green-600">WhatsApp</span>
+        <button class="flex items-center justify-between w-full bg-emerald-50 hover:bg-emerald-100 transition rounded-2xl px-5 py-4" onclick="sendLocationWhatsApp('393391801232')">
+          <div class="text-left">
+            <p class="text-sm font-black text-slate-900">Invia posizione WhatsApp</p>
+            <p class="text-xs text-slate-500 font-bold">a Francesca Schiavi</p>
+          </div>
+          <i class="fa-solid fa-location-dot text-emerald-600"></i>
         </button>
-
-        <a href="tel:112" class="flex items-center justify-between p-3 bg-red-50 rounded-xl border border-red-200 text-red-900 font-bold text-xs hover:bg-red-100">
-          <span><i class="fa-solid fa-shield-halved text-red-600 mr-2"></i> Num. Unico Emergenze (SE)</span>
-          <span class="text-red-600 font-black">112</span>
+        <a class="flex items-center justify-between w-full bg-red-50 hover:bg-red-100 transition rounded-2xl px-5 py-4" href="tel:112">
+          <div>
+            <p class="text-sm font-black text-slate-900">Soccorso Svezia (112)</p>
+            <p class="text-xs text-slate-500 font-bold">Numero unico emergenze locale</p>
+          </div>
+          <i class="fa-solid fa-triangle-exclamation text-red-600"></i>
         </a>
       </div>
-
-      <button onclick="closeSOSModal()" class="w-full bg-slate-200 text-slate-800 font-black uppercase py-3 rounded-2xl text-xs tracking-wider">Torna Indietro</button>
+      <button class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeSOSModal()">Chiudi</button>
     </div>
   </div>
 
+  <!-- 10. LOGICA JAVASCRIPT -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    let map, mapModalInstance;
+    /* =====================================================================
+       BLOCCO NOTIFICA PUSH INIZIALE (Copia questo blocco per gli altri file)
+       =====================================================================
+       Funzionamento:
+       - Attende il caricamento completo della pagina ('load').
+       - Dopo 1000ms (1 secondo) mostra il banner notifiche facendo scorrere l'elemento #push-alert.
+       - Dopo altri 5000ms (5 secondi) nasconde automaticamente la notifica.
+    */
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const pushAlert = document.getElementById('push-alert');
+        if (pushAlert) {
+          pushAlert.classList.add('show');
+          setTimeout(() => {
+            pushAlert.classList.remove('show');
+          }, 5000);
+        }
+      }, 1000);
+    });
+    /* ===================================================================== */
 
-    // Coordinate Tappe Martedì 25.08.2026
-    const hotelCoords = [59.3312, 18.0583];
-    const waypoints = [
-      { lat: 59.3275, lng: 18.0548, title: "Municipio (Stadshuset)" },
-      { lat: 59.3262, lng: 18.0674, title: "Gamla Stan (Ponte Vasabron)" },
-      { lat: 59.3283, lng: 18.0692, title: "Ponte Norrbro & Parlamento" },
-      { lat: 59.3323, lng: 18.0709, title: "Kungsträdgården & Museo Wetterling" },
-      { lat: 59.3360, lng: 18.0778, title: "Piazza Östermalmstorg & Salu Hall" },
-      { lat: 59.3248, lng: 18.0741, title: "Crociera Arcipelago (Statua Gustav III)" }
+    // Coordinate Hotel
+    const hotel = { name: "Hotel C Stockholm", lat: 59.3323, lng: 18.0583, label: "Hotel C Stockholm" };
+    
+    // Tappe del giorno
+    const stops = [
+      { name: "Municipio (Stadshuset)", lat: 59.3275, lng: 18.0543, visit: "Visita Sala Oro e Sala Blu." },
+      { name: "Gamla Stan (Vasabron)", lat: 59.3257, lng: 18.0686, visit: "Città vecchia attraverso il ponte pedonale." },
+      { name: "Norrbro & Parlamento", lat: 59.3273, lng: 18.0683, visit: "Ponte storico e palazzo del Parlamento." },
+      { name: "Kungsträdgården & Wetterling", lat: 59.3297, lng: 18.0703, visit: "Parco cittadino e Galleria Wetterling." },
+      { name: "Östermalmstorg & Salu Hall", lat: 59.3360, lng: 18.0780, visit: "Mercato al coperto gastronomico." },
+      { name: "Imbarco Crociera (Gustav III)", lat: 59.3262, lng: 18.0745, visit: "Partenza crociera 2 ore arcipelago." }
     ];
 
-    document.addEventListener("DOMContentLoaded", function() {
-      // 1. Notifica Push Temporizzata (dopo 1.5s)
-      setTimeout(() => {
-        const p = document.getElementById('push-alert');
-        if(p) {
-          p.classList.add('show');
-          setTimeout(() => p.classList.remove('show'), 5000);
-        }
-      }, 1500);
+    const routePoints = [
+      [hotel.lat, hotel.lng],
+      [stops[0].lat, stops[0].lng],
+      [stops[1].lat, stops[1].lng],
+      [stops[2].lat, stops[2].lng],
+      [stops[3].lat, stops[3].lng],
+      [stops[4].lat, stops[4].lng],
+      [stops[5].lat, stops[5].lng]
+    ];
 
-      // 2. Inizializzazione Mappe Leaflet
-      initMaps();
+    const segmentTimes = [
+      { lat: 59.3299, lng: 18.0563, text: "<i class='fa-solid fa-person-walking'></i> 10 min" },
+      { lat: 59.3266, lng: 18.0614, text: "<i class='fa-solid fa-person-walking'></i> 12 min" },
+      { lat: 59.3265, lng: 18.0684, text: "<i class='fa-solid fa-person-walking'></i> 3 min" },
+      { lat: 59.3285, lng: 18.0693, text: "<i class='fa-solid fa-person-walking'></i> 4 min" },
+      { lat: 59.3328, lng: 18.0741, text: "<i class='fa-solid fa-person-walking'></i> 10 min" },
+      { lat: 59.3311, lng: 18.0762, text: "<i class='fa-solid fa-person-walking'></i> 14 min" }
+    ];
 
-      // 3. Controllo/Aggiornamento Timeline in Tempo Reale
-      updateTimelineState();
-      setInterval(updateTimelineState, 60000);
-
-      // 4. Inizializzazione Sintesi Vocale (Text-to-Speech)
-      initAudioBtns();
-    });
-
-    // Inizializzazione Mappa Principale
-    function initMaps() {
-      map = L.map('map-student', { zoomControl: false }).setView(hotelCoords, 14);
-      
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap'
-      }).addTo(map);
-
-      // Icona Personalizzata Hotel Base
-      const hotelIcon = L.divIcon({
-        className: 'custom-hotel-icon',
-        html: '<div style="background:#4f46e5;color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(0,0,0,0.3);border:2px solid white;"><i class="fa-solid fa-hotel" style="font-size:14px;"></i></div>',
-        iconSize: [32, 32],
-        iconAnchor: [16, 16]
-      });
-
-      L.marker(hotelCoords, { icon: hotelIcon }).addTo(map)
-        .bindPopup("<b>Hotel C Stockholm</b><br>Base del Soggiorno");
-
-      // Area Raggio Hotel
-      L.circle(hotelCoords, {
-        color: '#4f46e5',
-        fillColor: '#6366f1',
-        fillOpacity: 0.12,
-        radius: 400
-      }).addTo(map);
-
-      // Aggiunta Pin Tappe e Linea Percorso Pedonale
-      const routePoints = [hotelCoords];
-      
-      waypoints.forEach((wp, index) => {
-        routePoints.push([wp.lat, wp.lng]);
-
-        const stepIcon = L.divIcon({
-          className: 'custom-step-icon',
-          html: `<div style="background:#f6a623;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:11px;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.2);">${index + 1}</div>`,
-          iconSize: [24, 24],
-          iconAnchor: [12, 12]
-        });
-
-        L.marker([wp.lat, wp.lng], { icon: stepIcon }).addTo(map)
-          .bindPopup(`<b>Tappa ${index + 1}</b><br>${wp.title}`);
-      });
-
-      // Tracciamento Linea Percorso
-      const polyline = L.polyline(routePoints, {
-        color: '#f6a623',
-        weight: 4,
-        dashArray: '8, 8',
-        lineCap: 'round'
-      }).addTo(map);
-
-      // Nuove Funzionalità Aggiunte (Commentate)
-      /* // FUNZIONALITÀ AGGIUNTIVA: Tratti a piedi con distanza/tempo stimato
-      const walkSegments = [
-        { from: hotelCoords, to: [waypoints[0].lat, waypoints[0].lng], dist: "650 m", time: "8 min" },
-        { from: [waypoints[0].lat, waypoints[0].lng], to: [waypoints[1].lat, waypoints[1].lng], dist: "900 m", time: "11 min" },
-        { from: [waypoints[1].lat, waypoints[1].lng], to: [waypoints[2].lat, waypoints[2].lng], dist: "400 m", time: "5 min" },
-        { from: [waypoints[2].lat, waypoints[2].lng], to: [waypoints[3].lat, waypoints[3].lng], dist: "550 m", time: "7 min" },
-        { from: [waypoints[3].lat, waypoints[3].lng], to: [waypoints[4].lat, waypoints[4].lng], dist: "850 m", time: "11 min" },
-        { from: [waypoints[4].lat, waypoints[4].lng], to: [waypoints[5].lat, waypoints[5].lng], dist: "1.2 km", time: "15 min" }
-      ];
-
-      walkSegments.forEach(seg => {
-        const midLat = (seg.from[0] + seg.to[0]) / 2;
-        const midLng = (seg.from[1] + seg.to[1]) / 2;
-        const walkIcon = L.divIcon({
-          className: 'walk-label-icon',
-          html: `<div class="walk-label"><i class="fa-solid fa-person-walking"></i> ${seg.dist} (${seg.time})</div>`,
-          iconSize: [100, 20],
-          iconAnchor: [50, 10]
-        });
-        L.marker([midLat, midLng], { icon: walkIcon, interactive: false }).addTo(map);
-      });
-      */
-
-      /*
-      // FUNZIONALITÀ AGGIUNTIVA: Filtri per Mappa (Tutti / Solo Tappe / Solo Hotel)
-      window.filterMapMarkers = function(type) {
-        if (type === 'hotel') {
-          map.setView(hotelCoords, 16);
-        } else if (type === 'route') {
-          map.fitBounds(polyline.getBounds(), { padding: [30, 30] });
-        } else {
-          resetMapView();
-        }
-      };
-      */
+    function getDistanceMeters(lat1, lon1, lat2, lon2) {
+      const R = 6371000;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
     }
 
-    // Reset Vista Mappa
-    function resetMapView() {
-      if(map) map.setView(hotelCoords, 14);
+    const maxDistanceInMeters = Math.max(
+      ...stops.map(stop => getDistanceMeters(hotel.lat, hotel.lng, stop.lat, stop.lng))
+    );
+
+    // Mappa Principale
+    const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+
+    function createGiantIcon(color, iconClass, pulse = false) {
+      return L.divIcon({
+        className: 'custom-icon',
+        html: `<div class="${pulse ? 'pulse-me' : ''}" style="background-color:${color}; width:46px; height:46px; border:4px solid white; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:18px; box-shadow:0 8px 15px rgba(0,0,0,0.15);"><i class="fa-solid ${iconClass}"></i></div>`,
+        iconSize:[46,46], iconAnchor:[23,23]
+      });
     }
 
-    // Gestione Modale Mappa A Schermo Intero
+    // Popolamento Mappa Principale
+    function renderMapElements(targetMap) {
+      const hotelCircle = L.circle([hotel.lat, hotel.lng], {
+        color: '#3b82f6',
+        fillColor: '#93c5fd',
+        fillOpacity: 0.35,
+        radius: maxDistanceInMeters
+      }).addTo(targetMap);
+
+      L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(targetMap);
+      L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(targetMap).bindPopup(`<strong>${hotel.name}</strong><br>Vasaplan 4`);
+      
+      stops.forEach(stop => { 
+        L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(targetMap).bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`); 
+      });
+
+      segmentTimes.forEach(st => {
+        L.marker([st.lat, st.lng], {
+          icon: L.divIcon({
+            className: '',
+            html: `<div class="walk-label">${st.text}</div>`,
+            iconSize: [60, 20],
+            iconAnchor: [30, 10]
+          })
+        }).addTo(targetMap);
+      });
+
+      return hotelCircle;
+    }
+
+    const hotelCircleMain = renderMapElements(map);
+
+    function resetMapView() { map.fitBounds(hotelCircleMain.getBounds().pad(0.1)); }
+    resetMapView();
+    window.addEventListener('load', () => setTimeout(() => map.invalidateSize(), 150));
+
+    // Mappa Modale (Ingrandita)
+    let modalMap = null;
+    let modalHotelCircle = null;
+
     function openMapModal() {
       document.getElementById('mapModal').style.display = 'flex';
-      
-      if (!mapModalInstance) {
-        setTimeout(() => {
-          mapModalInstance = L.map('map-modal-container').setView(hotelCoords, 14);
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(mapModalInstance);
-          
-          const hotelIcon = L.divIcon({
-            className: 'custom-hotel-icon',
-            html: '<div style="background:#4f46e5;color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(0,0,0,0.3);border:2px solid white;"><i class="fa-solid fa-hotel" style="font-size:14px;"></i></div>',
-            iconSize: [32, 32],
-            iconAnchor: [16, 16]
-          });
-          L.marker(hotelCoords, { icon: hotelIcon }).addTo(mapModalInstance);
-
-          const points = [hotelCoords];
-          waypoints.forEach((wp, index) => {
-            points.push([wp.lat, wp.lng]);
-            const stepIcon = L.divIcon({
-              className: 'custom-step-icon',
-              html: `<div style="background:#f6a623;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:11px;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.2);">${index + 1}</div>`,
-              iconSize: [24, 24],
-              iconAnchor: [12, 12]
-            });
-            L.marker([wp.lat, wp.lng], { icon: stepIcon }).addTo(mapModalInstance).bindPopup(`<b>${wp.title}</b>`);
-          });
-
-          L.polyline(points, { color: '#f6a623', weight: 4, dashArray: '8, 8' }).addTo(mapModalInstance);
-        }, 200);
-      } else {
-        setTimeout(() => { mapModalInstance.invalidateSize(); }, 200);
+      if (!modalMap) {
+        modalMap = L.map('map-modal-container', { zoomControl: true }).setView([hotel.lat, hotel.lng], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(modalMap);
+        modalHotelCircle = renderMapElements(modalMap);
       }
+      setTimeout(() => {
+        modalMap.invalidateSize();
+        modalMap.fitBounds(modalHotelCircle.getBounds().pad(0.1));
+      }, 200);
     }
 
     function closeMapModal() {
       document.getElementById('mapModal').style.display = 'none';
     }
 
-    // Avanzamento Stato Timeline
-    function updateTimelineState() {
-      const targetDateStr = "2026-08-25";
-      const now = new Date();
-      
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const day = String(now.getDate()).padStart(2, '0');
-      const currentDateStr = `${year}-${month}-${day}`;
-
-      const isTargetDay = (currentDateStr === targetDateStr);
-      const rows = document.querySelectorAll('.timeline-row');
-      const currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-      const times = Array.from(rows).map(row => {
-        const [h, m] = row.dataset.time.split(':').map(Number);
-        return h * 60 + m;
-      });
-
-      rows.forEach((row, index) => {
-        const rowTime = times[index];
-        const nextTime = times[index + 1] || 24 * 60;
-        const dot = row.querySelector('.dot');
-
-        row.classList.remove('done', 'active', 'future');
-
-        if (!isTargetDay) {
-          row.classList.add('future');
-          dot.style.background = '#e2e8f0';
-          dot.style.color = '#94a3b8';
-          dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
+    // Sintesi Vocale
+    let currentUtterance = null, currentButton = null;
+    function stopSpeech() { 
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel(); 
+      if (currentButton) currentButton.classList.remove('playing'); 
+      currentUtterance = null; 
+      currentButton = null; 
+    }
+    document.querySelectorAll('.audio-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const text = btn.dataset.audioText;
+        if (!('speechSynthesis' in window)) {
+          alert("La sintesi vocale non è supportata dal tuo browser.");
           return;
         }
-
-        if (currentMinutes >= rowTime && currentMinutes < nextTime) {
-          row.classList.add('active');
-          dot.style.background = '#f6a623';
-          dot.style.color = '#fff';
-          dot.innerHTML = '<i class="fa-solid fa-location-dot"></i>';
-        } else if (currentMinutes >= nextTime) {
-          row.classList.add('done');
-          dot.style.background = '#10b981';
-          dot.style.color = '#fff';
-          dot.innerHTML = '<i class="fa-solid fa-check"></i>';
-        } else {
-          row.classList.add('future');
-          dot.style.background = '#e2e8f0';
-          dot.style.color = '#94a3b8';
-          dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
+        if (currentButton === btn && window.speechSynthesis.speaking) { 
+          stopSpeech(); 
+          return; 
         }
-      });
-    }
-
-    // Nuove Funzionalità Aggiunte (Commentate)
-    /*
-    // FUNZIONALITÀ AGGIUNTIVA: Countdown alla prossima tappa della giornata
-    function updateCountdownNextStep() {
-      const rows = document.querySelectorAll('.timeline-row');
-      const now = new Date();
-      const currentMin = now.getHours() * 60 + now.getMinutes();
-      
-      let nextStep = null;
-      rows.forEach(row => {
-        const [h, m] = row.dataset.time.split(':').map(Number);
-        const stepMin = h * 60 + m;
-        if (stepMin > currentMin && !nextStep) {
-          nextStep = { title: row.querySelector('.timeline-title').innerText, timeMin: stepMin };
-        }
-      });
-
-      if (nextStep) {
-        const diff = nextStep.timeMin - currentMin;
-        console.log(`Prossima tappa: ${nextStep.title} tra ${diff} minuti`);
-      }
-    }
-    */
-
-    /*
-    // FUNZIONALITÀ AGGIUNTIVA: Salvataggio offline / Preferiti delle tappe
-    function toggleBookmark(stepTitle) {
-      let saved = JSON.parse(localStorage.getItem('gire_favorites') || '[]');
-      if (saved.includes(stepTitle)) {
-        saved = saved.filter(t => t !== stepTitle);
-      } else {
-        saved.push(stepTitle);
-      }
-      localStorage.setItem('gire_favorites', JSON.stringify(saved));
-    }
-    */
-
-    /*
-    // FUNZIONALITÀ AGGIUNTIVA: Condivisione rapida della scheda itinerario
-    function shareItinerary() {
-      if (navigator.share) {
-        navigator.share({
-          title: 'Gita a Stoccolma - Martedì 25.08.2026',
-          text: 'Dai un\'occhiata al programma per la giornata a Stoccolma con il Travel Crew!',
-          url: window.location.href
-        }).catch(console.error);
-      } else {
-        alert('Copia il link per condividere: ' + window.location.href);
-      }
-    }
-    */
-
-    // Gestione Lettore Vocale (Text to Speech)
-    let currentSpeech = null;
-    let activeAudioBtn = null;
-
-    function initAudioBtns() {
-      const btns = document.querySelectorAll('.audio-btn');
-      btns.forEach(btn => {
-        btn.addEventListener('click', function(e) {
-          e.stopPropagation(); // Evita l'apertura del modale cliccando il tasto audio
-          const text = this.getAttribute('data-audio-text');
-          toggleSpeech(text, this);
-        });
-      });
-    }
-
-    function toggleSpeech(text, btn) {
-      if ('speechSynthesis' in window) {
-        if (speechSynthesis.speaking && activeAudioBtn === btn) {
-          stopSpeech();
-          return;
-        }
-
         stopSpeech();
-
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'it-IT';
-        utterance.rate = 0.95;
-
-        utterance.onend = function() { stopSpeech(); };
-        utterance.onerror = function() { stopSpeech(); };
-
-        currentSpeech = utterance;
-        activeAudioBtn = btn;
-        btn.classList.add('playing');
-        btn.innerHTML = '<i class="fa-solid fa-square"></i>';
-
-        speechSynthesis.speak(utterance);
-      } else {
-        alert("La sintesi vocale non è supportata dal tuo browser.");
-      }
-    }
-
-    function stopSpeech() {
-      if ('speechSynthesis' in window) {
-        speechSynthesis.cancel();
-      }
-      if (activeAudioBtn) {
-        activeAudioBtn.classList.remove('playing');
-        activeAudioBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-        activeAudioBtn = null;
-      }
-      currentSpeech = null;
-    }
-
-    window.addEventListener('pagehide', stopSpeech);
+        const msg = new SpeechSynthesisUtterance(text); 
+        msg.lang = 'it-IT'; 
+        msg.rate = 0.95; 
+        msg.onend = stopSpeech; 
+        msg.onerror = stopSpeech;
+        currentUtterance = msg; 
+        currentButton = btn; 
+        btn.classList.add('playing'); 
+        window.speechSynthesis.speak(msg);
+      });
+    });
     window.addEventListener('beforeunload', stopSpeech);
 
     // Gestione Modali Dettagli e SOS
@@ -747,6 +588,68 @@
         alert('Impossibile recuperare la posizione GPS attuale.');
       });
     }
+
+     // --- AGGIORNAMENTO TIMELINE IN BASE ALL'ORARIO ---
+  function updateTimelineStatus() {
+  const rows = document.querySelectorAll('.timeline-row');
+  const now = new Date();
+  
+  // Data target della gita: 26 Agosto 2026
+  const targetYear = 2026;
+  const targetMonth = 7; // I mesi in JavaScript vanno da 0 (Gen) a 11 (Dic), quindi Agosto è 7
+  const targetDay = 25;
+
+  // Verifica se OGGI è esattamente il giorno della gita
+  const isTargetDay = (
+    now.getFullYear() === targetYear &&
+    now.getMonth() === targetMonth &&
+    now.getDate() === targetDay
+  );
+
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  const times = Array.from(rows).map(row => {
+    const [h, m] = row.dataset.time.split(':').map(Number);
+    return h * 60 + m;
+  });
+
+  rows.forEach((row, index) => {
+    const rowTime = times[index];
+    const nextTime = times[index + 1] || 24 * 60;
+    const dot = row.querySelector('.dot');
+
+    row.classList.remove('done', 'active', 'future');
+
+    // Se NON siamo nel giorno della gita, tutte le tappe restano grigie/future
+    if (!isTargetDay) {
+      row.classList.add('future');
+      dot.style.background = '#e2e8f0';
+      dot.style.color = '#94a3b8';
+      dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
+      return;
+    }
+
+    // Se SIAMO nel giorno della gita, colora in base all'orario
+    if (currentMinutes >= rowTime && currentMinutes < nextTime) {
+      row.classList.add('active');
+      dot.style.background = '#f6a623';
+      dot.style.color = '#fff';
+      dot.innerHTML = '<i class="fa-solid fa-location-dot"></i>';
+    } else if (currentMinutes >= nextTime) {
+      row.classList.add('done');
+      dot.style.background = '#10b981';
+      dot.style.color = '#fff';
+      dot.innerHTML = '<i class="fa-solid fa-check"></i>';
+    } else {
+      row.classList.add('future');
+      dot.style.background = '#e2e8f0';
+      dot.style.color = '#94a3b8';
+      dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
+    }
+  });
+}
+    // Esegui aggiornamento timeline all'avvio e ogni minuto
+    updateTimelineStatus();
+    setInterval(updateTimelineStatus, 60000);
   </script>
 </body>
 </html>
