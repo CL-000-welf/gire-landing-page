@@ -664,104 +664,85 @@
     updateTimelineStatus();
     setInterval(updateTimelineStatus, 60000);
 
-    // --- GESTIONE SWIPE TO DISMISS BANNER NOTIFICA (#push-alert) ---
-(function initSwipeToDismiss() {
+    // --- SWIPE UP PER SCOMPARSA NOTIFICA (STILE NATIVO) ---
+(function initPushAlertSwipe() {
   const alertBox = document.getElementById('push-alert');
   if (!alertBox) return;
 
-  let startX = 0, startY = 0;
-  let currentX = 0, currentY = 0;
-  let isSwiping = false;
+  let startY = 0;
+  let currentY = 0;
+  let isDragging = false;
 
-  const onStart = (e) => {
+  const handleStart = (e) => {
+    // Si attiva solo se il banner è attualmente visibile
     if (!alertBox.classList.contains('show')) return;
     
-    // Recupera le coordinate di partenza (touch o mouse)
-    const touch = e.touches ? e.touches[0] : e;
-    startX = touch.clientX;
-    startY = touch.clientY;
-    currentX = startX;
+    isDragging = true;
+    startY = e.touches ? e.touches[0].clientY : e.clientY;
     currentY = startY;
     
-    isSwiping = true;
-    alertBox.style.transition = 'none'; // Rimuove il delay durante il trascinamento
+    // Disabilita la transizione CSS per far seguire il dito in tempo reale
+    alertBox.style.transition = 'none';
   };
 
-  const onMove = (e) => {
-    if (!isSwiping) return;
+  const handleMove = (e) => {
+    if (!isDragging) return;
     
-    const touch = e.touches ? e.touches[0] : e;
-    currentX = touch.clientX;
-    currentY = touch.clientY;
+    currentY = e.touches ? e.touches[0].clientY : e.clientY;
+    const deltaY = currentY - startY;
 
-    const diffX = currentX - startX;
-    const diffY = currentY - startY;
-
-    // Se si trascina verso l'alto (diffY < 0) o lateralmente (diffX != 0)
-    if (diffY < 0 || Math.abs(diffX) > Math.abs(diffY)) {
-      // Applica lo spostamento in tempo reale sul banner
-      const moveX = diffX;
-      const moveY = Math.min(0, diffY); // Solo verso l'alto per Y
+    // Consentiamo solo il movimento verso l'alto (deltaY negativo)
+    if (deltaY < 0) {
+      // Previeni lo scroll della pagina mentre trascini il banner
+      if (e.cancelable) e.preventDefault();
       
-      alertBox.style.transform = `translate(${moveX}px, ${moveY}px)`;
-      
-      // Calcola la trasparenza in base alla distanza di scorrimento
-      const distance = Math.sqrt(moveX * moveX + moveY * moveY);
-      const opacity = Math.max(0, 1 - distance / 150);
-      alertBox.style.opacity = opacity;
+      // Applica lo spostamento in alto e sfuma leggermente l'opacità
+      alertBox.style.transform = `translateY(${deltaY}px)`;
+      alertBox.style.opacity = Math.max(0, 1 + deltaY / 100);
     }
   };
 
-  const onEnd = () => {
-    if (!isSwiping) return;
-    isSwiping = false;
+  const handleEnd = () => {
+    if (!isDragging) return;
+    isDragging = false;
 
-    const diffX = currentX - startX;
-    const diffY = currentY - startY;
+    const deltaY = currentY - startY;
 
-    // Soglia minima di 50px per considerare lo swipe valido (in su, a destra o a sinistra)
-    const dismissedUp = diffY < -50;
-    const dismissedSide = Math.abs(diffX) > 60;
+    // Ripristina una transizione fluida per la chiusura o il ripristino
+    alertBox.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
 
-    if (dismissedUp || dismissedSide) {
-      // Ripristina la transizione per far scivolare via il banner fluidamente
-      alertBox.style.transition = 'all 0.3s ease-out';
-      
-      // Direzione di uscita
-      const exitX = diffX > 0 ? '120%' : (diffX < 0 ? '-120%' : '0px');
-      const exitY = diffY < 0 ? '-150%' : '0px';
-
-      alertBox.style.transform = `translate(${exitX}, ${exitY})`;
+    // Se è stato trascinato verso l'alto di almeno 30px, chiudi la notifica
+    if (deltaY < -30) {
+      alertBox.style.transform = 'translateY(-150%)';
       alertBox.style.opacity = '0';
 
-      // Reset definitivo e rimozione classe dopo l'animazione
       setTimeout(() => {
         alertBox.classList.remove('show');
+        // Reset per le successive apparizioni
         alertBox.style.transform = '';
         alertBox.style.opacity = '';
         alertBox.style.transition = '';
       }, 300);
     } else {
-      // Se lo swipe è troppo breve, il banner torna dolcemente in posizione
-      alertBox.style.transition = 'all 0.2s ease-out';
-      alertBox.style.transform = 'translate(0px, 0px)';
+      // Se lo swipe è troppo corto, torna alla posizione originale
+      alertBox.style.transform = 'translateY(0)';
       alertBox.style.opacity = '1';
-      
+
       setTimeout(() => {
         alertBox.style.transition = '';
-      }, 200);
+      }, 300);
     }
   };
 
-  // Eventi Touch (Mobile)
-  alertBox.addEventListener('touchstart', onStart, { passive: true });
-  alertBox.addEventListener('touchmove', onMove, { passive: true });
-  alertBox.addEventListener('touchend', onEnd);
+  // Listener Eventi Touch (Mobile)
+  alertBox.addEventListener('touchstart', handleStart, { passive: false });
+  alertBox.addEventListener('touchmove', handleMove, { passive: false });
+  alertBox.addEventListener('touchend', handleEnd);
 
-  // Eventi Mouse (Desktop/Test)
-  alertBox.addEventListener('mousedown', onStart);
-  window.addEventListener('mousemove', onMove);
-  window.addEventListener('mouseup', onEnd);
+  // Listener Eventi Mouse (Desktop/Test)
+  alertBox.addEventListener('mousedown', handleStart);
+  window.addEventListener('mousemove', handleMove);
+  window.addEventListener('mouseup', handleEnd);
 })();
     
   </script>
