@@ -535,7 +535,7 @@
       </div>
     </article>
   </div>
-  <!-- ================================================ -->
+<!-- ================================================ -->
 <!-- SEZIONE INFO UTILI & GLOSSARIO AUDIO INTERATTIVO -->
 <!-- ================================================ -->
 <div class="bg-slate-900 text-white rounded-[2.5rem] p-6 shadow-xl mb-8 relative overflow-hidden border border-slate-800">
@@ -553,7 +553,7 @@
     </div>
   </div>
 
-  <!-- 1. TIP DEL GIORNO (Sincronizzato con il programma) -->
+  <!-- 1. TIP DEL GIORNO (Dinamico) -->
   <div id="daily-tip-box" class="bg-indigo-950/60 border border-indigo-500/40 rounded-2xl p-4 flex items-start gap-3 mb-4">
     <div class="text-indigo-400 text-base shrink-0 mt-0.5"><i class="fa-solid fa-lightbulb"></i></div>
     <div>
@@ -562,7 +562,7 @@
     </div>
   </div>
 
-  <!-- 2. ACCORDION DINAMICI (Generati da JS in base al giorno) -->
+  <!-- 2. ACCORDION DINAMICI DEL GIORNO (Generati da JS con stessa gerarchia) -->
   <div id="dynamic-accordions-container" class="space-y-3 mb-3">
     <!-- Generati da JavaScript -->
   </div>
@@ -571,8 +571,8 @@
   <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl overflow-hidden mb-3">
     <button onclick="toggleInfoAccordion('acc-galateo')" class="w-full p-4 flex items-center justify-between text-left hover:bg-slate-800/90 transition-colors">
       <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm shrink-0">
-          <i class="fa-solid fa-heart-handshake"></i>
+        <div class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm shrink-0 border border-amber-500/30">
+          <i class="fa-solid fa-users"></i>
         </div>
         <span class="font-black text-xs uppercase tracking-wide text-amber-300">Galateo & Cultura Svedese</span>
       </div>
@@ -618,8 +618,8 @@
   <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl overflow-hidden mb-6">
     <button onclick="toggleInfoAccordion('acc-farmacie')" class="w-full p-4 flex items-center justify-between text-left hover:bg-slate-800/90 transition-colors">
       <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-sm shrink-0">
-          <i class="fa-solid fa-prescription-bottle-medical"></i>
+        <div class="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-sm shrink-0 border border-rose-500/30">
+          <i class="fa-solid fa-kit-medical"></i>
         </div>
         <span class="font-black text-xs uppercase tracking-wide text-rose-300">Farmacie & Emergenze</span>
       </div>
@@ -652,7 +652,7 @@
         </div>
       </div>
 
-      <!-- Tasto Leaflet Integrato (NON APRE GOOGLE MAPS) -->
+      <!-- Tasto Leaflet Integrato -->
       <button onclick="locateNearestPharmacy()" class="w-full mt-2 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 font-black py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95">
         <i class="fa-solid fa-location-dot"></i> Mostra Farmacia 24/7 sulla Mappa
       </button>
@@ -1494,12 +1494,16 @@ const dayData = {
       {
         id: "acc-pay",
         icon: "fa-credit-card",
+        colorClass: "bg-indigo-500/20 text-indigo-400 border-indigo-500/30",
+        titleColor: "text-indigo-300",
         title: "Pagamenti & Metro SL",
         content: "A Stoccolma il contante non si usa. Per metropolitana e bus (SL), basta avvicinare la carta contactless o lo smartphone ai tornelli."
       },
       {
         id: "acc-plugs",
         icon: "fa-plug",
+        colorClass: "bg-sky-500/20 text-sky-400 border-sky-500/30",
+        titleColor: "text-sky-300",
         title: "Prese & Acqua",
         content: "Le prese sono di Tipo F (Schuko) da 230V. L'acqua del rubinetto a Stoccolma è pura e potabile: porta una borraccia da riempire!"
       }
@@ -1510,13 +1514,17 @@ const dayData = {
     accordions: [
       {
         id: "acc-vasa",
-        icon: "fa-dumpster-fire",
+        icon: "fa-landmark",
+        colorClass: "bg-purple-500/20 text-purple-400 border-purple-500/30",
+        titleColor: "text-purple-300",
         title: "Regole Museo Vasa",
         content: "Non sono ammessi zaini o borse ingombranti all'interno. Utilizza gli armadietti gratuiti all'ingresso prima di iniziare il tour."
       },
       {
         id: "acc-ferry",
         icon: "fa-ship",
+        colorClass: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+        titleColor: "text-blue-300",
         title: "Traghetti di Linea",
         content: "I traghetti verso Djurgården fanno parte della rete SL: puoi salire a bordo usando la stessa carta contactless della metro!"
       }
@@ -1528,12 +1536,16 @@ const dayData = {
       {
         id: "acc-luggage",
         icon: "fa-suitcase-rolling",
+        colorClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+        titleColor: "text-amber-300",
         title: "Deposito Bagagli",
         content: "Se hai il volo la sera, puoi lasciare i bagagli presso il deposito dell'Hotel C Stockholm o alla Stazione Centrale (T-Centralen)."
       },
       {
         id: "acc-taxfree",
         icon: "fa-bag-shopping",
+        colorClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+        titleColor: "text-emerald-300",
         title: "Shopping & Souvenir",
         content: "Drottninggatan è la via principale per lo shopping. Molti negozi offrono il rimborso Tax-Free per gli acquisti sopra le 200 SEK."
       }
@@ -1565,27 +1577,30 @@ const glossarySets = [
 
 let currentGlossaryIndex = 0;
 
-// Funzione principale di aggiornamento al cambio giorno
+// Aggiorna contenuti al cambio giorno
 function updateDayContent(dayKey = 'mar') {
   const data = dayData[dayKey] || dayData['mar'];
 
-  // 1. Aggiorna Tip
+  // 1. Tip
   const tipEl = document.getElementById('daily-tip-text');
   if (tipEl) tipEl.innerText = data.tip;
 
-  // 2. Genera Accordion Dinamici
+  // 2. Genera Accordion Dinamici con la STESSA GERARCHIA VISIVA
   const accContainer = document.getElementById('dynamic-accordions-container');
   if (accContainer) {
     accContainer.innerHTML = data.accordions.map(acc => `
-      <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl overflow-hidden">
-        <button onclick="toggleInfoAccordion('${acc.id}')" class="w-full p-4 flex justify-between items-center text-left hover:bg-slate-800/90 transition-colors">
-          <span class="font-black text-xs uppercase tracking-wide flex items-center gap-2 text-indigo-300">
-            <i class="fa-solid ${acc.icon}"></i> ${acc.title}
-          </span>
+      <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl overflow-hidden mb-3">
+        <button onclick="toggleInfoAccordion('${acc.id}')" class="w-full p-4 flex items-center justify-between text-left hover:bg-slate-800/90 transition-colors">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl ${acc.colorClass} flex items-center justify-center text-sm shrink-0 border">
+              <i class="fa-solid ${acc.icon}"></i>
+            </div>
+            <span class="font-black text-xs uppercase tracking-wide ${acc.titleColor}">${acc.title}</span>
+          </div>
           <i id="icon-${acc.id}" class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-300"></i>
         </button>
-        <div id="${acc.id}" class="px-4 pb-4 text-xs font-medium text-slate-300 leading-relaxed hidden border-t border-slate-700/40 pt-3">
-          ${acc.content}
+        <div id="${acc.id}" class="hidden px-4 pb-4 pt-1 text-xs text-slate-300 space-y-2 border-t border-slate-700/40">
+          <p class="pt-2">${acc.content}</p>
         </div>
       </div>
     `).join('');
@@ -1625,7 +1640,7 @@ function speakSwedish(text) {
   window.speechSynthesis.speak(utterance);
 }
 
-// Gestore Unico di Apertura/Chiusura Accordion
+// Toggle unificato per tutti gli accordion
 function toggleInfoAccordion(id) {
   const content = document.getElementById(id);
   const icon = document.getElementById(`icon-${id}`);
@@ -1640,37 +1655,42 @@ function toggleInfoAccordion(id) {
   }
 }
 
-// INTEGRAZIONE LEAFLET PER FARMACIA 24/7 (Senza uscire dall'App)
+// FUNZIONE ROBUSTA MOSTRA FARMACIA SU LEAFLET
 function locateNearestPharmacy() {
-  const mapElement = document.getElementById('map'); // Assicurati che l'ID del div mappa sia 'map'
-  if (!mapElement) return;
+  const mapElement = document.getElementById('map') || document.querySelector('.leaflet-container');
+  
+  if (mapElement) {
+    mapElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
 
-  // Scroll verso la mappa dentro l'app
-  mapElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // Trova l'istanza di Leaflet sia se globale sia se salvata nell'elemento DOM
+  const activeMap = window.map || (mapElement && mapElement._leaflet_map);
 
-  // Se l'istanza globale della mappa Leaflet esiste
-  if (typeof map !== 'undefined' && map) {
-    const pharmacyLat = 59.3328;
-    const pharmacyLng = 18.0505;
+  if (activeMap) {
+    const lat = 59.3328;
+    const lng = 18.0505;
 
-    map.flyTo([pharmacyLat, pharmacyLng], 16, { duration: 1.5 });
-
-    L.popup()
-      .setLatLng([pharmacyLat, pharmacyLng])
-      .setContent(`
-        <div style="text-align: center; font-family: sans-serif; color: #1e293b;">
-          <strong style="color: #e11d48;"><i class="fa-solid fa-prescription-bottle-medical"></i> Apoteket C W Scheele (24/7)</strong><br>
-          <small>Klarabergsgatan 64, Stoccolma</small>
-        </div>
-      `)
-      .openOn(map);
+    setTimeout(() => {
+      activeMap.flyTo([lat, lng], 16, { duration: 1.5 });
+      L.popup()
+        .setLatLng([lat, lng])
+        .setContent(`
+          <div style="text-align: center; font-family: sans-serif; color: #0f172a; padding: 2px;">
+            <strong style="color: #e11d48; font-size: 12px;"><i class="fa-solid fa-kit-medical"></i> Apoteket C W Scheele (24/7)</strong><br>
+            <span style="font-size: 11px; color: #475569;">Klarabergsgatan 64, Stoccolma</span>
+          </div>
+        `)
+        .openOn(activeMap);
+    }, 300);
+  } else {
+    console.warn("Istanza mappa Leaflet non trovata.");
   }
 }
 
-// Inizializzazione al caricamento
+// Init
 document.addEventListener('DOMContentLoaded', () => {
   renderGlossary(0);
-  updateDayContent('mar'); // <-- Dice alla pagina di prendere i dati di MARTEDÌ
+  updateDayContent('mar');
 });
     
 // --- DATABASE RISTORANTI & CAFFÈ ---
