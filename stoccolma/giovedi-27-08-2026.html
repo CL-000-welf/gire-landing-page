@@ -276,15 +276,15 @@
       <p id="conv-sek-label" class="text-xs font-extrabold text-emerald-100 mt-1">0 Kronor Svedesi (SEK)</p>
     </div>
 
-    <!-- Scelte Rapide Tagli -->
+     <!-- Scelte Rapide Tagli Turistici -->
     <p class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-2">Seleziona Corone (SEK):</p>
     <div class="grid grid-cols-3 gap-2 mb-4">
-      <button onclick="setSekValue(200)" class="bg-slate-50 border border-slate-200 py-2.5 rounded-xl font-black text-xs text-slate-700 active:scale-95">200 SEK</button>
-      <button onclick="setSekValue(500)" class="bg-slate-50 border border-slate-200 py-2.5 rounded-xl font-black text-xs text-slate-700 active:scale-95">500 SEK</button>
-      <button onclick="setSekValue(1000)" class="bg-slate-50 border border-slate-200 py-2.5 rounded-xl font-black text-xs text-slate-700 active:scale-95">1000 SEK</button>
-      <button onclick="setSekValue(2500)" class="bg-slate-50 border border-slate-200 py-2.5 rounded-xl font-black text-xs text-slate-700 active:scale-95">2500 SEK</button>
-      <button onclick="setSekValue(5000)" class="bg-slate-50 border border-slate-200 py-2.5 rounded-xl font-black text-xs text-slate-700 active:scale-95">5000 SEK</button>
-      <button onclick="setSekValue(11500)" class="bg-slate-50 border border-slate-200 py-2.5 rounded-xl font-black text-xs text-slate-700 active:scale-95">11500 SEK (~1000€)</button>
+      <button data-value="50" onclick="setSekValue(50)" class="preset-btn border py-3 rounded-xl font-black text-xs active:scale-95 transition-all">50 SEK</button>
+      <button data-value="100" onclick="setSekValue(100)" class="preset-btn border py-3 rounded-xl font-black text-xs active:scale-95 transition-all">100 SEK</button>
+      <button data-value="200" onclick="setSekValue(200)" class="preset-btn border py-3 rounded-xl font-black text-xs active:scale-95 transition-all">200 SEK</button>
+      <button data-value="500" onclick="setSekValue(500)" class="preset-btn border py-3 rounded-xl font-black text-xs active:scale-95 transition-all">500 SEK</button>
+      <button data-value="1000" onclick="setSekValue(1000)" class="preset-btn border py-3 rounded-xl font-black text-xs active:scale-95 transition-all">1000 SEK</button>
+      <button data-value="2500" onclick="setSekValue(2500)" class="preset-btn border py-3 rounded-xl font-black text-xs active:scale-95 transition-all">2500 SEK</button>
     </div>
 
     <!-- Slider Fino a 1000€ (~11.500 SEK) -->
@@ -1207,6 +1207,25 @@ function calculateCurrency(sekVal) {
   const eur = (sek * exchangeRate).toFixed(2);
   document.getElementById('conv-eur').innerText = `${eur} €`;
   document.getElementById('conv-sek-label').innerText = `${sek} Kronor Svedesi (SEK)`;
+
+  // Evidenzia il pulsante selezionato se corrisponde al valore attuale
+  highlightPresetButton(sek);
+}
+
+function highlightPresetButton(currentVal) {
+  // Seleziona tutti i pulsanti delle opzioni rapide
+  const buttons = document.querySelectorAll('.preset-btn');
+  
+  buttons.forEach(btn => {
+    const btnVal = parseFloat(btn.getAttribute('data-value'));
+    if (btnVal === currentVal) {
+      // Stile Selezionato (Sfondo verde, testo bianco)
+      btn.className = "preset-btn bg-emerald-600 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all border-2 border-emerald-600";
+    } else {
+      // Stile Standard (Sfondo grigio chiaro/trasparente, testo scuro)
+      btn.className = "preset-btn bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 px-4 rounded-xl transition-all border-2 border-transparent";
+    }
+  });
 }
 
 // --- LOGICA MODALE METRO SL CON LEAFLET IN-APP ---
