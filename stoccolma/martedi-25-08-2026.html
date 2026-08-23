@@ -101,6 +101,136 @@
     footer.app-footer .footer-brand { display: flex; align-items: center; gap: 8px; color: #64748b; }
     footer.app-footer img { width: 20px; height: 20px; border-radius: 6px; }
     @media (max-width: 420px) { body { padding: 16px 16px 32px; } .safe-card { border-radius: 1.7rem; } #map-student { height: 262px; border-radius: 1.6rem; margin: -16px -16px 0px -16px; } .diary-body { padding: 1rem; } .diary-head h4 { font-size: 1rem; } .diary-short { font-size:.95rem; line-height: 1.55; } .nav-row a, .nav-row span { min-width: 96px; padding: .7rem .85rem; } .modal-card { padding: 1.5rem; border-radius: 2rem; } .map-meta { grid-template-columns: 1fr; } .map-controls { justify-content: flex-start; } }
+ 
+  
+  /* --- FAB STICKY IN BASSO A SINISTRA --- */
+.nav-fab {
+  position: fixed;
+  bottom: 24px;
+  left: 20px;
+  width: 54px;
+  height: 54px;
+  background-color: #1a2238; /* Blu scuro coordinato con il tema della card */
+  border-radius: 16px; /* Quadrato con angoli smussati */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.nav-fab:active {
+  transform: scale(0.92);
+}
+
+.hamburger-icon {
+  width: 22px;
+  height: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hamburger-icon span {
+  display: block;
+  width: 100%;
+  height: 2.5px;
+  background-color: #ffffff;
+  border-radius: 2px;
+}
+
+/* --- OVERLAY MENU CIRCOLARE --- */
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.nav-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.circular-menu {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  background: #1a2238;
+  border-radius: 50%; /* Menu perfettamente circolare */
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: scale(0.7);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.nav-overlay.active .circular-menu {
+  transform: scale(1);
+}
+
+.close-btn {
+  position: absolute;
+  top: 14px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.menu-items {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 30px;
+  text-align: center;
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #ffffff;
+  padding: 6px;
+  border-radius: 12px;
+  transition: background 0.2s ease;
+}
+
+.menu-item:hover, .menu-item:active {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.menu-item .icon {
+  font-size: 20px;
+  margin-bottom: 2px;
+}
+
+.menu-item .label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+  
+  
   </style>
 </head>
 <body class="flex flex-col min-h-screen p-5 pb-10">
@@ -787,6 +917,40 @@
     </div>
   </div>
 
+<!-- FAB / Hamburger Menu Sticky -->
+<button id="nav-toggle" class="nav-fab" aria-label="Apri menu di navigazione">
+  <div class="hamburger-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</button>
+
+<!-- Menu Overlay Circolare -->
+<div id="nav-overlay" class="nav-overlay">
+  <div class="circular-menu">
+    <!-- Pulsante Chiudi integrato -->
+    <button id="nav-close" class="close-btn" aria-label="Chiudi menu">&times;</button>
+    
+    <!-- Griglia/Anello di Link -->
+    <div class="menu-items">
+      <a href="#meteo" class="menu-item"><span class="icon">☀️</span><span class="label">Meteo</span></a>
+      <a href="#mappa" class="menu-item"><span class="icon">🗺️</span><span class="label">Mappa</span></a>
+      <a href="#metro" class="menu-item"><span class="icon">🚇</span><span class="label">Metro</span></a>
+      <a href="#valuta" class="menu-item"><span class="icon">💶</span><span class="label">Cambio</span></a>
+      <a href="#tappe" class="menu-item"><span class="icon">📍</span><span class="label">Tappe</span></a>
+      <a href="#cards" class="menu-item"><span class="icon">🎴</span><span class="label">Card</span></a>
+      <a href="#cibo" class="menu-item"><span class="icon">🍽️</span><span class="label">Cibo</span></a>
+      <a href="#info" class="menu-item"><span class="icon">ℹ️</span><span class="label">Info</span></a>
+      <a href="#glossario" class="menu-item"><span class="icon">📖</span><span class="label">Glossario</span></a>
+    </div>
+  </div>
+</div>
+
+
+
+
+  
   <!-- 10. LOGICA JAVASCRIPT -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
@@ -1933,8 +2097,31 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
   
+//MENUMENUMENU
+const navToggle = document.getElementById('nav-toggle');
+const navClose = document.getElementById('nav-close');
+const navOverlay = document.getElementById('nav-overlay');
 
+// Apri menu e nascondi il bottone sticky
+navToggle.addEventListener('click', () => {
+  navOverlay.classList.add('active');
+  navToggle.style.opacity = '0';
+  navToggle.style.pointerEvents = 'none';
+});
 
+// Chiudi menu e ripristina il bottone sticky
+function closeMenu() {
+  navOverlay.classList.remove('active');
+  navToggle.style.opacity = '1';
+  navToggle.style.pointerEvents = 'auto';
+}
+
+navClose.addEventListener('click', closeMenu);
+
+// Chiudi cliccando lo sfondo sfocato
+navOverlay.addEventListener('click', (e) => {
+  if (e.target === navOverlay) closeMenu();
+});
     
   </script>
 </body>
