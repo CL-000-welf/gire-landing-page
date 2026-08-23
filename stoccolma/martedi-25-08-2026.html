@@ -104,7 +104,115 @@
   </style>
 </head>
 <body class="flex flex-col min-h-screen p-5 pb-10">
+<!-- ================================================================= -->
+<!-- NAVIGATORE STICKY CON ANCORE & FONTAWESOME                       -->
+<!-- Permette all'utente di navigare rapidamente alle sezioni principali -->
+<!-- ================================================================= -->
+<nav class="sticky top-0 z-[9999] bg-slate-900/95 backdrop-blur-md text-white border-b border-slate-800 px-3 py-2.5 shadow-md">
+  <div class="max-w-md mx-auto flex items-center justify-between text-xs font-black uppercase tracking-wider overflow-x-auto space-x-2 no-scrollbar">
+    
+    <!-- Ancora Meteo -->
+    <a href="#weather-card-bg" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-indigo-600 text-slate-200 hover:text-white transition-all shrink-0">
+      <i class="fa-solid fa-cloud-sun text-sky-400"></i>
+      <span>Meteo</span>
+    </a>
 
+    <!-- Ancora Mappa -->
+    <a href="#map-student" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-indigo-600 text-slate-200 hover:text-white transition-all shrink-0">
+      <i class="fa-solid fa-map-location-dot text-indigo-400"></i>
+      <span>Mappa</span>
+    </a>
+
+    <!-- Ancora Programma / Timeline -->
+    <a href="#timeline-section" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-indigo-600 text-slate-200 hover:text-white transition-all shrink-0">
+      <i class="fa-solid fa-list-check text-amber-400"></i>
+      <span>Tappe</span>
+    </a>
+
+    <!-- Ancora Dove Mangiare & Fika -->
+    <a href="#food-section" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-indigo-600 text-slate-200 hover:text-white transition-all shrink-0">
+      <i class="fa-solid fa-utensils text-emerald-400"></i>
+      <span>Fika & Cibo</span>
+    </a>
+
+    <!-- Tasto SOS Rapido -->
+    <button onclick="openSOSModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-600 text-white hover:bg-red-700 transition-all shrink-0 font-bold">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <span>SOS</span>
+    </button>
+
+  </div>
+</nav>
+
+  <!-- ================================================================= -->
+<!-- MENU MULTIFUNZIONE FLOATING (FAB) IN ALTO / IN BASSO              -->
+<!-- Offre accesso rapido a Metro, Cambio Valuta e SOS in qualunque punto-->
+<!-- ================================================================= -->
+<div class="fixed bottom-6 right-5 z-[9990] flex flex-col items-end gap-2">
+  
+  <!-- Sottomenu espandibile (nascosto di default) -->
+  <div id="fab-menu" class="hidden flex-col items-end gap-2 transition-all duration-300 transform scale-95 opacity-0 origin-bottom-right">
+    
+    <!-- Azione 1: Cambio Valuta SEK/EUR -->
+    <button onclick="openCurrencyModal(); toggleFabMenu();" class="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2.5 rounded-2xl shadow-xl font-black text-xs uppercase active:scale-95 transition-all">
+      <span>Cambio SEK</span>
+      <div class="w-7 h-7 bg-white/20 rounded-xl flex items-center justify-center">
+        <i class="fa-solid fa-coins"></i>
+      </div>
+    </button>
+
+    <!-- Azione 2: Metro & GPS SL -->
+    <button onclick="openMetroModal(); toggleFabMenu();" class="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-2xl shadow-xl font-black text-xs uppercase active:scale-95 transition-all">
+      <span>Metro & GPS</span>
+      <div class="w-7 h-7 bg-white/20 rounded-xl flex items-center justify-center font-black">
+        T
+      </div>
+    </button>
+
+    <!-- Azione 3: Emergenza SOS -->
+    <button onclick="openSOSModal(); toggleFabMenu();" class="flex items-center gap-2 bg-red-600 text-white px-4 py-2.5 rounded-2xl shadow-xl font-black text-xs uppercase active:scale-95 transition-all">
+      <span>SOS Emergenza</span>
+      <div class="w-7 h-7 bg-white/20 rounded-xl flex items-center justify-center">
+        <i class="fa-solid fa-phone"></i>
+      </div>
+    </button>
+
+  </div>
+
+  <!-- Bottone Principale FAB (Toggle Menu) -->
+  <button id="fab-main-btn" onclick="toggleFabMenu()" aria-label="Menu azionabile rapido" class="bg-slate-900 text-white border border-slate-700 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl active:scale-90 transition-all text-xl">
+    <i id="fab-icon" class="fa-solid fa-ellipsis-vertical"></i>
+  </button>
+
+</div>
+
+<!-- Script per il controllo dell'apertura/chiusura del FAB -->
+<script>
+  function toggleFabMenu() {
+    const menu = document.getElementById('fab-menu');
+    const icon = document.getElementById('fab-icon');
+    
+    if (menu.classList.contains('hidden')) {
+      menu.classList.remove('hidden');
+      setTimeout(() => {
+        menu.classList.remove('scale-95', 'opacity-0');
+        menu.classList.add('scale-100', 'opacity-100');
+      }, 10);
+      icon.className = 'fa-solid fa-xmark text-lg';
+    } else {
+      menu.classList.remove('scale-100', 'opacity-100');
+      menu.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => {
+        menu.classList.add('hidden');
+      }, 300);
+      icon.className = 'fa-solid fa-ellipsis-vertical';
+    }
+  }
+</script>
+
+
+
+  
   <!-- 1. NOTIFICA PUSH POP-UP -->
  <div id="push-alert" class="bg-slate-900 text-white p-5 rounded-[2rem] shadow-2xl flex items-center gap-4 border border-white/20 relative overflow-hidden">
   <div class="absolute top-2 left-1/2 -translate-x-1/2 w-8 h-1 bg-white/20 rounded-full"></div>
