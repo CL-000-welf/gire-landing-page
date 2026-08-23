@@ -104,9 +104,8 @@
  
   
 /* =====================================================================
-       STILI PER IL MENU A RAGGIERA STICKY CON LOGO GIRE
+       STILI PER IL MENU A RAGGIERA STICKY CON LOGO GIRE E ETICHETTE
        ===================================================================== */
-    /* Container fisso in basso a destra sopra gli altri contenuti */
     .radial-menu-wrapper {
       position: fixed;
       bottom: 24px;
@@ -114,17 +113,17 @@
       z-index: 9999;
     }
 
-    /* Disco di sfondo a raggiera con il logo 'G' trasparente */
+    /* Disco di sfondo - Stesso colore del bottone (#0f172a) con sfocatura */
     .radial-disc {
       position: absolute;
       bottom: 0;
       right: 0;
-      width: 260px;
-      height: 260px;
+      width: 310px;
+      height: 310px;
       border-radius: 50%;
-      background: rgba(15, 23, 42, 0.94); /* Colore Slate 900 scuro */
-      backdrop-filter: blur(10px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+      background: rgba(15, 23, 42, 0.96); /* Dark Slate #0f172a */
+      backdrop-filter: blur(12px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(255, 255, 255, 0.15);
       display: flex;
       align-items: center;
@@ -136,89 +135,107 @@
       pointer-events: none;
     }
 
-    /* Classe attivata via JS all'apertura del menu */
+    /* Attivazione visiva disco */
     .radial-menu-wrapper.active .radial-disc {
       transform: scale(1);
       opacity: 1;
       pointer-events: auto;
     }
 
-    /* Filigrana della 'G' di GIRE sul fondo del disco */
+    /* Filigrana Logo GIRE esattamente come Header/Footer */
     .radial-disc-bg-logo {
       position: absolute;
-      font-size: 140px;
-      font-weight: 900;
-      font-style: italic;
-      color: rgba(255, 255, 255, 0.06);
+      width: 140px;
+      height: 140px;
+      opacity: 0.12;
       user-select: none;
       pointer-events: none;
-      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* Pulsante sticky principale con i 3 punti */
+    /* Bottone Sticky con 3 punti verticali - Stesso blu (#0f172a) */
     .radial-toggle-btn {
       position: relative;
       z-index: 10001;
-      width: 58px;
-      height: 58px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
-      background: #4f46e5; /* Indaco GIRE */
+      background: #0f172a; /* Stesso colore del disco aperto */
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
-      box-shadow: 0 10px 25px rgba(79, 70, 229, 0.45);
-      border: 2px solid white;
+      font-size: 22px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.5);
+      border: 2px solid rgba(255, 255, 255, 0.2);
       cursor: pointer;
-      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s;
+      transition: transform 0.2s ease, background-color 0.3s, border-color 0.3s;
     }
 
     .radial-toggle-btn:active {
       transform: scale(0.92);
     }
 
-    /* Animazione icona al click (da 3 punti a X) */
     .radial-toggle-btn i {
       transition: transform 0.3s ease;
     }
-    .radial-menu-wrapper.active .radial-toggle-btn {
-      background: #0f172a;
-    }
+
     .radial-menu-wrapper.active .radial-toggle-btn i {
       transform: rotate(90deg);
     }
 
-    /* Singoli pulsanti posizionati a raggiera */
-    .radial-item {
+    /* Wrapper pulsanti a raggiera (Icona + Scritta sotto) */
+    .radial-item-container {
       position: absolute;
-      width: 44px;
-      height: 44px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .radial-item-btn {
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       background: white;
-      color: #1e293b;
       display: flex;
       align-items: center;
       justify-content: center;
-      text-decoration: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      font-size: 16px;
-      border: none;
-      cursor: pointer;
-      transition: transform 0.2s ease, background 0.2s, color 0.2s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+      font-size: 15px;
+      transition: transform 0.2s ease, background 0.2s;
     }
 
-    .radial-item:active {
-      transform: scale(0.9) !important;
+    .radial-item-container:active .radial-item-btn {
+      transform: scale(0.9);
     }
 
-    /* Posizionamento dei 5 elementi lungo l'arco di cerchio (quadrante in alto a sinistra) */
-    .radial-item:nth-child(2) { top: 20px; left: 110px; }  /* Top center */
-    .radial-item:nth-child(3) { top: 45px; left: 55px; }   /* Top-Left */
-    .radial-item:nth-child(4) { top: 95px; left: 20px; }   /* Mid-Left */
-    .radial-item:nth-child(5) { top: 155px; left: 45px; }  /* Bottom-Left */
-    .radial-item:nth-child(6) { top: 195px; left: 100px; } /* Bottom */
+    /* Etichetta in piccolo sotto l'icona */
+    .radial-item-label {
+      font-size: 9px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      margin-top: 3px;
+      text-align: center;
+      line-height: 1.1;
+      white-space: nowrap;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    }
 
+    /* Disposizione ad arco dei pulsanti (quadrante in alto a sinistra) */
+    .radial-item-container:nth-child(2) { top: 15px; left: 165px; }  /* Top Center */
+    .radial-item-container:nth-child(3) { top: 35px; left: 100px; }  /* Top-Left 1 */
+    .radial-item-container:nth-child(4) { top: 85px; left: 45px; }   /* Top-Left 2 */
+    .radial-item-container:nth-child(5) { top: 150px; left: 20px; }  /* Mid-Left */
+    .radial-item-container:nth-child(6) { top: 215px; left: 55px; }  /* Bottom-Left 1 */
+    .radial-item-container:nth-child(7) { top: 245px; left: 125px; } /* Bottom-Left 2 */
   
   </style>
 </head>
@@ -908,43 +925,139 @@
     </div>
   </div>
 
-  <!-- =====================================================================
-       MENU A RAGGIERA STICKY CON SFONDO LOGO GIRE
-       ===================================================================== -->
-  <div id="radialMenuWrapper" class="radial-menu-wrapper">
-    <!-- Disco di Sfondo con la G trasparente e Voci a Raggiera -->
-    <div class="radial-disc">
-      <!-- Filigrana 'G' di GIRE -->
-      <div class="radial-disc-bg-logo">G</div>
+ /* =====================================================================
+       STILI PER IL MENU A RAGGIERA STICKY CON LOGO GIRE E ETICHETTE
+       ===================================================================== */
+    .radial-menu-wrapper {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+    }
 
-      <!-- Voci a raggiera collegate alle funzioni JavaScript esistenti -->
-      <button onclick="openMapModal(); toggleRadialMenu();" class="radial-item text-indigo-600" title="Mappa">
-        <i class="fa-solid fa-map-location-dot"></i>
-      </button>
-      <button onclick="openMetroModal(); toggleRadialMenu();" class="radial-item text-blue-600" title="Metro SL">
-        <i class="fa-solid fa-subway"></i>
-      </button>
+    /* Disco di sfondo - Stesso colore del bottone (#0f172a) con sfocatura */
+    .radial-disc {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 310px;
+      height: 310px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.96); /* Dark Slate #0f172a */
+      backdrop-filter: blur(12px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: scale(0);
+      transform-origin: bottom right;
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
 
-      <button onclick="openCurrencyModal(); toggleRadialMenu();" class="radial-item text-emerald-600" title="Cambio Valuta">
-        <i class="fa-solid fa-coins"></i>
-      </button>
+    /* Attivazione visiva disco */
+    .radial-menu-wrapper.active .radial-disc {
+      transform: scale(1);
+      opacity: 1;
+      pointer-events: auto;
+    }
 
-      <button onclick="scrollToFood(); toggleRadialMenu();" class="radial-item text-amber-600" title="Dove Mangiare">
-        <i class="fa-solid fa-utensils"></i>
-      </button>
+    /* Filigrana Logo GIRE esattamente come Header/Footer */
+    .radial-disc-bg-logo {
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      opacity: 0.12;
+      user-select: none;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-      <button onclick="openSOSModal(); toggleRadialMenu();" class="radial-item text-red-600" title="SOS">
-        <i class="fa-solid fa-phone-flip"></i>
-      </button>
-    </div>
+    /* Bottone Sticky con 3 punti verticali - Stesso blu (#0f172a) */
+    .radial-toggle-btn {
+      position: relative;
+      z-index: 10001;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #0f172a; /* Stesso colore del disco aperto */
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.5);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: transform 0.2s ease, background-color 0.3s, border-color 0.3s;
+    }
 
-    <!-- Bottone Sticky a Cerchio con 3 Punti Orizzontali -->
-    <button id="radialToggleBtn" onclick="toggleRadialMenu()" class="radial-toggle-btn" aria-label="Menu Rapido">
-      <i class="fa-solid fa-ellipsis"></i>
-    </button>
-  </div>
+    .radial-toggle-btn:active {
+      transform: scale(0.92);
+    }
 
+    .radial-toggle-btn i {
+      transition: transform 0.3s ease;
+    }
 
+    .radial-menu-wrapper.active .radial-toggle-btn i {
+      transform: rotate(90deg);
+    }
+
+    /* Wrapper pulsanti a raggiera (Icona + Scritta sotto) */
+    .radial-item-container {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .radial-item-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+      font-size: 15px;
+      transition: transform 0.2s ease, background 0.2s;
+    }
+
+    .radial-item-container:active .radial-item-btn {
+      transform: scale(0.9);
+    }
+
+    /* Etichetta in piccolo sotto l'icona */
+    .radial-item-label {
+      font-size: 9px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      margin-top: 3px;
+      text-align: center;
+      line-height: 1.1;
+      white-space: nowrap;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    }
+
+    /* Disposizione ad arco dei pulsanti (quadrante in alto a sinistra) */
+    .radial-item-container:nth-child(2) { top: 15px; left: 165px; }  /* Top Center */
+    .radial-item-container:nth-child(3) { top: 35px; left: 100px; }  /* Top-Left 1 */
+    .radial-item-container:nth-child(4) { top: 85px; left: 45px; }   /* Top-Left 2 */
+    .radial-item-container:nth-child(5) { top: 150px; left: 20px; }  /* Mid-Left */
+    .radial-item-container:nth-child(6) { top: 215px; left: 55px; }  /* Bottom-Left 1 */
+    .radial-item-container:nth-child(7) { top: 245px; left: 125px; } /* Bottom-Left 2 */
 
   
   <!-- 10. LOGICA JAVASCRIPT -->
@@ -2094,9 +2207,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   
 /* =====================================================================
-       LOGICA JS PER IL MENU A RAGGIERA STICKY
+       LOGICA JS PER IL MENU A RAGGIERA STICKY ED ETICHETTE
        ===================================================================== */
-    // Attiva/Disattiva l'apertura del disco a raggiera
     function toggleRadialMenu() {
       const wrapper = document.getElementById('radialMenuWrapper');
       const icon = document.querySelector('#radialToggleBtn i');
@@ -2105,23 +2217,34 @@ document.addEventListener('DOMContentLoaded', () => {
       
       wrapper.classList.toggle('active');
       
-      // Cambio icona dinamico da 3 punti ad 'X' quando è aperto
+      // Cambio dinamico dell'icona (3 punti verticali -> X di chiusura)
       if (wrapper.classList.contains('active')) {
         icon.className = 'fa-solid fa-xmark';
       } else {
-        icon.className = 'fa-solid fa-ellipsis';
+        icon.className = 'fa-solid fa-ellipsis-vertical';
       }
     }
 
-    // Scroll fluido verso la sezione "Dove Mangiare & Fika"
-    function scrollToFood() {
-      const foodSection = document.querySelector('section .fa-utensils')?.closest('section');
-      if (foodSection) {
-        foodSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Scroll fluido automatico alle sezioni dell'applicazione
+    function scrollToSection(sectionType) {
+      let targetEl = null;
+
+      if (sectionType === 'tappe') {
+        targetEl = document.querySelector('.timeline-container') || document.querySelector('#tappe-section');
+      } else if (sectionType === 'cards') {
+        targetEl = document.querySelector('.safe-card')?.closest('section') || document.querySelector('#cards-section');
+      } else if (sectionType === 'info') {
+        targetEl = document.querySelector('section .fa-circle-info')?.closest('section') || document.querySelector('#info-section');
+      } else if (sectionType === 'glossario') {
+        targetEl = document.querySelector('section .fa-book-bookmark')?.closest('section') || document.querySelector('#glossario-section');
+      }
+
+      if (targetEl) {
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
 
-    // Chiudi il menu a raggiera quando si clicca in un punto qualsiasi fuori dal disco
+    // Chiudi il menu quando si clicca all'esterno
     document.addEventListener('click', function(event) {
       const wrapper = document.getElementById('radialMenuWrapper');
       if (wrapper && wrapper.classList.contains('active')) {
