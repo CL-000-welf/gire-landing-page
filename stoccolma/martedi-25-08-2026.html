@@ -236,7 +236,7 @@
     .radial-item-container:nth-child(5) { top: 150px; left: 20px; }  /* Mid-Left */
     .radial-item-container:nth-child(6) { top: 215px; left: 55px; }  /* Bottom-Left 1 */
     .radial-item-container:nth-child(7) { top: 245px; left: 125px; } /* Bottom-Left 2 */
-  
+    
   </style>
 </head>
 <body class="flex flex-col min-h-screen p-5 pb-10">
@@ -924,141 +924,82 @@
       <button class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeSOSModal()">Chiudi</button>
     </div>
   </div>
+<!-- =====================================================================
+       MENU A RAGGIERA STICKY CON LOGO GIRE E ETICHETTE
+       ===================================================================== -->
+  <div id="radialMenuWrapper" class="radial-menu-wrapper">
+    <!-- Disco di Sfondo -->
+    <div class="radial-disc">
+      
+      <!-- Logo GIRE stilizzato (Stesso gradiente dell'Header) -->
+      <div class="radial-disc-bg-logo">
+        <svg viewBox="0 0 100 100" class="w-full h-full">
+          <defs>
+            <linearGradient id="gireDiscGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#818cf8" />
+              <stop offset="100%" stop-color="#c084fc" />
+            </linearGradient>
+          </defs>
+          <path d="M 75 25 C 55 5, 20 15, 15 50 C 10 85, 55 95, 75 75 L 75 50 L 45 50" 
+                fill="none" stroke="url(#gireDiscGrad)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
 
- /* =====================================================================
-       STILI PER IL MENU A RAGGIERA STICKY CON LOGO GIRE E ETICHETTE
-       ===================================================================== */
-    .radial-menu-wrapper {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 9999;
-    }
+      <!-- 1. Mappe -->
+      <button onclick="openMapModal(); toggleRadialMenu();" class="radial-item-container" title="Mappa Interactive">
+        <div class="radial-item-btn text-indigo-600">
+          <i class="fa-solid fa-map-location-dot"></i>
+        </div>
+        <span class="radial-item-label">Mappe</span>
+      </button>
 
-    /* Disco di sfondo - Stesso colore del bottone (#0f172a) con sfocatura */
-    .radial-disc {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      width: 310px;
-      height: 310px;
-      border-radius: 50%;
-      background: rgba(15, 23, 42, 0.96); /* Dark Slate #0f172a */
-      backdrop-filter: blur(12px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transform: scale(0);
-      transform-origin: bottom right;
-      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
-      opacity: 0;
-      pointer-events: none;
-    }
+      <!-- 2. Metro SL -->
+      <button onclick="openMetroModal(); toggleRadialMenu();" class="radial-item-container" title="Mappa Metro e Tram">
+        <div class="radial-item-btn text-blue-600">
+          <i class="fa-solid fa-subway"></i>
+        </div>
+        <span class="radial-item-label">Metro SL</span>
+      </button>
 
-    /* Attivazione visiva disco */
-    .radial-menu-wrapper.active .radial-disc {
-      transform: scale(1);
-      opacity: 1;
-      pointer-events: auto;
-    }
+      <!-- 3. Tappe -->
+      <button onclick="scrollToSection('tappe'); toggleRadialMenu();" class="radial-item-container" title="Tappe del Viaggio">
+        <div class="radial-item-btn text-purple-600">
+          <i class="fa-solid fa-route"></i>
+        </div>
+        <span class="radial-item-label">Tappe</span>
+      </button>
 
-    /* Filigrana Logo GIRE esattamente come Header/Footer */
-    .radial-disc-bg-logo {
-      position: absolute;
-      width: 140px;
-      height: 140px;
-      opacity: 0.12;
-      user-select: none;
-      pointer-events: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+      <!-- 4. Card Informative -->
+      <button onclick="scrollToSection('cards'); toggleRadialMenu();" class="radial-item-container" title="Card Informative">
+        <div class="radial-item-btn text-teal-600">
+          <i class="fa-solid fa-clone"></i>
+        </div>
+        <span class="radial-item-label">Card Info</span>
+      </button>
 
-    /* Bottone Sticky con 3 punti verticali - Stesso blu (#0f172a) */
-    .radial-toggle-btn {
-      position: relative;
-      z-index: 10001;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: #0f172a; /* Stesso colore del disco aperto */
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.5);
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      cursor: pointer;
-      transition: transform 0.2s ease, background-color 0.3s, border-color 0.3s;
-    }
+      <!-- 5. Info Principali -->
+      <button onclick="scrollToSection('info'); toggleRadialMenu();" class="radial-item-container" title="Informazioni e Consigli">
+        <div class="radial-item-btn text-amber-600">
+          <i class="fa-solid fa-circle-info"></i>
+        </div>
+        <span class="radial-item-label">Info</span>
+      </button>
 
-    .radial-toggle-btn:active {
-      transform: scale(0.92);
-    }
+      <!-- 6. Glossario -->
+      <button onclick="scrollToSection('glossario'); toggleRadialMenu();" class="radial-item-container" title="Glossario e Termini">
+        <div class="radial-item-btn text-emerald-600">
+          <i class="fa-solid fa-book-bookmark"></i>
+        </div>
+        <span class="radial-item-label">Glossario</span>
+      </button>
 
-    .radial-toggle-btn i {
-      transition: transform 0.3s ease;
-    }
+    </div>
 
-    .radial-menu-wrapper.active .radial-toggle-btn i {
-      transform: rotate(90deg);
-    }
-
-    /* Wrapper pulsanti a raggiera (Icona + Scritta sotto) */
-    .radial-item-container {
-      position: absolute;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 60px;
-      text-decoration: none;
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
-
-    .radial-item-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-      font-size: 15px;
-      transition: transform 0.2s ease, background 0.2s;
-    }
-
-    .radial-item-container:active .radial-item-btn {
-      transform: scale(0.9);
-    }
-
-    /* Etichetta in piccolo sotto l'icona */
-    .radial-item-label {
-      font-size: 9px;
-      font-weight: 600;
-      color: rgba(255, 255, 255, 0.9);
-      margin-top: 3px;
-      text-align: center;
-      line-height: 1.1;
-      white-space: nowrap;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-    }
-
-    /* Disposizione ad arco dei pulsanti (quadrante in alto a sinistra) */
-    .radial-item-container:nth-child(2) { top: 15px; left: 165px; }  /* Top Center */
-    .radial-item-container:nth-child(3) { top: 35px; left: 100px; }  /* Top-Left 1 */
-    .radial-item-container:nth-child(4) { top: 85px; left: 45px; }   /* Top-Left 2 */
-    .radial-item-container:nth-child(5) { top: 150px; left: 20px; }  /* Mid-Left */
-    .radial-item-container:nth-child(6) { top: 215px; left: 55px; }  /* Bottom-Left 1 */
-    .radial-item-container:nth-child(7) { top: 245px; left: 125px; } /* Bottom-Left 2 */
-
+    <!-- Bottone Sticky Principale a 3 Punti Verticali -->
+    <button id="radialToggleBtn" onclick="toggleRadialMenu()" class="radial-toggle-btn" aria-label="Menu Rapido">
+      <i class="fa-solid fa-ellipsis-vertical"></i>
+    </button>
+  </div>
   
   <!-- 10. LOGICA JAVASCRIPT -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
