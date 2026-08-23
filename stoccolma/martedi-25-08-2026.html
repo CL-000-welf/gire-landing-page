@@ -257,6 +257,81 @@
 </head>
 <body class="flex flex-col min-h-screen p-5 pb-10">
 
+<!-- ========================================================= -->
+<!-- ELEMENTI HTML NAVIGAZIONE A RAGGIERA (STICKY & MODALE)    -->
+<!-- ========================================================= -->
+
+<!-- 1. Bottone Trigger Sticky a Destra (Tre punti bianchi) -->
+<div id="radial-nav-trigger" onclick="toggleRadialMenu(true)" title="Apri Navigazione Rapida">
+  <div class="trigger-dot"></div>
+  <div class="trigger-dot"></div>
+  <div class="trigger-dot"></div>
+</div>
+
+<!-- 2. Overlay Menu a Raggiera -->
+<div id="radial-menu-overlay" onclick="toggleRadialMenu(false)">
+  
+  <!-- Cerchio centrale che fa intravedere l'Header/G di GIRE sotto -->
+  <div class="radial-center-hole" onclick="event.stopPropagation()">
+    <button class="radial-close-btn" onclick="toggleRadialMenu(false)" title="Chiudi Menu">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <!-- 8 Voci disposte a Raggiera attorno al centro -->
+    <!-- N.B. L'angolo `--angle` è espresso in gradi per posizionarle in cerchio perfetto -->
+
+    <!-- METEO -->
+    <a href="#weather-card-bg" class="radial-item" style="--angle: 0deg;" onclick="handleRadialClick(event, 'weather-card-bg')">
+      <div class="radial-icon-box"><i class="fa-solid fa-sun"></i></div>
+      <span class="radial-label">Meteo</span>
+    </a>
+
+    <!-- MAPPA -->
+    <a href="javascript:void(0)" class="radial-item" style="--angle: 45deg;" onclick="handleRadialClick(event, 'map-student', openMapModal)">
+      <div class="radial-icon-box"><i class="fa-solid fa-map-location-dot"></i></div>
+      <span class="radial-label">Mappa</span>
+    </a>
+
+    <!-- METRO -->
+    <a href="javascript:void(0)" class="radial-item" style="--angle: 90deg;" onclick="handleRadialClick(event, null, openMetroModal)">
+      <div class="radial-icon-box"><i class="fa-solid fa-train-subway"></i></div>
+      <span class="radial-label">Metro</span>
+    </a>
+
+    <!-- CAMBIO VALUTA -->
+    <a href="javascript:void(0)" class="radial-item" style="--angle: 135deg;" onclick="handleRadialClick(event, null, openCurrencyModal)">
+      <div class="radial-icon-box"><i class="fa-solid fa-coins"></i></div>
+      <span class="radial-label">Cambio</span>
+    </a>
+
+    <!-- TAPPE -->
+    <a href="#appello-box" class="radial-item" style="--angle: 180deg;" onclick="handleRadialClick(event, 'appello-box')">
+      <div class="radial-icon-box"><i class="fa-solid fa-route"></i></div>
+      <span class="radial-label">Tappe</span>
+    </a>
+
+    <!-- CIBO -->
+    <a href="#food-list-container" class="radial-item" style="--angle: 225deg;" onclick="handleRadialClick(event, 'food-list-container')">
+      <div class="radial-icon-box"><i class="fa-solid fa-utensils"></i></div>
+      <span class="radial-label">Cibo</span>
+    </a>
+
+    <!-- CARD INFORMATIVE -->
+    <a href="#dynamic-accordions-container" class="radial-item" style="--angle: 270deg;" onclick="handleRadialClick(event, 'daily-tip-box')">
+      <div class="radial-icon-box"><i class="fa-solid fa-layer-group"></i></div>
+      <span class="radial-label">Card Info</span>
+    </a>
+
+    <!-- INFO E GLOSSARIO -->
+    <a href="#glossary-grid" class="radial-item" style="--angle: 315deg;" onclick="handleRadialClick(event, 'glossary-grid')">
+      <div class="radial-icon-box"><i class="fa-solid fa-book-bookmark"></i></div>
+      <span class="radial-label">Glossario</span>
+    </a>
+
+  </div>
+</div>
+
+  
   <!-- 1. NOTIFICA PUSH POP-UP -->
  <div id="push-alert" class="bg-slate-900 text-white p-5 rounded-[2rem] shadow-2xl flex items-center gap-4 border border-white/20 relative overflow-hidden">
   <div class="absolute top-2 left-1/2 -translate-x-1/2 w-8 h-1 bg-white/20 rounded-full"></div>
@@ -939,79 +1014,7 @@
     </div>
   </div>
 
-<!-- ========================================================= -->
-<!-- ELEMENTI HTML NAVIGAZIONE A RAGGIERA (STICKY & MODALE)    -->
-<!-- ========================================================= -->
 
-<!-- 1. Bottone Trigger Sticky a Destra (Tre punti bianchi) -->
-<div id="radial-nav-trigger" onclick="toggleRadialMenu(true)" title="Apri Navigazione Rapida">
-  <div class="trigger-dot"></div>
-  <div class="trigger-dot"></div>
-  <div class="trigger-dot"></div>
-</div>
-
-<!-- 2. Overlay Menu a Raggiera -->
-<div id="radial-menu-overlay" onclick="toggleRadialMenu(false)">
-  
-  <!-- Cerchio centrale che fa intravedere l'Header/G di GIRE sotto -->
-  <div class="radial-center-hole" onclick="event.stopPropagation()">
-    <button class="radial-close-btn" onclick="toggleRadialMenu(false)" title="Chiudi Menu">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-
-    <!-- 8 Voci disposte a Raggiera attorno al centro -->
-    <!-- N.B. L'angolo `--angle` è espresso in gradi per posizionarle in cerchio perfetto -->
-
-    <!-- METEO -->
-    <a href="#weather-card-bg" class="radial-item" style="--angle: 0deg;" onclick="handleRadialClick(event, 'weather-card-bg')">
-      <div class="radial-icon-box"><i class="fa-solid fa-sun"></i></div>
-      <span class="radial-label">Meteo</span>
-    </a>
-
-    <!-- MAPPA -->
-    <a href="javascript:void(0)" class="radial-item" style="--angle: 45deg;" onclick="handleRadialClick(event, 'map-student', openMapModal)">
-      <div class="radial-icon-box"><i class="fa-solid fa-map-location-dot"></i></div>
-      <span class="radial-label">Mappa</span>
-    </a>
-
-    <!-- METRO -->
-    <a href="javascript:void(0)" class="radial-item" style="--angle: 90deg;" onclick="handleRadialClick(event, null, openMetroModal)">
-      <div class="radial-icon-box"><i class="fa-solid fa-train-subway"></i></div>
-      <span class="radial-label">Metro</span>
-    </a>
-
-    <!-- CAMBIO VALUTA -->
-    <a href="javascript:void(0)" class="radial-item" style="--angle: 135deg;" onclick="handleRadialClick(event, null, openCurrencyModal)">
-      <div class="radial-icon-box"><i class="fa-solid fa-coins"></i></div>
-      <span class="radial-label">Cambio</span>
-    </a>
-
-    <!-- TAPPE -->
-    <a href="#appello-box" class="radial-item" style="--angle: 180deg;" onclick="handleRadialClick(event, 'appello-box')">
-      <div class="radial-icon-box"><i class="fa-solid fa-route"></i></div>
-      <span class="radial-label">Tappe</span>
-    </a>
-
-    <!-- CIBO -->
-    <a href="#food-list-container" class="radial-item" style="--angle: 225deg;" onclick="handleRadialClick(event, 'food-list-container')">
-      <div class="radial-icon-box"><i class="fa-solid fa-utensils"></i></div>
-      <span class="radial-label">Cibo</span>
-    </a>
-
-    <!-- CARD INFORMATIVE -->
-    <a href="#dynamic-accordions-container" class="radial-item" style="--angle: 270deg;" onclick="handleRadialClick(event, 'daily-tip-box')">
-      <div class="radial-icon-box"><i class="fa-solid fa-layer-group"></i></div>
-      <span class="radial-label">Card Info</span>
-    </a>
-
-    <!-- INFO E GLOSSARIO -->
-    <a href="#glossary-grid" class="radial-item" style="--angle: 315deg;" onclick="handleRadialClick(event, 'glossary-grid')">
-      <div class="radial-icon-box"><i class="fa-solid fa-book-bookmark"></i></div>
-      <span class="radial-label">Glossario</span>
-    </a>
-
-  </div>
-</div>
 
 
   
