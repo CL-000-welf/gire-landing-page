@@ -104,7 +104,7 @@
  
   
 /* =====================================================================
-       STILI PER IL MENU A RAGGIERA STICKY CON LOGO GIRE E ETICHETTE
+       STILI PER IL MENU A RAGGIERA STICKY CON LOGO GIRE
        ===================================================================== */
     .radial-menu-wrapper {
       position: fixed;
@@ -113,17 +113,16 @@
       z-index: 9999;
     }
 
-    /* Disco di sfondo - Stesso colore del bottone (#0f172a) con sfocatura */
     .radial-disc {
       position: absolute;
       bottom: 0;
       right: 0;
-      width: 310px;
-      height: 310px;
+      width: 320px;
+      height: 320px;
       border-radius: 50%;
-      background: rgba(15, 23, 42, 0.96); /* Dark Slate #0f172a */
-      backdrop-filter: blur(12px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      background: rgba(15, 23, 42, 0.94); /* Colore Slate 900 scuro */
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
       border: 1px solid rgba(255, 255, 255, 0.15);
       display: flex;
       align-items: center;
@@ -135,43 +134,39 @@
       pointer-events: none;
     }
 
-    /* Attivazione visiva disco */
     .radial-menu-wrapper.active .radial-disc {
       transform: scale(1);
       opacity: 1;
       pointer-events: auto;
     }
 
-    /* Filigrana Logo GIRE esattamente come Header/Footer */
     .radial-disc-bg-logo {
       position: absolute;
-      width: 140px;
-      height: 140px;
-      opacity: 0.12;
+      font-size: 140px;
+      font-weight: 900;
+      font-style: italic;
+      color: rgba(255, 255, 255, 0.06);
       user-select: none;
       pointer-events: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      line-height: 1;
     }
 
-    /* Bottone Sticky con 3 punti verticali - Stesso blu (#0f172a) */
     .radial-toggle-btn {
       position: relative;
       z-index: 10001;
-      width: 60px;
-      height: 60px;
+      width: 58px;
+      height: 58px;
       border-radius: 50%;
-      background: #0f172a; /* Stesso colore del disco aperto */
+      background: #4f46e5; /* Indaco GIRE */
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
-      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.5);
-      border: 2px solid rgba(255, 255, 255, 0.2);
+      font-size: 20px;
+      box-shadow: 0 10px 25px rgba(79, 70, 229, 0.45);
+      border: 2px solid white;
       cursor: pointer;
-      transition: transform 0.2s ease, background-color 0.3s, border-color 0.3s;
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s;
     }
 
     .radial-toggle-btn:active {
@@ -181,61 +176,44 @@
     .radial-toggle-btn i {
       transition: transform 0.3s ease;
     }
-
+    .radial-menu-wrapper.active .radial-toggle-btn {
+      background: #0f172a;
+    }
     .radial-menu-wrapper.active .radial-toggle-btn i {
       transform: rotate(90deg);
     }
 
-    /* Wrapper pulsanti a raggiera (Icona + Scritta sotto) */
-    .radial-item-container {
+    .radial-item {
       position: absolute;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 60px;
-      text-decoration: none;
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
-
-    .radial-item-btn {
-      width: 42px;
-      height: 42px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       background: white;
+      color: #1e293b;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-      font-size: 15px;
-      transition: transform 0.2s ease, background 0.2s;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s, color 0.2s;
     }
 
-    .radial-item-container:active .radial-item-btn {
-      transform: scale(0.9);
+    .radial-item:active {
+      transform: scale(0.9) !important;
     }
 
-    /* Etichetta in piccolo sotto l'icona */
-    .radial-item-label {
-      font-size: 9px;
-      font-weight: 600;
-      color: rgba(255, 255, 255, 0.9);
-      margin-top: 3px;
-      text-align: center;
-      line-height: 1.1;
-      white-space: nowrap;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-    }
-
-    /* Disposizione ad arco dei pulsanti (quadrante in alto a sinistra) */
-    .radial-item-container:nth-child(2) { top: 15px; left: 165px; }  /* Top Center */
-    .radial-item-container:nth-child(3) { top: 35px; left: 100px; }  /* Top-Left 1 */
-    .radial-item-container:nth-child(4) { top: 85px; left: 45px; }   /* Top-Left 2 */
-    .radial-item-container:nth-child(5) { top: 150px; left: 20px; }  /* Mid-Left */
-    .radial-item-container:nth-child(6) { top: 215px; left: 55px; }  /* Bottom-Left 1 */
-    .radial-item-container:nth-child(7) { top: 245px; left: 125px; } /* Bottom-Left 2 */
+    /* Posizionamento degli 8 elementi lungo l'arco a raggiera */
+    .radial-item:nth-child(2) { top: 15px; left: 175px; } /* Top Center */
+    .radial-item:nth-child(3) { top: 35px; left: 115px; } /* Top-Left 1 */
+    .radial-item:nth-child(4) { top: 75px; left: 65px; }  /* Top-Left 2 */
+    .radial-item:nth-child(5) { top: 130px; left: 30px; } /* Mid-Left */
+    .radial-item:nth-child(6) { top: 190px; left: 40px; } /* Bottom-Left 1 */
+    .radial-item:nth-child(7) { top: 240px; left: 80px; } /* Bottom-Left 2 */
+    .radial-item:nth-child(8) { top: 265px; left: 140px; }/* Bottom */
+    .radial-item:nth-child(9) { top: 260px; left: 205px; }/* Bottom Right-ish */
     
   </style>
 </head>
@@ -925,79 +903,51 @@
     </div>
   </div>
 <!-- =====================================================================
-       MENU A RAGGIERA STICKY CON LOGO GIRE E ETICHETTE
+       MENU A RAGGIERA STICKY CON SFONDO LOGO GIRE
        ===================================================================== -->
   <div id="radialMenuWrapper" class="radial-menu-wrapper">
-    <!-- Disco di Sfondo -->
+    <!-- Disco di Sfondo con la G trasparente e Voci a Raggiera -->
     <div class="radial-disc">
-      
-      <!-- Logo GIRE stilizzato (Stesso gradiente dell'Header) -->
-      <div class="radial-disc-bg-logo">
-        <svg viewBox="0 0 100 100" class="w-full h-full">
-          <defs>
-            <linearGradient id="gireDiscGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#818cf8" />
-              <stop offset="100%" stop-color="#c084fc" />
-            </linearGradient>
-          </defs>
-          <path d="M 75 25 C 55 5, 20 15, 15 50 C 10 85, 55 95, 75 75 L 75 50 L 45 50" 
-                fill="none" stroke="url(#gireDiscGrad)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
+      <!-- Filigrana 'G' di GIRE -->
+      <div class="radial-disc-bg-logo">G</div>
 
-      <!-- 1. Mappe -->
-      <button onclick="openMapModal(); toggleRadialMenu();" class="radial-item-container" title="Mappa Interactive">
-        <div class="radial-item-btn text-indigo-600">
-          <i class="fa-solid fa-map-location-dot"></i>
-        </div>
-        <span class="radial-item-label">Mappe</span>
+      <!-- Voci a raggiera -->
+      <button onclick="openMapModal(); toggleRadialMenu();" class="radial-item text-indigo-600" title="Mappa">
+        <i class="fa-solid fa-map-location-dot"></i>
       </button>
 
-      <!-- 2. Metro SL -->
-      <button onclick="openMetroModal(); toggleRadialMenu();" class="radial-item-container" title="Mappa Metro e Tram">
-        <div class="radial-item-btn text-blue-600">
-          <i class="fa-solid fa-subway"></i>
-        </div>
-        <span class="radial-item-label">Metro SL</span>
+      <button onclick="openMetroModal(); toggleRadialMenu();" class="radial-item text-blue-600" title="Metro SL">
+        <i class="fa-solid fa-subway"></i>
       </button>
 
-      <!-- 3. Tappe -->
-      <button onclick="scrollToSection('tappe'); toggleRadialMenu();" class="radial-item-container" title="Tappe del Viaggio">
-        <div class="radial-item-btn text-purple-600">
-          <i class="fa-solid fa-route"></i>
-        </div>
-        <span class="radial-item-label">Tappe</span>
+      <button onclick="openCurrencyModal(); toggleRadialMenu();" class="radial-item text-emerald-600" title="Cambio Valuta">
+        <i class="fa-solid fa-coins"></i>
       </button>
 
-      <!-- 4. Card Informative -->
-      <button onclick="scrollToSection('cards'); toggleRadialMenu();" class="radial-item-container" title="Card Informative">
-        <div class="radial-item-btn text-teal-600">
-          <i class="fa-solid fa-clone"></i>
-        </div>
-        <span class="radial-item-label">Card Info</span>
+      <button onclick="scrollToFood(); toggleRadialMenu();" class="radial-item text-amber-600" title="Dove Mangiare">
+        <i class="fa-solid fa-utensils"></i>
       </button>
 
-      <!-- 5. Info Principali -->
-      <button onclick="scrollToSection('info'); toggleRadialMenu();" class="radial-item-container" title="Informazioni e Consigli">
-        <div class="radial-item-btn text-amber-600">
-          <i class="fa-solid fa-circle-info"></i>
-        </div>
-        <span class="radial-item-label">Info</span>
+      <button onclick="scrollToSection('tappe'); toggleRadialMenu();" class="radial-item text-purple-600" title="Tappe">
+        <i class="fa-solid fa-route"></i>
       </button>
 
-      <!-- 6. Glossario -->
-      <button onclick="scrollToSection('glossario'); toggleRadialMenu();" class="radial-item-container" title="Glossario e Termini">
-        <div class="radial-item-btn text-emerald-600">
-          <i class="fa-solid fa-book-bookmark"></i>
-        </div>
-        <span class="radial-item-label">Glossario</span>
+      <button onclick="scrollToSection('cards'); toggleRadialMenu();" class="radial-item text-teal-600" title="Card Informative">
+        <i class="fa-solid fa-clone"></i>
       </button>
 
+      <button onclick="scrollToSection('info'); toggleRadialMenu();" class="radial-item text-sky-600" title="Info">
+        <i class="fa-solid fa-circle-info"></i>
+      </button>
+
+      <button onclick="scrollToSection('glossario'); toggleRadialMenu();" class="radial-item text-rose-600" title="Glossario">
+        <i class="fa-solid fa-book-bookmark"></i>
+      </button>
     </div>
 
-    <!-- Bottone Sticky Principale a 3 Punti Verticali -->
+    <!-- Bottone Sticky a Cerchio con 3 Punti Orizzontali -->
     <button id="radialToggleBtn" onclick="toggleRadialMenu()" class="radial-toggle-btn" aria-label="Menu Rapido">
-      <i class="fa-solid fa-ellipsis-vertical"></i>
+      <i class="fa-solid fa-ellipsis"></i>
     </button>
   </div>
   
@@ -2148,8 +2098,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   
 /* =====================================================================
-       LOGICA JS PER IL MENU A RAGGIERA STICKY ED ETICHETTE
+       LOGICA JS PER IL MENU A RAGGIERA STICKY
        ===================================================================== */
+    // Attiva/Disattiva l'apertura del disco a raggiera
     function toggleRadialMenu() {
       const wrapper = document.getElementById('radialMenuWrapper');
       const icon = document.querySelector('#radialToggleBtn i');
@@ -2158,34 +2109,41 @@ document.addEventListener('DOMContentLoaded', () => {
       
       wrapper.classList.toggle('active');
       
-      // Cambio dinamico dell'icona (3 punti verticali -> X di chiusura)
+      // Cambio icona dinamico da 3 punti ad 'X' quando è aperto
       if (wrapper.classList.contains('active')) {
         icon.className = 'fa-solid fa-xmark';
       } else {
-        icon.className = 'fa-solid fa-ellipsis-vertical';
+        icon.className = 'fa-solid fa-ellipsis';
       }
     }
 
-    // Scroll fluido automatico alle sezioni dell'applicazione
-    function scrollToSection(sectionType) {
-      let targetEl = null;
-
-      if (sectionType === 'tappe') {
-        targetEl = document.querySelector('.timeline-container') || document.querySelector('#tappe-section');
-      } else if (sectionType === 'cards') {
-        targetEl = document.querySelector('.safe-card')?.closest('section') || document.querySelector('#cards-section');
-      } else if (sectionType === 'info') {
-        targetEl = document.querySelector('section .fa-circle-info')?.closest('section') || document.querySelector('#info-section');
-      } else if (sectionType === 'glossario') {
-        targetEl = document.querySelector('section .fa-book-bookmark')?.closest('section') || document.querySelector('#glossario-section');
-      }
-
-      if (targetEl) {
-        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Scroll fluido verso la sezione "Dove Mangiare & Fika"
+    function scrollToFood() {
+      const foodSection = document.querySelector('section .fa-utensils')?.closest('section');
+      if (foodSection) {
+        foodSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
 
-    // Chiudi il menu quando si clicca all'esterno
+    // Scroll verso le varie sezioni della pagina
+    function scrollToSection(type) {
+      let el = null;
+      if (type === 'tappe') {
+        el = document.querySelector('.timeline-container') || document.querySelector('#tappe');
+      } else if (type === 'cards') {
+        el = document.querySelector('.safe-card')?.closest('section') || document.querySelector('#cards');
+      } else if (type === 'info') {
+        el = document.querySelector('section .fa-circle-info')?.closest('section') || document.querySelector('#info');
+      } else if (type === 'glossario') {
+        el = document.querySelector('section .fa-book-bookmark')?.closest('section') || document.querySelector('#glossario');
+      }
+
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    // Chiudi il menu a raggiera quando si clicca in un punto qualsiasi fuori dal disco
     document.addEventListener('click', function(event) {
       const wrapper = document.getElementById('radialMenuWrapper');
       if (wrapper && wrapper.classList.contains('active')) {
