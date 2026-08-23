@@ -103,233 +103,127 @@
     @media (max-width: 420px) { body { padding: 16px 16px 32px; } .safe-card { border-radius: 1.7rem; } #map-student { height: 262px; border-radius: 1.6rem; margin: -16px -16px 0px -16px; } .diary-body { padding: 1rem; } .diary-head h4 { font-size: 1rem; } .diary-short { font-size:.95rem; line-height: 1.55; } .nav-row a, .nav-row span { min-width: 96px; padding: .7rem .85rem; } .modal-card { padding: 1.5rem; border-radius: 2rem; } .map-meta { grid-template-columns: 1fr; } .map-controls { justify-content: flex-start; } }
  
   
-<!-- ========================================================= -->
-<!-- STILI CSS PER LA NAVIGAZIONE AD ANELLO / RAGGIERA (STICKY) -->
-<!-- ========================================================= -->
+/* =====================================================================
+       STILI PER IL MENU A RAGGIERA STICKY CON LOGO GIRE
+       ===================================================================== */
+    /* Container fisso in basso a destra sopra gli altri contenuti */
+    .radial-menu-wrapper {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+    }
 
-  /* Bottone Sticky sempre visibile sulla destra */
-  #radial-nav-trigger {
-    position: fixed;
-    right: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 52px;
-    height: 52px;
-    background-color: #2563eb; /* Blu acceso */
-    border-radius: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
-    z-index: 9990;
-    cursor: pointer;
-    border: 3px solid #ffffff;
-    transition: transform 0.2s ease, background-color 0.2s ease;
-  }
+    /* Disco di sfondo a raggiera con il logo 'G' trasparente */
+    .radial-disc {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.94); /* Colore Slate 900 scuro */
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: scale(0);
+      transform-origin: bottom right;
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
 
-  #radial-nav-trigger:active {
-    transform: translateY(-50%) scale(0.92);
-  }
+    /* Classe attivata via JS all'apertura del menu */
+    .radial-menu-wrapper.active .radial-disc {
+      transform: scale(1);
+      opacity: 1;
+      pointer-events: auto;
+    }
 
-  /* I 3 pallini verticali bianchi */
-  .trigger-dot {
-    width: 5px;
-    height: 5px;
-    background-color: #ffffff;
-    border-radius: 50%;
-  }
+    /* Filigrana della 'G' di GIRE sul fondo del disco */
+    .radial-disc-bg-logo {
+      position: absolute;
+      font-size: 140px;
+      font-weight: 900;
+      font-style: italic;
+      color: rgba(255, 255, 255, 0.06);
+      user-select: none;
+      pointer-events: none;
+      line-height: 1;
+    }
 
-  /* Overlay a tutto schermo quando il menu è aperto */
-  #radial-menu-overlay {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(15, 23, 42, 0.82); /* Scuro semi-trasparente */
-    backdrop-filter: blur(10px); /* SFONDO CHE LASCIA INTRAVEDERE L'HEADER / LA G DI GIRE */
-    -webkit-backdrop-filter: blur(10px);
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  }
+    /* Pulsante sticky principale con i 3 punti */
+    .radial-toggle-btn {
+      position: relative;
+      z-index: 10001;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: #4f46e5; /* Indaco GIRE */
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 10px 25px rgba(79, 70, 229, 0.45);
+      border: 2px solid white;
+      cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s;
+    }
 
-  #radial-menu-overlay.active {
-    opacity: 1;
-    pointer-events: auto;
-  }
+    .radial-toggle-btn:active {
+      transform: scale(0.92);
+    }
 
-  /* Cerchio centrale trasparente che mostra la "G" dell'Header sottostante */
-  .radial-center-hole {
-    position: relative;
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    background-color: rgba(37, 99, 235, 0.25); /* Blu semi-trasparente */
-    border: 2px dashed rgba(255, 255, 255, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 40px rgba(37, 99, 235, 0.3);
-  }
+    /* Animazione icona al click (da 3 punti a X) */
+    .radial-toggle-btn i {
+      transition: transform 0.3s ease;
+    }
+    .radial-menu-wrapper.active .radial-toggle-btn {
+      background: #0f172a;
+    }
+    .radial-menu-wrapper.active .radial-toggle-btn i {
+      transform: rotate(90deg);
+    }
 
-  /* Bottone Chiudi al centro del cerchio */
-  .radial-close-btn {
-    width: 44px;
-    height: 44px;
-    background-color: #ffffff;
-    color: #1e293b;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    cursor: pointer;
-    transition: transform 0.2s ease;
-  }
+    /* Singoli pulsanti posizionati a raggiera */
+    .radial-item {
+      position: absolute;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: white;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s, color 0.2s;
+    }
 
-  .radial-close-btn:active {
-    transform: scale(0.9);
-  }
+    .radial-item:active {
+      transform: scale(0.9) !important;
+    }
 
-  /* Contenitore delle icone disposte a raggiera */
-  .radial-item {
-    position: absolute;
-    width: 62px;
-    height: 62px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    opacity: 0;
-    transform: translate(0, 0) scale(0.3);
-  }
-
-  /* Quando attivo, le icone si espandono verso l'esterno */
-  #radial-menu-overlay.active .radial-item {
-    opacity: 1;
-    transform: translate(var(--tx), var(--ty)) scale(1);
-  }
-
-  /* Cerchio icone FontAwesome */
-  .radial-icon-box {
-    width: 46px;
-    height: 46px;
-    background: #ffffff;
-    color: #2563eb;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
-    border: 2px solid #eff6ff;
-    transition: transform 0.15s ease, background-color 0.2s ease, color 0.2s ease;
-  }
-
-  .radial-item:active .radial-icon-box {
-    transform: scale(0.9);
-    background-color: #2563eb;
-    color: #ffffff;
-  }
-
-  /* Label sotto l'icona */
-  .radial-label {
-    font-size: 9px;
-    font-weight: 900;
-    color: #ffffff;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    margin-top: 4px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
-    white-space: nowrap;
-  }
-
+    /* Posizionamento dei 5 elementi lungo l'arco di cerchio (quadrante in alto a sinistra) */
+    .radial-item:nth-child(2) { top: 20px; left: 110px; }  /* Top center */
+    .radial-item:nth-child(3) { top: 45px; left: 55px; }   /* Top-Left */
+    .radial-item:nth-child(4) { top: 95px; left: 20px; }   /* Mid-Left */
+    .radial-item:nth-child(5) { top: 155px; left: 45px; }  /* Bottom-Left */
+    .radial-item:nth-child(6) { top: 195px; left: 100px; } /* Bottom */
 
   
   </style>
 </head>
 <body class="flex flex-col min-h-screen p-5 pb-10">
 
-<!-- ========================================================= -->
-<!-- ELEMENTI HTML NAVIGAZIONE A RAGGIERA (STICKY & MODALE)    -->
-<!-- ========================================================= -->
-
-<!-- 1. Bottone Trigger Sticky a Destra (Tre punti bianchi) -->
-<div id="radial-nav-trigger" onclick="toggleRadialMenu(true)" title="Apri Navigazione Rapida">
-  <div class="trigger-dot"></div>
-  <div class="trigger-dot"></div>
-  <div class="trigger-dot"></div>
-</div>
-
-<!-- 2. Overlay Menu a Raggiera -->
-<div id="radial-menu-overlay" onclick="toggleRadialMenu(false)">
-  
-  <!-- Cerchio centrale che fa intravedere l'Header/G di GIRE sotto -->
-  <div class="radial-center-hole" onclick="event.stopPropagation()">
-    <button class="radial-close-btn" onclick="toggleRadialMenu(false)" title="Chiudi Menu">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-
-    <!-- 8 Voci disposte a Raggiera attorno al centro -->
-    <!-- N.B. L'angolo `--angle` è espresso in gradi per posizionarle in cerchio perfetto -->
-
-    <!-- METEO -->
-    <a href="#weather-card-bg" class="radial-item" style="--angle: 0deg;" onclick="handleRadialClick(event, 'weather-card-bg')">
-      <div class="radial-icon-box"><i class="fa-solid fa-sun"></i></div>
-      <span class="radial-label">Meteo</span>
-    </a>
-
-    <!-- MAPPA -->
-    <a href="javascript:void(0)" class="radial-item" style="--angle: 45deg;" onclick="handleRadialClick(event, 'map-student', openMapModal)">
-      <div class="radial-icon-box"><i class="fa-solid fa-map-location-dot"></i></div>
-      <span class="radial-label">Mappa</span>
-    </a>
-
-    <!-- METRO -->
-    <a href="javascript:void(0)" class="radial-item" style="--angle: 90deg;" onclick="handleRadialClick(event, null, openMetroModal)">
-      <div class="radial-icon-box"><i class="fa-solid fa-train-subway"></i></div>
-      <span class="radial-label">Metro</span>
-    </a>
-
-    <!-- CAMBIO VALUTA -->
-    <a href="javascript:void(0)" class="radial-item" style="--angle: 135deg;" onclick="handleRadialClick(event, null, openCurrencyModal)">
-      <div class="radial-icon-box"><i class="fa-solid fa-coins"></i></div>
-      <span class="radial-label">Cambio</span>
-    </a>
-
-    <!-- TAPPE -->
-    <a href="#appello-box" class="radial-item" style="--angle: 180deg;" onclick="handleRadialClick(event, 'appello-box')">
-      <div class="radial-icon-box"><i class="fa-solid fa-route"></i></div>
-      <span class="radial-label">Tappe</span>
-    </a>
-
-    <!-- CIBO -->
-    <a href="#food-list-container" class="radial-item" style="--angle: 225deg;" onclick="handleRadialClick(event, 'food-list-container')">
-      <div class="radial-icon-box"><i class="fa-solid fa-utensils"></i></div>
-      <span class="radial-label">Cibo</span>
-    </a>
-
-    <!-- CARD INFORMATIVE -->
-    <a href="#dynamic-accordions-container" class="radial-item" style="--angle: 270deg;" onclick="handleRadialClick(event, 'daily-tip-box')">
-      <div class="radial-icon-box"><i class="fa-solid fa-layer-group"></i></div>
-      <span class="radial-label">Card Info</span>
-    </a>
-
-    <!-- INFO E GLOSSARIO -->
-    <a href="#glossary-grid" class="radial-item" style="--angle: 315deg;" onclick="handleRadialClick(event, 'glossary-grid')">
-      <div class="radial-icon-box"><i class="fa-solid fa-book-bookmark"></i></div>
-      <span class="radial-label">Glossario</span>
-    </a>
-
-  </div>
-</div>
 
   
   <!-- 1. NOTIFICA PUSH POP-UP -->
@@ -1014,6 +908,41 @@
     </div>
   </div>
 
+  <!-- =====================================================================
+       MENU A RAGGIERA STICKY CON SFONDO LOGO GIRE
+       ===================================================================== -->
+  <div id="radialMenuWrapper" class="radial-menu-wrapper">
+    <!-- Disco di Sfondo con la G trasparente e Voci a Raggiera -->
+    <div class="radial-disc">
+      <!-- Filigrana 'G' di GIRE -->
+      <div class="radial-disc-bg-logo">G</div>
+
+      <!-- Voci a raggiera collegate alle funzioni JavaScript esistenti -->
+      <button onclick="openMapModal(); toggleRadialMenu();" class="radial-item text-indigo-600" title="Mappa">
+        <i class="fa-solid fa-map-location-dot"></i>
+      </button>
+      <button onclick="openMetroModal(); toggleRadialMenu();" class="radial-item text-blue-600" title="Metro SL">
+        <i class="fa-solid fa-subway"></i>
+      </button>
+
+      <button onclick="openCurrencyModal(); toggleRadialMenu();" class="radial-item text-emerald-600" title="Cambio Valuta">
+        <i class="fa-solid fa-coins"></i>
+      </button>
+
+      <button onclick="scrollToFood(); toggleRadialMenu();" class="radial-item text-amber-600" title="Dove Mangiare">
+        <i class="fa-solid fa-utensils"></i>
+      </button>
+
+      <button onclick="openSOSModal(); toggleRadialMenu();" class="radial-item text-red-600" title="SOS">
+        <i class="fa-solid fa-phone-flip"></i>
+      </button>
+    </div>
+
+    <!-- Bottone Sticky a Cerchio con 3 Punti Orizzontali -->
+    <button id="radialToggleBtn" onclick="toggleRadialMenu()" class="radial-toggle-btn" aria-label="Menu Rapido">
+      <i class="fa-solid fa-ellipsis"></i>
+    </button>
+  </div>
 
 
 
@@ -2164,85 +2093,43 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
   
-/* ========================================================= */
-/* LOGICA JAVASCRIPT NAVIGAZIONE A RAGGIERA (MODALE & SCROLL)  */
-/* ========================================================= */
-
-/**
- * Calcola e applica le coordinate X,Y per posizionare le voci a raggiera.
- */
-function initRadialPositions() {
-  const items = document.querySelectorAll('.radial-item');
-  // Raggio della raggiera in pixel (adattato per schermi mobile)
-  const radius = window.innerWidth < 400 ? 115 : 135; 
-
-  items.forEach(item => {
-    // Recupera l'angolo inline dal CSS (es: 45deg -> 45)
-    const angleDeg = parseFloat(item.style.getPropertyValue('--angle'));
-    const angleRad = (angleDeg - 90) * (Math.PI / 180); // Offset -90deg per far partire da in alto
-
-    const tx = Math.round(radius * Math.cos(angleRad));
-    const ty = Math.round(radius * Math.sin(angleRad));
-
-    item.style.setProperty('--tx', `${tx}px`);
-    item.style.setProperty('--ty', `${ty}px`);
-  });
-}
-
-/**
- * Apre o chiude il menu overlay a raggiera.
- * @param {boolean} show - true per aprire, false per chiudere.
- */
-function toggleRadialMenu(show) {
-  const overlay = document.getElementById('radial-menu-overlay');
-  if (!overlay) return;
-
-  if (show) {
-    initRadialPositions();
-    overlay.classList.add('active');
-  } else {
-    overlay.classList.remove('active');
-  }
-}
-
-/**
- * Gestisce il click sulle voci della raggiera:
- * - Se c'è una funzione target (es. modale metro, cambio valuta, mappa), la esegue subito.
- * - Se c'è un ID di sezione, effettua uno scroll fluido verso l'elemento.
- */
-function handleRadialClick(event, targetId, callbackFn) {
-  event.preventDefault();
-  event.stopPropagation();
-
-  // 1. Chiude il menu a raggiera
-  toggleRadialMenu(false);
-
-  // 2. Esegue eventuale funzione (apertura Modali Mappa, Metro, Cambio Valuta)
-  if (typeof callbackFn === 'function') {
-    setTimeout(() => {
-      callbackFn();
-    }, 150);
-    return;
-  }
-
-  // 3. Esegue lo scroll verso l'elemento selezionato nel corpo centrale
-  if (targetId) {
-    const targetEl = document.getElementById(targetId);
-    if (targetEl) {
-      setTimeout(() => {
-        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 150);
+/* =====================================================================
+       LOGICA JS PER IL MENU A RAGGIERA STICKY
+       ===================================================================== */
+    // Attiva/Disattiva l'apertura del disco a raggiera
+    function toggleRadialMenu() {
+      const wrapper = document.getElementById('radialMenuWrapper');
+      const icon = document.querySelector('#radialToggleBtn i');
+      
+      if (!wrapper) return;
+      
+      wrapper.classList.toggle('active');
+      
+      // Cambio icona dinamico da 3 punti ad 'X' quando è aperto
+      if (wrapper.classList.contains('active')) {
+        icon.className = 'fa-solid fa-xmark';
+      } else {
+        icon.className = 'fa-solid fa-ellipsis';
+      }
     }
-  }
-}
 
-// Inizializza il ricalcolo delle posizioni in caso di ridimensionamento della finestra
-window.addEventListener('resize', () => {
-  const overlay = document.getElementById('radial-menu-overlay');
-  if (overlay && overlay.classList.contains('active')) {
-    initRadialPositions();
-  }
-});
+    // Scroll fluido verso la sezione "Dove Mangiare & Fika"
+    function scrollToFood() {
+      const foodSection = document.querySelector('section .fa-utensils')?.closest('section');
+      if (foodSection) {
+        foodSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    // Chiudi il menu a raggiera quando si clicca in un punto qualsiasi fuori dal disco
+    document.addEventListener('click', function(event) {
+      const wrapper = document.getElementById('radialMenuWrapper');
+      if (wrapper && wrapper.classList.contains('active')) {
+        if (!wrapper.contains(event.target)) {
+          toggleRadialMenu();
+        }
+      }
+    });
     
   </script>
 </body>
