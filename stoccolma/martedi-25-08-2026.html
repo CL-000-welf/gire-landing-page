@@ -1225,6 +1225,67 @@
       });
     }
 
+
+// ================= ================= ================= =================
+// GEOLOCALIZZAZIONE UTENTE (PIN AZZURRO)
+// ================= ================= ================= =================
+
+let userMarkerMain = null;
+let userMarkerModal = null;
+
+// Icona azzurra con effetto pulsante per l'utente
+const userIcon = createGiantIcon('#0284c7', 'fa-person-dot-location', true);
+
+function updateUserLocation(lat, lng) {
+  // Aggiorna o crea il marker sulla mappa principale
+  if (!userMarkerMain) {
+    userMarkerMain = L.marker([lat, lng], { icon: userIcon })
+      .addTo(map)
+      .bindPopup('<strong>La tua posizione</strong>');
+  } else {
+    userMarkerMain.setLatLng([lat, lng]);
+  }
+
+  // Aggiorna o crea il marker sulla mappa modale (se è già stata creata)
+  if (modalMap) {
+    if (!userMarkerModal) {
+      userMarkerModal = L.marker([lat, lng], { icon: userIcon })
+        .addTo(modalMap)
+        .bindPopup('<strong>La tua posizione</strong>');
+    } else {
+      userMarkerModal.setLatLng([lat, lng]);
+    }
+  }
+}
+
+function startGeolocation() {
+  if (!navigator.geolocation) {
+    console.warn("Geolocalizzazione non supportata dal browser.");
+    return;
+  }
+
+  // watchPosition aggiorna il pin in tempo reale mentre l'utente si sposta
+  navigator.geolocation.watchPosition(
+    (position) => {
+      const { latitude, longitude } = position.coords;
+      updateUserLocation(latitude, longitude);
+    },
+    (error) => {
+      console.warn("Errore geolocalizzazione:", error.message);
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    }
+  );
+}
+
+// Avvia il tracciamento al caricamento
+startGeolocation();
+
+    
+
      // --- AGGIORNAMENTO TIMELINE IN BASE ALL'ORARIO ---
   function updateTimelineStatus() {
   const rows = document.querySelectorAll('.timeline-row');
