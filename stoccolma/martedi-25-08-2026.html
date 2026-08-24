@@ -1021,226 +1021,352 @@
   </button>
 </div>
   
- <!-- 10. LOGICA JAVASCRIPT -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      const pushAlert = document.getElementById('push-alert');
-      if (pushAlert) {
-        pushAlert.classList.add('show');
-        setTimeout(() => {
-          pushAlert.classList.remove('show');
-        }, 5000);
+  <!-- 10. LOGICA JAVASCRIPT -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    /* =====================================================================
+       BLOCCO NOTIFICA PUSH INIZIALE (Copia questo blocco per gli altri file)
+       =====================================================================
+       Funzionamento:
+       - Attende il caricamento completo della pagina ('load').
+       - Dopo 1000ms (1 secondo) mostra il banner notifiche facendo scorrere l'elemento #push-alert.
+       - Dopo altri 5000ms (5 secondi) nasconde automaticamente la notifica.
+    */
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const pushAlert = document.getElementById('push-alert');
+        if (pushAlert) {
+          pushAlert.classList.add('show');
+          setTimeout(() => {
+            pushAlert.classList.remove('show');
+          }, 5000);
+        }
+      }, 1000);
+    });
+    /* ===================================================================== */
+
+    // Coordinate Hotel
+    const hotel = { name: "Hotel C Stockholm", lat: 59.3323, lng: 18.0583, label: "Hotel C Stockholm" };
+    
+    // Tappe del giorno
+    const stops = [
+      { name: "Municipio (Stadshuset)", lat: 59.3275, lng: 18.0543, visit: "Visita Sala Oro e Sala Blu." },
+      { name: "Gamla Stan (Vasabron)", lat: 59.3257, lng: 18.0686, visit: "Città vecchia attraverso il ponte pedonale." },
+      { name: "Norrbro & Parlamento", lat: 59.3273, lng: 18.0683, visit: "Ponte storico e palazzo del Parlamento." },
+      { name: "Kungsträdgården & Wetterling", lat: 59.3297, lng: 18.0703, visit: "Parco cittadino e Galleria Wetterling." },
+      { name: "Östermalmstorg & Salu Hall", lat: 59.3360, lng: 18.0780, visit: "Mercato al coperto gastronomico." },
+      { name: "Imbarco Crociera (Gustav III)", lat: 59.3262, lng: 18.0745, visit: "Partenza crociera 2 ore arcipelago." }
+    ];
+
+    const routePoints = [
+      [hotel.lat, hotel.lng],
+      [stops[0].lat, stops[0].lng],
+      [stops[1].lat, stops[1].lng],
+      [stops[2].lat, stops[2].lng],
+      [stops[3].lat, stops[3].lng],
+      [stops[4].lat, stops[4].lng],
+      [stops[5].lat, stops[5].lng]
+    ];
+
+    const segmentTimes = [
+      { lat: 59.3299, lng: 18.0563, text: "<i class='fa-solid fa-person-walking'></i> 10 min" },
+      { lat: 59.3266, lng: 18.0614, text: "<i class='fa-solid fa-person-walking'></i> 12 min" },
+      { lat: 59.3265, lng: 18.0684, text: "<i class='fa-solid fa-person-walking'></i> 3 min" },
+      { lat: 59.3285, lng: 18.0693, text: "<i class='fa-solid fa-person-walking'></i> 4 min" },
+      { lat: 59.3328, lng: 18.0741, text: "<i class='fa-solid fa-person-walking'></i> 10 min" },
+      { lat: 59.3311, lng: 18.0762, text: "<i class='fa-solid fa-person-walking'></i> 14 min" }
+    ];
+
+    function getDistanceMeters(lat1, lon1, lat2, lon2) {
+      const R = 6371000;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    const maxDistanceInMeters = Math.max(
+      ...stops.map(stop => getDistanceMeters(hotel.lat, hotel.lng, stop.lat, stop.lng))
+    );
+
+    // Mappa Principale
+    const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+
+    function createGiantIcon(color, iconClass, pulse = false) {
+      return L.divIcon({
+        className: 'custom-icon',
+        html: `<div class="pulse?'pulse-me':''"style="background-color:{color}; width:46px; height:46px; border:4px solid white; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:18px; box-shadow:0 8px 15px rgba(0,0,0,0.15);"><i class="fa-solid ${iconClass}"></i></div>`,
+        iconSize:[46,46], iconAnchor:[23,23]
+      });
+    }
+
+    // Popolamento Mappa Principale
+    function renderMapElements(targetMap) {
+      const hotelCircle = L.circle([hotel.lat, hotel.lng], {
+        color: '#3b82f6',
+        fillColor: '#93c5fd',
+        fillOpacity: 0.35,
+        radius: maxDistanceInMeters
+      }).addTo(targetMap);
+
+      L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(targetMap);
+      L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(targetMap).bindPopup(`<strong>${hotel.name}</strong><br>Vasaplan 4`);
+      
+      stops.forEach(stop => { 
+        L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(targetMap).bindPopup(`<strong>stop.name</strong><br>{stop.visit}`); 
+      });
+
+      segmentTimes.forEach(st => {
+        L.marker([st.lat, st.lng], {
+          icon: L.divIcon({
+            className: '',
+            html: `<div class="walk-label">${st.text}</div>`,
+            iconSize: [60, 20],
+            iconAnchor: [30, 10]
+          })
+        }).addTo(targetMap);
+      });
+
+      return hotelCircle;
+    }
+
+    const hotelCircleMain = renderMapElements(map);
+
+    function resetMapView() { map.fitBounds(hotelCircleMain.getBounds().pad(0.1)); }
+    resetMapView();
+    window.addEventListener('load', () => setTimeout(() => map.invalidateSize(), 150));
+
+    // Mappa Modale (Ingrandita)
+    let modalMap = null;
+    let modalHotelCircle = null;
+
+    function openMapModal() {
+      document.getElementById('mapModal').style.display = 'flex';
+      if (!modalMap) {
+        modalMap = L.map('map-modal-container', { zoomControl: true }).setView([hotel.lat, hotel.lng], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(modalMap);
+        modalHotelCircle = renderMapElements(modalMap);
       }
-    }, 1000);
-  });
+      setTimeout(() => {
+        modalMap.invalidateSize();
+        modalMap.fitBounds(modalHotelCircle.getBounds().pad(0.1));
+      }, 200);
+    }
 
-  // Coordinate Hotel
-  const hotel = { name: "Hotel C Stockholm", lat: 59.3323, lng: 18.0583, label: "Hotel C Stockholm" };
+    function closeMapModal() {
+      document.getElementById('mapModal').style.display = 'none';
+    }
+
+    // Sintesi Vocale
+    let currentUtterance = null, currentButton = null;
+    function stopSpeech() { 
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel(); 
+      if (currentButton) currentButton.classList.remove('playing'); 
+      currentUtterance = null; 
+      currentButton = null; 
+    }
+    document.querySelectorAll('.audio-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const text = btn.dataset.audioText;
+        if (!('speechSynthesis' in window)) {
+          alert("La sintesi vocale non è supportata dal tuo browser.");
+          return;
+        }
+        if (currentButton === btn && window.speechSynthesis.speaking) { 
+          stopSpeech(); 
+          return; 
+        }
+        stopSpeech();
+        const msg = new SpeechSynthesisUtterance(text); 
+        msg.lang = 'it-IT'; 
+        msg.rate = 0.95; 
+        msg.onend = stopSpeech; 
+        msg.onerror = stopSpeech;
+        currentUtterance = msg; 
+        currentButton = btn; 
+        btn.classList.add('playing'); 
+        window.speechSynthesis.speak(msg);
+      });
+    });
+    window.addEventListener('beforeunload', stopSpeech);
+
+    // Gestione Modali Dettagli e SOS
+    function openInfo(title, text, imgSrc = '') { 
+      document.getElementById('infoTitle').innerText = title; 
+      document.getElementById('infoContent').innerText = text; 
+      
+      const imgEl = document.getElementById('infoImage');
+      if (imgSrc) {
+        imgEl.src = imgSrc;
+        imgEl.classList.remove('hidden');
+      } else {
+        imgEl.classList.add('hidden');
+      }
+      
+      document.getElementById('infoModal').style.display = 'flex'; 
+    }
+    function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
+    function openSOSModal() { document.getElementById('sosModal').style.display = 'flex'; }
+    function closeSOSModal() { document.getElementById('sosModal').style.display = 'none'; }
+    function confermaPresenza() { document.getElementById('appello-box').classList.add('hidden-appello'); }
+
+    function sendLocationWhatsApp(phone) {
+      if (!navigator.geolocation) { alert('Geolocalizzazione non supportata dal dispositivo.'); return; }
+      navigator.geolocation.getCurrentPosition(p => {
+        const msg = encodeURIComponent('SOS STUDENTE: https://maps.google.com/?q=' + p.coords.latitude + ',' + p.coords.longitude);
+        window.location.href = 'https://wa.me/' + phone + '?text=' + msg;
+      }, () => {
+        alert('Impossibile recuperare la posizione GPS attuale.');
+      });
+    }
+
+     // --- AGGIORNAMENTO TIMELINE IN BASE ALL'ORARIO ---
+  function updateTimelineStatus() {
+  const rows = document.querySelectorAll('.timeline-row');
+  const now = new Date();
   
-  // Tappe del giorno
-  const stops = [
-    { name: "Municipio (Stadshuset)", lat: 59.3275, lng: 18.0543, visit: "Visita Sala Oro e Sala Blu." },
-    { name: "Gamla Stan (Vasabron)", lat: 59.3257, lng: 18.0686, visit: "Città vecchia attraverso il ponte pedonale." },
-    { name: "Norrbro & Parlamento", lat: 59.3273, lng: 18.0683, visit: "Ponte storico e palazzo del Parlamento." },
-    { name: "Kungsträdgården & Wetterling", lat: 59.3297, lng: 18.0703, visit: "Parco cittadino e Galleria Wetterling." },
-    { name: "Östermalmstorg & Salu Hall", lat: 59.3360, lng: 18.0780, visit: "Mercato al coperto gastronomico." },
-    { name: "Imbarco Crociera (Gustav III)", lat: 59.3262, lng: 18.0745, visit: "Partenza crociera 2 ore arcipelago." }
-  ];
+  // Data target della gita: 26 Agosto 2026
+  const targetYear = 2026;
+  const targetMonth = 7; // I mesi in JavaScript vanno da 0 (Gen) a 11 (Dic), quindi Agosto è 7
+  const targetDay = 25;
 
-  const routePoints = [
-    [hotel.lat, hotel.lng],
-    [stops[0].lat, stops[0].lng],
-    [stops[1].lat, stops[1].lng],
-    [stops[2].lat, stops[2].lng],
-    [stops[3].lat, stops[3].lng],
-    [stops[4].lat, stops[4].lng],
-    [stops[5].lat, stops[5].lng]
-  ];
-
-  const segmentTimes = [
-    { lat: 59.3299, lng: 18.0563, text: "<i class='fa-solid fa-person-walking'></i> 10 min" },
-    { lat: 59.3266, lng: 18.0614, text: "<i class='fa-solid fa-person-walking'></i> 12 min" },
-    { lat: 59.3265, lng: 18.0684, text: "<i class='fa-solid fa-person-walking'></i> 3 min" },
-    { lat: 59.3285, lng: 18.0693, text: "<i class='fa-solid fa-person-walking'></i> 4 min" },
-    { lat: 59.3328, lng: 18.0741, text: "<i class='fa-solid fa-person-walking'></i> 10 min" },
-    { lat: 59.3311, lng: 18.0762, text: "<i class='fa-solid fa-person-walking'></i> 14 min" }
-  ];
-
-  function getDistanceMeters(lat1, lon1, lat2, lon2) {
-    const R = 6371000;
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-  }
-
-  const maxDistanceInMeters = Math.max(
-    ...stops.map(stop => getDistanceMeters(hotel.lat, hotel.lng, stop.lat, stop.lng))
+  // Verifica se OGGI è esattamente il giorno della gita
+  const isTargetDay = (
+    now.getFullYear() === targetYear &&
+    now.getMonth() === targetMonth &&
+    now.getDate() === targetDay
   );
 
-  // Mappa Principale
-  const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
-
-  // TRACCIAMENTO POSIZIONE GPS
-  let userMarker = null;
-  if (navigator.geolocation) {
-    navigator.geolocation.watchPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        const blueUserIcon = L.divIcon({
-          className: 'custom-icon',
-          html: `<div style="background-color:#007bff; width:24px; height:24px; border:3px solid white; border-radius:50%; box-shadow:0 0 10px rgba(0,123,255,0.8);"></div>`,
-          iconSize: [24, 24],
-          iconAnchor: [12, 12]
-        });
-
-        if (userMarker) {
-          userMarker.setLatLng([latitude, longitude]);
-        } else {
-          userMarker = L.marker([latitude, longitude], { icon: blueUserIcon })
-            .addTo(map)
-            .bindPopup("La tua posizione attuale");
-        }
-      },
-      (error) => { console.warn("GPS non disponibile:", error.message); },
-      { enableHighAccuracy: true }
-    );
-  }
-
-  function createGiantIcon(color, iconClass, pulse = false) {
-    return L.divIcon({
-      className: 'custom-icon',
-      html: `<div class="${pulse ? 'pulse-me' : ''}" style="background-color:${color}; width:46px; height:46px; border:4px solid white; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:18px; box-shadow:0 8px 15px rgba(0,0,0,0.15);"><i class="fa-solid ${iconClass}"></i></div>`,
-      iconSize:[46,46], iconAnchor:[23,23]
-    });
-  }
-
-  // Popolamento Mappa Principale
-  function renderMapElements(targetMap) {
-    const hotelCircle = L.circle([hotel.lat, hotel.lng], {
-      color: '#3b82f6',
-      fillColor: '#93c5fd',
-      fillOpacity: 0.35,
-      radius: maxDistanceInMeters
-    }).addTo(targetMap);
-
-    L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(targetMap);
-    L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(targetMap).bindPopup(`<strong>${hotel.name}</strong><br>Vasaplan 4`);
-    
-    stops.forEach(stop => { 
-      L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(targetMap).bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`); 
-    });
-
-    segmentTimes.forEach(st => {
-      L.marker([st.lat, st.lng], {
-        icon: L.divIcon({
-          className: '',
-          html: `<div class="walk-label">${st.text}</div>`,
-          iconSize: [60, 20],
-          iconAnchor: [30, 10]
-        })
-      }).addTo(targetMap);
-    });
-
-    return hotelCircle;
-  }
-
-  const hotelCircleMain = renderMapElements(map);
-
-  function resetMapView() { map.fitBounds(hotelCircleMain.getBounds().pad(0.1)); }
-  resetMapView();
-  window.addEventListener('load', () => setTimeout(() => map.invalidateSize(), 150));
-
-  // Mappa Modale (Ingrandita)
-  let modalMap = null;
-  let modalHotelCircle = null;
-
-  function openMapModal() {
-    document.getElementById('mapModal').style.display = 'flex';
-    if (!modalMap) {
-      modalMap = L.map('map-modal-container', { zoomControl: true }).setView([hotel.lat, hotel.lng], 13);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(modalMap);
-      modalHotelCircle = renderMapElements(modalMap);
-    }
-    setTimeout(() => {
-      modalMap.invalidateSize();
-      modalMap.fitBounds(modalHotelCircle.getBounds().pad(0.1));
-    }, 200);
-  }
-
-  function closeMapModal() {
-    document.getElementById('mapModal').style.display = 'none';
-  }
-
-  // Sintesi Vocale
-  let currentUtterance = null, currentButton = null;
-  function stopSpeech() { 
-    if ('speechSynthesis' in window) window.speechSynthesis.cancel(); 
-    if (currentButton) currentButton.classList.remove('playing'); 
-    currentUtterance = null; 
-    currentButton = null; 
-  }
-  document.querySelectorAll('.audio-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const text = btn.dataset.audioText;
-      if (!('speechSynthesis' in window)) {
-        alert("La sintesi vocale non è supportata dal tuo browser.");
-        return;
-      }
-      if (currentButton === btn && window.speechSynthesis.speaking) { 
-        stopSpeech(); 
-        return; 
-      }
-      stopSpeech();
-      const msg = new SpeechSynthesisUtterance(text); 
-      msg.lang = 'it-IT'; 
-      msg.rate = 0.95; 
-      msg.onend = stopSpeech; 
-      msg.onerror = stopSpeech;
-      currentUtterance = msg; 
-      currentButton = btn; 
-      btn.classList.add('playing'); 
-      window.speechSynthesis.speak(msg);
-    });
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  const times = Array.from(rows).map(row => {
+    const [h, m] = row.dataset.time.split(':').map(Number);
+    return h * 60 + m;
   });
-  window.addEventListener('beforeunload', stopSpeech);
 
-  // Gestione Modali Dettagli e SOS
-  function openInfo(title, text, imgSrc = '') { 
-    document.getElementById('infoTitle').innerText = title; 
-    document.getElementById('infoContent').innerText = text; 
-    
-    const imgEl = document.getElementById('infoImage');
-    if (imgSrc) {
-      imgEl.src = imgSrc;
-      imgEl.classList.remove('hidden');
-    } else {
-      imgEl.classList.add('hidden');
+  rows.forEach((row, index) => {
+    const rowTime = times[index];
+    const nextTime = times[index + 1] || 24 * 60;
+    const dot = row.querySelector('.dot');
+
+    row.classList.remove('done', 'active', 'future');
+
+    // Se NON siamo nel giorno della gita, tutte le tappe restano grigie/future
+    if (!isTargetDay) {
+      row.classList.add('future');
+      dot.style.background = '#e2e8f0';
+      dot.style.color = '#94a3b8';
+      dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
+      return;
     }
-    
-    document.getElementById('infoModal').style.display = 'flex'; 
-  }
-  function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
-  function openSOSModal() { document.getElementById('sosModal').style.display = 'flex'; }
-  function closeSOSModal() { document.getElementById('sosModal').style.display = 'none'; }
-  function confermaPresenza() { document.getElementById('appello-box').classList.add('hidden-appello'); }
 
-  function sendLocationWhatsApp(phone) {
-    if (!navigator.geolocation) { alert('Geolocalizzazione non supportata dal dispositivo.'); return; }
-    navigator.geolocation.getCurrentPosition(p => {
-      const msg = encodeURIComponent('SOS STUDENTE: https://maps.google.com/?q=' + p.coords.latitude + ',' + p.coords.longitude);
-      window.location.href = 'https://wa.me/' + phone + '?text=' + msg;
-    }, () => {
-      alert('Impossibile recuperare la posizione GPS attuale.');
-    });
-  }
+    // Se SIAMO nel giorno della gita, colora in base all'orario
+    if (currentMinutes >= rowTime && currentMinutes < nextTime) {
+      row.classList.add('active');
+      dot.style.background = '#f6a623';
+      dot.style.color = '#fff';
+      dot.innerHTML = '<i class="fa-solid fa-location-dot"></i>';
+    } else if (currentMinutes >= nextTime) {
+      row.classList.add('done');
+      dot.style.background = '#10b981';
+      dot.style.color = '#fff';
+      dot.innerHTML = '<i class="fa-solid fa-check"></i>';
+    } else {
+      row.classList.add('future');
+      dot.style.background = '#e2e8f0';
+      dot.style.color = '#94a3b8';
+      dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
+    }
+  });
+}
+    // Esegui aggiornamento timeline all'avvio e ogni minuto
+    updateTimelineStatus();
+    setInterval(updateTimelineStatus, 60000);
+
+    // --- SWIPE UP PER SCOMPARSA NOTIFICA (STILE NATIVO) ---
+(function initPushAlertSwipe() {
+  const alertBox = document.getElementById('push-alert');
+  if (!alertBox) return;
+
+  let startY = 0;
+  let currentY = 0;
+  let isDragging = false;
+
+  const handleStart = (e) => {
+    // Si attiva solo se il banner è attualmente visibile
+    if (!alertBox.classList.contains('show')) return;
+    
+    isDragging = true;
+    startY = e.touches ? e.touches[0].clientY : e.clientY;
+    currentY = startY;
+    
+    // Disabilita la transizione CSS per far seguire il dito in tempo reale
+    alertBox.style.transition = 'none';
+  };
+
+  const handleMove = (e) => {
+    if (!isDragging) return;
+    
+    currentY = e.touches ? e.touches[0].clientY : e.clientY;
+    const deltaY = currentY - startY;
+
+    // Consentiamo solo il movimento verso l'alto (deltaY negativo)
+    if (deltaY < 0) {
+      // Previeni lo scroll della pagina mentre trascini il banner
+      if (e.cancelable) e.preventDefault();
+      
+      // Applica lo spostamento in alto e sfuma leggermente l'opacità
+      alertBox.style.transform = `translateY(${deltaY}px)`;
+      alertBox.style.opacity = Math.max(0, 1 + deltaY / 100);
+    }
+  };
+
+  const handleEnd = () => {
+    if (!isDragging) return;
+    isDragging = false;
+
+    const deltaY = currentY - startY;
+
+    // Ripristina una transizione fluida per la chiusura o il ripristino
+    alertBox.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+
+    // Se è stato trascinato verso l'alto di almeno 30px, chiudi la notifica
+    if (deltaY < -30) {
+      alertBox.style.transform = 'translateY(-150%)';
+      alertBox.style.opacity = '0';
+
+      setTimeout(() => {
+        alertBox.classList.remove('show');
+        // Reset per le successive apparizioni
+        alertBox.style.transform = '';
+        alertBox.style.opacity = '';
+        alertBox.style.transition = '';
+      }, 300);
+    } else {
+      // Se lo swipe è troppo corto, torna alla posizione originale
+      alertBox.style.transform = 'translateY(0)';
+      alertBox.style.opacity = '1';
+
+      setTimeout(() => {
+        alertBox.style.transition = '';
+      }, 300);
+    }
+  };
+
+  // Listener Eventi Touch (Mobile)
+  alertBox.addEventListener('touchstart', handleStart, { passive: false });
+  alertBox.addEventListener('touchmove', handleMove, { passive: false });
+  alertBox.addEventListener('touchend', handleEnd);
+
+  // Listener Eventi Mouse (Desktop/Test)
+  alertBox.addEventListener('mousedown', handleStart);
+  window.addEventListener('mousemove', handleMove);
+  window.addEventListener('mouseup', handleEnd);
+})();
 
  // --- CARICAMENTO METEO CON SFONDO E GRAFICA DINAMICA (GIORNO / NOTTE) ---
 async function fetchExactWeather() {
@@ -2088,5 +2214,3 @@ function scrollToSection(type) {
   </script>
 </body>
 </html>
-
-
