@@ -1149,101 +1149,83 @@ Buongiorno! Oggi scopriamo la città tra le acque.</p>
     }
 
 // =====================================================================
-// GEOLOCALIZZAZIONE UTENTE (MAPPA PRINCIPALE + MODALE AD ALTA PRECISIONE)
+// GEOLOCALIZZAZIONE UTENTE (MAPPA PRINCIPALE + MODALE)
 // =====================================================================
 
 let userMarkerMain = null;
-let userAccuracyCircleMain = null;
+let userCircleMain = null;
 
 let userMarkerModal = null;
-let userAccuracyCircleModal = null;
+let userCircleModal = null;
 
-// Ultima posizione GPS salvata
-let lastUserCoords = null; 
+let lastCoords = null; // Memorizza l'ultima posizione GPS rilevata
 
-// Icona azzurra con effetto pulsante
 const userIcon = createGiantIcon('#0284c7', 'fa-person-dot-location', true);
 
-// Funzione per aggiornare i marker su una specifica mappa
-function applyUserLocationToMap(targetMap, currentMarker, currentCircle, lat, lng, accuracy) {
-  if (!targetMap) return { marker: currentMarker, circle: currentCircle };
+// Disegna o aggiorna il pin + cerchio su una mappa
+function drawUserOnMap(targetMap, marker, circle, lat, lng, accuracy) {
+  if (!targetMap) return { marker, circle };
 
-  const popupText = `<strong>La tua posizione</strong><br>Precisione: ±${Math.round(accuracy)}m`;
+  const label = `<strong>La tua posizione</strong><br>Precisione: ±${Math.round(accuracy)}m`;
 
-  // Marker
-  if (!currentMarker) {
-    currentMarker = L.marker([lat, lng], { icon: userIcon }).addTo(targetMap).bindPopup(popupText);
+  if (!marker) {
+    marker = L.marker([lat, lng], { icon: userIcon }).addTo(targetMap).bindPopup(label);
   } else {
-    currentMarker.setLatLng([lat, lng]).setPopupContent(popupText);
+    marker.setLatLng([lat, lng]).setPopupContent(label);
   }
 
-  // Cerchio di precisione
-  if (!currentCircle) {
-    currentCircle = L.circle([lat, lng], {
+  if (!circle) {
+    circle = L.circle([lat, lng], {
       radius: accuracy,
       color: '#0284c7',
       fillColor: '#38bdf8',
-      fillOpacity: 0.15,
-      weight: 1
+      fillOpacity: 0.2,
+      weight: 1.5
     }).addTo(targetMap);
   } else {
-    currentCircle.setLatLng([lat, lng]).setRadius(accuracy);
+    circle.setLatLng([lat, lng]).setRadius(accuracy);
   }
 
-  return { marker: currentMarker, circle: currentCircle };
+  return { marker, circle };
 }
 
-// Funzione principale che riceve le coordinate GPS
-function updateUserLocation(lat, lng, accuracy) {
-  lastUserCoords = { lat, lng, accuracy };
+// Riceve la posizione GPS e la applica
+function onLocationFound(lat, lng, accuracy) {
+  lastCoords = { lat, lng, accuracy };
 
-  // Aggiorna Mappa Principale
-  const mainRes = applyUserLocationToMap(map, userMarkerMain, userAccuracyCircleMain, lat, lng, accuracy);
-  userMarkerMain = mainRes.marker;
-  userAccuracyCircleMain = mainRes.circle;
+  // Mappa Principale
+  const main = drawUserOnMap(map, userMarkerMain, userCircleMain, lat, lng, accuracy);
+  userMarkerMain = main.marker;
+  userCircleMain = main.circle;
 
-  // Aggiorna Mappa Modale (se esiste)
+  // Mappa Modale (se già aperta)
   if (modalMap) {
-    const modalRes = applyUserLocationToMap(modalMap, userMarkerModal, userAccuracyCircleModal, lat, lng, accuracy);
-    userMarkerModal = modalRes.marker;
-    userAccuracyCircleModal = modalRes.circle;
+    const modal = drawUserOnMap(modalMap, userMarkerModal, userCircleModal, lat, lng, accuracy);
+    userMarkerModal = modal.marker;
+    userCircleModal = modal.circle;
   }
 }
 
+// Avvio tracciamento GPS
 function startGeolocation() {
-  if (!navigator.geolocation) {
-    console.warn("Geolocalizzazione non supportata dal browser.");
-    return;
-  }
-
-  const geoOptions = {
-    enableHighAccuracy: true, // Attiva il GPS ad alta precisione
-    timeout: 15000,           // Attende fino a 15 secondi per il fix GPS
-    maximumAge: 0             // Non usa posizioni in cache
-  };
+  if (!navigator.geolocation) return;
 
   navigator.geolocation.watchPosition(
-    (position) => {
-      const { latitude, longitude, accuracy } = position.coords;
-
-      // Scarta misurazioni con errore maggiore di 50m
-      if (accuracy > 50) {
-        console.warn(`Segnale GPS debole. Precisione attuale: ${Math.round(accuracy)}m`);
-        return;
-      }
-
-      updateUserLocation(latitude, longitude, accuracy);
+    (pos) => {
+      onLocationFound(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy);
     },
-    (error) => {
-      console.warn("Errore geolocalizzazione:", error.message);
+    (err) => {
+      console.warn("Errore GPS:", err.message);
     },
-    geoOptions
+    {
+      enableHighAccuracy: true,
+      timeout: 20000,
+      maximumAge: 0
+    }
   );
 }
 
-// Avvia il tracciamento
 startGeolocation();
-
 
 
     
@@ -1300,10 +1282,17 @@ startGeolocation();
           }).addTo(fullMap);
         });
       }
-      setTimeout(() => {
-        fullMap.invalidateSize();
-        fullMap.fitBounds(hotelCircle.getBounds().pad(0.1));
-      }, 200);
+      // ---> APPENA SI APRE LA MAPPA MOSTRA SUBITO LA POSIZIONE SALVATA <---
+  if (lastCoords) {
+    const modal = drawUserOnMap(modalMap, userMarkerModal, userCircleModal, lastCoords.lat, lastCoords.lng, lastCoords.accuracy);
+    userMarkerModal = modal.marker;
+    userCircleModal = modal.circle;
+  }
+
+  setTimeout(() => {
+    modalMap.invalidateSize();
+    modalMap.fitBounds(modalHotelCircle.getBounds().pad(0.1));
+  }, 200);
     }
     function closeMapModal() {
       document.getElementById('mapModal').style.display = 'none';
