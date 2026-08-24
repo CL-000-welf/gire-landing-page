@@ -1121,6 +1121,105 @@
         iconSize:[46,46], iconAnchor:[23,23]
       });
     }
+
+
+// =====================================================================
+// GEOLOCALIZZAZIONE UTENTE (MAPPA PRINCIPALE + MODALE AD ALTA PRECISIONE)
+// =====================================================================
+
+let userMarkerMain = null;
+let userAccuracyCircleMain = null;
+
+let userMarkerModal = null;
+let userAccuracyCircleModal = null;
+
+// Ultima posizione GPS salvata
+let lastUserCoords = null; 
+
+// Icona azzurra con effetto pulsante
+const userIcon = createGiantIcon('#0284c7', 'fa-person-dot-location', true);
+
+// Funzione per aggiornare i marker su una specifica mappa
+function applyUserLocationToMap(targetMap, currentMarker, currentCircle, lat, lng, accuracy) {
+  if (!targetMap) return { marker: currentMarker, circle: currentCircle };
+
+  const popupText = `<strong>La tua posizione</strong><br>Precisione: ±${Math.round(accuracy)}m`;
+
+  // Marker
+  if (!currentMarker) {
+    currentMarker = L.marker([lat, lng], { icon: userIcon }).addTo(targetMap).bindPopup(popupText);
+  } else {
+    currentMarker.setLatLng([lat, lng]).setPopupContent(popupText);
+  }
+
+  // Cerchio di precisione
+  if (!currentCircle) {
+    currentCircle = L.circle([lat, lng], {
+      radius: accuracy,
+      color: '#0284c7',
+      fillColor: '#38bdf8',
+      fillOpacity: 0.15,
+      weight: 1
+    }).addTo(targetMap);
+  } else {
+    currentCircle.setLatLng([lat, lng]).setRadius(accuracy);
+  }
+
+  return { marker: currentMarker, circle: currentCircle };
+}
+
+// Funzione principale che riceve le coordinate GPS
+function updateUserLocation(lat, lng, accuracy) {
+  lastUserCoords = { lat, lng, accuracy };
+
+  // Aggiorna Mappa Principale
+  const mainRes = applyUserLocationToMap(map, userMarkerMain, userAccuracyCircleMain, lat, lng, accuracy);
+  userMarkerMain = mainRes.marker;
+  userAccuracyCircleMain = mainRes.circle;
+
+  // Aggiorna Mappa Modale (se esiste)
+  if (modalMap) {
+    const modalRes = applyUserLocationToMap(modalMap, userMarkerModal, userAccuracyCircleModal, lat, lng, accuracy);
+    userMarkerModal = modalRes.marker;
+    userAccuracyCircleModal = modalRes.circle;
+  }
+}
+
+function startGeolocation() {
+  if (!navigator.geolocation) {
+    console.warn("Geolocalizzazione non supportata dal browser.");
+    return;
+  }
+
+  const geoOptions = {
+    enableHighAccuracy: true, // Attiva il GPS ad alta precisione
+    timeout: 15000,           // Attende fino a 15 secondi per il fix GPS
+    maximumAge: 0             // Non usa posizioni in cache
+  };
+
+  navigator.geolocation.watchPosition(
+    (position) => {
+      const { latitude, longitude, accuracy } = position.coords;
+
+      // Scarta misurazioni con errore maggiore di 50m
+      if (accuracy > 50) {
+        console.warn(`Segnale GPS debole. Precisione attuale: ${Math.round(accuracy)}m`);
+        return;
+      }
+
+      updateUserLocation(latitude, longitude, accuracy);
+    },
+    (error) => {
+      console.warn("Errore geolocalizzazione:", error.message);
+    },
+    geoOptions
+  );
+}
+
+// Avvia il tracciamento
+startGeolocation();
+
+    
     // 1. Cerchio dinamico calcolato attorno all'hotel
     const hotelCircle = L.circle([hotel.lat, hotel.lng], {
       color: '#3b82f6',
