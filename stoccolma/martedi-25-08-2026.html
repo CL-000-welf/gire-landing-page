@@ -241,15 +241,34 @@
     pointer-events: none;
   }
 
-  /* Distribuzione trigonometrica per 8 voci (R=120px) */
-  .radial-item-wrapper:nth-child(2) { top: 22px;  left: 216px; } /* 1. Meteo */
-  .radial-item-wrapper:nth-child(3) { top: 38px;  left: 173px; } /* 2. Mappe */
-  .radial-item-wrapper:nth-child(4) { top: 64px;  left: 133px; } /* 3. Metro */
-  .radial-item-wrapper:nth-child(5) { top: 99px;  left: 99px;  } /* 4. Cambio */
-  .radial-item-wrapper:nth-child(6) { top: 133px; left: 64px;  } /* 5. Cibo */
-  .radial-item-wrapper:nth-child(7) { top: 173px; left: 38px;  } /* 6. Tappe */
-  .radial-item-wrapper:nth-child(8) { top: 216px; left: 22px;  } /* 7. Diario */
-  .radial-item-wrapper:nth-child(9) { top: 248px; left: 110px; } /* 8. Guida Rapida */
+  /* =====================================================================
+   POSIZIONAMENTO CIRCOLARE AD ARCO (8 VOCI DA 120° A 330°)
+   Raggio: 115px | Centro Disco: (160px, 160px)
+   ===================================================================== */
+
+/* 1. METEO (120° -> 30° a destra della verticale alta) */
+.radial-item-wrapper:nth-child(2) { top: 36px;  left: 194px; }
+
+/* 2. MAPPE (150°) */
+.radial-item-wrapper:nth-child(3) { top: 79px;  left: 236px; }
+
+/* 3. METRO (180° -> Orizzontale a sinistra) */
+.radial-item-wrapper:nth-child(4) { top: 136px; left: 251px; }
+
+/* 4. CAMBIO (210°) */
+.radial-item-wrapper:nth-child(5) { top: 194px; left: 236px; }
+
+/* 5. CIBO (240°) */
+.radial-item-wrapper:nth-child(6) { top: 236px; left: 194px; }
+
+/* 6. TAPPE (270° -> Verticale in basso) */
+.radial-item-wrapper:nth-child(7) { top: 251px; left: 136px; }
+
+/* 7. DIARIO (300°) */
+.radial-item-wrapper:nth-child(8) { top: 236px; left: 79px;  }
+
+/* 8. GUIDA RAPIDA (330°) */
+.radial-item-wrapper:nth-child(9) { top: 194px; left: 36px;  }
     
   </style>
 </head>
