@@ -318,7 +318,7 @@
 
 
 <!-- CARD METEO CON SFONDO E GRAFICA DINAMICA -->
-<div id="weather-card-bg" class="bg-gradient-to-br from-sky-400 via-sky-500 to-blue-600 text-white rounded-[2rem] p-5 shadow-lg relative overflow-hidden mb-6 transition-all duration-500">
+<div id="meteo" class="bg-gradient-to-br from-sky-400 via-sky-500 to-blue-600 text-white rounded-[2rem] p-5 shadow-lg relative overflow-hidden mb-6 transition-all duration-500">
   
   <!-- Sfondo Grafico Dinamico (Icone sfumate in trasparenza) -->
   <div id="weather-bg-pattern" class="absolute -right-4 -bottom-6 text-white/10 text-9xl pointer-events-none transition-all duration-500">
@@ -514,7 +514,7 @@
   <!-- ========================================== -->
   <!-- 5. TIMELINE / PROGRAMMA GIORNO             -->
   <!-- ========================================== -->
-  <div class="safe-card p-6 mb-8">
+  <div id="tappe" class="safe-card p-6 mb-8">
     <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6 italic text-center">Programma giornata</h3>
     <div class="relative">
       <div class="timeline-line"></div>
@@ -607,7 +607,8 @@
   <!-- ====================================================== -->
   <!-- 6. CARD DIARIO / SCHEDE TAPPE (INTERAMENTE CLICCABILI) -->
   <!-- ====================================================== -->
-  <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic">I diari di viaggio</h3>
+  <div id="diario">
+  <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic">I diari di viaggio</h3></div>
   <div class="space-y-6 mb-12">
     
     <article class="diary-card safe-card" onclick="openInfo('Municipio (Stadshuset) - Sala Oro e Blu', 'Partiamo a piedi dall\'hotel in zona Norrmalm per visitare il municipio di Stoccolma. Visiteremo la celebre Sala Blu, sede del banchetto dei Premi Nobel, e la spettacolare Sala Oro rivestita da oltre 18 milioni di tessere di mosaico.', 'https://cl-000-welf.github.io/gire-landing-page/stoccolma/img/municipio.jpg')">
@@ -709,7 +710,7 @@
 <!-- ================================================ -->
 <!-- SEZIONE INFO UTILI & GLOSSARIO AUDIO INTERATTIVO -->
 <!-- ================================================ -->
-<div class="bg-slate-900 text-white rounded-[2.5rem] p-6 shadow-xl mb-8 relative overflow-hidden border border-slate-800">
+<div id="guida" class="bg-slate-900 text-white rounded-[2.5rem] p-6 shadow-xl mb-8 relative overflow-hidden border border-slate-800">
   
   <!-- Header Sezione -->
   <div class="flex items-center justify-between mb-5 border-b border-slate-800 pb-4">
@@ -965,11 +966,11 @@
   <div class="radial-disc">
     <div class="radial-disc-bg-logo"></div>
 
-    <!-- 1. Meteo (Modal) -->
-    <button onclick="openWeatherModal(); toggleRadialMenu();" class="radial-item-wrapper">
-      <div class="radial-item-btn text-sky-500"><i class="fa-solid fa-cloud-sun"></i></div>
-      <span class="radial-item-label">METEO</span>
-    </button>
+   <!-- 1. Meteo (Scroll alla sezione Meteo) -->
+<button onclick="scrollToSection('meteo'); toggleRadialMenu();" class="radial-item-wrapper">
+  <div class="radial-item-btn text-sky-500"><i class="fa-solid fa-cloud-sun"></i></div>
+  <span class="radial-item-label">METEO</span>
+</button>
 
     <!-- 2. Mappe (Modal) -->
     <button onclick="openMapModal(); toggleRadialMenu();" class="radial-item-wrapper">
@@ -2174,39 +2175,32 @@ document.addEventListener('DOMContentLoaded', () => {
     if (wrapper) wrapper.classList.toggle('active');
   }
 
-  function scrollToSection(type) {
-    let targetEl = null;
+function scrollToSection(type) {
+  let targetEl = null;
 
-    if (type === 'cibo') {
-      targetEl = document.querySelector('#cibo') || 
-                 document.querySelector('.fa-utensils')?.closest('section, div.card, div');
-    } else if (type === 'tappe') {
-      targetEl = document.querySelector('#tappe') || 
-                 document.querySelector('.timeline-container') || 
-                 document.querySelector('.fa-route')?.closest('section, div');
-    } else if (type === 'diario') {
-      targetEl = document.querySelector('#diario') || 
-                 document.querySelector('#cards') || 
-                 document.querySelector('.safe-card')?.closest('section, div') || 
-                 document.querySelector('.fa-book-open')?.closest('section, div');
-    } else if (type === 'guida') {
-      targetEl = document.querySelector('#guida') || 
-                 document.querySelector('#info') || 
-                 document.querySelector('#glossario') || 
-                 document.querySelector('.fa-compass')?.closest('section, div') || 
-                 document.querySelector('.fa-circle-info')?.closest('section, div') || 
-                 document.querySelector('.fa-book-bookmark')?.closest('section, div');
-    }
-
-    if (!targetEl) {
-      const allHeadings = Array.from(document.querySelectorAll('h1, h2, h3, h4, div, section'));
-      targetEl = allHeadings.find(el => el.textContent.toLowerCase().includes(type));
-    }
-
-    if (targetEl) {
-      targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+  if (type === 'meteo') {
+    targetEl = document.getElementById('meteo') || document.getElementById('weather-card-bg');
+  } else if (type === 'tappe') {
+    targetEl = document.getElementById('tappe') || document.querySelector('.timeline-row')?.parentElement;
+  } else if (type === 'diario') {
+    targetEl = document.getElementById('diario') || document.querySelector('.diary-card')?.parentElement;
+  } else if (type === 'guida') {
+    targetEl = document.getElementById('guida') || document.getElementById('daily-tip-box')?.parentElement;
+  } else if (type === 'cibo') {
+    targetEl = document.getElementById('cibo') || document.querySelector('.fa-utensils')?.closest('section, div');
   }
+
+  // Fallback di ricerca generica se gli ID non vengono trovati
+  if (!targetEl) {
+    const allHeadings = Array.from(document.querySelectorAll('h1, h2, h3, h4, div, section'));
+    targetEl = allHeadings.find(el => el.textContent.toLowerCase().includes(type));
+  }
+
+  // Esecuzione dello scroll con animazione fluida
+  if (targetEl) {
+    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
 
   document.addEventListener('click', function(event) {
     const wrapper = document.getElementById('radialMenuWrapper');
