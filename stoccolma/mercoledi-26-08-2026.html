@@ -110,6 +110,177 @@
     #map-fullscreen { width: 100%; height: 100%; }
 
     @media (max-width: 420px) { body { padding: 16px 16px 32px; } .safe-card { border-radius: 1.7rem; } #map-student { height: 262px; border-radius: 1.6rem; margin: -16px -16px 0px -16px; } .diary-body { padding: 1rem; } .diary-head h4 { font-size: 1rem; } .diary-short { font-size:.95rem; line-height: 1.55; } .nav-row a, .nav-row span { min-width: 96px; padding: .7rem .85rem; } .modal-card { padding: 1.5rem; border-radius: 2rem; } .map-meta { grid-template-columns: 1fr; } .map-controls { justify-content: flex-start; } }
+ 
+  /* =====================================================================
+     STILI PER IL MENU A RAGGIERA STICKY CON LOGO FAVICON E 8 VOCI
+     ===================================================================== */
+  .radial-menu-wrapper {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+  }
+
+  .radial-disc {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.96); /* Dark Slate #0f172a */
+    backdrop-filter: blur(12px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: scale(0);
+    transform-origin: bottom right;
+    transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .radial-menu-wrapper.active .radial-disc {
+    transform: scale(1);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .radial-disc-bg-logo {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    opacity: 0.15;
+    background: url('https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png') no-repeat center center;
+    background-size: contain;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .radial-toggle-btn {
+    position: relative;
+    z-index: 10001;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #0f172a;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s;
+  }
+
+  .radial-toggle-btn:active {
+    transform: scale(0.92);
+  }
+
+  .radial-toggle-btn i {
+    position: absolute;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .radial-toggle-btn .icon-open {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+
+  .radial-toggle-btn .icon-close {
+    opacity: 0;
+    transform: rotate(-90deg);
+  }
+
+  .radial-menu-wrapper.active .radial-toggle-btn .icon-open {
+    opacity: 0;
+    transform: rotate(90deg);
+  }
+
+  .radial-menu-wrapper.active .radial-toggle-btn .icon-close {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+
+  .radial-item-wrapper {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    z-index: 10000;
+  }
+
+  .radial-item-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    font-size: 18px;
+    transition: transform 0.2s ease, background 0.2s;
+  }
+
+  .radial-item-wrapper:active .radial-item-btn {
+    transform: scale(0.88);
+  }
+
+  .radial-item-label {
+    font-size: 9px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-top: 2px;
+    text-align: center;
+    white-space: nowrap;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.9), 0 0 2px rgba(0,0,0,1);
+    pointer-events: none;
+  }
+
+/* =====================================================================
+   POSIZIONAMENTO AD ARCO AMPIO (8 VOCI - PASSO 40° ANTIORARIO)
+   Raggio: 115px | Centro Disco: (160px, 160px)
+   ===================================================================== */
+
+/* 1. METEO (60° -> 30° a destra della verticale) */
+.radial-item-wrapper:nth-child(2) { top: 36px;  left: 194px; }
+
+/* 2. MAPPE (100°) */
+.radial-item-wrapper:nth-child(3) { top: 23px;  left: 116px; }
+
+/* 3. METRO (140°) */
+.radial-item-wrapper:nth-child(4) { top: 62px;  left: 48px;  }
+
+/* 4. CAMBIO (180° -> Orizzontale a sinistra) */
+.radial-item-wrapper:nth-child(5) { top: 136px; left: 21px;  }
+
+/* 5. CIBO (220°) */
+.radial-item-wrapper:nth-child(6) { top: 210px; left: 48px;  }
+
+/* 6. TAPPE (260°) */
+.radial-item-wrapper:nth-child(7) { top: 249px; left: 116px; }
+
+/* 7. DIARIO (300°) */
+.radial-item-wrapper:nth-child(8) { top: 236px; left: 194px; }
+
+/* 8. GUIDA RAPIDA (340°) */
+.radial-item-wrapper:nth-child(9) { top: 175px; left: 224px; }
+  
+  
+  
+  
   </style>
 </head>
 <body class="flex flex-col min-h-screen p-5 pb-10">
@@ -159,7 +330,7 @@ Buongiorno! Oggi scopriamo la città tra le acque.</p>
   </div>
 
 <!-- CARD METEO CON SFONDO E GRAFICA DINAMICA -->
-<div id="weather-card-bg" class="bg-gradient-to-br from-sky-400 via-sky-500 to-blue-600 text-white rounded-[2rem] p-5 shadow-lg relative overflow-hidden mb-6 transition-all duration-500">
+<div id="meteo" class="bg-gradient-to-br from-sky-400 via-sky-500 to-blue-600 text-white rounded-[2rem] p-5 shadow-lg relative overflow-hidden mb-6 transition-all duration-500">
   
   <!-- Sfondo Grafico Dinamico (Icone sfumate in trasparenza) -->
   <div id="weather-bg-pattern" class="absolute -right-4 -bottom-6 text-white/10 text-9xl pointer-events-none transition-all duration-500">
@@ -354,7 +525,7 @@ Buongiorno! Oggi scopriamo la città tra le acque.</p>
   <!-- ========================================== -->
   <!--           5. TIMELINE / PROGRAMMA GIORNO   -->
   <!-- ========================================== -->
-  <div class="safe-card p-6 mb-8">
+  <div id="tappe" class="safe-card p-6 mb-8">
     <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6 italic text-center">Programma giornata</h3>
     <div class="relative">
       <div class="timeline-line"></div>
@@ -454,7 +625,8 @@ Buongiorno! Oggi scopriamo la città tra le acque.</p>
   <!-- ========================================== -->
   <!--           6. CARD DIARIO / SCHEDE TAPPE   -->
   <!-- ========================================== -->
-  <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic">I diari di viaggio</h3>
+  <div id="diario">
+  <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic">I diari di viaggio</h3></div>
   <div class="space-y-6 mb-12">
     
     <!-- Card 1: Dramaten & Nybroplan -->
@@ -825,6 +997,70 @@ Buongiorno! Oggi scopriamo la città tra le acque.</p>
       <button class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeSOSModal()">Chiudi</button>
     </div>
   </div>
+
+<!-- =====================================================================
+       MENU A RAGGIERA STICKY CON LOGO FAVICON E 7 VOCI
+       ===================================================================== -->
+ <div id="radialMenuWrapper" class="radial-menu-wrapper">
+  <div class="radial-disc">
+    <div class="radial-disc-bg-logo"></div>
+
+   <!-- 1. Meteo (Scroll alla sezione Meteo) -->
+<button onclick="scrollToSection('meteo'); toggleRadialMenu();" class="radial-item-wrapper">
+  <div class="radial-item-btn text-sky-500"><i class="fa-solid fa-cloud-sun"></i></div>
+  <span class="radial-item-label">METEO</span>
+</button>
+
+    <!-- 2. Mappe (Modal) -->
+    <button onclick="openMapModal(); toggleRadialMenu();" class="radial-item-wrapper">
+      <div class="radial-item-btn text-indigo-600"><i class="fa-solid fa-map-location-dot"></i></div>
+      <span class="radial-item-label">MAPPE</span>
+    </button>
+
+    <!-- 3. Metro (Modal) -->
+    <button onclick="openMetroModal(); toggleRadialMenu();" class="radial-item-wrapper">
+      <div class="radial-item-btn text-blue-600"><i class="fa-solid fa-subway"></i></div>
+      <span class="radial-item-label">METRO</span>
+    </button>
+
+    <!-- 4. Cambio Valuta (Modal) -->
+    <button onclick="openCurrencyModal(); toggleRadialMenu();" class="radial-item-wrapper">
+      <div class="radial-item-btn text-emerald-600"><i class="fa-solid fa-coins"></i></div>
+      <span class="radial-item-label">CAMBIO</span>
+    </button>
+
+    <!-- 5. Cibo (Scroll) -->
+    <button onclick="scrollToSection('cibo'); toggleRadialMenu();" class="radial-item-wrapper">
+      <div class="radial-item-btn text-amber-600"><i class="fa-solid fa-utensils"></i></div>
+      <span class="radial-item-label">CIBO</span>
+    </button>
+
+    <!-- 6. Tappe (Scroll) -->
+    <button onclick="scrollToSection('tappe'); toggleRadialMenu();" class="radial-item-wrapper">
+      <div class="radial-item-btn text-purple-600"><i class="fa-solid fa-route"></i></div>
+      <span class="radial-item-label">TAPPE</span>
+    </button>
+
+    <!-- 7. Diario (Scroll) -->
+    <button onclick="scrollToSection('diario'); toggleRadialMenu();" class="radial-item-wrapper">
+      <div class="radial-item-btn text-teal-600"><i class="fa-solid fa-book-open"></i></div>
+      <span class="radial-item-label">DIARIO</span>
+    </button>
+
+    <!-- 8. Guida Rapida (Scroll) -->
+    <button onclick="scrollToSection('guida'); toggleRadialMenu();" class="radial-item-wrapper">
+      <div class="radial-item-btn text-rose-600"><i class="fa-solid fa-compass"></i></div>
+      <span class="radial-item-label">GUIDA</span>
+    </button>
+  </div>
+
+  <button id="radialToggleBtn" onclick="toggleRadialMenu()" class="radial-toggle-btn" aria-label="Menu Rapido">
+    <i class="fa-solid fa-ellipsis-vertical icon-open"></i>
+    <i class="fa-solid fa-xmark icon-close"></i>
+  </button>
+</div>
+
+  
   <!-- ========================================== -->
   <!--           10. LOGICA JAVASCRIPT            -->
   <!-- ========================================== -->
@@ -1965,6 +2201,50 @@ function closeFoodMapModal() {
 document.addEventListener('DOMContentLoaded', () => {
   renderFoodList();
 });
+
+    /* =====================================================================
+       LOGICA JS PER IL MENU A RAGGIERA E SCROLL ANCORE UNIVERSALE
+       ===================================================================== */
+  function toggleRadialMenu() {
+    const wrapper = document.getElementById('radialMenuWrapper');
+    if (wrapper) wrapper.classList.toggle('active');
+  }
+
+function scrollToSection(type) {
+  let targetEl = null;
+
+  if (type === 'meteo') {
+    targetEl = document.getElementById('meteo') || document.getElementById('weather-card-bg');
+  } else if (type === 'tappe') {
+    targetEl = document.getElementById('tappe') || document.querySelector('.timeline-row')?.parentElement;
+  } else if (type === 'diario') {
+    targetEl = document.getElementById('diario') || document.querySelector('.diary-card')?.parentElement;
+  } else if (type === 'guida') {
+    targetEl = document.getElementById('guida') || document.getElementById('daily-tip-box')?.parentElement;
+  } else if (type === 'cibo') {
+    targetEl = document.getElementById('cibo') || document.querySelector('.fa-utensils')?.closest('section, div');
+  }
+
+  // Fallback di ricerca generica se gli ID non vengono trovati
+  if (!targetEl) {
+    const allHeadings = Array.from(document.querySelectorAll('h1, h2, h3, h4, div, section'));
+    targetEl = allHeadings.find(el => el.textContent.toLowerCase().includes(type));
+  }
+
+  // Esecuzione dello scroll con animazione fluida
+  if (targetEl) {
+    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+  document.addEventListener('click', function(event) {
+    const wrapper = document.getElementById('radialMenuWrapper');
+    if (wrapper && wrapper.classList.contains('active')) {
+      if (!wrapper.contains(event.target)) {
+        toggleRadialMenu();
+      }
+    }
+  });
     
   </script>
 </body>
