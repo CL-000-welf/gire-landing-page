@@ -104,134 +104,152 @@
  
   
 /* =====================================================================
-       STILI PER IL MENU A RAGGIERA STICKY CON LOGO FAVICON E 7 VOCI
-       ===================================================================== */
-    .radial-menu-wrapper {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 9999;
-    }
+     STILI PER IL MENU A RAGGIERA STICKY CON LOGO FAVICON E 8 VOCI
+     ===================================================================== */
+  .radial-menu-wrapper {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+  }
 
-    .radial-disc {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      width: 320px;
-      height: 320px;
-      border-radius: 50%;
-      background: rgba(15, 23, 42, 0.96); /* Dark Slate #0f172a */
-      backdrop-filter: blur(12px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transform: scale(0);
-      transform-origin: bottom right;
-      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
-      opacity: 0;
-      pointer-events: none;
-    }
+  .radial-disc {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.96); /* Dark Slate #0f172a */
+    backdrop-filter: blur(12px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: scale(0);
+    transform-origin: bottom right;
+    transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+  }
 
-    .radial-menu-wrapper.active .radial-disc {
-      transform: scale(1);
-      opacity: 1;
-      pointer-events: auto;
-    }
+  .radial-menu-wrapper.active .radial-disc {
+    transform: scale(1);
+    opacity: 1;
+    pointer-events: auto;
+  }
 
-    .radial-disc-bg-logo {
-      position: absolute;
-      width: 150px;
-      height: 150px;
-      opacity: 0.15;
-      background: url('https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png') no-repeat center center;
-      background-size: contain;
-      user-select: none;
-      pointer-events: none;
-    }
+  .radial-disc-bg-logo {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    opacity: 0.15;
+    background: url('https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png') no-repeat center center;
+    background-size: contain;
+    user-select: none;
+    pointer-events: none;
+  }
 
-    .radial-toggle-btn {
-      position: relative;
-      z-index: 10001;
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      background: #0f172a;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.5);
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      cursor: pointer;
-      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s;
-    }
+  .radial-toggle-btn {
+    position: relative;
+    z-index: 10001;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #0f172a;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s;
+  }
 
-    .radial-toggle-btn:active {
-      transform: scale(0.92);
-    }
+  .radial-toggle-btn:active {
+    transform: scale(0.92);
+  }
 
-    .radial-toggle-btn i {
-      transition: transform 0.3s ease;
-    }
+  .radial-toggle-btn i {
+    position: absolute;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
 
-    .radial-menu-wrapper.active .radial-toggle-btn i {
-      transform: rotate(90deg);
-    }
+  .radial-toggle-btn .icon-open {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
 
-    .radial-item-wrapper {
-      position: absolute;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      margin: 0;
-      z-index: 10000;
-    }
+  .radial-toggle-btn .icon-close {
+    opacity: 0;
+    transform: rotate(-90deg);
+  }
 
-    /* Ingranditi a 48px con icone a 18px */
-    .radial-item-btn {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-      font-size: 18px;
-      transition: transform 0.2s ease, background 0.2s;
-    }
+  .radial-menu-wrapper.active .radial-toggle-btn .icon-open {
+    opacity: 0;
+    transform: rotate(90deg);
+  }
 
-    .radial-item-wrapper:active .radial-item-btn {
-      transform: scale(0.88);
-    }
+  .radial-menu-wrapper.active .radial-toggle-btn .icon-close {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
 
-    .radial-item-label {
-      font-size: 9px;
-      font-weight: 700;
-      color: #ffffff;
-      margin-top: 2px;
-      text-align: center;
-      white-space: nowrap;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.9), 0 0 2px rgba(0,0,0,1);
-      pointer-events: none;
-    }
+  .radial-item-wrapper {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    z-index: 10000;
+  }
 
-    /* Arco trigonometrico perfetto (Raggio 115px, centro in Basso-Astra 291px, 291px) */
-    .radial-item-wrapper:nth-child(2) { top: 38px;  left: 202px; } /* 1. Mappe */
-    .radial-item-wrapper:nth-child(3) { top: 50px;  left: 139px; } /* 2. Metro SL */
-    .radial-item-wrapper:nth-child(4) { top: 85px;  left: 85px;  } /* 3. Cambio */
-    .radial-item-wrapper:nth-child(5) { top: 139px; left: 50px;  } /* 4. Cibo */
-    .radial-item-wrapper:nth-child(6) { top: 202px; left: 38px;  } /* 5. Tappe */
-    .radial-item-wrapper:nth-child(7) { top: 240px; left: 88px;  } /* 6. Diario */
-    .radial-item-wrapper:nth-child(8) { top: 247px; left: 160px; } /* 7. Guida Rapida */
+  .radial-item-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    font-size: 18px;
+    transition: transform 0.2s ease, background 0.2s;
+  }
+
+  .radial-item-wrapper:active .radial-item-btn {
+    transform: scale(0.88);
+  }
+
+  .radial-item-label {
+    font-size: 9px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-top: 2px;
+    text-align: center;
+    white-space: nowrap;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.9), 0 0 2px rgba(0,0,0,1);
+    pointer-events: none;
+  }
+
+  /* Distribuzione trigonometrica per 8 voci (R=120px) */
+  .radial-item-wrapper:nth-child(2) { top: 22px;  left: 216px; } /* 1. Meteo */
+  .radial-item-wrapper:nth-child(3) { top: 38px;  left: 173px; } /* 2. Mappe */
+  .radial-item-wrapper:nth-child(4) { top: 64px;  left: 133px; } /* 3. Metro */
+  .radial-item-wrapper:nth-child(5) { top: 99px;  left: 99px;  } /* 4. Cambio */
+  .radial-item-wrapper:nth-child(6) { top: 133px; left: 64px;  } /* 5. Cibo */
+  .radial-item-wrapper:nth-child(7) { top: 173px; left: 38px;  } /* 6. Tappe */
+  .radial-item-wrapper:nth-child(8) { top: 216px; left: 22px;  } /* 7. Diario */
+  .radial-item-wrapper:nth-child(9) { top: 248px; left: 110px; } /* 8. Guida Rapida */
     
   </style>
 </head>
@@ -924,59 +942,64 @@
 <!-- =====================================================================
        MENU A RAGGIERA STICKY CON LOGO FAVICON E 7 VOCI
        ===================================================================== -->
-  <div id="radialMenuWrapper" class="radial-menu-wrapper">
-    <div class="radial-disc">
-      <!-- Background Logo Favicon -->
-      <div class="radial-disc-bg-logo"></div>
+ <div id="radialMenuWrapper" class="radial-menu-wrapper">
+  <div class="radial-disc">
+    <div class="radial-disc-bg-logo"></div>
 
-      <!-- 1. Mappe (Modal) -->
-      <button onclick="openMapModal(); toggleRadialMenu();" class="radial-item-wrapper">
-        <div class="radial-item-btn text-indigo-600"><i class="fa-solid fa-map-location-dot"></i></div>
-        <span class="radial-item-label">MAPPE</span>
-      </button>
+    <!-- 1. Meteo (Modal) -->
+    <button onclick="openWeatherModal(); toggleRadialMenu();" class="radial-item-wrapper">
+      <div class="radial-item-btn text-sky-500"><i class="fa-solid fa-cloud-sun"></i></div>
+      <span class="radial-item-label">METEO</span>
+    </button>
 
-      <!-- 2. Metro SL (Modal) -->
-      <button onclick="openMetroModal(); toggleRadialMenu();" class="radial-item-wrapper">
-        <div class="radial-item-btn text-blue-600"><i class="fa-solid fa-subway"></i></div>
-        <span class="radial-item-label">METRO</span>
-      </button>
+    <!-- 2. Mappe (Modal) -->
+    <button onclick="openMapModal(); toggleRadialMenu();" class="radial-item-wrapper">
+      <div class="radial-item-btn text-indigo-600"><i class="fa-solid fa-map-location-dot"></i></div>
+      <span class="radial-item-label">MAPPE</span>
+    </button>
 
-      <!-- 3. Cambio Valuta (Modal) -->
-      <button onclick="openCurrencyModal(); toggleRadialMenu();" class="radial-item-wrapper">
-        <div class="radial-item-btn text-emerald-600"><i class="fa-solid fa-coins"></i></div>
-        <span class="radial-item-label">CAMBIO</span>
-      </button>
+    <!-- 3. Metro (Modal) -->
+    <button onclick="openMetroModal(); toggleRadialMenu();" class="radial-item-wrapper">
+      <div class="radial-item-btn text-blue-600"><i class="fa-solid fa-subway"></i></div>
+      <span class="radial-item-label">METRO</span>
+    </button>
 
-      <!-- 4. Cibo (Scroll) -->
-      <button onclick="scrollToSection('cibo'); toggleRadialMenu();" class="radial-item-wrapper">
-        <div class="radial-item-btn text-amber-600"><i class="fa-solid fa-utensils"></i></div>
-        <span class="radial-item-label">CIBO</span>
-      </button>
+    <!-- 4. Cambio Valuta (Modal) -->
+    <button onclick="openCurrencyModal(); toggleRadialMenu();" class="radial-item-wrapper">
+      <div class="radial-item-btn text-emerald-600"><i class="fa-solid fa-coins"></i></div>
+      <span class="radial-item-label">CAMBIO</span>
+    </button>
 
-      <!-- 5. Tappe (Scroll) -->
-      <button onclick="scrollToSection('tappe'); toggleRadialMenu();" class="radial-item-wrapper">
-        <div class="radial-item-btn text-purple-600"><i class="fa-solid fa-route"></i></div>
-        <span class="radial-item-label">TAPPE</span>
-      </button>
+    <!-- 5. Cibo (Scroll) -->
+    <button onclick="scrollToSection('cibo'); toggleRadialMenu();" class="radial-item-wrapper">
+      <div class="radial-item-btn text-amber-600"><i class="fa-solid fa-utensils"></i></div>
+      <span class="radial-item-label">CIBO</span>
+    </button>
 
-      <!-- 6. Diario (Scroll) -->
-      <button onclick="scrollToSection('diario'); toggleRadialMenu();" class="radial-item-wrapper">
-        <div class="radial-item-btn text-teal-600"><i class="fa-solid fa-book-open"></i></div>
-        <span class="radial-item-label">DIARIO</span>
-      </button>
+    <!-- 6. Tappe (Scroll) -->
+    <button onclick="scrollToSection('tappe'); toggleRadialMenu();" class="radial-item-wrapper">
+      <div class="radial-item-btn text-purple-600"><i class="fa-solid fa-route"></i></div>
+      <span class="radial-item-label">TAPPE</span>
+    </button>
 
-      <!-- 7. Guida Rapida (Scroll) -->
-      <button onclick="scrollToSection('guida'); toggleRadialMenu();" class="radial-item-wrapper">
-        <div class="radial-item-btn text-rose-600"><i class="fa-solid fa-compass"></i></div>
-        <span class="radial-item-label">GUIDA RAPIDA</span>
-      </button>
-    </div>
+    <!-- 7. Diario (Scroll) -->
+    <button onclick="scrollToSection('diario'); toggleRadialMenu();" class="radial-item-wrapper">
+      <div class="radial-item-btn text-teal-600"><i class="fa-solid fa-book-open"></i></div>
+      <span class="radial-item-label">DIARIO</span>
+    </button>
 
-    <!-- Bottone Sticky Principale a 3 Punti Verticali -->
-    <button id="radialToggleBtn" onclick="toggleRadialMenu()" class="radial-toggle-btn" aria-label="Menu Rapido">
-      <i class="fa-solid fa-ellipsis-vertical"></i>
+    <!-- 8. Guida Rapida (Scroll) -->
+    <button onclick="scrollToSection('guida'); toggleRadialMenu();" class="radial-item-wrapper">
+      <div class="radial-item-btn text-rose-600"><i class="fa-solid fa-compass"></i></div>
+      <span class="radial-item-label">GUIDA RAPIDA</span>
     </button>
   </div>
+
+  <button id="radialToggleBtn" onclick="toggleRadialMenu()" class="radial-toggle-btn" aria-label="Menu Rapido">
+    <i class="fa-solid fa-ellipsis-vertical icon-open"></i>
+    <i class="fa-solid fa-xmark icon-close"></i>
+  </button>
+</div>
   
   <!-- 10. LOGICA JAVASCRIPT -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -2127,66 +2150,53 @@ document.addEventListener('DOMContentLoaded', () => {
 /* =====================================================================
        LOGICA JS PER IL MENU A RAGGIERA E SCROLL ANCORE UNIVERSALE
        ===================================================================== */
-    function toggleRadialMenu() {
-      const wrapper = document.getElementById('radialMenuWrapper');
-      const icon = document.querySelector('#radialToggleBtn i');
-      
-      if (!wrapper) return;
-      
-      wrapper.classList.toggle('active');
-      
-      if (wrapper.classList.contains('active')) {
-        icon.className = 'fa-solid fa-xmark';
-      } else {
-        icon.className = 'fa-solid fa-ellipsis-vertical';
-      }
+  function toggleRadialMenu() {
+    const wrapper = document.getElementById('radialMenuWrapper');
+    if (wrapper) wrapper.classList.toggle('active');
+  }
+
+  function scrollToSection(type) {
+    let targetEl = null;
+
+    if (type === 'cibo') {
+      targetEl = document.querySelector('#cibo') || 
+                 document.querySelector('.fa-utensils')?.closest('section, div.card, div');
+    } else if (type === 'tappe') {
+      targetEl = document.querySelector('#tappe') || 
+                 document.querySelector('.timeline-container') || 
+                 document.querySelector('.fa-route')?.closest('section, div');
+    } else if (type === 'diario') {
+      targetEl = document.querySelector('#diario') || 
+                 document.querySelector('#cards') || 
+                 document.querySelector('.safe-card')?.closest('section, div') || 
+                 document.querySelector('.fa-book-open')?.closest('section, div');
+    } else if (type === 'guida') {
+      targetEl = document.querySelector('#guida') || 
+                 document.querySelector('#info') || 
+                 document.querySelector('#glossario') || 
+                 document.querySelector('.fa-compass')?.closest('section, div') || 
+                 document.querySelector('.fa-circle-info')?.closest('section, div') || 
+                 document.querySelector('.fa-book-bookmark')?.closest('section, div');
     }
 
-    // Ricerca dinamica dello scroll per supportare qualsiasi struttura della pagina
-    function scrollToSection(type) {
-      let targetEl = null;
-
-      if (type === 'cibo') {
-        targetEl = document.querySelector('#cibo') || 
-                   document.querySelector('.fa-utensils')?.closest('section, div.card, div');
-      } else if (type === 'tappe') {
-        targetEl = document.querySelector('#tappe') || 
-                   document.querySelector('.timeline-container') || 
-                   document.querySelector('.fa-route')?.closest('section, div');
-      } else if (type === 'diario') {
-        targetEl = document.querySelector('#diario') || 
-                   document.querySelector('#cards') || 
-                   document.querySelector('.safe-card')?.closest('section, div') || 
-                   document.querySelector('.fa-book-open')?.closest('section, div');
-      } else if (type === 'guida') {
-        targetEl = document.querySelector('#guida') || 
-                   document.querySelector('#info') || 
-                   document.querySelector('#glossario') || 
-                   document.querySelector('.fa-compass')?.closest('section, div') || 
-                   document.querySelector('.fa-circle-info')?.closest('section, div') || 
-                   document.querySelector('.fa-book-bookmark')?.closest('section, div');
-      }
-
-      // Ricerca fallback nel testo se non trova l'elemento tramite classe/icona
-      if (!targetEl) {
-        const allHeadings = Array.from(document.querySelectorAll('h1, h2, h3, h4, div, section'));
-        targetEl = allHeadings.find(el => el.textContent.toLowerCase().includes(type));
-      }
-
-      if (targetEl) {
-        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+    if (!targetEl) {
+      const allHeadings = Array.from(document.querySelectorAll('h1, h2, h3, h4, div, section'));
+      targetEl = allHeadings.find(el => el.textContent.toLowerCase().includes(type));
     }
 
-    // Chiudi il menu a raggiera quando si clicca fuori
-    document.addEventListener('click', function(event) {
-      const wrapper = document.getElementById('radialMenuWrapper');
-      if (wrapper && wrapper.classList.contains('active')) {
-        if (!wrapper.contains(event.target)) {
-          toggleRadialMenu();
-        }
+    if (targetEl) {
+      targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  document.addEventListener('click', function(event) {
+    const wrapper = document.getElementById('radialMenuWrapper');
+    if (wrapper && wrapper.classList.contains('active')) {
+      if (!wrapper.contains(event.target)) {
+        toggleRadialMenu();
       }
-    });
+    }
+  });
     
   </script>
 </body>
