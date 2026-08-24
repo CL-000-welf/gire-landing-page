@@ -1092,10 +1092,47 @@
       ...stops.map(stop => getDistanceMeters(hotel.lat, hotel.lng, stop.lat, stop.lng))
     );
 
+    
     // Mappa Principale
     const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
 
+    // TUA POSIZIONE
+// Tracciamento posizione utente in tempo reale
+let userMarker = null;
+
+if (navigator.geolocation) {
+  navigator.geolocation.watchPosition(
+    (position) => {
+      const { latitude, longitude } = position.coords;
+      
+      // Icona Personalizzata Pin Blu
+      const blueUserIcon = L.divIcon({
+        className: 'custom-icon',
+        html: `<div style="background-color:#007bff; width:24px; height:24px; border:3px solid white; border-radius:50%; box-shadow:0 0 10px rgba(0,123,255,0.8);"></div>`,
+        iconSize: [24, 24],
+        iconAnchor: [12, 12]
+      });
+
+      // Aggiorna o crea il marker sulla mappa principale
+      if (userMarker) {
+        userMarker.setLatLng([latitude, longitude]);
+      } else {
+        userMarker = L.marker([latitude, longitude], { icon: blueUserIcon })
+          .addTo(map)
+          .bindPopup("La tua posizione attuale");
+      }
+    },
+    (error) => {
+      console.warn("Geolocalizzazione non disponibile o negata:", error.message);
+    },
+    { enableHighAccuracy: true }
+  );
+} // TUA POSIZIONE
+
+
+
+    
     function createGiantIcon(color, iconClass, pulse = false) {
       return L.divIcon({
         className: 'custom-icon',
