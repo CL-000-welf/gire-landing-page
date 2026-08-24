@@ -1021,17 +1021,12 @@
   </button>
 </div>
   
-  <!-- 10. LOGICA JAVASCRIPT -->
+ <!-- 10. LOGICA JAVASCRIPT -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     /* =====================================================================
-       BLOCCO NOTIFICA PUSH INIZIALE (Copia questo blocco per gli altri file)
-       =====================================================================
-       Funzionamento:
-       - Attende il caricamento completo della pagina ('load').
-       - Dopo 1000ms (1 secondo) mostra il banner notifiche facendo scorrere l'elemento #push-alert.
-       - Dopo altri 5000ms (5 secondi) nasconde automaticamente la notifica.
-    */
+       BLOCCO NOTIFICA PUSH INIZIALE
+       ===================================================================== */
     window.addEventListener('load', () => {
       setTimeout(() => {
         const pushAlert = document.getElementById('push-alert');
@@ -1043,7 +1038,7 @@
         }
       }, 1000);
     });
-    /* ===================================================================== */
+
 // Coordinate Hotel
 const hotel = { name: "Hotel C Stockholm", lat: 59.3323, lng: 18.0583, label: "Hotel C Stockholm" };
 
@@ -1152,7 +1147,6 @@ function trackUserLocation() {
       const userLat = position.coords.latitude;
       const userLng = position.coords.longitude;
 
-      // Aggiorna o crea il marker sulla mappa principale
       if (userMarkerMain) {
         userMarkerMain.setLatLng([userLat, userLng]);
       } else {
@@ -1161,7 +1155,6 @@ function trackUserLocation() {
         }).addTo(map).bindPopup("<strong>Tu sei qui</strong>");
       }
 
-      // Aggiorna o crea il marker sulla mappa modale
       if (modalMap) {
         if (userMarkerModal) {
           userMarkerModal.setLatLng([userLat, userLng]);
@@ -1179,7 +1172,6 @@ function trackUserLocation() {
   );
 }
 
-// Avvia il tracciamento della posizione
 trackUserLocation();
 
 // Mappa Modale (Ingrandita)
@@ -1267,17 +1259,16 @@ function sendLocationWhatsApp(phone) {
   });
 }
 
-     // --- AGGIORNAMENTO TIMELINE IN BASE ALL'ORARIO ---
-  function updateTimelineStatus() {
+// --- AGGIORNAMENTO TIMELINE IN BASE ALL'ORARIO ---
+function updateTimelineStatus() {
   const rows = document.querySelectorAll('.timeline-row');
   const now = new Date();
   
-  // Data target della gita: 26 Agosto 2026
+  // Data target della gita: 25 Agosto 2026 (Martedì)
   const targetYear = 2026;
-  const targetMonth = 7; // I mesi in JavaScript vanno da 0 (Gen) a 11 (Dic), quindi Agosto è 7
+  const targetMonth = 7; // Agosto (0-11)
   const targetDay = 25;
 
-  // Verifica se OGGI è esattamente il giorno della gita
   const isTargetDay = (
     now.getFullYear() === targetYear &&
     now.getMonth() === targetMonth &&
@@ -1297,7 +1288,6 @@ function sendLocationWhatsApp(phone) {
 
     row.classList.remove('done', 'active', 'future');
 
-    // Se NON siamo nel giorno della gita, tutte le tappe restano grigie/future
     if (!isTargetDay) {
       row.classList.add('future');
       dot.style.background = '#e2e8f0';
@@ -1306,7 +1296,6 @@ function sendLocationWhatsApp(phone) {
       return;
     }
 
-    // Se SIAMO nel giorno della gita, colora in base all'orario
     if (currentMinutes >= rowTime && currentMinutes < nextTime) {
       row.classList.add('active');
       dot.style.background = '#f6a623';
@@ -1325,11 +1314,10 @@ function sendLocationWhatsApp(phone) {
     }
   });
 }
-    // Esegui aggiornamento timeline all'avvio e ogni minuto
-    updateTimelineStatus();
-    setInterval(updateTimelineStatus, 60000);
+updateTimelineStatus();
+setInterval(updateTimelineStatus, 60000);
 
-    // --- SWIPE UP PER SCOMPARSA NOTIFICA (STILE NATIVO) ---
+// --- SWIPE UP PER SCOMPARSA NOTIFICA ---
 (function initPushAlertSwipe() {
   const alertBox = document.getElementById('push-alert');
   if (!alertBox) return;
@@ -1339,14 +1327,11 @@ function sendLocationWhatsApp(phone) {
   let isDragging = false;
 
   const handleStart = (e) => {
-    // Si attiva solo se il banner è attualmente visibile
     if (!alertBox.classList.contains('show')) return;
     
     isDragging = true;
     startY = e.touches ? e.touches[0].clientY : e.clientY;
     currentY = startY;
-    
-    // Disabilita la transizione CSS per far seguire il dito in tempo reale
     alertBox.style.transition = 'none';
   };
 
@@ -1356,12 +1341,8 @@ function sendLocationWhatsApp(phone) {
     currentY = e.touches ? e.touches[0].clientY : e.clientY;
     const deltaY = currentY - startY;
 
-    // Consentiamo solo il movimento verso l'alto (deltaY negativo)
     if (deltaY < 0) {
-      // Previeni lo scroll della pagina mentre trascini il banner
       if (e.cancelable) e.preventDefault();
-      
-      // Applica lo spostamento in alto e sfuma leggermente l'opacità
       alertBox.style.transform = `translateY(${deltaY}px)`;
       alertBox.style.opacity = Math.max(0, 1 + deltaY / 100);
     }
@@ -1372,24 +1353,19 @@ function sendLocationWhatsApp(phone) {
     isDragging = false;
 
     const deltaY = currentY - startY;
-
-    // Ripristina una transizione fluida per la chiusura o il ripristino
     alertBox.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
 
-    // Se è stato trascinato verso l'alto di almeno 30px, chiudi la notifica
     if (deltaY < -30) {
       alertBox.style.transform = 'translateY(-150%)';
       alertBox.style.opacity = '0';
 
       setTimeout(() => {
         alertBox.classList.remove('show');
-        // Reset per le successive apparizioni
         alertBox.style.transform = '';
         alertBox.style.opacity = '';
         alertBox.style.transition = '';
       }, 300);
     } else {
-      // Se lo swipe è troppo corto, torna alla posizione originale
       alertBox.style.transform = 'translateY(0)';
       alertBox.style.opacity = '1';
 
@@ -1399,24 +1375,22 @@ function sendLocationWhatsApp(phone) {
     }
   };
 
-  // Listener Eventi Touch (Mobile)
   alertBox.addEventListener('touchstart', handleStart, { passive: false });
   alertBox.addEventListener('touchmove', handleMove, { passive: false });
   alertBox.addEventListener('touchend', handleEnd);
 
-  // Listener Eventi Mouse (Desktop/Test)
   alertBox.addEventListener('mousedown', handleStart);
   window.addEventListener('mousemove', handleMove);
   window.addEventListener('mouseup', handleEnd);
 })();
 
- // --- CARICAMENTO METEO CON SFONDO E GRAFICA DINAMICA (GIORNO / NOTTE) ---
+// --- CARICAMENTO METEO CON SFONDO E GRAFICA DINAMICA ---
 async function fetchExactWeather() {
   const lat = 59.3323;
   const lng = 18.0583;
 
   try {
-    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=lat&longitude={lng}&current_weather=true&hourly=apparent_temperature&daily=temperature_2m_max,temperature_2m_min&timezone=auto`);
+    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true&hourly=apparent_temperature&daily=temperature_2m_max,temperature_2m_min&timezone=auto`);
     const data = await res.json();
 
     if (data && data.current_weather) {
@@ -1530,8 +1504,8 @@ async function fetchExactWeather() {
 
 document.addEventListener('DOMContentLoaded', fetchExactWeather);
 
-// --- LOGICA CAMBIO VALUTA (SEK -> EUR fino a 1000€ / 11500 SEK) ---
-const exchangeRate = 0.087; // 1 SEK ≈ 0.087 EUR
+// --- LOGICA CAMBIO VALUTA (SEK -> EUR) ---
+const exchangeRate = 0.087;
 
 function openCurrencyModal() {
   document.getElementById('currencyModal').classList.remove('hidden');
@@ -1566,29 +1540,25 @@ function calculateCurrency(sekVal) {
   document.getElementById('conv-eur').innerText = `${eur} €`;
   document.getElementById('conv-sek-label').innerText = `${sek} Kronor Svedesi (SEK)`;
 
-  // Evidenzia il pulsante selezionato se corrisponde al valore attuale
   highlightPresetButton(sek);
 }
 
 function highlightPresetButton(currentVal) {
-  // Seleziona tutti i pulsanti delle opzioni rapide
   const buttons = document.querySelectorAll('.preset-btn');
   
   buttons.forEach(btn => {
     const btnVal = parseFloat(btn.getAttribute('data-value'));
     if (btnVal === currentVal) {
-      // Stile Selezionato (Sfondo verde, testo bianco)
       btn.className = "preset-btn bg-emerald-600 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all border-2 border-emerald-600";
     } else {
-      // Stile Standard (Sfondo grigio chiaro/trasparente, testo scuro)
       btn.className = "preset-btn bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 px-4 rounded-xl transition-all border-2 border-transparent";
     }
   });
 }
-   
+
 // --- LOGICA MODALE METRO SL CON LEAFLET IN-APP ---
 let metroMapInstance = null;
-let metroImgMapInstance = null; // Instanza per lo zoom dell'immagine PNG
+let metroImgMapInstance = null;
 let userMarker = null;
 let stationMarker = null;
 let polylineRoute = null;
@@ -1620,7 +1590,7 @@ function initMetroImageViewer() {
       crs: L.CRS.Simple,
       minZoom: -2,
       maxZoom: 3,
-      zoomSnap: 0.1, // Zoom più fluido e preciso
+      zoomSnap: 0.1,
       attributionControl: false
     });
 
@@ -1633,7 +1603,6 @@ function initMetroImageViewer() {
       
       L.imageOverlay(imgUrl, bounds).addTo(metroImgMapInstance);
       
-      // Calcola lo zoom per riempire l'intero contenitore (effetto object-fit: cover)
       const container = metroImgMapInstance.getContainer();
       const scaleX = container.clientWidth / w;
       const scaleY = container.clientHeight / h;
@@ -1671,7 +1640,6 @@ function switchMetroTab(tab) {
     mapContent.classList.remove('hidden');
     gpsContent.classList.add('hidden');
     
-    // Inizializza/Aggiorna il visualizzatore interattivo dell'immagine
     initMetroImageViewer();
   }
 }
@@ -1705,19 +1673,18 @@ function getUserNearestStation() {
 
       const distMeters = Math.round(minDistance);
       const walkMin = Math.round(minDistance / 80);
+      const distDisplay = distMeters < 1000 ? `${distMeters}m` : `${(distMeters / 1000).toFixed(2)}km`;
 
-      // Aggiorna testo
       box.innerHTML = `
         <div class="text-left space-y-1">
           <div class="flex justify-between items-center">
             <h4 class="font-black text-sm text-slate-900">${nearest.name}</h4>
             <span class="bg-indigo-100 text-indigo-700 text-[9px] font-black px-2 py-0.5 rounded-full">${nearest.lines}</span>
           </div>
-          <p class="text-xs font-bold text-slate-600"><i class="fa-solid fa-person-walking text-indigo-600"></i> Distanza: <strong>distMeters<1000?distMeters+'m':(distMeters/1000).toFixed(2)+'km'</strong>(~{walkMin} min)</p>
+          <p class="text-xs font-bold text-slate-600"><i class="fa-solid fa-person-walking text-indigo-600"></i> Distanza: <strong>${distDisplay}</strong> (~${walkMin} min)</p>
         </div>
       `;
 
-      // Mostra e renderizza Mappa Leaflet In-App
       mapContainer.classList.remove('hidden');
 
       if (!metroMapInstance) {
@@ -1730,27 +1697,22 @@ function getUserNearestStation() {
         metroMapInstance.setView([userLat, userLng], 15);
       }
 
-      // Rimuovi eventuali vecchi elementi
       if (userMarker) metroMapInstance.removeLayer(userMarker);
       if (stationMarker) metroMapInstance.removeLayer(stationMarker);
       if (polylineRoute) metroMapInstance.removeLayer(polylineRoute);
 
-      // Marker Utente
       userMarker = L.marker([userLat, userLng]).addTo(metroMapInstance)
         .bindPopup("<b>Tu sei qui</b>").openPopup();
 
-      // Marker Stazione
       stationMarker = L.marker([nearest.lat, nearest.lng]).addTo(metroMapInstance)
         .bindPopup(`<b>Metropolitana ${nearest.name}</b>`);
 
-      // Linea di collegamento
       polylineRoute = L.polyline([[userLat, userLng], [nearest.lat, nearest.lng]], {
         color: '#4f46e5',
         weight: 4,
         dashArray: '6, 8'
       }).addTo(metroMapInstance);
 
-      // Adatta lo zoom per vedere sia utente che fermata
       const bounds = L.latLngBounds([[userLat, userLng], [nearest.lat, nearest.lng]]);
       metroMapInstance.fitBounds(bounds, { padding: [30, 30] });
       
@@ -1761,8 +1723,8 @@ function getUserNearestStation() {
     }
   );
 }
-  
- // --- DATABASE DINAMICO PER GIORNATA ---
+
+// --- DATABASE DINAMICO PER GIORNATA ---
 const dayData = {
   mar: {
     tip: "Oggi si visita Gamla Stan e il Municipio: il centro storico ha vicoli stretti e ciottoli, indossa scarpe comode per camminare!",
@@ -1815,444 +1777,11 @@ const dayData = {
         colorClass: "bg-amber-500/20 text-amber-400 border-amber-500/30",
         titleColor: "text-amber-300",
         title: "Deposito Bagagli",
-        content: "Se hai il volo la sera, puoi lasciare i bagagli presso il deposito dell'Hotel C Stockholm o alla Stazione Centrale (T-Centralen)."
-      },
-      {
-        id: "acc-taxfree",
-        icon: "fa-bag-shopping",
-        colorClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-        titleColor: "text-emerald-300",
-        title: "Shopping & Souvenir",
-        content: "Drottninggatan è la via principale per lo shopping. Molti negozi offrono il rimborso Tax-Free per gli acquisti sopra le 200 SEK."
+        content: "Se hai il volo la sera, puoi lasciare i bagagli in hotel o negli armadietti della Stazione Centrale (T-Centralen)."
       }
     ]
   }
 };
-
-// Database Glossario
-const glossarySets = [
-  [
-    { sv: 'Hej', it: 'Ciao', audio: 'Hej' },
-    { sv: 'Tack', it: 'Grazie', audio: 'Tack' },
-    { sv: 'Fika', it: 'Pausa caffè/dolce', audio: 'Fika' },
-    { sv: 'Ja / Nej', it: 'Sì / No', audio: 'Ja, Nej' }
-  ],
-  [
-    { sv: 'Ursäkta', it: 'Scusa / Permesso', audio: 'Ursäkta' },
-    { sv: 'Var är...?', it: 'Dov\'è...?', audio: 'Var är' },
-    { sv: 'Spårvagn', it: 'Tram', audio: 'Spårvagn' },
-    { sv: 'Tack så mycket', it: 'Grazie mille', audio: 'Tack så mycket' }
-  ],
-  [
-    { sv: 'Notan', it: 'Il conto', audio: 'Notan' },
-    { sv: 'Skål!', it: 'Cincin / Salute!', audio: 'Skål' },
-    { sv: 'Kaffe', it: 'Caffè', audio: 'Kaffe' },
-    { sv: 'Hejdå', it: 'Arrivederci', audio: 'Hejdå' }
-  ]
-];
-
-let currentGlossaryIndex = 0;
-
-// Aggiorna contenuti al cambio giorno
-function updateDayContent(dayKey = 'mar') {
-  const data = dayData[dayKey] || dayData['mar'];
-
-  // 1. Tip
-  const tipEl = document.getElementById('daily-tip-text');
-  if (tipEl) tipEl.innerText = data.tip;
-
-  // 2. Genera Accordion Dinamici con la STESSA GERARCHIA VISIVA
-  const accContainer = document.getElementById('dynamic-accordions-container');
-  if (accContainer) {
-    accContainer.innerHTML = data.accordions.map(acc => `
-      <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl overflow-hidden mb-3">
-        <button onclick="toggleInfoAccordion('${acc.id}')" class="w-full p-4 flex items-center justify-between text-left hover:bg-slate-800/90 transition-colors">
-          <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-xl ${acc.colorClass} flex items-center justify-center text-sm shrink-0 border">
-              <i class="fa-solid ${acc.icon}"></i>
-            </div>
-            <span class="font-black text-xs uppercase tracking-wide acc.titleColor">{acc.title}</span>
-          </div>
-          <i id="icon-${acc.id}" class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-300"></i>
-        </button>
-        <div id="${acc.id}" class="hidden px-4 pb-4 pt-1 text-xs text-slate-300 space-y-2 border-t border-slate-700/40">
-          <p class="pt-2">${acc.content}</p>
-        </div>
-      </div>
-    `).join('');
-  }
-}
-
-// Renderizza Glossario
-function renderGlossary(index) {
-  const container = document.getElementById('glossary-grid');
-  if (!container) return;
-
-  const currentSet = glossarySets[index];
-  container.innerHTML = currentSet.map(item => `
-    <button onclick="speakSwedish('${item.audio}')" class="bg-slate-800 hover:bg-slate-700 border border-slate-700/80 p-3 rounded-xl flex items-center justify-between active:scale-95 transition-all text-left">
-      <div>
-        <h5 class="font-black text-sm text-white">${item.sv}</h5>
-        <p class="text-[10px] font-bold text-slate-400">${item.it}</p>
-      </div>
-      <div class="w-7 h-7 rounded-lg bg-indigo-600/30 flex items-center justify-center text-indigo-400 text-xs">
-        <i class="fa-solid fa-volume-high"></i>
-      </div>
-    </button>
-  `).join('');
-}
-
-function rotateGlossary() {
-  currentGlossaryIndex = (currentGlossaryIndex + 1) % glossarySets.length;
-  renderGlossary(currentGlossaryIndex);
-}
-
-function speakSwedish(text) {
-  if (!('speechSynthesis' in window)) return;
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'sv-SE';
-  utterance.rate = 0.85;
-  window.speechSynthesis.speak(utterance);
-}
-
-// Toggle unificato per tutti gli accordion
-function toggleInfoAccordion(id) {
-  const content = document.getElementById(id);
-  const icon = document.getElementById(`icon-${id}`);
-  if (!content) return;
-  
-  if (content.classList.contains('hidden')) {
-    content.classList.remove('hidden');
-    if (icon) icon.style.transform = 'rotate(180deg)';
-  } else {
-    content.classList.add('hidden');
-    if (icon) icon.style.transform = 'rotate(0deg)';
-  }
-}
-
-// FUNZIONE ROBUSTA MOSTRA FARMACIA SU LEAFLET
-function locateNearestPharmacy() {
-  const mapElement = document.getElementById('map') || document.querySelector('.leaflet-container');
-  
-  if (mapElement) {
-    mapElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-
-  // Trova l'istanza di Leaflet sia se globale sia se salvata nell'elemento DOM
-  const activeMap = window.map || (mapElement && mapElement._leaflet_map);
-
-  if (activeMap) {
-    const lat = 59.3328;
-    const lng = 18.0505;
-
-    setTimeout(() => {
-      activeMap.flyTo([lat, lng], 16, { duration: 1.5 });
-      L.popup()
-        .setLatLng([lat, lng])
-        .setContent(`
-          <div style="text-align: center; font-family: sans-serif; color: #0f172a; padding: 2px;">
-            <strong style="color: #e11d48; font-size: 12px;"><i class="fa-solid fa-kit-medical"></i> Apoteket C W Scheele (24/7)</strong><br>
-            <span style="font-size: 11px; color: #475569;">Klarabergsgatan 64, Stoccolma</span>
-          </div>
-        `)
-        .openOn(activeMap);
-    }, 300);
-  } else {
-    console.warn("Istanza mappa Leaflet non trovata.");
-  }
-}
-
-// Init
-document.addEventListener('DOMContentLoaded', () => {
-  renderGlossary(0);
-  updateDayContent('mar'); // <-- Dice alla pagina di prendere i dati di MARTEDÌ
-});
-    
-// --- DATABASE RISTORANTI & CAFFÈ ---
-const foodPlaces = [
-  {
-    id: 1,
-    name: "Café Satir (Nationalmuseum)",
-    type: "fika",
-    icon: "fa-mug-hot",
-    typeLabel: "Fika & Caffè",
-    price: "€€",
-    lat: 59.3283,
-    lng: 18.0781,
-    desc: "Ottimo caffè e kanelbullar dentro l'atrio del museo.",
-    tip: "Consigliato per la pausetta Fika a metà mattina.",
-    address: "Södra Blasieholmshamnen 2"
-  },
-  {
-    id: 2,
-    name: "Tradition",
-    type: "svedese",
-    icon: "fa-bowl-food",
-    typeLabel: "Tipico Svedese",
-    price: "€€€",
-    lat: 59.3255,
-    lng: 18.0731,
-    desc: "Cucina tradizionale svedese (Köttbullar, aringhe, renna).",
-    tip: "Polpette svedesi eccezionali! Consigliata la prenotazione.",
-    address: "Österlånggatan 1"
-  },
-  {
-    id: 3,
-    name: "K25 Food Hall",
-    type: "quick",
-    icon: "fa-burger",
-    typeLabel: "Rapido / Economico",
-    price: "€",
-    lat: 59.3364,
-    lng: 18.0645,
-    desc: "Food court moderna con oltre 10 stand (hamburger, asiatico, burrito, falafel).",
-    tip: "Perfetto per un pranzo veloce ed economico in centro.",
-    address: "Kungsgatan 25"
-  },
-  {
-    id: 4,
-    name: "Vete-Katten",
-    type: "fika",
-    icon: "fa-cake-candles",
-    typeLabel: "Fika & Dolci",
-    price: "€€",
-    lat: 59.3341,
-    lng: 18.0583,
-    desc: "La pasticceria storica più famosa di Stoccolma (dal 1928), tra sale vintage.",
-    tip: "Prova la Princess tårta o i kardemummabulle.",
-    address: "Kungsgatan 55"
-  },
-  {
-    id: 5,
-    name: "Strömmingsvagnen",
-    type: "quick",
-    icon: "fa-fish",
-    typeLabel: "Tipico / Rapido",
-    price: "€",
-    lat: 59.3198,
-    lng: 18.0722,
-    desc: "Chiosco storico di aringa fritta servita su pane di segale o con purè.",
-    tip: "Street food svedese super tipico, gustoso ed economico.",
-    address: "Ryssgården, Slussen"
-  }
-];
-
-let currentFoodFilter = 'all';
-let foodMapInstance = null;
-let foodMarker = null;
-let foodUserMarker = null;
-
-// Renderizza i ristoranti come card orizzontali
-function renderFoodList(places = foodPlaces) {
-  const container = document.getElementById('food-list-container');
-  if (!container) return;
-
-  if (places.length === 0) {
-    container.innerHTML = `<p class="text-xs font-bold text-slate-400 text-center py-4 w-full">Nessun locale trovato per questa categoria.</p>`;
-    return;
-  }
-
-  container.innerHTML = places.map(place => {
-    const distText = place.distance 
-      ? `<span class="text-amber-600 font-black"><i class="fa-solid fa-location-arrow"></i> ${place.distance < 1000 ? place.distance + ' m' : (place.distance/1000).toFixed(1) + ' km'}</span> • ` 
-      : '';
-    
-    return `
-      <div class="w-[82%] sm:w-[280px] shrink-0 snap-align-start p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col justify-between gap-2 shadow-xs">
-        <div>
-          <div class="flex justify-between items-start gap-2 mb-1">
-            <h4 class="font-black text-sm text-slate-900 leading-tight line-clamp-1">${place.name}</h4>
-            <span class="bg-amber-100 text-amber-800 text-[10px] font-black px-2 py-0.5 rounded-md whitespace-nowrap shrink-0">${place.price}</span>
-          </div>
-          <p class="text-xs text-slate-600 mb-2 line-clamp-2">${place.desc}</p>
-          <div class="bg-white p-2 rounded-xl text-[11px] text-amber-900 border border-amber-100 font-medium flex items-start gap-2">
-            <i class="fa-solid fa-lightbulb text-amber-500 mt-0.5 shrink-0"></i>
-            <div class="line-clamp-2"><strong>Tip:</strong> ${place.tip}</div>
-          </div>
-        </div>
-        <div class="flex justify-between items-center pt-2 border-t border-slate-200/60 text-[11px] font-bold text-slate-500">
-          <div class="flex items-center gap-1.5 truncate">
-            ${distText}
-            <span class="flex items-center gap-1 truncate"><i class="fa-solid ${place.icon} text-slate-400"></i> ${place.typeLabel}</span>
-          </div>
-          <button onclick="openFoodMap(${place.id})" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-black px-2.5 py-1 rounded-lg flex items-center gap-1 shrink-0 ml-1 transition-all">
-            <i class="fa-solid fa-map-pin"></i> Mappa
-          </button>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-// Filtra i ristoranti per categoria
-function filterFood(type) {
-  currentFoodFilter = type;
-  const buttons = ['all', 'fika', 'svedese', 'quick'];
-
-  buttons.forEach(t => {
-    const btn = document.getElementById(`food-btn-${t}`);
-    if (btn) {
-      if (t === type) {
-        btn.className = "px-3 py-1.5 rounded-xl bg-slate-900 text-white whitespace-nowrap flex items-center gap-1.5 shrink-0";
-      } else {
-        btn.className = "px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 whitespace-nowrap flex items-center gap-1.5 shrink-0";
-      }
-    }
-  });
-
-  if (type === 'all') {
-    renderFoodList(foodPlaces);
-  } else {
-    const filtered = foodPlaces.filter(p => p.type === type || (type === 'svedese' && p.type === 'quick'));
-    renderFoodList(filtered);
-  }
-}
-
-// Trova i locali più vicini alla posizione GPS dell'utente
-function getNearbyFood() {
-  const container = document.getElementById('food-list-container');
-  container.innerHTML = `<p class="text-xs font-black text-amber-600 text-center py-4 w-full"><i class="fa-solid fa-spinner fa-spin"></i> Calcolo locali più vicini a te...</p>`;
-
-  if (!navigator.geolocation) {
-    alert("Geolocalizzazione non supportata dal tuo browser.");
-    renderFoodList();
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      const userLat = pos.coords.latitude;
-      const userLng = pos.coords.longitude;
-
-      const placesWithDist = foodPlaces.map(place => {
-        const dist = getDistanceMeters(userLat, userLng, place.lat, place.lng);
-        return { ...place, distance: Math.round(dist) };
-      });
-
-      placesWithDist.sort((a, b) => a.distance - b.distance);
-
-      if (currentFoodFilter !== 'all') {
-        const filtered = placesWithDist.filter(p => p.type === currentFoodFilter);
-        renderFoodList(filtered);
-      } else {
-        renderFoodList(placesWithDist);
-      }
-      
-      container.scrollLeft = 0;
-    },
-    () => {
-      alert("Impossibile accedere alla tua posizione GPS.");
-      renderFoodList();
-    }
-  );
-}
-
-// Apri Modale Mappa per il Ristorante
-function openFoodMap(placeId) {
-  const place = foodPlaces.find(p => p.id === placeId);
-  if (!place) return;
-
-  document.getElementById('food-modal-title').innerText = place.name;
-  document.getElementById('food-modal-type').innerText = place.typeLabel;
-  document.getElementById('food-modal-address').innerHTML = `<i class="fa-solid fa-location-dot text-indigo-500"></i> ${place.address}`;
-  document.getElementById('food-modal-dist').innerHTML = place.distance ? `<i class="fa-solid fa-person-walking text-amber-600"></i> Distanza: <strong>${place.distance < 1000 ? place.distance + ' m' : (place.distance/1000).toFixed(1) + ' km'}</strong>` : '';
-
-  const modal = document.getElementById('foodMapModal');
-  modal.classList.remove('hidden');
-  modal.classList.add('flex');
-
-  setTimeout(() => {
-    if (!foodMapInstance) {
-      foodMapInstance = L.map('food-leaflet-map').setView([place.lat, place.lng], 16);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap'
-      }).addTo(foodMapInstance);
-    } else {
-      foodMapInstance.setView([place.lat, place.lng], 16);
-    }
-
-    foodMapInstance.invalidateSize();
-
-    if (foodMarker) foodMapInstance.removeLayer(foodMarker);
-    if (foodUserMarker) foodMapInstance.removeLayer(foodUserMarker);
-
-    foodMarker = L.marker([place.lat, place.lng]).addTo(foodMapInstance)
-      .bindPopup(`<b>place.name</b><br>{place.address}`).openPopup();
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((pos) => {
-        const uLat = pos.coords.latitude;
-        const uLng = pos.coords.longitude;
-
-        foodUserMarker = L.marker([uLat, uLng]).addTo(foodMapInstance)
-          .bindPopup("<b>Tu sei qui</b>");
-
-        const bounds = L.latLngBounds([[uLat, uLng], [place.lat, place.lng]]);
-        foodMapInstance.fitBounds(bounds, { padding: [40, 40] });
-      }, () => {});
-    }
-  }, 100);
-}
-
-// Chiudi Modale Mappa Ristorante
-function closeFoodMapModal() {
-  const modal = document.getElementById('foodMapModal');
-  modal.classList.add('hidden');
-  modal.classList.remove('flex');
-}
-
-// Inizializza al caricamento della pagina
-document.addEventListener('DOMContentLoaded', () => {
-  renderFoodList();
-});
-
-  
-/* =====================================================================
-       LOGICA JS PER IL MENU A RAGGIERA E SCROLL ANCORE UNIVERSALE
-       ===================================================================== */
-  function toggleRadialMenu() {
-    const wrapper = document.getElementById('radialMenuWrapper');
-    if (wrapper) wrapper.classList.toggle('active');
-  }
-
-function scrollToSection(type) {
-  let targetEl = null;
-
-  if (type === 'meteo') {
-    targetEl = document.getElementById('meteo') || document.getElementById('weather-card-bg');
-  } else if (type === 'tappe') {
-    targetEl = document.getElementById('tappe') || document.querySelector('.timeline-row')?.parentElement;
-  } else if (type === 'diario') {
-    targetEl = document.getElementById('diario') || document.querySelector('.diary-card')?.parentElement;
-  } else if (type === 'guida') {
-    targetEl = document.getElementById('guida') || document.getElementById('daily-tip-box')?.parentElement;
-  } else if (type === 'cibo') {
-    targetEl = document.getElementById('cibo') || document.querySelector('.fa-utensils')?.closest('section, div');
-  }
-
-  // Fallback di ricerca generica se gli ID non vengono trovati
-  if (!targetEl) {
-    const allHeadings = Array.from(document.querySelectorAll('h1, h2, h3, h4, div, section'));
-    targetEl = allHeadings.find(el => el.textContent.toLowerCase().includes(type));
-  }
-
-  // Esecuzione dello scroll con animazione fluida
-  if (targetEl) {
-    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-}
-
-  document.addEventListener('click', function(event) {
-    const wrapper = document.getElementById('radialMenuWrapper');
-    if (wrapper && wrapper.classList.contains('active')) {
-      if (!wrapper.contains(event.target)) {
-        toggleRadialMenu();
-      }
-    }
-  });
-    
   </script>
 </body>
 </html>
