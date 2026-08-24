@@ -1044,186 +1044,228 @@
       }, 1000);
     });
     /* ===================================================================== */
+// Coordinate Hotel
+const hotel = { name: "Hotel C Stockholm", lat: 59.3323, lng: 18.0583, label: "Hotel C Stockholm" };
 
-    // Coordinate Hotel
-    const hotel = { name: "Hotel C Stockholm", lat: 59.3323, lng: 18.0583, label: "Hotel C Stockholm" };
-    
-    // Tappe del giorno
-    const stops = [
-      { name: "Municipio (Stadshuset)", lat: 59.3275, lng: 18.0543, visit: "Visita Sala Oro e Sala Blu." },
-      { name: "Gamla Stan (Vasabron)", lat: 59.3257, lng: 18.0686, visit: "Città vecchia attraverso il ponte pedonale." },
-      { name: "Norrbro & Parlamento", lat: 59.3273, lng: 18.0683, visit: "Ponte storico e palazzo del Parlamento." },
-      { name: "Kungsträdgården & Wetterling", lat: 59.3297, lng: 18.0703, visit: "Parco cittadino e Galleria Wetterling." },
-      { name: "Östermalmstorg & Salu Hall", lat: 59.3360, lng: 18.0780, visit: "Mercato al coperto gastronomico." },
-      { name: "Imbarco Crociera (Gustav III)", lat: 59.3262, lng: 18.0745, visit: "Partenza crociera 2 ore arcipelago." }
-    ];
+// Tappe del giorno
+const stops = [
+  { name: "Municipio (Stadshuset)", lat: 59.3275, lng: 18.0543, visit: "Visita Sala Oro e Sala Blu." },
+  { name: "Gamla Stan (Vasabron)", lat: 59.3257, lng: 18.0686, visit: "Città vecchia attraverso il ponte pedonale." },
+  { name: "Norrbro & Parlamento", lat: 59.3273, lng: 18.0683, visit: "Ponte storico e palazzo del Parlamento." },
+  { name: "Kungsträdgården & Wetterling", lat: 59.3297, lng: 18.0703, visit: "Parco cittadino e Galleria Wetterling." },
+  { name: "Östermalmstorg & Salu Hall", lat: 59.3360, lng: 18.0780, visit: "Mercato al coperto gastronomico." },
+  { name: "Imbarco Crociera (Gustav III)", lat: 59.3262, lng: 18.0745, visit: "Partenza crociera 2 ore arcipelago." }
+];
 
-    const routePoints = [
-      [hotel.lat, hotel.lng],
-      [stops[0].lat, stops[0].lng],
-      [stops[1].lat, stops[1].lng],
-      [stops[2].lat, stops[2].lng],
-      [stops[3].lat, stops[3].lng],
-      [stops[4].lat, stops[4].lng],
-      [stops[5].lat, stops[5].lng]
-    ];
+const routePoints = [
+  [hotel.lat, hotel.lng],
+  [stops[0].lat, stops[0].lng],
+  [stops[1].lat, stops[1].lng],
+  [stops[2].lat, stops[2].lng],
+  [stops[3].lat, stops[3].lng],
+  [stops[4].lat, stops[4].lng],
+  [stops[5].lat, stops[5].lng]
+];
 
-    const segmentTimes = [
-      { lat: 59.3299, lng: 18.0563, text: "<i class='fa-solid fa-person-walking'></i> 10 min" },
-      { lat: 59.3266, lng: 18.0614, text: "<i class='fa-solid fa-person-walking'></i> 12 min" },
-      { lat: 59.3265, lng: 18.0684, text: "<i class='fa-solid fa-person-walking'></i> 3 min" },
-      { lat: 59.3285, lng: 18.0693, text: "<i class='fa-solid fa-person-walking'></i> 4 min" },
-      { lat: 59.3328, lng: 18.0741, text: "<i class='fa-solid fa-person-walking'></i> 10 min" },
-      { lat: 59.3311, lng: 18.0762, text: "<i class='fa-solid fa-person-walking'></i> 14 min" }
-    ];
+const segmentTimes = [
+  { lat: 59.3299, lng: 18.0563, text: "<i class='fa-solid fa-person-walking'></i> 10 min" },
+  { lat: 59.3266, lng: 18.0614, text: "<i class='fa-solid fa-person-walking'></i> 12 min" },
+  { lat: 59.3265, lng: 18.0684, text: "<i class='fa-solid fa-person-walking'></i> 3 min" },
+  { lat: 59.3285, lng: 18.0693, text: "<i class='fa-solid fa-person-walking'></i> 4 min" },
+  { lat: 59.3328, lng: 18.0741, text: "<i class='fa-solid fa-person-walking'></i> 10 min" },
+  { lat: 59.3311, lng: 18.0762, text: "<i class='fa-solid fa-person-walking'></i> 14 min" }
+];
 
-    function getDistanceMeters(lat1, lon1, lat2, lon2) {
-      const R = 6371000;
-      const dLat = (lat2 - lat1) * Math.PI / 180;
-      const dLon = (lon2 - lon1) * Math.PI / 180;
-      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return R * c;
-    }
+function getDistanceMeters(lat1, lon1, lat2, lon2) {
+  const R = 6371000;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
 
-    const maxDistanceInMeters = Math.max(
-      ...stops.map(stop => getDistanceMeters(hotel.lat, hotel.lng, stop.lat, stop.lng))
-    );
+const maxDistanceInMeters = Math.max(
+  ...stops.map(stop => getDistanceMeters(hotel.lat, hotel.lng, stop.lat, stop.lng))
+);
 
-    // Mappa Principale
-    const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+// Mappa Principale
+const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
 
-    function createGiantIcon(color, iconClass, pulse = false) {
-      return L.divIcon({
-        className: 'custom-icon',
-        html: `<div class="pulse?'pulse-me':''"style="background-color:{color}; width:46px; height:46px; border:4px solid white; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:18px; box-shadow:0 8px 15px rgba(0,0,0,0.15);"><i class="fa-solid ${iconClass}"></i></div>`,
-        iconSize:[46,46], iconAnchor:[23,23]
-      });
-    }
+// Helper icone personalizzate (Corretto con interpolazione stringhe)
+function createGiantIcon(color, iconClass, pulse = false) {
+  return L.divIcon({
+    className: 'custom-icon',
+    html: `<div class="${pulse ? 'pulse-me' : ''}" style="background-color:${color}; width:46px; height:46px; border:4px solid white; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:18px; box-shadow:0 8px 15px rgba(0,0,0,0.15);"><i class="fa-solid ${iconClass}"></i></div>`,
+    iconSize:[46,46], iconAnchor:[23,23]
+  });
+}
 
-    // Popolamento Mappa Principale
-    function renderMapElements(targetMap) {
-      const hotelCircle = L.circle([hotel.lat, hotel.lng], {
-        color: '#3b82f6',
-        fillColor: '#93c5fd',
-        fillOpacity: 0.35,
-        radius: maxDistanceInMeters
-      }).addTo(targetMap);
+// Popolamento Mappa Principale
+function renderMapElements(targetMap) {
+  const hotelCircle = L.circle([hotel.lat, hotel.lng], {
+    color: '#3b82f6',
+    fillColor: '#93c5fd',
+    fillOpacity: 0.35,
+    radius: maxDistanceInMeters
+  }).addTo(targetMap);
 
-      L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(targetMap);
-      L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(targetMap).bindPopup(`<strong>${hotel.name}</strong><br>Vasaplan 4`);
-      
-      stops.forEach(stop => { 
-        L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(targetMap).bindPopup(`<strong>stop.name</strong><br>{stop.visit}`); 
-      });
+  L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(targetMap);
+  L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(targetMap).bindPopup(`<strong>${hotel.name}</strong><br>Vasaplan 4`);
+  
+  stops.forEach(stop => { 
+    L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(targetMap).bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`); 
+  });
 
-      segmentTimes.forEach(st => {
-        L.marker([st.lat, st.lng], {
-          icon: L.divIcon({
-            className: '',
-            html: `<div class="walk-label">${st.text}</div>`,
-            iconSize: [60, 20],
-            iconAnchor: [30, 10]
-          })
-        }).addTo(targetMap);
-      });
+  segmentTimes.forEach(st => {
+    L.marker([st.lat, st.lng], {
+      icon: L.divIcon({
+        className: '',
+        html: `<div class="walk-label">${st.text}</div>`,
+        iconSize: [60, 20],
+        iconAnchor: [30, 10]
+      })
+    }).addTo(targetMap);
+  });
 
-      return hotelCircle;
-    }
+  return hotelCircle;
+}
 
-    const hotelCircleMain = renderMapElements(map);
+const hotelCircleMain = renderMapElements(map);
 
-    function resetMapView() { map.fitBounds(hotelCircleMain.getBounds().pad(0.1)); }
-    resetMapView();
-    window.addEventListener('load', () => setTimeout(() => map.invalidateSize(), 150));
+function resetMapView() { map.fitBounds(hotelCircleMain.getBounds().pad(0.1)); }
+resetMapView();
+window.addEventListener('load', () => setTimeout(() => map.invalidateSize(), 150));
 
-    // Mappa Modale (Ingrandita)
-    let modalMap = null;
-    let modalHotelCircle = null;
+// --- GEOLOCALIZZAZIONE UTENTE (PIN BLU) ---
+let userMarkerMain = null;
+let userMarkerModal = null;
 
-    function openMapModal() {
-      document.getElementById('mapModal').style.display = 'flex';
-      if (!modalMap) {
-        modalMap = L.map('map-modal-container', { zoomControl: true }).setView([hotel.lat, hotel.lng], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(modalMap);
-        modalHotelCircle = renderMapElements(modalMap);
-      }
-      setTimeout(() => {
-        modalMap.invalidateSize();
-        modalMap.fitBounds(modalHotelCircle.getBounds().pad(0.1));
-      }, 200);
-    }
+function trackUserLocation() {
+  if (!navigator.geolocation) return;
 
-    function closeMapModal() {
-      document.getElementById('mapModal').style.display = 'none';
-    }
+  navigator.geolocation.watchPosition(
+    (position) => {
+      const userLat = position.coords.latitude;
+      const userLng = position.coords.longitude;
 
-    // Sintesi Vocale
-    let currentUtterance = null, currentButton = null;
-    function stopSpeech() { 
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel(); 
-      if (currentButton) currentButton.classList.remove('playing'); 
-      currentUtterance = null; 
-      currentButton = null; 
-    }
-    document.querySelectorAll('.audio-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const text = btn.dataset.audioText;
-        if (!('speechSynthesis' in window)) {
-          alert("La sintesi vocale non è supportata dal tuo browser.");
-          return;
-        }
-        if (currentButton === btn && window.speechSynthesis.speaking) { 
-          stopSpeech(); 
-          return; 
-        }
-        stopSpeech();
-        const msg = new SpeechSynthesisUtterance(text); 
-        msg.lang = 'it-IT'; 
-        msg.rate = 0.95; 
-        msg.onend = stopSpeech; 
-        msg.onerror = stopSpeech;
-        currentUtterance = msg; 
-        currentButton = btn; 
-        btn.classList.add('playing'); 
-        window.speechSynthesis.speak(msg);
-      });
-    });
-    window.addEventListener('beforeunload', stopSpeech);
-
-    // Gestione Modali Dettagli e SOS
-    function openInfo(title, text, imgSrc = '') { 
-      document.getElementById('infoTitle').innerText = title; 
-      document.getElementById('infoContent').innerText = text; 
-      
-      const imgEl = document.getElementById('infoImage');
-      if (imgSrc) {
-        imgEl.src = imgSrc;
-        imgEl.classList.remove('hidden');
+      // Aggiorna o crea il marker sulla mappa principale
+      if (userMarkerMain) {
+        userMarkerMain.setLatLng([userLat, userLng]);
       } else {
-        imgEl.classList.add('hidden');
+        userMarkerMain = L.marker([userLat, userLng], {
+          icon: createGiantIcon('#3b82f6', 'fa-crosshairs', true)
+        }).addTo(map).bindPopup("<strong>Tu sei qui</strong>");
       }
-      
-      document.getElementById('infoModal').style.display = 'flex'; 
-    }
-    function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
-    function openSOSModal() { document.getElementById('sosModal').style.display = 'flex'; }
-    function closeSOSModal() { document.getElementById('sosModal').style.display = 'none'; }
-    function confermaPresenza() { document.getElementById('appello-box').classList.add('hidden-appello'); }
 
-    function sendLocationWhatsApp(phone) {
-      if (!navigator.geolocation) { alert('Geolocalizzazione non supportata dal dispositivo.'); return; }
-      navigator.geolocation.getCurrentPosition(p => {
-        const msg = encodeURIComponent('SOS STUDENTE: https://maps.google.com/?q=' + p.coords.latitude + ',' + p.coords.longitude);
-        window.location.href = 'https://wa.me/' + phone + '?text=' + msg;
-      }, () => {
-        alert('Impossibile recuperare la posizione GPS attuale.');
-      });
+      // Aggiorna o crea il marker sulla mappa modale
+      if (modalMap) {
+        if (userMarkerModal) {
+          userMarkerModal.setLatLng([userLat, userLng]);
+        } else {
+          userMarkerModal = L.marker([userLat, userLng], {
+            icon: createGiantIcon('#3b82f6', 'fa-crosshairs', true)
+          }).addTo(modalMap).bindPopup("<strong>Tu sei qui</strong>");
+        }
+      }
+    },
+    (error) => {
+      console.warn("Geolocalizzazione non disponibile o negata dall'utente.", error);
+    },
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+  );
+}
+
+// Avvia il tracciamento della posizione
+trackUserLocation();
+
+// Mappa Modale (Ingrandita)
+let modalMap = null;
+let modalHotelCircle = null;
+
+function openMapModal() {
+  document.getElementById('mapModal').style.display = 'flex';
+  if (!modalMap) {
+    modalMap = L.map('map-modal-container', { zoomControl: true }).setView([hotel.lat, hotel.lng], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(modalMap);
+    modalHotelCircle = renderMapElements(modalMap);
+  }
+  setTimeout(() => {
+    modalMap.invalidateSize();
+    modalMap.fitBounds(modalHotelCircle.getBounds().pad(0.1));
+  }, 200);
+}
+
+function closeMapModal() {
+  document.getElementById('mapModal').style.display = 'none';
+}
+
+// Sintesi Vocale
+let currentUtterance = null, currentButton = null;
+function stopSpeech() { 
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel(); 
+  if (currentButton) currentButton.classList.remove('playing'); 
+  currentUtterance = null; 
+  currentButton = null; 
+}
+document.querySelectorAll('.audio-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const text = btn.dataset.audioText;
+    if (!('speechSynthesis' in window)) {
+      alert("La sintesi vocale non è supportata dal tuo browser.");
+      return;
     }
+    if (currentButton === btn && window.speechSynthesis.speaking) { 
+      stopSpeech(); 
+      return; 
+    }
+    stopSpeech();
+    const msg = new SpeechSynthesisUtterance(text); 
+    msg.lang = 'it-IT'; 
+    msg.rate = 0.95; 
+    msg.onend = stopSpeech; 
+    msg.onerror = stopSpeech;
+    currentUtterance = msg; 
+    currentButton = btn; 
+    btn.classList.add('playing'); 
+    window.speechSynthesis.speak(msg);
+  });
+});
+window.addEventListener('beforeunload', stopSpeech);
+
+// Gestione Modali Dettagli e SOS
+function openInfo(title, text, imgSrc = '') { 
+  document.getElementById('infoTitle').innerText = title; 
+  document.getElementById('infoContent').innerText = text; 
+  
+  const imgEl = document.getElementById('infoImage');
+  if (imgSrc) {
+    imgEl.src = imgSrc;
+    imgEl.classList.remove('hidden');
+  } else {
+    imgEl.classList.add('hidden');
+  }
+  
+  document.getElementById('infoModal').style.display = 'flex'; 
+}
+function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
+function openSOSModal() { document.getElementById('sosModal').style.display = 'flex'; }
+function closeSOSModal() { document.getElementById('sosModal').style.display = 'none'; }
+function confermaPresenza() { document.getElementById('appello-box').classList.add('hidden-appello'); }
+
+function sendLocationWhatsApp(phone) {
+  if (!navigator.geolocation) { alert('Geolocalizzazione non supportata dal dispositivo.'); return; }
+  navigator.geolocation.getCurrentPosition(p => {
+    const msg = encodeURIComponent('SOS STUDENTE: https://maps.google.com/?q=' + p.coords.latitude + ',' + p.coords.longitude);
+    window.location.href = 'https://wa.me/' + phone + '?text=' + msg;
+  }, () => {
+    alert('Impossibile recuperare la posizione GPS attuale.');
+  });
+}
 
      // --- AGGIORNAMENTO TIMELINE IN BASE ALL'ORARIO ---
   function updateTimelineStatus() {
