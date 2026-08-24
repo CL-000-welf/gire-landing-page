@@ -241,34 +241,34 @@
     pointer-events: none;
   }
 
-  /* =====================================================================
-   POSIZIONAMENTO CIRCOLARE AD ARCO (8 VOCI DA 120° A 330°)
-   Raggio: 115px | Centro Disco: (160px, 160px)
+/* =====================================================================
+   POSIZIONAMENTO CIRCOLARE AD ARCO (8 VOCI DA 120° A 235° IN SENSO ORARIO)
+   Raggio: 115px | Centro Disco: (160px, 160px) | Passo: -35°
    ===================================================================== */
 
-/* 1. METEO (120° -> 30° a destra della verticale alta) */
+/* 1. METEO (120° -> 30° a destra della verticale) */
 .radial-item-wrapper:nth-child(2) { top: 36px;  left: 194px; }
 
-/* 2. MAPPE (150°) */
-.radial-item-wrapper:nth-child(3) { top: 79px;  left: 236px; }
+/* 2. MAPPE (85°) */
+.radial-item-wrapper:nth-child(3) { top: 22px;  left: 146px; }
 
-/* 3. METRO (180° -> Orizzontale a sinistra) */
-.radial-item-wrapper:nth-child(4) { top: 136px; left: 251px; }
+/* 3. METRO (50°) */
+.radial-item-wrapper:nth-child(4) { top: 48px;  left: 86px;  }
 
-/* 4. CAMBIO (210°) */
-.radial-item-wrapper:nth-child(5) { top: 194px; left: 236px; }
+/* 4. CAMBIO (15°) */
+.radial-item-wrapper:nth-child(5) { top: 106px; left: 63px;  }
 
-/* 5. CIBO (240°) */
-.radial-item-wrapper:nth-child(6) { top: 236px; left: 194px; }
+/* 5. CIBO (340° / -20°) */
+.radial-item-wrapper:nth-child(6) { top: 175px; left: 68px;  }
 
-/* 6. TAPPE (270° -> Verticale in basso) */
-.radial-item-wrapper:nth-child(7) { top: 251px; left: 136px; }
+/* 6. TAPPE (305° / -55°) */
+.radial-item-wrapper:nth-child(7) { top: 230px; left: 102px; }
 
-/* 7. DIARIO (300°) */
-.radial-item-wrapper:nth-child(8) { top: 236px; left: 79px;  }
+/* 7. DIARIO (270° / -90° -> Verticale in basso) */
+.radial-item-wrapper:nth-child(8) { top: 251px; left: 136px; }
 
-/* 8. GUIDA RAPIDA (330°) */
-.radial-item-wrapper:nth-child(9) { top: 194px; left: 36px;  }
+/* 8. GUIDA RAPIDA (235° / -125°) */
+.radial-item-wrapper:nth-child(9) { top: 230px; left: 170px; }
     
   </style>
 </head>
