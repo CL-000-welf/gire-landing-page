@@ -1092,51 +1092,14 @@
       ...stops.map(stop => getDistanceMeters(hotel.lat, hotel.lng, stop.lat, stop.lng))
     );
 
-    
     // Mappa Principale
     const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
 
-    // TUA POSIZIONE
-// Tracciamento posizione utente in tempo reale
-let userMarker = null;
-
-if (navigator.geolocation) {
-  navigator.geolocation.watchPosition(
-    (position) => {
-      const { latitude, longitude } = position.coords;
-      
-      // Icona Personalizzata Pin Blu
-      const blueUserIcon = L.divIcon({
-        className: 'custom-icon',
-        html: `<div style="background-color:#007bff; width:24px; height:24px; border:3px solid white; border-radius:50%; box-shadow:0 0 10px rgba(0,123,255,0.8);"></div>`,
-        iconSize: [24, 24],
-        iconAnchor: [12, 12]
-      });
-
-      // Aggiorna o crea il marker sulla mappa principale
-      if (userMarker) {
-        userMarker.setLatLng([latitude, longitude]);
-      } else {
-        userMarker = L.marker([latitude, longitude], { icon: blueUserIcon })
-          .addTo(map)
-          .bindPopup("La tua posizione attuale");
-      }
-    },
-    (error) => {
-      console.warn("Geolocalizzazione non disponibile o negata:", error.message);
-    },
-    { enableHighAccuracy: true }
-  );
-} // TUA POSIZIONE
-
-
-
-    
     function createGiantIcon(color, iconClass, pulse = false) {
       return L.divIcon({
         className: 'custom-icon',
-        html: `<div class="${pulse ? 'pulse-me' : ''}" style="background-color:${color}; width:46px; height:46px; border:4px solid white; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:18px; box-shadow:0 8px 15px rgba(0,0,0,0.15);"><i class="fa-solid ${iconClass}"></i></div>`,
+        html: `<div class="pulse?'pulse-me':''"style="background-color:{color}; width:46px; height:46px; border:4px solid white; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:18px; box-shadow:0 8px 15px rgba(0,0,0,0.15);"><i class="fa-solid ${iconClass}"></i></div>`,
         iconSize:[46,46], iconAnchor:[23,23]
       });
     }
@@ -1154,7 +1117,7 @@ if (navigator.geolocation) {
       L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(targetMap).bindPopup(`<strong>${hotel.name}</strong><br>Vasaplan 4`);
       
       stops.forEach(stop => { 
-        L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(targetMap).bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`); 
+        L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(targetMap).bindPopup(`<strong>stop.name</strong><br>{stop.visit}`); 
       });
 
       segmentTimes.forEach(st => {
@@ -1411,7 +1374,7 @@ async function fetchExactWeather() {
   const lng = 18.0583;
 
   try {
-    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true&hourly=apparent_temperature&daily=temperature_2m_max,temperature_2m_min&timezone=auto`);
+    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=lat&longitude={lng}&current_weather=true&hourly=apparent_temperature&daily=temperature_2m_max,temperature_2m_min&timezone=auto`);
     const data = await res.json();
 
     if (data && data.current_weather) {
@@ -1708,7 +1671,7 @@ function getUserNearestStation() {
             <h4 class="font-black text-sm text-slate-900">${nearest.name}</h4>
             <span class="bg-indigo-100 text-indigo-700 text-[9px] font-black px-2 py-0.5 rounded-full">${nearest.lines}</span>
           </div>
-          <p class="text-xs font-bold text-slate-600"><i class="fa-solid fa-person-walking text-indigo-600"></i> Distanza: <strong>${distMeters < 1000 ? distMeters + ' m' : (distMeters/1000).toFixed(2) + ' km'}</strong> (~${walkMin} min)</p>
+          <p class="text-xs font-bold text-slate-600"><i class="fa-solid fa-person-walking text-indigo-600"></i> Distanza: <strong>distMeters<1000?distMeters+'m':(distMeters/1000).toFixed(2)+'km'</strong>(~{walkMin} min)</p>
         </div>
       `;
 
@@ -1866,7 +1829,7 @@ function updateDayContent(dayKey = 'mar') {
             <div class="w-8 h-8 rounded-xl ${acc.colorClass} flex items-center justify-center text-sm shrink-0 border">
               <i class="fa-solid ${acc.icon}"></i>
             </div>
-            <span class="font-black text-xs uppercase tracking-wide ${acc.titleColor}">${acc.title}</span>
+            <span class="font-black text-xs uppercase tracking-wide acc.titleColor">{acc.title}</span>
           </div>
           <i id="icon-${acc.id}" class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-300"></i>
         </button>
@@ -2174,7 +2137,7 @@ function openFoodMap(placeId) {
     if (foodUserMarker) foodMapInstance.removeLayer(foodUserMarker);
 
     foodMarker = L.marker([place.lat, place.lng]).addTo(foodMapInstance)
-      .bindPopup(`<b>${place.name}</b><br>${place.address}`).openPopup();
+      .bindPopup(`<b>place.name</b><br>{place.address}`).openPopup();
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((pos) => {
@@ -2251,3 +2214,5 @@ function scrollToSection(type) {
   </script>
 </body>
 </html>
+
+
