@@ -151,20 +151,21 @@
       line-height: 1;
     }
 
+    /* Pulsante sticky principale - Stesso blu ardesia del disco (#0f172a) */
     .radial-toggle-btn {
       position: relative;
       z-index: 10001;
       width: 58px;
       height: 58px;
       border-radius: 50%;
-      background: #4f46e5; /* Indaco GIRE */
+      background: #0f172a; /* Stesso colore del disco aperto */
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 20px;
-      box-shadow: 0 10px 25px rgba(79, 70, 229, 0.45);
-      border: 2px solid white;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.5);
+      border: 2px solid rgba(255, 255, 255, 0.2);
       cursor: pointer;
       transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s;
     }
@@ -176,9 +177,11 @@
     .radial-toggle-btn i {
       transition: transform 0.3s ease;
     }
+
     .radial-menu-wrapper.active .radial-toggle-btn {
       background: #0f172a;
     }
+
     .radial-menu-wrapper.active .radial-toggle-btn i {
       transform: rotate(90deg);
     }
@@ -945,9 +948,9 @@
       </button>
     </div>
 
-    <!-- Bottone Sticky a Cerchio con 3 Punti Orizzontali -->
+   <!-- Bottone Sticky a Cerchio con 3 Punti Verticali -->
     <button id="radialToggleBtn" onclick="toggleRadialMenu()" class="radial-toggle-btn" aria-label="Menu Rapido">
-      <i class="fa-solid fa-ellipsis"></i>
+      <i class="fa-solid fa-ellipsis-vertical"></i>
     </button>
   </div>
   
@@ -2100,8 +2103,7 @@ document.addEventListener('DOMContentLoaded', () => {
 /* =====================================================================
        LOGICA JS PER IL MENU A RAGGIERA STICKY
        ===================================================================== */
-    // Attiva/Disattiva l'apertura del disco a raggiera
-    function toggleRadialMenu() {
+   function toggleRadialMenu() {
       const wrapper = document.getElementById('radialMenuWrapper');
       const icon = document.querySelector('#radialToggleBtn i');
       
@@ -2109,11 +2111,10 @@ document.addEventListener('DOMContentLoaded', () => {
       
       wrapper.classList.toggle('active');
       
-      // Cambio icona dinamico da 3 punti ad 'X' quando è aperto
       if (wrapper.classList.contains('active')) {
         icon.className = 'fa-solid fa-xmark';
       } else {
-        icon.className = 'fa-solid fa-ellipsis';
+        icon.className = 'fa-solid fa-ellipsis-vertical';
       }
     }
 
