@@ -104,7 +104,7 @@
  
   
 /* =====================================================================
-       STILI PER IL MENU A RAGGIERA STICKY CON FAVICON GIRE
+       STILI PER IL MENU A RAGGIERA STICKY CON LOGO FAVICON E 7 VOCI
        ===================================================================== */
     .radial-menu-wrapper {
       position: fixed;
@@ -113,7 +113,6 @@
       z-index: 9999;
     }
 
-    /* Disco di Sfondo */
     .radial-disc {
       position: absolute;
       bottom: 0;
@@ -141,7 +140,6 @@
       pointer-events: auto;
     }
 
-    /* Logo Favicon in Background con Opacity */
     .radial-disc-bg-logo {
       position: absolute;
       width: 150px;
@@ -153,7 +151,6 @@
       pointer-events: none;
     }
 
-    /* Pulsante Sticky (Stesso Blu #0f172a e 3 Punti Verticali) */
     .radial-toggle-btn {
       position: relative;
       z-index: 10001;
@@ -184,7 +181,6 @@
       transform: rotate(90deg);
     }
 
-    /* Wrapper Singoli Elementi + Etichetta Mobile */
     .radial-item-wrapper {
       position: absolute;
       display: flex;
@@ -199,16 +195,17 @@
       z-index: 10000;
     }
 
+    /* Ingranditi a 48px con icone a 18px */
     .radial-item-btn {
-      width: 44px;
-      height: 44px;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
       background: white;
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-      font-size: 16px;
+      font-size: 18px;
       transition: transform 0.2s ease, background 0.2s;
     }
 
@@ -216,9 +213,8 @@
       transform: scale(0.88);
     }
 
-    /* Etichette visibili sia su Mobile che Desktop */
     .radial-item-label {
-      font-size: 9.5px;
+      font-size: 9px;
       font-weight: 700;
       color: #ffffff;
       margin-top: 2px;
@@ -228,14 +224,14 @@
       pointer-events: none;
     }
 
-    /* Posizionamento perfetto delle 7 voci sulla circonferenza concentrica */
-    .radial-item-wrapper:nth-child(2) { top: 12px;  left: 175px; } /* 1. Mappe */
-    .radial-item-wrapper:nth-child(3) { top: 30px;  left: 110px; } /* 2. Metro SL */
-    .radial-item-wrapper:nth-child(4) { top: 75px;  left: 55px;  } /* 3. Cambio */
-    .radial-item-wrapper:nth-child(5) { top: 135px; left: 22px;  } /* 4. Cibo */
-    .radial-item-wrapper:nth-child(6) { top: 198px; left: 42px;  } /* 5. Tappe */
-    .radial-item-wrapper:nth-child(7) { top: 248px; left: 95px;  } /* 6. Card Info */
-    .radial-item-wrapper:nth-child(8) { top: 265px; left: 168px; } /* 7. Info & Glossario */
+    /* Arco trigonometrico perfetto (Raggio 115px, centro in Basso-Astra 291px, 291px) */
+    .radial-item-wrapper:nth-child(2) { top: 38px;  left: 202px; } /* 1. Mappe */
+    .radial-item-wrapper:nth-child(3) { top: 50px;  left: 139px; } /* 2. Metro SL */
+    .radial-item-wrapper:nth-child(4) { top: 85px;  left: 85px;  } /* 3. Cambio */
+    .radial-item-wrapper:nth-child(5) { top: 139px; left: 50px;  } /* 4. Cibo */
+    .radial-item-wrapper:nth-child(6) { top: 202px; left: 38px;  } /* 5. Tappe */
+    .radial-item-wrapper:nth-child(7) { top: 240px; left: 88px;  } /* 6. Diario */
+    .radial-item-wrapper:nth-child(8) { top: 247px; left: 160px; } /* 7. Guida Rapida */
     
   </style>
 </head>
@@ -929,51 +925,50 @@
        MENU A RAGGIERA STICKY CON LOGO FAVICON E 7 VOCI
        ===================================================================== -->
   <div id="radialMenuWrapper" class="radial-menu-wrapper">
-    <!-- Disco di Sfondo -->
     <div class="radial-disc">
-      <!-- Immagine Logo GIRE Favicon trasparente -->
+      <!-- Background Logo Favicon -->
       <div class="radial-disc-bg-logo"></div>
 
       <!-- 1. Mappe (Modal) -->
       <button onclick="openMapModal(); toggleRadialMenu();" class="radial-item-wrapper">
         <div class="radial-item-btn text-indigo-600"><i class="fa-solid fa-map-location-dot"></i></div>
-        <span class="radial-item-label">Mappe</span>
+        <span class="radial-item-label">MAPPE</span>
       </button>
 
       <!-- 2. Metro SL (Modal) -->
       <button onclick="openMetroModal(); toggleRadialMenu();" class="radial-item-wrapper">
         <div class="radial-item-btn text-blue-600"><i class="fa-solid fa-subway"></i></div>
-        <span class="radial-item-label">Metro SL</span>
+        <span class="radial-item-label">METRO</span>
       </button>
 
       <!-- 3. Cambio Valuta (Modal) -->
       <button onclick="openCurrencyModal(); toggleRadialMenu();" class="radial-item-wrapper">
         <div class="radial-item-btn text-emerald-600"><i class="fa-solid fa-coins"></i></div>
-        <span class="radial-item-label">Cambio</span>
+        <span class="radial-item-label">CAMBIO</span>
       </button>
 
-      <!-- 4. Dove Mangiare (Scroll) -->
-      <button onclick="scrollToSection('food'); toggleRadialMenu();" class="radial-item-wrapper">
+      <!-- 4. Cibo (Scroll) -->
+      <button onclick="scrollToSection('cibo'); toggleRadialMenu();" class="radial-item-wrapper">
         <div class="radial-item-btn text-amber-600"><i class="fa-solid fa-utensils"></i></div>
-        <span class="radial-item-label">Cibo</span>
+        <span class="radial-item-label">CIBO</span>
       </button>
 
-      <!-- 5. Tappe del Viaggio (Scroll) -->
+      <!-- 5. Tappe (Scroll) -->
       <button onclick="scrollToSection('tappe'); toggleRadialMenu();" class="radial-item-wrapper">
         <div class="radial-item-btn text-purple-600"><i class="fa-solid fa-route"></i></div>
-        <span class="radial-item-label">Tappe</span>
+        <span class="radial-item-label">TAPPE</span>
       </button>
 
-      <!-- 6. Card Informative (Scroll) -->
-      <button onclick="scrollToSection('cards'); toggleRadialMenu();" class="radial-item-wrapper">
-        <div class="radial-item-btn text-teal-600"><i class="fa-solid fa-clone"></i></div>
-        <span class="radial-item-label">Card Info</span>
+      <!-- 6. Diario (Scroll) -->
+      <button onclick="scrollToSection('diario'); toggleRadialMenu();" class="radial-item-wrapper">
+        <div class="radial-item-btn text-teal-600"><i class="fa-solid fa-book-open"></i></div>
+        <span class="radial-item-label">DIARIO</span>
       </button>
 
-      <!-- 7. Info & Glossario (Scroll - Unificato) -->
-      <button onclick="scrollToSection('info-glossario'); toggleRadialMenu();" class="radial-item-wrapper">
-        <div class="radial-item-btn text-rose-600"><i class="fa-solid fa-circle-info"></i></div>
-        <span class="radial-item-label">Info & Glossario</span>
+      <!-- 7. Guida Rapida (Scroll) -->
+      <button onclick="scrollToSection('guida'); toggleRadialMenu();" class="radial-item-wrapper">
+        <div class="radial-item-btn text-rose-600"><i class="fa-solid fa-compass"></i></div>
+        <span class="radial-item-label">GUIDA RAPIDA</span>
       </button>
     </div>
 
@@ -2130,7 +2125,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   
 /* =====================================================================
-       LOGICA JS PER IL MENU A RAGGIERA E SCROLL ANCORE
+       LOGICA JS PER IL MENU A RAGGIERA E SCROLL ANCORE UNIVERSALE
        ===================================================================== */
     function toggleRadialMenu() {
       const wrapper = document.getElementById('radialMenuWrapper');
@@ -2147,26 +2142,35 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Gestione dello scorrimento fluido (Scroll Ancore)
+    // Ricerca dinamica dello scroll per supportare qualsiasi struttura della pagina
     function scrollToSection(type) {
       let targetEl = null;
 
-      if (type === 'food') {
-        targetEl = document.querySelector('.fa-utensils')?.closest('section') || 
-                   document.querySelector('#food') || 
-                   document.querySelector('.food-section');
+      if (type === 'cibo') {
+        targetEl = document.querySelector('#cibo') || 
+                   document.querySelector('.fa-utensils')?.closest('section, div.card, div');
       } else if (type === 'tappe') {
-        targetEl = document.querySelector('.timeline-container') || 
-                   document.querySelector('.fa-route')?.closest('section') || 
-                   document.querySelector('#tappe');
-      } else if (type === 'cards') {
-        targetEl = document.querySelector('.safe-card')?.closest('section') || 
-                   document.querySelector('#cards');
-      } else if (type === 'info-glossario') {
-        targetEl = document.querySelector('.fa-book-bookmark')?.closest('section') || 
-                   document.querySelector('.fa-circle-info')?.closest('section') || 
+        targetEl = document.querySelector('#tappe') || 
+                   document.querySelector('.timeline-container') || 
+                   document.querySelector('.fa-route')?.closest('section, div');
+      } else if (type === 'diario') {
+        targetEl = document.querySelector('#diario') || 
+                   document.querySelector('#cards') || 
+                   document.querySelector('.safe-card')?.closest('section, div') || 
+                   document.querySelector('.fa-book-open')?.closest('section, div');
+      } else if (type === 'guida') {
+        targetEl = document.querySelector('#guida') || 
+                   document.querySelector('#info') || 
                    document.querySelector('#glossario') || 
-                   document.querySelector('#info');
+                   document.querySelector('.fa-compass')?.closest('section, div') || 
+                   document.querySelector('.fa-circle-info')?.closest('section, div') || 
+                   document.querySelector('.fa-book-bookmark')?.closest('section, div');
+      }
+
+      // Ricerca fallback nel testo se non trova l'elemento tramite classe/icona
+      if (!targetEl) {
+        const allHeadings = Array.from(document.querySelectorAll('h1, h2, h3, h4, div, section'));
+        targetEl = allHeadings.find(el => el.textContent.toLowerCase().includes(type));
       }
 
       if (targetEl) {
