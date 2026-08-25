@@ -1500,13 +1500,13 @@ setInterval(updateTimelineStatus, 60000);
   window.addEventListener('mouseup', handleEnd);
 })();
 
- // --- CARICAMENTO METEO CON SFONDO E GRAFICA DINAMICA (GIORNO / NOTTE) ---
+// --- CARICAMENTO METEO CON SFONDO ANIMATO (GIORNO / NOTTE) ---
 async function fetchExactWeather() {
   const lat = 59.3323;
   const lng = 18.0583;
 
   try {
-    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true&hourly=apparent_temperature&daily=temperature_2m_max,temperature_2m_min&timezone=auto`);
+    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true&hourly=apparent_temperature&daily=temperature_2m_min,temperature_2m_max&timezone=auto`);
     const data = await res.json();
 
     if (data && data.current_weather) {
@@ -1524,75 +1524,78 @@ async function fetchExactWeather() {
         0: { 
           desc: isNight ? 'Sereno (Notte)' : 'Soleggiato', 
           icon: isNight ? 'fa-moon' : 'fa-sun', 
-          bgClass: isNight ? 'from-indigo-950 via-slate-900 to-slate-950' : 'from-sky-400 via-sky-500 to-blue-600',
-          bgPattern: isNight ? 'fa-moon' : 'fa-sun',
+          bgGradient: isNight ? 'from-slate-950 via-indigo-950 to-slate-900' : 'from-sky-400 via-sky-500 to-blue-600',
+          glowColor: isNight ? 'bg-indigo-500/20' : 'bg-amber-300/30',
           advice: isNight ? 'Cielo sereno stasera: consigliata una giacca per il fresco.' : 'Meteo perfetto: consigliata giacca leggera o felpa per la sera.', 
           adviceIcon: 'fa-shirt' 
         },
         1: { 
           desc: isNight ? 'Quasi Sereno' : 'Preval. Sereno', 
           icon: isNight ? 'fa-cloud-moon' : 'fa-cloud-sun', 
-          bgClass: isNight ? 'from-slate-900 via-indigo-950 to-slate-950' : 'from-sky-400 via-blue-500 to-indigo-600',
-          bgPattern: isNight ? 'fa-cloud-moon' : 'fa-cloud-sun',
+          bgGradient: isNight ? 'from-slate-900 via-indigo-950 to-slate-950' : 'from-sky-400 via-blue-500 to-indigo-600',
+          glowColor: isNight ? 'bg-blue-500/20' : 'bg-sky-300/30',
           advice: isNight ? 'Notte limpida: copriti bene per le passeggiate serali.' : 'Tempo ottimo, porta una felpa per i momenti all\'ombra.', 
           adviceIcon: 'fa-shirt' 
         },
         2: { 
           desc: 'Parz. Nuvoloso', 
           icon: isNight ? 'fa-cloud-moon' : 'fa-cloud-sun', 
-          bgClass: isNight ? 'from-slate-800 via-indigo-900 to-slate-950' : 'from-slate-400 via-sky-500 to-blue-600',
-          bgPattern: 'fa-cloud',
+          bgGradient: isNight ? 'from-slate-900 via-slate-800 to-indigo-950' : 'from-slate-400 via-sky-500 to-blue-600',
+          glowColor: 'bg-white/10',
           advice: 'Nubi passeggere: ideale vestirsi a strati.', 
           adviceIcon: 'fa-shirt' 
         },
         3: { 
           desc: 'Coperto', 
           icon: 'fa-cloud', 
-          bgClass: isNight ? 'from-slate-900 via-slate-950 to-black' : 'from-slate-500 via-slate-600 to-slate-700',
-          bgPattern: 'fa-cloud',
+          bgGradient: isNight ? 'from-slate-950 via-slate-900 to-black' : 'from-slate-600 via-slate-700 to-slate-800',
+          glowColor: 'bg-slate-500/10',
           advice: 'Cielo coperto: consigliata giacca antivento.', 
           adviceIcon: 'fa-vest' 
         },
         51: { 
           desc: 'Pioggerella', 
           icon: 'fa-cloud-rain', 
-          bgClass: 'from-blue-900 via-slate-800 to-slate-950',
-          bgPattern: 'fa-cloud-rain',
+          bgGradient: 'from-blue-950 via-slate-900 to-slate-950',
+          glowColor: 'bg-blue-600/20',
           advice: 'Pioggia leggera: porta un ombrello pieghevole o k-way.', 
           adviceIcon: 'fa-umbrella' 
         },
         61: { 
           desc: 'Pioggia', 
           icon: 'fa-cloud-showers-heavy', 
-          bgClass: 'from-slate-900 via-blue-950 to-slate-950',
-          bgPattern: 'fa-cloud-showers-heavy',
+          bgGradient: 'from-slate-950 via-blue-950 to-slate-950',
+          glowColor: 'bg-cyan-500/20',
           advice: 'Pioggia in corso: consigliato ombrello e scarpe impermeabili.', 
           adviceIcon: 'fa-umbrella' 
         },
         95: { 
           desc: 'Temporale', 
           icon: 'fa-cloud-bolt', 
-          bgClass: 'from-slate-950 via-purple-950 to-black',
-          bgPattern: 'fa-cloud-bolt',
+          bgGradient: 'from-slate-950 via-purple-950 to-black',
+          glowColor: 'bg-purple-600/30',
           advice: 'Temporale: consigliato riparo al coperto e k-way.', 
           adviceIcon: 'fa-umbrella' 
         }
       };
 
-      const info = weatherMap[code] || { 
-        desc: isNight ? 'Sereno (Notte)' : 'Soleggiato', 
-        icon: isNight ? 'fa-moon' : 'fa-sun', 
-        bgClass: isNight ? 'from-indigo-950 via-slate-900 to-slate-950' : 'from-sky-400 via-sky-500 to-blue-600',
-        bgPattern: isNight ? 'fa-moon' : 'fa-sun',
-        advice: 'Meteo piacevole: consigliata giacca leggera a portata di mano.', 
-        adviceIcon: 'fa-shirt' 
-      };
-
+      const info = weatherMap[code] || weatherMap[0];
       const cardEl = document.getElementById('weather-card-bg');
-      if (cardEl) cardEl.className = `bg-gradient-to-br ${info.bgClass} text-white rounded-[2rem] p-5 shadow-lg relative overflow-hidden mb-6 transition-all duration-500`;
-      
-      const bgPatternEl = document.getElementById('weather-bg-pattern');
-      if (bgPatternEl) bgPatternEl.innerHTML = `<i class="fa-solid ${info.bgPattern}"></i>`;
+
+      if (cardEl) {
+        // Reset completo delle classi di background precedenti
+        cardEl.className = `rounded-3xl p-5 text-white bg-gradient-to-br ${info.bgGradient} shadow-lg relative overflow-hidden transition-all duration-700`;
+        
+        // Inserimento sfondo animato stile iPhone
+        cardEl.querySelectorAll('.weather-animated-bg').forEach(el => el.remove());
+        const animBgContainer = document.createElement('div');
+        animBgContainer.className = 'weather-animated-bg absolute inset-0 pointer-events-none overflow-hidden';
+        animBgContainer.innerHTML = `
+          <div class="absolute -top-12 -right-12 w-48 h-48 ${info.glowColor} rounded-full blur-3xl animate-pulse"></div>
+          <div class="absolute -bottom-12 -left-12 w-40 h-40 ${info.glowColor} rounded-full blur-2xl animate-pulse" style="animation-delay: 1.5s;"></div>
+        `;
+        cardEl.prepend(animBgContainer);
+      }
 
       document.getElementById('weather-temp-live').innerText = `${temp}°C`;
       document.getElementById('weather-desc-live').innerText = info.desc;
@@ -1609,12 +1612,7 @@ async function fetchExactWeather() {
       document.getElementById('weather-advice-icon').innerHTML = `<i class="fa-solid ${info.adviceIcon}"></i>`;
     }
   } catch (e) {
-    document.getElementById('weather-temp-live').innerText = '19°C';
-    document.getElementById('weather-desc-live').innerText = 'Sereno';
-    document.getElementById('weather-feels-live').innerText = 'Percepita 20°';
-    document.getElementById('weather-advice-live').innerText = 'Meteo perfetto: consigliata giacca leggera o felpa per la sera.';
-    document.getElementById('weather-icon-live').innerHTML = '<i class="fa-solid fa-moon"></i>';
-    document.getElementById('weather-advice-icon').innerHTML = '<i class="fa-solid fa-shirt"></i>';
+    console.error("Errore meteo:", e);
   }
 }
 
