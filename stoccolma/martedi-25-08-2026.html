@@ -2035,43 +2035,72 @@ function toggleInfoAccordion(id) {
   }
 }
 
-// FUNZIONE ROBUSTA MOSTRA FARMACIA SU LEAFLET
+// FUNZIONE MOSTRA FARMACIA NEL MODALE MAPPA (COME I RISTORANTI)
 function locateNearestPharmacy() {
-  const mapElement = document.getElementById('map') || document.querySelector('.leaflet-container');
+  const pharmacy = {
+    name: "Apoteket C W Scheele (Farmacia 24/7)",
+    typeLabel: "Farmacia & Emergenze",
+    address: "Klarabergsgatan 64, Stoccolma",
+    lat: 59.3328,
+    lng: 18.0505
+  };
+
+  // 1. Calcola la distanza se la posizione GPS è disponibile
+  const uLat = (typeof lastCoords !== 'undefined' && lastCoords) ? lastCoords.lat : null;
+  const uLng = (typeof lastCoords !== 'undefined' && lastCoords) ? lastCoords.lng : null;
   
-  if (mapElement) {
-    mapElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  let distText = '';
+  if (uLat && uLng && typeof getDistanceMeters === 'function') {
+    const dist = getDistanceMeters(uLat, uLng, pharmacy.lat, pharmacy.lng);
+    const distFormatted = dist < 1000 ? Math.round(dist) + ' m' : (dist/1000).toFixed(1) + ' km';
+    distText = `<i class="fa-solid fa-person-walking text-amber-600"></i> Distanza: <strong>${distFormatted}</strong>`;
   }
 
-  // Trova l'istanza di Leaflet sia se globale sia se salvata nell'elemento DOM
-  const activeMap = window.map || (mapElement && mapElement._leaflet_map);
+  // 2. Compila i campi del modale esistente
+  document.getElementById('food-modal-title').innerText = pharmacy.name;
+  document.getElementById('food-modal-type').innerText = pharmacy.typeLabel;
+  document.getElementById('food-modal-address').innerHTML = `<i class="fa-solid fa-location-dot text-indigo-500"></i> ${pharmacy.address}`;
+  document.getElementById('food-modal-dist').innerHTML = distText;
 
-  if (activeMap) {
-    const lat = 59.3328;
-    const lng = 18.0505;
+  // 3. Mostra il modale
+  const modal = document.getElementById('foodMapModal');
+  if (!modal) return;
+  
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
 
-    setTimeout(() => {
-      activeMap.flyTo([lat, lng], 16, { duration: 1.5 });
-      L.popup()
-        .setLatLng([lat, lng])
-        .setContent(`
-          <div style="text-align: center; font-family: sans-serif; color: #0f172a; padding: 2px;">
-            <strong style="color: #e11d48; font-size: 12px;"><i class="fa-solid fa-kit-medical"></i> Apoteket C W Scheele (24/7)</strong><br>
-            <span style="font-size: 11px; color: #475569;">Klarabergsgatan 64, Stoccolma</span>
-          </div>
-        `)
-        .openOn(activeMap);
-    }, 300);
-  } else {
-    console.warn("Istanza mappa Leaflet non trovata.");
-  }
+  // 4. Inizializza o aggiorna la mappa Leaflet del modale
+  setTimeout(() => {
+    if (!foodMapInstance) {
+      foodMapInstance = L.map('food-leaflet-map').setView([pharmacy.lat, pharmacy.lng], 16);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+      }).addTo(foodMapInstance);
+    } else {
+      foodMapInstance.setView([pharmacy.lat, pharmacy.lng], 16);
+    }
+
+    foodMapInstance.invalidateSize();
+
+    // Rimuovi vecchi marker se presenti
+    if (foodMarker) foodMapInstance.removeLayer(foodMarker);
+    if (foodUserMarker) foodMapInstance.removeLayer(foodUserMarker);
+
+    // Marker Farmacia
+    foodMarker = L.marker([pharmacy.lat, pharmacy.lng])
+      .addTo(foodMapInstance)
+      .bindPopup(`<b><i class="fa-solid fa-kit-medical text-rose-500"></i> ${pharmacy.name}</b><br>${pharmacy.address}`)
+      .openPopup();
+
+    // Se la posizione dell'utente è nota, mostra anche "Tu sei qui" e adatta lo zoom
+    if (uLat && uLng) {
+      foodUserMarker = L.marker([uLat, uLng]).addTo(foodMapInstance).bindPopup("<b>Tu sei qui</b>");
+      const bounds = L.latLngBounds([[uLat, uLng], [pharmacy.lat, pharmacy.lng]]);
+      foodMapInstance.fitBounds(bounds, { padding: [40, 40] });
+    }
+  }, 100);
 }
-
-// Init
-document.addEventListener('DOMContentLoaded', () => {
-  renderGlossary(0);
-  updateDayContent('mar'); // <-- Dice alla pagina di prendere i dati di MARTEDÌ
-});
     
 // --- DATABASE RISTORANTI & CAFFÈ ---
 const foodPlaces = [
