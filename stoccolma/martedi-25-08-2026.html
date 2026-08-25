@@ -1730,6 +1730,13 @@ function getUserNearestStation() {
   const box = document.getElementById('nearest-station-box');
   const mapContainer = document.getElementById('metro-leaflet-map');
 
+  // 1. Se abbiamo già le coordinate dal tracciamento live, calcola INSTANTANEMENTE
+  if (typeof lastCoords !== 'undefined' && lastCoords) {
+    processNearestStation(lastCoords.lat, lastCoords.lng);
+    return;
+  }
+
+  // 2. Se non ancora disponibili, mostra caricamento ed esegui fallback rapido
   box.innerHTML = '<p class="text-xs font-black text-indigo-600"><i class="fa-solid fa-spinner fa-spin"></i> Rilevamento posizione GPS...</p>';
 
   if (!navigator.geolocation) {
@@ -1737,24 +1744,32 @@ function getUserNearestStation() {
     return;
   }
 
+  // Fallback rapido con timeout a 5 secondi
   navigator.geolocation.getCurrentPosition(
     (pos) => {
-      const userLat = pos.coords.latitude;
-      const userLng = pos.coords.longitude;
+      processNearestStation(pos.coords.latitude, pos.coords.longitude);
+    },
+    () => {
+      box.innerHTML = '<p class="text-xs font-bold text-red-500">Errore GPS. Attiva la posizione nel browser.</p>';
+    },
+    { enableHighAccuracy: false, timeout: 5000, maximumAge: 10000 }
+  );
 
-      let nearest = null;
-      let minDistance = Infinity;
+  // Funzione di calcolo ed elaborazione mappa
+  function processNearestStation(userLat, userLng) {
+    let nearest = null;
+    let minDistance = Infinity;
 
-      metroStations.forEach(st => {
-        const dist = getDistanceMeters(userLat, userLng, st.lat, st.lng);
-        if (dist < minDistance) {
-          minDistance = dist;
-          nearest = st;
-        }
-      });
+    metroStations.forEach(st => {
+      const dist = getDistanceMeters(userLat, userLng, st.lat, st.lng);
+      if (dist < minDistance) {
+        minDistance = dist;
+        nearest = st;
+      }
+    });
 
-      const distMeters = Math.round(minDistance);
-      const walkMin = Math.round(minDistance / 80);
+    const distMeters = Math.round(minDistance);
+    const walkMin = Math.round(minDistance / 80);
 
       // Aggiorna testo
       box.innerHTML = `
