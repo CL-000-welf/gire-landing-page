@@ -577,28 +577,25 @@
     </div>
   </div>
  <!-- =================================================== -->
- <!-- SEZIONE DOVE MANGIARE & FIKA (SLIDER ORIZZONTALE)   -->
- <!-- =================================================== -->
+<!-- SEZIONE DOVE MANGIARE & FIKA (SLIDER ORIZZONTALE)   -->
+<!-- =================================================== -->
 <section class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 mb-6">
-  <div class="flex items-center justify-between mb-3">
-    <div class="flex items-center gap-2.5">
-      <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg">
+  
+  <!-- Header Sezione Uniformato a Itinerario -->
+  <div class="flex items-center justify-between mb-5 border-b border-slate-100 pb-4">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 text-lg shrink-0">
         <i class="fa-solid fa-utensils"></i>
       </div>
-     <div class="flex items-center justify-between mb-3">
-  <div class="flex items-center gap-2.5">
-    <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg">
-      <i class="fa-solid fa-utensils"></i>
+      <div>
+        <p class="text-[9px] font-black uppercase tracking-widest text-indigo-600">Cibo</p>
+        <h3 class="font-black italic text-lg uppercase leading-tight text-slate-900">Ristoranti & Fika</h3>
+      </div>
     </div>
-    <div>
-      <h3 class="font-black text-slate-900 text-base leading-tight">Cibo</h3>
-      <p class="text-[11px] font-bold text-slate-400">Scorri i consigli nella zona di oggi</p>
-    </div>
+    <button onclick="getNearbyFood()" class="bg-amber-50 border border-amber-200 text-amber-700 text-xs font-black px-3 py-2 rounded-xl flex items-center gap-1.5 hover:bg-amber-100 transition-all shrink-0">
+      <i class="fa-solid fa-location-crosshairs text-amber-600"></i> Vicino a me
+    </button>
   </div>
-  <button onclick="getNearbyFood()" class="bg-amber-50 text-amber-700 text-xs font-black px-3 py-1.5 rounded-xl flex items-center gap-1.5 hover:bg-amber-100 transition-all shrink-0">
-    <i class="fa-solid fa-location-crosshairs text-amber-600"></i> Vicino a me
-  </button>
-</div>
 
   <!-- Filtri Categoria con Icone Font Awesome -->
   <div class="flex gap-2 overflow-x-auto pb-2 mb-3 no-scrollbar text-[11px] font-black">
@@ -620,6 +617,7 @@
   <div id="food-list-container" class="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 no-scrollbar">
     <!-- Le schede verranno inserite dinamicamente affiancate -->
   </div>
+
 </section>
   
   <!-- ====================================================== -->
