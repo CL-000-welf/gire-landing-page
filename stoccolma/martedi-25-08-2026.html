@@ -2035,54 +2035,43 @@ function toggleInfoAccordion(id) {
   }
 }
 
-// FUNZIONE MOSTRA FARMACIA CON MODALE E MAPPA LEAFLET
+// FUNZIONE ROBUSTA MOSTRA FARMACIA SU LEAFLET
 function locateNearestPharmacy() {
-  const pharmacyData = {
-    title: "Apoteket C W Scheele (Farmacia 24/7)",
-    address: "Klarabergsgatan 64, Stoccolma",
-    lat: 59.3328,
-    lng: 18.0505,
-    icon: "fa-kit-medical",
-    color: "#e11d48"
-  };
-
-  // 1. Se nel tuo progetto usi una funzione per i modali mappa (es. openMapModal), la richiamiamo direttamente:
-  if (typeof openMapModal === 'function') {
-    openMapModal(pharmacyData.title, pharmacyData.lat, pharmacyData.lng, pharmacyData.address);
-    return;
-  }
-
-  // 2. In alternativa, se usi la mappa principale Leaflet in pagina:
   const mapElement = document.getElementById('map') || document.querySelector('.leaflet-container');
   
   if (mapElement) {
     mapElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
-  // Recupera l'istanza valida di Leaflet
-  const activeMap = window.map || (window.leafletMap) || (mapElement && mapElement._leaflet_map);
+  // Trova l'istanza di Leaflet sia se globale sia se salvata nell'elemento DOM
+  const activeMap = window.map || (mapElement && mapElement._leaflet_map);
 
   if (activeMap) {
+    const lat = 59.3328;
+    const lng = 18.0505;
+
     setTimeout(() => {
-      activeMap.flyTo([pharmacyData.lat, pharmacyData.lng], 16, { duration: 1.5 });
-      
-      // Creazione Marker Farmacia personalizzato
-      L.marker([pharmacyData.lat, pharmacyData.lng])
-        .addTo(activeMap)
-        .bindPopup(`
-          <div style="text-align: center; font-family: sans-serif; color: #0f172a; padding: 4px;">
-            <strong style="color: ${pharmacyData.color}; font-size: 13px;">
-              <i class="fa-solid ${pharmacyData.icon}"></i> ${pharmacyData.title}
-            </strong><br>
-            <span style="font-size: 11px; color: #475569;">${pharmacyData.address}</span>
+      activeMap.flyTo([lat, lng], 16, { duration: 1.5 });
+      L.popup()
+        .setLatLng([lat, lng])
+        .setContent(`
+          <div style="text-align: center; font-family: sans-serif; color: #0f172a; padding: 2px;">
+            <strong style="color: #e11d48; font-size: 12px;"><i class="fa-solid fa-kit-medical"></i> Apoteket C W Scheele (24/7)</strong><br>
+            <span style="font-size: 11px; color: #475569;">Klarabergsgatan 64, Stoccolma</span>
           </div>
         `)
-        .openPopup();
-    }, 400);
+        .openOn(activeMap);
+    }, 300);
   } else {
     console.warn("Istanza mappa Leaflet non trovata.");
   }
 }
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  renderGlossary(0);
+  updateDayContent('mar'); // <-- Dice alla pagina di prendere i dati di MARTEDÌ
+});
     
 // --- DATABASE RISTORANTI & CAFFÈ ---
 const foodPlaces = [
