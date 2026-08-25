@@ -1328,14 +1328,23 @@ startGeolocation();
 
     row.classList.remove('done', 'active', 'future');
 
-    // Se NON siamo nel giorno della gita, tutte le tappe restano grigie/future
-    if (!isTargetDay) {
-      row.classList.add('future');
-      dot.style.background = '#e2e8f0';
-      dot.style.color = '#94a3b8';
-      dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
-      return;
-    }
+   // (Mantiene la prima tappa arancione prima dell'inizio o nei giorni di test)
+const firstTime = times[0];
+
+if (!isTargetDay || currentMinutes < firstTime) {
+  if (index === 0) {
+    row.classList.add('active');
+    dot.style.background = '#f6a623';
+    dot.style.color = '#fff';
+    dot.innerHTML = '<i class="fa-solid fa-location-dot"></i>';
+  } else {
+    row.classList.add('future');
+    dot.style.background = '#e2e8f0';
+    dot.style.color = '#94a3b8';
+    dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
+  }
+  return;
+}
 
     // Se SIAMO nel giorno della gita, colora in base all'orario
     if (currentMinutes >= rowTime && currentMinutes < nextTime) {
