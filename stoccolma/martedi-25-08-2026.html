@@ -1730,53 +1730,31 @@ function getUserNearestStation() {
   const box = document.getElementById('nearest-station-box');
   const mapContainer = document.getElementById('metro-leaflet-map');
 
-  // Controllo di sicurezza: verifichiamo se lastCoords esiste ed ha dati validi
-  const validCoords = (typeof lastCoords !== 'undefined' && lastCoords && lastCoords.lat && lastCoords.lng) 
-    ? lastCoords 
-    : null;
-
-  // 1. Se le coordinate sono già in memoria, elabora SUBITO
-  if (validCoords) {
-    processNearestStation(validCoords.lat, validCoords.lng);
-    return;
-  }
-
-  // 2. Altrimenti mostra caricamento e richiedi il GPS
   box.innerHTML = '<p class="text-xs font-black text-indigo-600"><i class="fa-solid fa-spinner fa-spin"></i> Rilevamento posizione GPS...</p>';
 
   if (!navigator.geolocation) {
-    box.innerHTML = '<p class="text-xs font-bold text-red-500">Geolocalizzazione non supportata dal browser.</p>';
+    box.innerHTML = '<p class="text-xs font-bold text-red-500">Geolocalizzazione non supportata.</p>';
     return;
   }
 
   navigator.geolocation.getCurrentPosition(
     (pos) => {
-      processNearestStation(pos.coords.latitude, pos.coords.longitude);
-    },
-    (err) => {
-      console.error("Errore GPS:", err);
-      box.innerHTML = '<p class="text-xs font-bold text-red-500">Impossibile ottenere la posizione. Attiva il GPS.</p>';
-    },
-    { enableHighAccuracy: false, timeout: 10000, maximumAge: 30000 }
-  );
+      const userLat = pos.coords.latitude;
+      const userLng = pos.coords.longitude;
 
-  // Funzione interna per calcolare la stazione e aggiornare la mappa
-  function processNearestStation(userLat, userLng) {
-    let nearest = null;
-    let minDistance = Infinity;
+      let nearest = null;
+      let minDistance = Infinity;
 
-    metroStations.forEach(st => {
-      const dist = getDistanceMeters(userLat, userLng, st.lat, st.lng);
-      if (dist < minDistance) {
-        minDistance = dist;
-        nearest = st;
-      }
-    });
+      metroStations.forEach(st => {
+        const dist = getDistanceMeters(userLat, userLng, st.lat, st.lng);
+        if (dist < minDistance) {
+          minDistance = dist;
+          nearest = st;
+        }
+      });
 
-    if (!nearest) return;
-
-    const distMeters = Math.round(minDistance);
-    const walkMin = Math.round(minDistance / 80);
+      const distMeters = Math.round(minDistance);
+      const walkMin = Math.round(minDistance / 80);
 
       // Aggiorna testo
       box.innerHTML = `
