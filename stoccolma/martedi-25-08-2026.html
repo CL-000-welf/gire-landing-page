@@ -1105,86 +1105,6 @@
     }
 
 
-// =====================================================================
-// GEOLOCALIZZAZIONE UTENTE (MAPPA PRINCIPALE + MODALE)
-// =====================================================================
-
-let userMarkerMain = null;
-let userCircleMain = null;
-
-let userMarkerModal = null;
-let userCircleModal = null;
-
-let lastCoords = null; // Memorizza l'ultima posizione GPS rilevata
-
-const userIcon = createGiantIcon('#0284c7', 'fa-person-dot-location', true);
-
-// Disegna o aggiorna il pin + cerchio su una mappa
-function drawUserOnMap(targetMap, marker, circle, lat, lng, accuracy) {
-  if (!targetMap) return { marker, circle };
-
-  const label = `<strong>La tua posizione</strong><br>Precisione: ±${Math.round(accuracy)}m`;
-
-  if (!marker) {
-    marker = L.marker([lat, lng], { icon: userIcon }).addTo(targetMap).bindPopup(label);
-  } else {
-    marker.setLatLng([lat, lng]).setPopupContent(label);
-  }
-
-  if (!circle) {
-    circle = L.circle([lat, lng], {
-      radius: accuracy,
-      color: '#0284c7',
-      fillColor: '#38bdf8',
-      fillOpacity: 0.2,
-      weight: 1.5
-    }).addTo(targetMap);
-  } else {
-    circle.setLatLng([lat, lng]).setRadius(accuracy);
-  }
-
-  return { marker, circle };
-}
-
-// Riceve la posizione GPS e la applica
-function onLocationFound(lat, lng, accuracy) {
-  lastCoords = { lat, lng, accuracy };
-
-  // Mappa Principale
-  const main = drawUserOnMap(map, userMarkerMain, userCircleMain, lat, lng, accuracy);
-  userMarkerMain = main.marker;
-  userCircleMain = main.circle;
-
-  // Mappa Modale (se già aperta)
-  if (modalMap) {
-    const modal = drawUserOnMap(modalMap, userMarkerModal, userCircleModal, lat, lng, accuracy);
-    userMarkerModal = modal.marker;
-    userCircleModal = modal.circle;
-  }
-}
-
-// Avvio tracciamento GPS
-function startGeolocation() {
-  if (!navigator.geolocation) return;
-
-  navigator.geolocation.watchPosition(
-    (pos) => {
-      onLocationFound(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy);
-    },
-    (err) => {
-      console.warn("Errore GPS:", err.message);
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 20000,
-      maximumAge: 0
-    }
-  );
-}
-
-startGeolocation();
-
-
 
     
     // Popolamento Mappa Principale
@@ -1227,25 +1147,24 @@ startGeolocation();
     let modalMap = null;
     let modalHotelCircle = null;
 
-    function openMapModal() {
-      document.getElementById('mapModal').style.display = 'flex';
-      if (!modalMap) {
-        modalMap = L.map('map-modal-container', { zoomControl: true }).setView([hotel.lat, hotel.lng], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(modalMap);
-        modalHotelCircle = renderMapElements(modalMap);
-      }
-      // ---> APPENA SI APRE LA MAPPA MOSTRA SUBITO LA POSIZIONE SALVATA <---
-  if (lastCoords) {
-    const modal = drawUserOnMap(modalMap, userMarkerModal, userCircleModal, lastCoords.lat, lastCoords.lng, lastCoords.accuracy);
-    userMarkerModal = modal.marker;
-    userCircleModal = modal.circle;
+   function openMapModal() {
+  document.getElementById('mapModal').style.display = 'flex';
+  if (!modalMap) {
+    modalMap = L.map('map-modal-container', { zoomControl: true }).setView([hotel.lat, hotel.lng], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(modalMap);
+    modalHotelCircle = renderMapElements(modalMap);
+  }
+
+  // Se esistono coordinate salvate, aggiunge subito il marker sulla mappa modale
+  if (lastCoords && !userMarkerModal) {
+    userMarkerModal = L.marker([lastCoords.lat, lastCoords.lng], { icon: userIcon }).addTo(modalMap).bindPopup('<strong>Tu sei qui</strong>');
   }
 
   setTimeout(() => {
     modalMap.invalidateSize();
     modalMap.fitBounds(modalHotelCircle.getBounds().pad(0.1));
   }, 200);
-    }
+}
 
     function closeMapModal() {
       document.getElementById('mapModal').style.display = 'none';
@@ -2302,6 +2221,56 @@ function scrollToSection(type) {
       }
     }
   });
+
+    // =====================================================================
+// GEOLOCALIZZAZIONE UTENTE (MAPPA PRINCIPALE + MODALE)
+// =====================================================================
+
+let userMarkerMain = null;
+let userMarkerModal = null;
+let lastCoords = null; // Coordinate condivise per la ricerca fermata Metro
+
+// Icona azzurra con pulse
+const userIcon = createGiantIcon('#0284c7', 'fa-person-dot-location', true);
+
+function updateUserLocation(lat, lng) {
+  lastCoords = { lat, lng };
+
+  // 1. Mappa Principale
+  if (typeof map !== 'undefined' && map) {
+    if (!userMarkerMain) {
+      userMarkerMain = L.marker([lat, lng], { icon: userIcon }).addTo(map).bindPopup('<strong>Tu sei qui</strong>');
+    } else {
+      userMarkerMain.setLatLng([lat, lng]);
+    }
+  }
+
+  // 2. Mappa Modale (se aperta)
+  if (typeof modalMap !== 'undefined' && modalMap) {
+    if (!userMarkerModal) {
+      userMarkerModal = L.marker([lat, lng], { icon: userIcon }).addTo(modalMap).bindPopup('<strong>Tu sei qui</strong>');
+    } else {
+      userMarkerModal.setLatLng([lat, lng]);
+    }
+  }
+}
+
+// Avvio tracciamento continuo
+if (navigator.geolocation) {
+  navigator.geolocation.watchPosition(
+    (pos) => {
+      updateUserLocation(pos.coords.latitude, pos.coords.longitude);
+    },
+    (err) => {
+      console.warn("Segnale GPS non disponibile:", err.message);
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    }
+  );
+}
     
   </script>
 </body>
