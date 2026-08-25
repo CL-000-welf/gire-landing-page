@@ -2120,6 +2120,18 @@ let foodMapInstance = null;
 let foodMarker = null;
 let foodUserMarker = null;
 
+// Funzione di supporto per il calcolo della distanza (Haversine)
+function getDistanceMeters(lat1, lon1, lat2, lon2) {
+  const R = 6371000;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
 // Renderizza i ristoranti come card orizzontali
 function renderFoodList(places = foodPlaces) {
   const container = document.getElementById('food-list-container');
@@ -2189,6 +2201,13 @@ function filterFood(type) {
 // Trova i locali più vicini alla posizione GPS dell'utente
 function getNearbyFood() {
   const container = document.getElementById('food-list-container');
+
+  // 1. Se le coordinate sono già state memorizzate dal tracciamento live, calcola SUBITO
+  if (typeof lastCoords !== 'undefined' && lastCoords && lastCoords.lat && lastCoords.lng) {
+    processNearbyFood(lastCoords.lat, lastCoords.lng);
+    return;
+  }
+
   container.innerHTML = `<p class="text-xs font-black text-amber-600 text-center py-4 w-full"><i class="fa-solid fa-spinner fa-spin"></i> Calcolo locali più vicini a te...</p>`;
 
   if (!navigator.geolocation) {
@@ -2197,32 +2216,36 @@ function getNearbyFood() {
     return;
   }
 
+  // 2. Richiesta GPS con timeout a 8 secondi per evitare il caricamento infinito
   navigator.geolocation.getCurrentPosition(
     (pos) => {
-      const userLat = pos.coords.latitude;
-      const userLng = pos.coords.longitude;
-
-      const placesWithDist = foodPlaces.map(place => {
-        const dist = getDistanceMeters(userLat, userLng, place.lat, place.lng);
-        return { ...place, distance: Math.round(dist) };
-      });
-
-      placesWithDist.sort((a, b) => a.distance - b.distance);
-
-      if (currentFoodFilter !== 'all') {
-        const filtered = placesWithDist.filter(p => p.type === currentFoodFilter);
-        renderFoodList(filtered);
-      } else {
-        renderFoodList(placesWithDist);
-      }
-      
-      container.scrollLeft = 0;
+      processNearbyFood(pos.coords.latitude, pos.coords.longitude);
     },
-    () => {
-      alert("Impossibile accedere alla tua posizione GPS.");
+    (err) => {
+      console.warn("Errore GPS Ristoranti:", err.message);
+      alert("Impossibile accedere alla posizione GPS. Verifica i permessi del browser.");
       renderFoodList();
-    }
+    },
+    { enableHighAccuracy: false, timeout: 8000, maximumAge: 30000 }
   );
+
+  function processNearbyFood(userLat, userLng) {
+    const placesWithDist = foodPlaces.map(place => {
+      const dist = getDistanceMeters(userLat, userLng, place.lat, place.lng);
+      return { ...place, distance: Math.round(dist) };
+    });
+
+    placesWithDist.sort((a, b) => a.distance - b.distance);
+
+    if (currentFoodFilter !== 'all') {
+      const filtered = placesWithDist.filter(p => p.type === currentFoodFilter);
+      renderFoodList(filtered);
+    } else {
+      renderFoodList(placesWithDist);
+    }
+    
+    container.scrollLeft = 0;
+  }
 }
 
 // Apri Modale Mappa per il Ristorante
@@ -2258,17 +2281,14 @@ function openFoodMap(placeId) {
     foodMarker = L.marker([place.lat, place.lng]).addTo(foodMapInstance)
       .bindPopup(`<b>${place.name}</b><br>${place.address}`).openPopup();
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((pos) => {
-        const uLat = pos.coords.latitude;
-        const uLng = pos.coords.longitude;
+    // Sfrutta le coordinate memorizzate o richiede la posizione al volo
+    const uLat = (typeof lastCoords !== 'undefined' && lastCoords) ? lastCoords.lat : null;
+    const uLng = (typeof lastCoords !== 'undefined' && lastCoords) ? lastCoords.lng : null;
 
-        foodUserMarker = L.marker([uLat, uLng]).addTo(foodMapInstance)
-          .bindPopup("<b>Tu sei qui</b>");
-
-        const bounds = L.latLngBounds([[uLat, uLng], [place.lat, place.lng]]);
-        foodMapInstance.fitBounds(bounds, { padding: [40, 40] });
-      }, () => {});
+    if (uLat && uLng) {
+      foodUserMarker = L.marker([uLat, uLng]).addTo(foodMapInstance).bindPopup("<b>Tu sei qui</b>");
+      const bounds = L.latLngBounds([[uLat, uLng], [place.lat, place.lng]]);
+      foodMapInstance.fitBounds(bounds, { padding: [40, 40] });
     }
   }, 100);
 }
