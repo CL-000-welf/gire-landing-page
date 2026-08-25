@@ -585,15 +585,20 @@
       <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg">
         <i class="fa-solid fa-utensils"></i>
       </div>
-      <div>
-        <h3 class="font-black text-slate-900 text-base leading-tight">Dove Mangiare & Fika</h3>
-        <p class="text-[11px] font-bold text-slate-400">Scorri i consigli nella zona di oggi</p>
-      </div>
+     <div class="flex items-center justify-between mb-3">
+  <div class="flex items-center gap-2.5">
+    <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg">
+      <i class="fa-solid fa-utensils"></i>
     </div>
-    <button onclick="getNearbyFood()" class="bg-amber-50 text-amber-700 text-xs font-black px-3 py-1.5 rounded-xl flex items-center gap-1.5 hover:bg-amber-100 transition-all shrink-0">
-      <i class="fa-solid fa-location-crosshairs text-amber-600"></i> Vicino a me
-    </button>
+    <div>
+      <h3 class="font-black text-slate-900 text-base leading-tight">Cibo</h3>
+      <p class="text-[11px] font-bold text-slate-400">Scorri i consigli nella zona di oggi</p>
+    </div>
   </div>
+  <button onclick="getNearbyFood()" class="bg-amber-50 text-amber-700 text-xs font-black px-3 py-1.5 rounded-xl flex items-center gap-1.5 hover:bg-amber-100 transition-all shrink-0">
+    <i class="fa-solid fa-location-crosshairs text-amber-600"></i> Vicino a me
+  </button>
+</div>
 
   <!-- Filtri Categoria con Icone Font Awesome -->
   <div class="flex gap-2 overflow-x-auto pb-2 mb-3 no-scrollbar text-[11px] font-black">
