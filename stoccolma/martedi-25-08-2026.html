@@ -1317,17 +1317,16 @@ startGeolocation();
 
     
 
-     // --- AGGIORNAMENTO TIMELINE IN BASE ALL'ORARIO ---
-  function updateTimelineStatus() {
+// --- AGGIORNAMENTO TIMELINE IN BASE ALL'ORARIO ---
+function updateTimelineStatus() {
   const rows = document.querySelectorAll('.timeline-row');
   const now = new Date();
   
-  // Data target della gita: 26 Agosto 2026
+  // Data target della gita: 25 Agosto 2026
   const targetYear = 2026;
-  const targetMonth = 7; // I mesi in JavaScript vanno da 0 (Gen) a 11 (Dic), quindi Agosto è 7
+  const targetMonth = 7; // Agosto = 7 (da 0 a 11)
   const targetDay = 25;
 
-  // Verifica se OGGI è esattamente il giorno della gita
   const isTargetDay = (
     now.getFullYear() === targetYear &&
     now.getMonth() === targetMonth &&
@@ -1340,6 +1339,8 @@ startGeolocation();
     return h * 60 + m;
   });
 
+  const firstTime = times[0];
+
   rows.forEach((row, index) => {
     const rowTime = times[index];
     const nextTime = times[index + 1] || 24 * 60;
@@ -1347,16 +1348,25 @@ startGeolocation();
 
     row.classList.remove('done', 'active', 'future');
 
-    // Se NON siamo nel giorno della gita, tutte le tappe restano grigie/future
-    if (!isTargetDay) {
-      row.classList.add('future');
-      dot.style.background = '#e2e8f0';
-      dot.style.color = '#94a3b8';
-      dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
+    // Se non è il giorno della gita OPPURE siamo prima dell'orario della prima tappa (es. prima delle 09:00)
+    if (!isTargetDay || currentMinutes < firstTime) {
+      if (index === 0) {
+        // La prima tappa resta attiva (arancione) come punto di partenza
+        row.classList.add('active');
+        dot.style.background = '#f6a623';
+        dot.style.color = '#fff';
+        dot.innerHTML = '<i class="fa-solid fa-location-dot"></i>';
+      } else {
+        // Tutte le altre tappe restano grigie
+        row.classList.add('future');
+        dot.style.background = '#e2e8f0';
+        dot.style.color = '#94a3b8';
+        dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
+      }
       return;
     }
 
-    // Se SIAMO nel giorno della gita, colora in base all'orario
+    // Se siamo durante la gita (dalle 09:00 in poi)
     if (currentMinutes >= rowTime && currentMinutes < nextTime) {
       row.classList.add('active');
       dot.style.background = '#f6a623';
@@ -1375,9 +1385,10 @@ startGeolocation();
     }
   });
 }
-    // Esegui aggiornamento timeline all'avvio e ogni minuto
-    updateTimelineStatus();
-    setInterval(updateTimelineStatus, 60000);
+
+// Esegui all'avvio
+updateTimelineStatus();
+setInterval(updateTimelineStatus, 60000);
 
     // --- SWIPE UP PER SCOMPARSA NOTIFICA (STILE NATIVO) ---
 (function initPushAlertSwipe() {
