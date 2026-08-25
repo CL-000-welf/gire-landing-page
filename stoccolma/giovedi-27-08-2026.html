@@ -278,7 +278,7 @@
 .radial-item-wrapper:nth-child(8) { top: 237px; left: 189px; }
 
 /* 8. USI E COSTUMI (0° / 360° -> Orizzontale a destra) */
-.radial-item-wrapper:nth-child(9) { top: 180px; left: 233px; }
+.radial-item-wrapper:nth-child(9) { top: 180px; left: 240px; }
   
   
   </style>
@@ -402,15 +402,17 @@
     </div>
   </div>
 
-  <!-- BOTTONI RAPIDI: METRO & CAMBIO VALUTA -->
+  <!-- ========================================== -->
+  <!-- BOTTONI RAPIDI: METRO & CAMBIO VALUTA      -->
+  <!-- ========================================== -->
 <div class="grid grid-cols-2 gap-3 mb-8">
   <button onclick="openMetroModal()" class="bg-white border border-slate-200 rounded-3xl p-4 flex items-center gap-3 shadow-sm active:scale-95 transition-all text-left">
     <div class="bg-blue-600 text-white w-10 h-10 rounded-2xl flex items-center justify-center font-black text-lg shrink-0">
-      T
+      <i class="fa-solid fa-subway"></i>
     </div>
     <div>
-      <p class="text-[9px] font-black uppercase text-indigo-600 tracking-wider">Mezzi SL</p>
-      <h4 class="font-black text-xs uppercase italic leading-tight text-slate-800">Metro & GPS <i class="fa-solid fa-chevron-right text-[10px]"></i></h4>
+      <p class="text-[9px] font-black uppercase text-indigo-600 tracking-wider">Metro</p>
+      <h4 class="font-black text-xs uppercase italic leading-tight text-slate-800">Stazioni <i class="fa-solid fa-chevron-right text-[10px]"></i></h4>
     </div>
   </button>
 
@@ -426,7 +428,7 @@
     </div>
   </button>
 </div>
-
+  
 <!-- MODALE CAMBIO RAPIDO SEK / EUR (FINO A 1000€) -->
 <div id="currencyModal" class="hidden fixed inset-0 bg-slate-900/90 z-[10000] items-center justify-center p-4 backdrop-blur-md" onclick="closeCurrencyModal()">
   <div class="bg-white rounded-[2.5rem] max-w-md w-full p-6 shadow-2xl relative" onclick="event.stopPropagation()">
@@ -522,11 +524,23 @@
 </div>
 
   
-  <!-- ========================================== -->
-  <!--           5. TIMELINE / PROGRAMMA GIORNO   -->
+<!-- ========================================== -->
+  <!-- 5. TIMELINE / PROGRAMMA GIORNO             -->
   <!-- ========================================== -->
   <div id="tappe" class="safe-card p-6 mb-8">
-    <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6 italic text-center">Programma giornata</h3>
+    
+    <!-- Header Sezione: Programma Giornata -->
+<div class="flex items-center justify-between mb-5 border-b border-slate-100 pb-4">
+  <div class="flex items-center gap-3">
+    <div class="w-10 h-10 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 text-lg shrink-0">
+      <i class="fa-solid fa-calendar-day"></i>
+    </div>
+    <div>
+      <p class="text-[9px] font-black uppercase tracking-widest text-indigo-600">Tappe</p>
+      <h3 class="font-black italic text-lg uppercase leading-tight text-slate-900">Itinerario giornata</h3>
+    </div>
+  </div>
+</div>
     <div class="relative">
       <div class="timeline-line"></div>
       
@@ -573,20 +587,22 @@
     </div>
   </div>
  <!-- =================================================== -->
- <!-- SEZIONE DOVE MANGIARE & FIKA (SLIDER ORIZZONTALE)   -->
- <!-- =================================================== -->
+<!-- SEZIONE DOVE MANGIARE & FIKA (SLIDER ORIZZONTALE)   -->
+<!-- =================================================== -->
 <section class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 mb-6">
-  <div class="flex items-center justify-between mb-3">
-    <div class="flex items-center gap-2.5">
-      <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg">
+  
+  <!-- Header Sezione Uniformato a Itinerario -->
+  <div class="flex items-center justify-between mb-5 border-b border-slate-100 pb-4">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 text-lg shrink-0">
         <i class="fa-solid fa-utensils"></i>
       </div>
       <div>
-        <h3 class="font-black text-slate-900 text-base leading-tight">Dove Mangiare & Fika</h3>
-        <p class="text-[11px] font-bold text-slate-400">Scorri i consigli nella zona di oggi</p>
+        <p class="text-[9px] font-black uppercase tracking-widest text-indigo-600">Cibo</p>
+        <h3 class="font-black italic text-lg uppercase leading-tight text-slate-900">Dove mangiare</h3>
       </div>
     </div>
-    <button onclick="getNearbyFood()" class="bg-amber-50 text-amber-700 text-xs font-black px-3 py-1.5 rounded-xl flex items-center gap-1.5 hover:bg-amber-100 transition-all shrink-0">
+    <button onclick="getNearbyFood()" class="bg-amber-50 border border-amber-200 text-amber-700 text-xs font-black px-3 py-2 rounded-xl flex items-center gap-1.5 hover:bg-amber-100 transition-all shrink-0">
       <i class="fa-solid fa-location-crosshairs text-amber-600"></i> Vicino a me
     </button>
   </div>
@@ -613,11 +629,22 @@
   </div>
 </section>
   
-  <!-- ========================================== -->
-  <!--           6. CARD DIARIO / SCHEDE TAPPE   -->
-  <!-- ========================================== -->
-  <div id="diario">
-  <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1 italic">I diari di viaggio</h3></div>
+<!-- ====================================================== -->
+  <!-- 6. CARD DIARIO / SCHEDE TAPPE (INTERAMENTE CLICCABILI) -->
+  <!-- ====================================================== -->
+<section id="diario" class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 mb-6">
+  <!-- Header Sezione: I Diari di Viaggio -->
+<div class="flex items-center justify-between mb-5 border-b border-slate-200/60 pb-4">
+  <div class="flex items-center gap-3">
+    <div class="w-10 h-10 rounded-2xl bg-sky-50 border border-sky-100 flex items-center justify-center text-sky-600 text-lg shrink-0">
+      <i class="fa-solid fa-book-open"></i>
+    </div>
+    <div>
+      <p class="text-[9px] font-black uppercase tracking-widest text-sky-600">Diario</p>
+      <h3 class="font-black italic text-lg uppercase leading-tight text-slate-900">Approfondimenti <br>e immagini</h3>
+    </div>
+  </div>
+</div>
   <div class="space-y-6 mb-12">
     
     <!-- Card 1: Södermalm -->
@@ -711,6 +738,7 @@
       </div>
     </article>
   </div>
+  </section>
 <!-- ================================================ -->
 <!-- SEZIONE INFO UTILI & GLOSSARIO AUDIO INTERATTIVO -->
 <!-- ================================================ -->
@@ -720,11 +748,11 @@
   <div class="flex items-center justify-between mb-5 border-b border-slate-800 pb-4">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-2xl bg-indigo-600/30 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-lg">
-        <i class="fa-solid fa-circle-info"></i>
+        <i class="fa-solid fa-life-ring"></i>
       </div>
       <div>
         <p class="text-[9px] font-black uppercase tracking-widest text-indigo-400">Guida Rapida</p>
-        <h3 class="font-black italic text-lg uppercase leading-tight">Info Utili & Glossario</h3>
+        <h3 class="font-black italic text-lg uppercase leading-tight">Info Utili e Glossario</h3>
       </div>
     </div>
   </div>
@@ -1022,8 +1050,8 @@
 
     <!-- 8. Guida Rapida (Scroll) -->
     <button onclick="scrollToSection('guida'); toggleRadialMenu();" class="radial-item-wrapper">
-      <div class="radial-item-btn text-rose-600"><i class="fa-solid fa-compass"></i></div>
-      <span class="radial-item-label">GUIDA</span>
+      <div class="radial-item-btn text-rose-600"><i class="fa-solid fa-life-ring"></i></div>
+      <span class="radial-item-label">GUIDA<br>RAPIDA</span>
     </button>
   </div>
 
@@ -2052,7 +2080,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateDayContent('gio'); // <-- Dice alla pagina di prendere i dati di GIOVEDÌ
 });
 
-   // --- DATABASE RISTORANTI & CAFFÈ ---
+ // --- DATABASE RISTORANTI & CAFFÈ ---
 const foodPlaces = [
   {
     id: 1,
@@ -2118,6 +2146,97 @@ const foodPlaces = [
     desc: "Chiosco storico di aringa fritta servita su pane di segale o con purè.",
     tip: "Street food svedese super tipico, gustoso ed economico.",
     address: "Ryssgården, Slussen"
+  },
+  {
+    id: 6,
+    name: "Meatballs for the People",
+    type: "svedese",
+    icon: "fa-bowl-food",
+    typeLabel: "Tipico Svedese",
+    price: "€€",
+    lat: 59.3137,
+    lng: 18.0767,
+    desc: "Il tempio delle polpette a Södermalm: carni classiche e selvaggina (alce, cinghiale).",
+    tip: "Ordina il 'Tasting Plate' per assaggiare diverse varietà di carne.",
+    address: "Nytorgsgatan 30"
+  },
+  {
+    id: 7,
+    name: "Café Pascal",
+    type: "fika",
+    icon: "fa-mug-hot",
+    typeLabel: "Fika & Caffè",
+    price: "€€",
+    lat: 59.3408,
+    lng: 18.0538,
+    desc: "Caffetteria premiata in stile industrial chic con dolci artigianali e caffè specialty.",
+    tip: "Il loro Cinnamon Bun al cardamomo è tra i migliori della città.",
+    address: "Norrtullsgatan 4"
+  },
+  {
+    id: 8,
+    name: "Kajsas Fisk",
+    type: "quick",
+    icon: "fa-fish",
+    typeLabel: "Tipico / Rapido",
+    price: "€€",
+    lat: 59.3347,
+    lng: 18.0620,
+    desc: "Famoso locale all'interno del mercato coperto Hötorgshallen noto per la zuppa di pesce.",
+    tip: "Zuppa di pesce ricchissima e pane/insalata gratis al buffet.",
+    address: "Hötorgshallen 3"
+  },
+  {
+    id: 9,
+    name: "Östermalms Saluhall",
+    type: "svedese",
+    icon: "fa-utensils",
+    typeLabel: "Tipico Svedese",
+    price: "€€€",
+    lat: 59.3361,
+    lng: 18.0764,
+    desc: "Storico mercato gastronomico del 1888 con banchi di pesce fresco e bistrot svedesi.",
+    tip: "Fermati da Lisa Elmqvist per un toast Skagen (gamberetti) leggendario.",
+    address: "Östermalmstorg 1"
+  },
+  {
+    id: 10,
+    name: "MAX Burgers (Hamngatan)",
+    type: "quick",
+    icon: "fa-burger",
+    typeLabel: "Rapido / Economico",
+    price: "€",
+    lat: 59.3327,
+    lng: 18.0708,
+    desc: "La catena di fast food svedese più amata (battuto persino McDonald's in patria).",
+    tip: "Prova il Frisco Burger e le patatine con salsa deliziosa al formaggio.",
+    address: "Hamngatan 27"
+  },
+  {
+    id: 11,
+    name: "Fabrique Stenugnsbageri",
+    type: "fika",
+    icon: "fa-wheat-awn",
+    typeLabel: "Fika & Dolci",
+    price: "€€",
+    lat: 59.3248,
+    lng: 18.0701,
+    desc: "Fornai artigianali famosi per la cottura in forno a legna e brioche tradizionali.",
+    tip: "I Kardemummabulle qui sono croccanti fuori e morbidissimi dentro.",
+    address: "Lilla Nygatan 12 (Gamla Stan)"
+  },
+  {
+    id: 12,
+    name: "Pelikan",
+    type: "svedese",
+    icon: "fa-beer-mug-empty",
+    typeLabel: "Tipico Svedese",
+    price: "€€€",
+    lat: 59.3130,
+    lng: 18.0762,
+    desc: "Taverna storica del 1904 a Södermalm con architettura Art Nouveau e cibo rustico.",
+    tip: "Ordina lo Sturehofs Strömming o lo stinco di maiale con purè.",
+    address: "Blekingegatan 40"
   }
 ];
 
