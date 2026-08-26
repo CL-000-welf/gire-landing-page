@@ -1305,17 +1305,12 @@ startGeolocation();
   const rows = document.querySelectorAll('.timeline-row');
   const now = new Date();
   
-  // Data target della gita: 26 Agosto 2026
   const targetYear = 2026;
-  const targetMonth = 7; // I mesi in JavaScript vanno da 0 (Gen) a 11 (Dic), quindi Agosto è 7
+  const targetMonth = 7;
   const targetDay = 27;
 
-  // Verifica se OGGI è esattamente il giorno della gita
-  const isTargetDay = (
-    now.getFullYear() === targetYear &&
-    now.getMonth() === targetMonth &&
-    now.getDate() === targetDay
-  );
+  const currentDateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const targetDateOnly = new Date(targetYear, targetMonth, targetDay);
 
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
   const times = Array.from(rows).map(row => {
@@ -1323,47 +1318,78 @@ startGeolocation();
     return h * 60 + m;
   });
 
-  rows.forEach((row, index) => {
-    const rowTime = times[index];
-    const nextTime = times[index + 1] || 24 * 60;
-    const dot = row.querySelector('.dot');
+  const setDone = (row, dot) => {
+    row.classList.remove('active', 'future');
+    row.classList.add('done');
+    dot.style.background = '#10b981';
+    dot.style.color = '#fff';
+    dot.innerHTML = '<i class="fa-solid fa-check"></i>';
+  };
 
-    row.classList.remove('done', 'active', 'future');
-
-   // (Mantiene la prima tappa arancione prima dell'inizio o nei giorni di test)
-const firstTime = times[0];
-
-if (!isTargetDay || currentMinutes < firstTime) {
-  if (index === 0) {
+  const setActive = (row, dot) => {
+    row.classList.remove('done', 'future');
     row.classList.add('active');
     dot.style.background = '#f6a623';
     dot.style.color = '#fff';
     dot.innerHTML = '<i class="fa-solid fa-location-dot"></i>';
-  } else {
+  };
+
+  const setFuture = (row, dot) => {
+    row.classList.remove('done', 'active');
     row.classList.add('future');
     dot.style.background = '#e2e8f0';
     dot.style.color = '#94a3b8';
     dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
-  }
-  return;
-}
+  };
 
-    // Se SIAMO nel giorno della gita, colora in base all'orario
-    if (currentMinutes >= rowTime && currentMinutes < nextTime) {
-      row.classList.add('active');
-      dot.style.background = '#f6a623';
-      dot.style.color = '#fff';
-      dot.innerHTML = '<i class="fa-solid fa-location-dot"></i>';
-    } else if (currentMinutes >= nextTime) {
-      row.classList.add('done');
-      dot.style.background = '#10b981';
-      dot.style.color = '#fff';
-      dot.innerHTML = '<i class="fa-solid fa-check"></i>';
+  // 1. Se la data è già passata -> tutte verdi
+  if (currentDateOnly > targetDateOnly) {
+    rows.forEach(row => setDone(row, row.querySelector('.dot')));
+    return;
+  }
+
+  // 2. Se la data deve ancora arrivare -> 1ª arancione, altre grigie
+  if (currentDateOnly < targetDateOnly) {
+    rows.forEach((row, index) => {
+      const dot = row.querySelector('.dot');
+      if (index === 0) setActive(row, dot);
+      else setFuture(row, dot);
+    });
+    return;
+  }
+
+  // 3. Se siamo nel giorno della gita
+  const firstTime = times[0];
+
+  if (currentMinutes < firstTime) {
+    rows.forEach((row, index) => {
+      const dot = row.querySelector('.dot');
+      if (index === 0) setActive(row, dot);
+      else setFuture(row, dot);
+    });
+    return;
+  }
+
+  rows.forEach((row, index) => {
+    const rowTime = times[index];
+    const isLast = index === rows.length - 1;
+    const nextTime = isLast ? null : times[index + 1];
+    const dot = row.querySelector('.dot');
+
+    if (isLast) {
+      if (currentMinutes >= rowTime) {
+        setDone(row, dot);
+      } else {
+        setFuture(row, dot);
+      }
     } else {
-      row.classList.add('future');
-      dot.style.background = '#e2e8f0';
-      dot.style.color = '#94a3b8';
-      dot.innerHTML = '<i class="fa-solid fa-clock"></i>';
+      if (currentMinutes >= nextTime) {
+        setDone(row, dot);
+      } else if (currentMinutes >= rowTime && currentMinutes < nextTime) {
+        setActive(row, dot);
+      } else {
+        setFuture(row, dot);
+      }
     }
   });
 }
