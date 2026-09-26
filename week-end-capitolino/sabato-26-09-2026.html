@@ -588,22 +588,27 @@
 
 
 <!-- MODALE METRO & TRASPORTI -->
-<div id="metroModal" style="display:none;" class="fixed inset-0 bg-slate-900/90 z-[10000] flex items-center justify-center p-5 backdrop-blur-sm" onclick="closeMetroModal()">
-  <div class="modal-card-map bg-white rounded-[2.3rem] max-w-[600px] w-full p-5 shadow-2xl" onclick="event.stopPropagation()">
-    <div class="flex justify-between items-center mb-3">
-      <h3 class="font-black italic text-lg uppercase text-slate-800">Rete Metro & Trasporti Roma</h3>
+<div id="metroModal" style="display:none;" class="fixed inset-0 bg-slate-900/90 z-[10000] flex items-center justify-center p-4 backdrop-blur-sm" onclick="closeMetroModal()">
+  <div class="modal-card-map bg-white rounded-[2.3rem] max-w-[600px] w-full p-5 shadow-2xl max-h-[90vh] flex flex-col overflow-hidden" onclick="event.stopPropagation()">
+    
+    <!-- Intestazione -->
+    <div class="flex justify-between items-center mb-3 shrink-0">
+      <h3 class="font-black italic text-lg uppercase text-slate-800">Mappa Metro & Trasporti</h3>
       <button onclick="closeMetroModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold p-1">
         <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
 
-    <!-- BOX DINAMICO PER LA STAZIONE PIÙ VICINA (GPS) -->
-    <div id="nearest-metro-info" class="mb-4"></div>
+    <!-- BOX DINAMICO GPS STAZIONE PIÙ VICINA -->
+    <div id="nearest-metro-info" class="mb-3 shrink-0"></div>
 
-    <!-- MAPPA METRO INTERATTIVA -->
-    <div id="metro-map-container" style="height: 350px; border-radius: 1.5rem;" class="w-full bg-slate-100 overflow-hidden border border-slate-200"></div>
+    <!-- IMMAGINE MAPPA SCHEMA METRO (ZOOMABILE / SCROLLABILE) -->
+    <div class="grow overflow-auto border border-slate-200 rounded-2xl bg-slate-50 p-2 flex items-center justify-center">
+      <img src="assets/metro-roma.png" alt="Mappa Metro Roma" class="w-full h-auto object-contain rounded-xl min-w-[300px]"/>
+    </div>
 
-    <button class="w-full bg-slate-900 text-white py-3.5 rounded-2xl font-black uppercase text-xs mt-4 active:scale-95 transition-all" onclick="closeMetroModal()">
+    <!-- Tasto Chiudi -->
+    <button class="w-full bg-slate-900 text-white py-3.5 rounded-2xl font-black uppercase text-xs mt-3 shrink-0 active:scale-95 transition-all" onclick="closeMetroModal()">
       Chiudi
     </button>
   </div>
@@ -770,7 +775,7 @@
 
 // Database stazioni principali Metro di Roma
 const metroStations = [
-  { name: "Metro B - Piramide / Roma Ostiense", lat: 41.8756, lng: 12.4815, line: "Linea B" },
+  { name: "Metro B - Piramide / Roma Ostiense", lat: 41.8756, lng: 12.4815, line: "Linea B / FL1" },
   { name: "Metro B - Garbatella", lat: 41.8664, lng: 12.4828, line: "Linea B" },
   { name: "Metro B - Circo Massimo", lat: 41.8828, lng: 12.4882, line: "Linea B" },
   { name: "Metro B - Colosseo", lat: 41.8914, lng: 12.4914, line: "Linea B" },
@@ -782,7 +787,7 @@ const metroStations = [
   { name: "Metro C - San Giovanni", lat: 41.8862, lng: 12.5093, line: "Linea A / C" }
 ];
 
-// Formula per il calcolo della distanza (Haversine)
+// Calcolo distanza Haversine
 function getDistanceInKm(lat1, lon1, lat2, lon2) {
   const R = 6371;
   const dLat = (lat2 - lat1) * (Math.PI / 180);
@@ -794,29 +799,8 @@ function getDistanceInKm(lat1, lon1, lat2, lon2) {
   return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
 }
 
-// Funzione di apertura modale e calcolo GPS
-let metroMap = null;
-
 function openMetroModal() {
   document.getElementById('metroModal').style.display = 'flex';
-  
-  // 1. Inizializza la mappa Leaflet per il modale Metro (se non creata)
-  if (!metroMap) {
-    metroMap = L.map('metro-map-container').setView([41.8919, 12.5113], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap'
-    }).addTo(metroMap);
-
-    // Aggiunge i marker delle stazioni metro sulla mappa
-    metroStations.forEach(st => {
-      L.marker([st.lat, st.lng]).addTo(metroMap)
-       .bindPopup(`<strong>${st.name}</strong><br>${st.line}`);
-    });
-  }
-
-  setTimeout(() => { metroMap.invalidateSize(); }, 200);
-
-  // 2. Trova la stazione più vicina tramite GPS
   findNearestMetro();
 }
 
@@ -831,11 +815,11 @@ function findNearestMetro() {
   container.innerHTML = `
     <div class="p-3 bg-slate-50 border border-slate-200 rounded-2xl flex items-center gap-3">
       <i class="fa-solid fa-spinner fa-spin text-red-600"></i>
-      <span class="text-xs font-bold text-slate-600">Rilevamento stazione Metro più vicina...</span>
+      <span class="text-xs font-bold text-slate-600">Rilevamento fermata più vicina...</span>
     </div>`;
 
   if (!navigator.geolocation) {
-    container.innerHTML = `<div class="p-3 bg-red-50 border border-red-100 rounded-2xl text-xs font-bold text-red-600">Geolocalizzazione non supportata.</div>`;
+    container.innerHTML = `<div class="p-3 bg-red-50 border border-red-100 rounded-2xl text-xs font-bold text-red-600">Geolocalizzazione non supportata dal tuo browser.</div>`;
     return;
   }
 
@@ -860,36 +844,23 @@ function findNearestMetro() {
         : `${minDistance.toFixed(2)} km`;
 
       container.innerHTML = `
-        <div class="bg-red-50 border border-red-100 rounded-2xl p-4 flex items-center justify-between gap-3 shadow-sm">
+        <div class="bg-red-50 border border-red-100 rounded-2xl p-3.5 flex items-center justify-between gap-3 shadow-sm">
           <div>
             <p class="text-[9px] font-black uppercase tracking-widest text-red-600">Fermata più vicina a te</p>
             <h4 class="font-black text-sm text-slate-900 leading-tight">${nearest.name}</h4>
             <p class="text-xs font-bold text-slate-500 mt-0.5">${nearest.line} · a circa ${distText}</p>
           </div>
-          <a href="https://maps.google.com/?q=${nearest.lat},${nearest.lng}" target="_blank" class="bg-red-600 text-white w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black shrink-0 active:scale-95 transition-transform" title="Indicazioni">
+          <a href="https://maps.google.com/?q=${nearest.lat},${nearest.lng}" target="_blank" class="bg-red-600 text-white w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black shrink-0 active:scale-95 transition-transform" title="Apri indicazioni su Google Maps">
             <i class="fa-solid fa-directions"></i>
           </a>
         </div>
       `;
-
-      // Centra la mappa sulla posizione dell'utente
-      if (metroMap) {
-        metroMap.setView([userLat, userLng], 14);
-        L.marker([userLat, userLng], {
-          icon: L.divIcon({
-            className: 'custom-user-pin',
-            html: `<div style="background:#2563eb; width:16px; height:16px; border:3px solid white; border-radius:50%; box-shadow:0 0 10px rgba(37,99,235,0.8);"></div>`,
-            iconSize: [16, 16],
-            iconAnchor: [8, 8]
-          })
-        }).addTo(metroMap).bindPopup("La tua posizione attuale");
-      }
     },
     (err) => {
       container.innerHTML = `
         <div class="p-3 bg-amber-50 border border-amber-100 rounded-2xl flex items-center gap-2 text-xs font-bold text-amber-700">
           <i class="fa-solid fa-location-crosshairs"></i>
-          <span>Attiva il GPS del telefono per calcolare la stazione più vicina.</span>
+          <span>Attiva il GPS per calcolare la stazione più vicina.</span>
         </div>`;
     },
     { enableHighAccuracy: true, timeout: 8000 }
