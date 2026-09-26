@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Sabato 26.09.2026 - Gita a Roma</title>
+  
+  <!-- SEO & OpenGraph Meta Tags -->
+  <meta name="description" content="Itinerario giornaliero per la gita a Roma (26/09/2026) con timeline, mappa interattiva e info utili."/>
+  <link rel="icon" type="image/png" href="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
+  <link rel="apple-touch-icon" href="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
+  <meta property="og:title" content="Sabato 26.09.2026 - Gita a Roma"/>
+  <meta property="og:description" content="Itinerario giornaliero per la gita a Roma con timeline, mappa e contatti SOS."/>
+  <meta property="og:url" content="https://cl-000-welf.github.io/gire-landing-page/sabato-26-09-2026.html"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image" content="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
+  <meta property="og:image:secure_url" content="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
+  <meta property="og:image:type" content="image/png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Sabato 26.09.2026 - Gita a Roma"/>
+  <meta name="twitter:description" content="Itinerario giornaliero per la gita a Roma con timeline, mappa e contatti SOS."/>
+  <meta name="twitter:image" content="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png"/>
+
+  <!-- Librerie Esterne -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
+  <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
+
+  <!-- Stili CSS -->
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; overflow-x: hidden; }
+    .safe-card { background: white; border-radius: 1.9rem; border: 1px solid #E2E8F0; overflow: hidden; box-shadow: 0 10px 25px rgba(15,23,42,0.04); }
+    #map-student { height: 250px; border-radius: 1.35rem; z-index: 10; border: 2px solid white; box-shadow: 0 8px 18px rgba(0,0,0,0.05); cursor: pointer; }
+    #map-modal-container { height: 75vh; width: 100%; border-radius: 1.5rem; }
+    .map-shell { position: relative; }
+    .map-meta { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: end; margin-top: 12px; }
+    .map-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 11px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: .03em; }
+    .legend-block { line-height: 1.35; }
+    .map-controls { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+    .map-controls button { background: white; border: 1px solid #E2E8F0; border-radius: 14px; min-width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(15,23,42,0.06); color: #334155; font-size: 14px; font-weight: 900; }
+    .map-controls button.reset-btn { min-width: 64px; padding: 0 12px; gap: 6px; font-size: 12px; }
+    #push-alert { 
+      position: fixed; 
+      top: 20px; 
+      left: 20px; 
+      right: 20px; 
+      z-index: 9999; 
+      transform: translateY(-150%); 
+      transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275); 
+      touch-action: pan-y; 
+      user-select: none;
+      cursor: grab;
+    }
+    #push-alert.show { transform: translateY(0); }
+    #push-alert.swiping { transition: none !important; }
+    #appello-box { transition: all 0.6s ease; max-height: 300px; opacity: 1; margin-bottom: 1.5rem; }
+    #appello-box.hidden-appello { max-height: 0; opacity: 0; margin-bottom: 0; padding: 0; transform: scale(0.9); pointer-events: none; }
+    .pulse-me { animation: pulse-blue 2s infinite; border-radius: 50%; }
+    @keyframes pulse-blue { 0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.6); } 70% { box-shadow: 0 0 0 15px rgba(59,130,246,0); } 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); } }
+    #infoModal, #sosModal, #mapModal { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.92); z-index:10000; align-items:center; justify-content:center; padding:20px; backdrop-filter: blur(8px); }
+    .modal-card { background:white; border-radius:2.3rem; max-width: 420px; width:100%; padding: 2rem; box-shadow:0 22px 60px rgba(0,0,0,.2); max-height: 90vh; overflow-y: auto; }
+    .modal-card-map { background:white; border-radius:2.3rem; max-width: 600px; width:100%; padding: 1.25rem; box-shadow:0 22px 60px rgba(0,0,0,.2); }
+    .timeline-line { position:absolute; left:13px; top:12px; bottom:12px; width:2px; background:#edf0f3; }
+    .timeline-row { position:relative; display:flex; gap:14px; align-items:center; }
+    .timeline-row + .timeline-row { margin-top: 26px; }
+    .dot { z-index:1; width:28px; height:28px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:4px solid white; box-shadow:0 2px 6px rgba(0,0,0,.08); font-size:10px; flex:0 0 auto; }
+    .timeline-copy { min-width:0; }
+    .timeline-title { font-size: .97rem; font-weight: 900; font-style: italic; line-height:1.1; color:#162038; }
+    .timeline-time { font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .02em; color: #8a94a6; margin-top: 2px; }
+    .timeline-row.active .timeline-time { color:#d97706; }
+    .timeline-row.future .timeline-title, .timeline-row.future .timeline-time { color:#94a3b8; }
+    .timeline-row.done .timeline-title { color:#475569; }
+    .timeline-row.active .timeline-title { color:#162038; }
+    .diary-card { cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .diary-card:active { transform: scale(0.98); }
+    .diary-img { width:100%; height:176px; object-fit:cover; display:block; background:linear-gradient(135deg,#c7d2fe,#e2e8f0); }
+    .diary-body { padding: 1.25rem; }
+    .diary-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:.55rem; }
+    .diary-head h4 { margin:0; font-weight:900; font-style:italic; text-transform:uppercase; color:#4f46e5; font-size:1.08rem; line-height:1.05; }
+    .audio-btn { background:#eef2ff; color:#4f46e5; width:42px; height:42px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:none; cursor:pointer; flex:0 0 auto; transition:transform .15s ease, background .2s ease; }
+    .audio-btn.playing { background:#4f46e5; color:white; }
+    .audio-btn:active { transform:scale(.93); }
+    .diary-short { font-size:1rem; line-height:1.7; color:#4b5563; margin: 0 0 1.2rem; }
+    .more-link { border:none; background:none; color:#4f46e5; font-weight:900; text-transform:uppercase; font-size:.9rem; padding:0 0 .15rem; border-bottom:4px solid #dfe4ff; cursor:pointer; }
+    .more-link i { margin-left: .35rem; }
+    .nav-row { display:flex; justify-content:space-between; gap:12px; margin-top: 18px; }
+    .nav-row a, .nav-row span { min-width: 110px; text-align:center; text-decoration:none; background:white; border:1px solid #E2E8F0; border-radius: 1rem; padding: .8rem 1rem; font-weight: 800; color:#334155; }
+    .walk-label { background: white; border: 1px solid #cbd5e1; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 800; color: #1e293b; box-shadow: 0 2px 8px rgba(0,0,0,.12); white-space: nowrap; text-align: center; }
+    .walk-label i { color: #4f46e5; margin-right: 3px; }
+
+    #weather-banner { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    
+    footer.app-footer { margin-top: 28px; padding: 18px 8px 2px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #94a3b8; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
+    footer.app-footer .footer-brand { display: flex; align-items: center; gap: 8px; color: #64748b; }
+    footer.app-footer img { width: 20px; height: 20px; border-radius: 6px; }
+
+    /* MENU A RAGGIERA */
+    .radial-menu-wrapper { position: fixed; bottom: 24px; right: 24px; z-index: 9999; }
+    .radial-disc { position: absolute; bottom: 0; right: 0; width: 320px; height: 320px; border-radius: 50%; background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(12px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center; transform: scale(0); transform-origin: bottom right; transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease; opacity: 0; pointer-events: none; }
+    .radial-menu-wrapper.active .radial-disc { transform: scale(1); opacity: 1; pointer-events: auto; }
+    .radial-disc-bg-logo { position: absolute; width: 150px; height: 150px; opacity: 0.15; background: url('https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png') no-repeat center center; background-size: contain; user-select: none; pointer-events: none; }
+    .radial-toggle-btn { position: relative; z-index: 10001; width: 58px; height: 58px; border-radius: 50%; background: #0f172a; color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 10px 25px rgba(15, 23, 42, 0.5); border: 2px solid rgba(255, 255, 255, 0.2); cursor: pointer; overflow: hidden; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s; }
+    .radial-toggle-btn:active { transform: scale(0.92); }
+    .radial-toggle-btn i { position: absolute; transition: transform 0.3s ease, opacity 0.3s ease; }
+    .radial-toggle-btn .icon-open { opacity: 1; transform: rotate(0deg); }
+    .radial-toggle-btn .icon-close { opacity: 0; transform: rotate(-90deg); }
+    .radial-menu-wrapper.active .radial-toggle-btn .icon-open { opacity: 0; transform: rotate(90deg); }
+    .radial-menu-wrapper.active .radial-toggle-btn .icon-close { opacity: 1; transform: rotate(0deg); }
+    .radial-item-wrapper { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; background: none; border: none; cursor: pointer; padding: 0; margin: 0; z-index: 10000; }
+    .radial-item-btn { width: 48px; height: 48px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.25); font-size: 18px; transition: transform 0.2s ease, background 0.2s; }
+    .radial-item-wrapper:active .radial-item-btn { transform: scale(0.88); }
+    .radial-item-label { font-size: 9px; font-weight: 700; color: #ffffff; margin-top: 2px; text-align: center; white-space: nowrap; text-shadow: 0 2px 4px rgba(0,0,0,0.9), 0 0 2px rgba(0,0,0,1); pointer-events: none; }
+
+    /* Posizioni percorsi menu raggiera */
+    .radial-item-wrapper:nth-child(2) { top: 30px;  left: 190px; }
+    .radial-item-wrapper:nth-child(3) { top: 20px;  left: 110px; }
+    .radial-item-wrapper:nth-child(4) { top: 58px;  left: 44px;  }
+    .radial-item-wrapper:nth-child(5) { top: 130px; left: 16px;  }
+    .radial-item-wrapper:nth-child(6) { top: 208px; left: 43px;  }
+    .radial-item-wrapper:nth-child(7) { top: 250px; left: 112px; }
+    .radial-item-wrapper:nth-child(8) { top: 237px; left: 189px; }
+    .radial-item-wrapper:nth-child(9) { top: 180px; left: 240px; }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen p-5 pb-10">
+
+  <!-- 1. NOTIFICA PUSH POP-UP -->
+  <div id="push-alert" class="bg-slate-900 text-white p-5 rounded-[2rem] shadow-2xl flex items-center gap-4 border border-white/20 relative overflow-hidden">
+    <div class="absolute top-2 left-1/2 -translate-x-1/2 w-8 h-1 bg-white/20 rounded-full"></div>
+    <div class="bg-indigo-500 h-10 w-10 rounded-full flex items-center justify-center shrink-0">
+      <i class="fa-solid fa-paper-plane text-white"></i>
+    </div>
+    <div>
+      <p class="text-[9px] font-black uppercase tracking-widest text-indigo-300">Gire Roma</p>
+      <p class="text-xs font-bold leading-tight">ROMA NON È FATA IN UN GIORNO<br>“Goderne ogni momento con la giusta calma.”</p>
+    </div>
+  </div>
+
+  <!-- 2. INTESTAZIONE / HEADER -->
+  <header class="flex justify-between items-start mb-6 px-1 gap-3">
+    <div class="flex items-start gap-2">
+      <img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE" class="h-8 w-8 rounded-lg mt-1"/>
+      <div>
+        <p class="text-[10px] font-black uppercase tracking-widest text-indigo-600 italic">Gita a Roma</p>
+        <h1 class="text-2xl font-black italic tracking-tighter uppercase leading-none">Il nostro viaggio</h1>
+      </div>
+    </div>
+    <div class="text-right">
+      <p class="text-xs font-black italic uppercase text-slate-800">Sabato<br/>26.09.2026</p>
+      <div class="flex justify-end gap-2 mt-2 items-center">
+        <span class="text-[9px] bg-green-500 text-white px-2 py-0.5 rounded-full font-bold uppercase">Live</span>
+        <button onclick="openSOSModal()" class="text-[9px] bg-red-500 text-white px-2 py-0.5 rounded-full font-bold uppercase border-0 active:scale-95 transition-all">SOS</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. BANNER PROGRAMMA / APPELLO -->
+  <div id="appello-box" class="bg-indigo-600 rounded-[2.5rem] p-6 text-white shadow-xl flex items-center justify-between gap-4">
+    <div>
+      <p class="text-[9px] font-black uppercase text-indigo-200 mb-1 tracking-widest">Programma del Giorno</p>
+      <h3 class="font-black text-base italic tracking-tighter uppercase leading-tight md:text-lg">Centro Storico, Colosseo e Tramonto all'Aventino</h3>
+    </div>
+    <button class="bg-white text-indigo-600 px-6 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all" onclick="confermaPresenza()">OK</button>
+  </div>
+
+  <!-- CARD METEO LIVE -->
+  <div id="meteo" class="relative mb-6">
+    <div id="weather-card-bg" class="rounded-[2rem] p-5 text-white bg-gradient-to-br from-sky-400 via-sky-500 to-blue-600 shadow-lg relative overflow-hidden transition-all duration-500">
+      <div id="weather-bg-pattern" class="absolute -right-4 -bottom-6 text-white/10 text-9xl pointer-events-none">
+        <i class="fa-solid fa-sun"></i>
+      </div>
+      <div class="flex justify-between items-start mb-2 relative z-10">
+        <span class="bg-white/25 backdrop-blur-md text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full text-white">
+          Meteo Roma Live
+        </span>
+        <div id="weather-icon-live" class="text-yellow-300 text-3xl drop-shadow">
+          <i class="fa-solid fa-sun"></i>
+        </div>
+      </div>
+      <div class="flex justify-between items-baseline mb-4 relative z-10">
+        <div class="flex items-baseline gap-2">
+          <span id="weather-temp-live" class="text-4xl font-black tracking-tight">--°C</span>
+          <span id="weather-desc-live" class="text-sm font-extrabold opacity-90">Aggiornamento...</span>
+        </div>
+        <div class="text-right">
+          <span id="weather-feels-live" class="text-xs font-extrabold opacity-85">Percepita --°</span>
+        </div>
+      </div>
+      <div class="border-t border-white/20 my-3 relative z-10"></div>
+      <div class="flex items-center gap-3 text-xs font-bold leading-tight opacity-95 relative z-10">
+        <div class="shrink-0 text-base" id="weather-advice-icon">
+          <i class="fa-solid fa-shirt"></i>
+        </div>
+        <p id="weather-advice-live">
+          Caricamento consigli meteo...
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. MAPPA INTERATTIVA -->
+  <div class="safe-card p-4 mb-8">
+    <div class="map-shell">
+      <div id="map-student" onclick="openMapModal()" title="Clicca per ingrandire la mappa"></div>
+    </div>
+    <div class="map-meta">
+      <div class="map-legend">
+        <div class="legend-block">
+          <div>Base: Bob W Testaccio</div>
+        </div>
+        <div class="legend-block">
+          <div>Cerchio = Raggio d'azione</div>
+          <div>Pin = Tappe del giorno</div>
+        </div>
+      </div>
+      <div class="map-controls">
+        <button onclick="openMapModal()" title="Mappa a schermo intero"><i class="fa-solid fa-expand"></i></button>
+        <button onclick="map.zoomIn()" aria-label="Zoom avanti"><i class="fa-solid fa-plus"></i></button>
+        <button onclick="map.zoomOut()" aria-label="Zoom indietro"><i class="fa-solid fa-minus"></i></button>
+        <button class="reset-btn" onclick="resetMapView()" aria-label="Reset mappa">
+          <i class="fa-solid fa-rotate-left"></i> Reset
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTONI RAPIDI METRO E ATAC ROMA -->
+  <div class="grid grid-cols-2 gap-3 mb-8">
+    <button onclick="openMetroModal()" class="bg-white border border-slate-200 rounded-3xl p-4 flex items-center gap-3 shadow-sm active:scale-95 transition-all text-left">
+      <div class="bg-red-600 text-white w-10 h-10 rounded-2xl flex items-center justify-center font-black text-lg shrink-0">
+        <i class="fa-solid fa-subway"></i>
+      </div>
+      <div>
+        <p class="text-[9px] font-black uppercase text-red-600 tracking-wider">Trasporti ATAC</p>
+        <h4 class="font-black text-xs uppercase italic leading-tight text-slate-800">Metro & Bus <i class="fa-solid fa-chevron-right text-[10px]"></i></h4>
+      </div>
+    </button>
+
+    <button onclick="openInfo('Info Biglietti ATAC', 'Il biglietto standard BIT costa 1,50€ e vale 100 minuti su bus/tram ed una sola corsa in metropolitana. Puoi pagare direttamente contactless ai tornelli con carta o telefono.')" class="bg-amber-50/60 border border-amber-100 rounded-3xl p-4 flex items-center gap-3 shadow-sm active:scale-95 transition-all text-left">
+      <div class="bg-amber-600 text-white w-10 h-10 rounded-2xl flex items-center justify-center text-lg shrink-0">
+        <i class="fa-solid fa-ticket"></i>
+      </div>
+      <div class="grow">
+        <p class="text-[9px] font-black uppercase text-amber-600 tracking-wider">Biglietti</p>
+        <h4 class="font-black text-xs uppercase italic leading-tight text-slate-800 flex items-center justify-between">
+          Tap & Go (1,50€) <i class="fa-solid fa-info-circle text-[10px] text-amber-600"></i>
+        </h4>
+      </div>
+    </button>
+  </div>
+
+  <!-- 5. TIMELINE / PROGRAMMA SABATO -->
+  <div id="tappe" class="safe-card p-6 mb-8">
+    <div class="flex items-center justify-between mb-5 border-b border-slate-100 pb-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 text-lg shrink-0">
+          <i class="fa-solid fa-calendar-day"></i>
+        </div>
+        <div>
+          <p class="text-[9px] font-black uppercase tracking-widest text-indigo-600">Tappe Sabato 26/09</p>
+          <h3 class="font-black italic text-lg uppercase leading-tight text-slate-900">Itinerario giornata</h3>
+        </div>
+      </div>
+    </div>
+    
+    <div class="relative">
+      <div class="timeline-line"></div>
+      
+      <div class="timeline-row active" data-time="09:00">
+        <div class="dot" style="background:#f6a623;color:#fff"><i class="fa-solid fa-location-dot"></i></div>
+        <div class="timeline-copy">
+          <div class="timeline-title">Centro Storico: Piazza Navona, Pantheon & Trevi</div>
+          <div class="timeline-time">09:00</div>
+        </div>
+      </div>
+      <div class="timeline-row future" data-time="13:00">
+        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
+        <div class="timeline-copy">
+          <div class="timeline-title">Pausa Pranzo / Street Food Romano</div>
+          <div class="timeline-time">13:00</div>
+        </div>
+      </div>
+      <div class="timeline-row future" data-time="15:00">
+        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
+        <div class="timeline-copy">
+          <div class="timeline-title">Roma Imperiale: Colosseo, Foro & Palatino</div>
+          <div class="timeline-time">15:00</div>
+        </div>
+      </div>
+      <div class="timeline-row future" data-time="18:30">
+        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
+        <div class="timeline-copy">
+          <div class="timeline-title">Tramonto Giardino degli Aranci & Buco della Serratura</div>
+          <div class="timeline-time">18:30</div>
+        </div>
+      </div>
+      <div class="timeline-row future" data-time="20:30">
+        <div class="dot" style="background:#e2e8f0;color:#94a3b8"><i class="fa-solid fa-clock"></i></div>
+        <div class="timeline-copy">
+          <div class="timeline-title">Cena Tipica a Trastevere</div>
+          <div class="timeline-time">20:30</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEZIONE CIBO & RISTORANTI -->
+  <section id="cibo" class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 mb-6">
+    <div class="flex items-center justify-between mb-5 border-b border-slate-100 pb-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 text-lg shrink-0">
+          <i class="fa-solid fa-utensils"></i>
+        </div>
+        <div>
+          <p class="text-[9px] font-black uppercase tracking-widest text-indigo-600">Cibo Romano</p>
+          <h3 class="font-black italic text-lg uppercase leading-tight text-slate-900">Dove mangiare</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenitore Carousel Orizzontale Ristoranti Romani -->
+    <div id="food-list-container" class="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 no-scrollbar">
+      
+      <!-- Card 1 -->
+      <div class="snap-center shrink-0 w-64 bg-slate-50 border border-slate-200 rounded-2xl p-4">
+        <span class="text-[9px] font-black uppercase tracking-widest bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md">Street Food</span>
+        <h4 class="font-black text-sm uppercase text-slate-900 mt-2">Supplì Roma</h4>
+        <p class="text-xs text-slate-600 mt-1">Classici supplì al telefono caldi, pizza al taglio e fritti tradizionali.</p>
+        <p class="text-[10px] font-bold text-indigo-600 mt-3"><i class="fa-solid fa-location-dot"></i> Trastevere / Centro</p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="snap-center shrink-0 w-64 bg-slate-50 border border-slate-200 rounded-2xl p-4">
+        <span class="text-[9px] font-black uppercase tracking-widest bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">Trattoria Tipica</span>
+        <h4 class="font-black text-sm uppercase text-slate-900 mt-2">Da Enzo al 29</h4>
+        <p class="text-xs text-slate-600 mt-1">Imprescindibile per Carbonara, Amatriciana, Cacio e Pepe e carciofi alla giudia.</p>
+        <p class="text-[10px] font-bold text-indigo-600 mt-3"><i class="fa-solid fa-location-dot"></i> Via de' Vascellari, Trastevere</p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="snap-center shrink-0 w-64 bg-slate-50 border border-slate-200 rounded-2xl p-4">
+        <span class="text-[9px] font-black uppercase tracking-widest bg-blue-100 text-blue-800 px-2 py-0.5 rounded-md">Trattoria Testaccio</span>
+        <h4 class="font-black text-sm uppercase text-slate-900 mt-2">Flavio al Velavevodetto</h4>
+        <p class="text-xs text-slate-600 mt-1">A due passi dall'alloggio Bob W. Storico tempio della cucina romana autentica.</p>
+        <p class="text-[10px] font-bold text-indigo-600 mt-3"><i class="fa-solid fa-location-dot"></i> Via di Monte Testaccio</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 6. DIARIO DI VIAGGIO / SCHEDE TAPPE -->
+  <section id="diario" class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 mb-6">
+    <div class="flex items-center justify-between mb-5 border-b border-slate-200/60 pb-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-sky-50 border border-sky-100 flex items-center justify-center text-sky-600 text-lg shrink-0">
+          <i class="fa-solid fa-book-open"></i>
+        </div>
+        <div>
+          <p class="text-[9px] font-black uppercase tracking-widest text-sky-600">Diario</p>
+          <h3 class="font-black italic text-lg uppercase leading-tight text-slate-900">Schede e Approfondimenti</h3>
+        </div>
+      </div>
+    </div>
+      
+    <div class="space-y-6 mb-12">
+      
+      <!-- Scheda 1 -->
+      <article class="diary-card safe-card" onclick="openInfo('Centro Storico e Fontane', 'Partenza da Bob W a Testaccio verso le meraviglie del centro: passeggiata barocca tra Piazza Navona con la Fontana dei Quattro Fiumi del Bernini, il Pantheon con la sua maestosa cupola e la Fontana di Trevi per il lancio della moneta.', 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800')">
+        <img alt="Centro Storico Roma" class="diary-img" src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800"/>
+        <div class="diary-body">
+          <div class="diary-head">
+            <h4>Piazza Navona, Pantheon & Trevi</h4>
+            <button aria-label="Ascolta Centro Storico" class="audio-btn" data-audio-text="Partenza dall'hotel. Passeggiata verso Piazza Navona, Pantheon e Fontana di Trevi.">
+              <i class="fa-solid fa-volume-high"></i>
+            </button>
+          </div>
+          <p class="diary-short">Passeggiata nel cuore barocco di Roma, tra fontane monumentali ed il fascino millenario del Pantheon.</p>
+          <span class="more-link">Leggi di più <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </article>
+
+      <!-- Scheda 2 -->
+      <article class="diary-card safe-card" onclick="openInfo('Pausa Pranzo Street Food', 'Gusta le primizie della tradizione romana: un primo piatto espresso di Carbonara o Amatriciana, oppure dei croccanti supplì al telefono calda camminando tra le viuzze romane.', 'https://images.unsplash.com/photo-1621996346565-e3d5d6281320?w=800')">
+        <img alt="Pasta Romana" class="diary-img" src="https://images.unsplash.com/photo-1621996346565-e3d5d6281320?w=800"/>
+        <div class="diary-body">
+          <div class="diary-head">
+            <h4>Pausa Pranzo / Street Food</h4>
+            <button aria-label="Ascolta Pausa Pranzo" class="audio-btn" data-audio-text="Sosta gastronomica con prima assaggiata di pasta romana Carbonara o Amatriciana o supplì al volo.">
+              <i class="fa-solid fa-volume-high"></i>
+            </button>
+          </div>
+          <p class="diary-short">Sosta culinaria con prima degustazione di pasta romana tradizionale o uno sfizioso supplì.</p>
+          <span class="more-link">Leggi di più <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </article>
+
+      <!-- Scheda 3 -->
+      <article class="diary-card safe-card" onclick="openInfo('Roma Imperiale', 'Visita al simbolo per eccellenza dell Anfiteatro Flavio (Colosseo), attraversando la via dei Fori Imperiali con sosta al Foro Romano ed al Colle Palatino dove nacque la leggenda di Roma.', 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800')">
+        <img alt="Colosseo Roma" class="diary-img" src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800"/>
+        <div class="diary-body">
+          <div class="diary-head">
+            <h4>Colosseo, Foro & Palatino</h4>
+            <button aria-label="Ascolta Roma Imperiale" class="audio-btn" data-audio-text="Visita guidata al Colosseo, Foro Romano e Palatino nel cuore della Roma Imperiale.">
+              <i class="fa-solid fa-volume-high"></i>
+            </button>
+          </div>
+          <p class="diary-short">Immersione nella storia antica guidati alla scoperta dell'Anfiteatro Flavio e dei Fori.</p>
+          <span class="more-link">Leggi di più <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </article>
+
+      <!-- Scheda 4 -->
+      <article class="diary-card safe-card" onclick="openInfo('Tramonto all Aventino', 'Salita sul colle Aventino presso il Giardino degli Aranci (Parco Savello) per godere di uno dei panorami più suggestivi di Roma al tramonto. A poca distanza, la sbirciatina al buco della serratura del Priorato dei Cavalieri di Malta con la Cupola di San Pietro perfettamente incorniciata.', 'https://images.unsplash.com/photo-1531572753322-ad063cecc140?w=800')">
+        <img alt="Giardino degli Aranci" class="diary-img" src="https://images.unsplash.com/photo-1531572753322-ad063cecc140?w=800"/>
+        <div class="diary-body">
+          <div class="diary-head">
+            <h4>Giardino degli Aranci & Serratura</h4>
+            <button aria-label="Ascolta Tramonto Aventino" class="audio-btn" data-audio-text="Salita sull Aventino per la vista panoramica della città e il buco della serratura dei Cavalieri di Malta.">
+              <i class="fa-solid fa-volume-high"></i>
+            </button>
+          </div>
+          <p class="diary-short">Panorami romantici al tramonto ed il celebre scorcio sulla Cupola di San Pietro.</p>
+          <span class="more-link">Leggi di più <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </article>
+
+      <!-- Scheda 5 -->
+      <article class="diary-card safe-card" onclick="openInfo('Cena a Trastevere', 'Discesa dall Aventino per attraversare il fiume ed entrare nel rione Trastevere. Serata intima e cenetta tra i vicoli illuminati con piattoni di pasta e dolci della casa.', 'https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=800')">
+        <img alt="Trastevere Roma" class="diary-img" src="https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=800"/>
+        <div class="diary-body">
+          <div class="diary-head">
+            <h4>Cena Tipica a Trastevere</h4>
+            <button aria-label="Ascolta Cena Trastevere" class="audio-btn" data-audio-text="Serata e cena tipica tra i vicoli storici del quartiere Trastevere.">
+              <i class="fa-solid fa-volume-high"></i>
+            </button>
+          </div>
+          <p class="diary-short">Conclusione perfetta della giornata gustando la movida ed i piatti tipici di Trastevere.</p>
+          <span class="more-link">Leggi di più <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- GUIDA RAPIDA E FARMACIE -->
+  <div id="guida" class="bg-slate-900 text-white rounded-[2.5rem] p-6 shadow-xl mb-8 relative overflow-hidden border border-slate-800">
+    <div class="flex items-center justify-between mb-5 border-b border-slate-800 pb-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-indigo-600/30 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-lg">
+          <i class="fa-solid fa-life-ring"></i>
+        </div>
+        <div>
+          <p class="text-[9px] font-black uppercase tracking-widest text-indigo-400">Guida Rapida</p>
+          <h3 class="font-black italic text-lg uppercase leading-tight">Info Utili Roma</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tip del giorno -->
+    <div class="bg-indigo-950/60 border border-indigo-500/40 rounded-2xl p-4 flex items-start gap-3 mb-4">
+      <div class="text-indigo-400 text-base shrink-0 mt-0.5"><i class="fa-solid fa-faucet-drip"></i></div>
+      <div>
+        <p class="text-[9px] font-black uppercase tracking-wider text-indigo-300">Nasoni di Roma</p>
+        <p class="text-xs font-bold text-slate-200 mt-0.5">Non comprare bottigliette di plastica in centro! Porta una borraccia e riempila gratis alle storiche fontanelle romane aperte h24 (i "Nasoni").</p>
+      </div>
+    </div>
+
+    <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-4">
+      <p class="text-xs font-black text-rose-300 uppercase mb-2"><i class="fa-solid fa-kit-medical"></i> Farmacia di Turno / Emergenza</p>
+      <p class="text-xs text-slate-300">In caso di necessità vicino a Testaccio troverai farmacie lungo Via Marmorata. Per emergenze chiamare il <strong>112</strong>.</p>
+    </div>
+  </div>
+
+  <!-- 7. BANNER SOS & NAVIGAZIONE PER DOMENICA -->
+  <div class="mt-auto pt-2">
+    <div class="bg-red-50 rounded-[2.5rem] p-6 border border-red-100 flex items-center justify-between shadow-sm gap-4">
+      <div>
+        <p class="text-[9px] font-black uppercase text-red-600 mb-1 tracking-widest">Gire Safe Mode</p>
+        <h3 class="font-black text-sm italic tracking-tighter uppercase leading-tight text-slate-900">Hai bisogno di aiuto?</h3>
+        <p class="text-[8px] font-bold text-red-400 uppercase mt-1 leading-none">Invia posizione GPS al capo gruppo</p>
+      </div>
+      <button class="bg-red-600 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg shadow-red-200 active:scale-95 transition-all" onclick="openSOSModal()">SOS</button>
+    </div>
+    
+    <div class="nav-row">
+      <span>Sab 26 (Oggi)</span>
+      <a href="domenica-27-09-2026.html">Dom 27 <i class="fa-solid fa-arrow-right text-xs ml-1"></i></a>
+    </div>
+  </div>
+
+  <!-- 8. FOOTER -->
+  <footer class="app-footer">
+    <div class="footer-brand">
+      <img src="https://cl-000-welf.github.io/gire-landing-page/assets/favicon.png" alt="GIRE"/>
+      <span>GIRE</span>
+    </div>
+    <span>Il nostro viaggio · Roma 2026</span>
+  </footer>
+
+  <!-- 9. MODALI OVERLAY -->
+  <div id="infoModal" onclick="closeModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <img id="infoImage" src="" alt="" class="w-full h-48 object-cover rounded-2xl mb-4 hidden"/>
+      <h3 class="font-black italic text-2xl mb-4 text-indigo-600 uppercase leading-tight" id="infoTitle"></h3>
+      <p class="text-base font-medium leading-relaxed mb-6 text-gray-600" id="infoContent"></p>
+      <button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeModal()">Ho capito!</button>
+    </div>
+  </div>
+
+  <div id="mapModal" onclick="closeMapModal()">
+    <div class="modal-card-map" onclick="event.stopPropagation()">
+      <div class="flex justify-between items-center mb-3 px-2">
+        <h3 class="font-black italic text-lg uppercase text-slate-800">Mappa Itinerario Roma</h3>
+        <button onclick="closeMapModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="map-modal-container"></div>
+      <button class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-black uppercase text-xs mt-3 active:scale-95 transition-all" onclick="closeMapModal()">Chiudi Mappa</button>
+    </div>
+  </div>
+
+  <div id="sosModal" onclick="closeSOSModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <p class="text-[10px] font-black uppercase tracking-widest text-red-500 mb-2">Contatti emergenza</p>
+      <h3 class="font-black italic text-2xl mb-6 text-slate-900 uppercase">Chi vuoi chiamare?</h3>
+      <div class="space-y-3 mb-4">
+        <a class="flex items-center justify-between w-full bg-slate-50 hover:bg-slate-100 transition rounded-2xl px-5 py-4" href="tel:+393391801232">
+          <div>
+            <p class="text-sm font-black text-slate-900">Francesca Schiavi</p>
+            <p class="text-xs text-slate-500 font-bold">+39 339 180 1232</p>
+          </div>
+          <i class="fa-solid fa-phone text-red-600"></i>
+        </a>
+        <button class="flex items-center justify-between w-full bg-emerald-50 hover:bg-emerald-100 transition rounded-2xl px-5 py-4" onclick="sendLocationWhatsApp('393391801232')">
+          <div class="text-left">
+            <p class="text-sm font-black text-slate-900">Invia posizione WhatsApp</p>
+            <p class="text-xs text-slate-500 font-bold">a Capogruppo</p>
+          </div>
+          <i class="fa-solid fa-location-dot text-emerald-600"></i>
+        </button>
+        <a class="flex items-center justify-between w-full bg-red-50 hover:bg-red-100 transition rounded-2xl px-5 py-4" href="tel:112">
+          <div>
+            <p class="text-sm font-black text-slate-900">Emergenze Italia (112)</p>
+            <p class="text-xs text-slate-500 font-bold">Numero unico nazionale</p>
+          </div>
+          <i class="fa-solid fa-triangle-exclamation text-red-600"></i>
+        </a>
+      </div>
+      <button class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition-all" onclick="closeSOSModal()">Chiudi</button>
+    </div>
+  </div>
+
+  <!-- MENU A RAGGIERA STICKY -->
+  <div id="radialMenuWrapper" class="radial-menu-wrapper">
+    <div class="radial-disc">
+      <div class="radial-disc-bg-logo"></div>
+      <button onclick="scrollToSection('meteo'); toggleRadialMenu();" class="radial-item-wrapper">
+        <div class="radial-item-btn text-sky-500"><i class="fa-solid fa-cloud-sun"></i></div>
+        <span class="radial-item-label">METEO</span>
+      </button>
+      <button onclick="openMapModal(); toggleRadialMenu();" class="radial-item-wrapper">
+        <div class="radial-item-btn text-indigo-600"><i class="fa-solid fa-map-location-dot"></i></div>
+        <span class="radial-item-label">MAPPA</span>
+      </button>
+      <button onclick="scrollToSection('tappe'); toggleRadialMenu();" class="radial-item-wrapper">
+        <div class="radial-item-btn text-purple-600"><i class="fa-solid fa-calendar-day"></i></div>
+        <span class="radial-item-label">TAPPE</span>
+      </button>
+      <button onclick="scrollToSection('cibo'); toggleRadialMenu();" class="radial-item-wrapper">
+        <div class="radial-item-btn text-amber-600"><i class="fa-solid fa-utensils"></i></div>
+        <span class="radial-item-label">CIBO</span>
+      </button>
+      <button onclick="scrollToSection('diario'); toggleRadialMenu();" class="radial-item-wrapper">
+        <div class="radial-item-btn text-teal-600"><i class="fa-solid fa-book-open"></i></div>
+        <span class="radial-item-label">DIARIO</span>
+      </button>
+      <button onclick="scrollToSection('guida'); toggleRadialMenu();" class="radial-item-wrapper">
+        <div class="radial-item-btn text-rose-600"><i class="fa-solid fa-life-ring"></i></div>
+        <span class="radial-item-label">GUIDA</span>
+      </button>
+    </div>
+
+    <button id="radialToggleBtn" onclick="toggleRadialMenu()" class="radial-toggle-btn" aria-label="Menu Rapido">
+      <i class="fa-solid fa-ellipsis-vertical icon-open"></i>
+      <i class="fa-solid fa-xmark icon-close"></i>
+    </button>
+  </div>
+
+  <!-- 10. JAVASCRIPT & MAPPA LEAFLET ROMA -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // Notifica di avvio
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const pushAlert = document.getElementById('push-alert');
+        if (pushAlert) {
+          pushAlert.classList.add('show');
+          setTimeout(() => pushAlert.classList.remove('show'), 5000);
+        }
+      }, 1000);
+    });
+
+    // Coordinate Alloggio Bob W Testaccio (Roma)
+    const hotel = { name: "Bob W Testaccio", lat: 41.8792, lng: 12.4776, label: "Bob W Testaccio" };
+    
+    // Tappe del Sabato
+    const stops = [
+      { name: "Piazza Navona & Pantheon", lat: 41.8992, lng: 12.4731, visit: "Passeggiata Centro Storico e Fontana di Trevi." },
+      { name: "Pranzo Street Food", lat: 41.8972, lng: 12.4761, visit: "Pasta o supplì tipici." },
+      { name: "Colosseo & Fori Imperiali", lat: 41.8902, lng: 12.4922, visit: "Visita alla Roma Imperiale." },
+      { name: "Giardino degli Aranci", lat: 41.8848, lng: 12.4800, visit: "Aventino, tramonto e buco della serratura." },
+      { name: "Cena a Trastevere", lat: 41.8893, lng: 12.4700, visit: "Cena tipica romana tra i vicoli." }
+    ];
+
+    const routePoints = [
+      [hotel.lat, hotel.lng],
+      [stops[0].lat, stops[0].lng],
+      [stops[1].lat, stops[1].lng],
+      [stops[2].lat, stops[2].lng],
+      [stops[3].lat, stops[3].lng],
+      [stops[4].lat, stops[4].lng]
+    ];
+
+    const map = L.map('map-student', { zoomControl: false, scrollWheelZoom: false }).setView([hotel.lat, hotel.lng], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
+
+    function createGiantIcon(color, iconClass) {
+      return L.divIcon({
+        className: 'custom-icon',
+        html: `<div style="background-color:${color}; width:42px; height:42px; border:3px solid white; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:16px; box-shadow:0 6px 12px rgba(0,0,0,0.15);"><i class="fa-solid ${iconClass}"></i></div>`,
+        iconSize:[42,42], iconAnchor:[21,21]
+      });
+    }
+
+    function renderMapElements(targetMap) {
+      const hotelCircle = L.circle([hotel.lat, hotel.lng], {
+        color: '#ef4444',
+        fillColor: '#fca5a5',
+        fillOpacity: 0.25,
+        radius: 2500
+      }).addTo(targetMap);
+
+      L.polyline(routePoints, { color:'#4f46e5', weight:4, opacity:.75 }).addTo(targetMap);
+      L.marker([hotel.lat, hotel.lng], { icon: createGiantIcon('#ef4444', 'fa-hotel') }).addTo(targetMap).bindPopup(`<strong>${hotel.name}</strong><br>Testaccio`);
+      
+      stops.forEach(stop => { 
+        L.marker([stop.lat, stop.lng], { icon: createGiantIcon('#f59e0b', 'fa-location-dot') }).addTo(targetMap).bindPopup(`<strong>${stop.name}</strong><br>${stop.visit}`); 
+      });
+
+      return hotelCircle;
+    }
+
+    const hotelCircleMain = renderMapElements(map);
+    function resetMapView() { map.fitBounds(hotelCircleMain.getBounds().pad(0.1)); }
+    resetMapView();
+
+    // Mappa Ingrandita Modal
+    let modalMap = null, modalHotelCircle = null;
+    function openMapModal() {
+      document.getElementById('mapModal').style.display = 'flex';
+      if (!modalMap) {
+        modalMap = L.map('map-modal-container', { zoomControl: true }).setView([hotel.lat, hotel.lng], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(modalMap);
+        modalHotelCircle = renderMapElements(modalMap);
+      }
+      setTimeout(() => {
+        modalMap.invalidateSize();
+        modalMap.fitBounds(modalHotelCircle.getBounds().pad(0.1));
+      }, 200);
+    }
+    function closeMapModal() { document.getElementById('mapModal').style.display = 'none'; }
+
+    // Interattività Modali
+    function openInfo(title, text, imgSrc = '') { 
+      document.getElementById('infoTitle').innerText = title; 
+      document.getElementById('infoContent').innerText = text; 
+      const imgEl = document.getElementById('infoImage');
+      if (imgSrc) { imgEl.src = imgSrc; imgEl.classList.remove('hidden'); } else { imgEl.classList.add('hidden'); }
+      document.getElementById('infoModal').style.display = 'flex'; 
+    }
+    function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
+    function openSOSModal() { document.getElementById('sosModal').style.display = 'flex'; }
+    function closeSOSModal() { document.getElementById('sosModal').style.display = 'none'; }
+    function confermaPresenza() { document.getElementById('appello-box').classList.add('hidden-appello'); }
+
+    function toggleRadialMenu() {
+      document.getElementById('radialMenuWrapper').classList.toggle('active');
+    }
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Sintesi vocale
+    let currentUtterance = null, currentButton = null;
+    function stopSpeech() { 
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel(); 
+      if (currentButton) currentButton.classList.remove('playing'); 
+      currentUtterance = null; currentButton = null; 
+    }
+    document.querySelectorAll('.audio-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const text = btn.dataset.audioText;
+        if (!('speechSynthesis' in window)) return;
+        if (currentButton === btn && window.speechSynthesis.speaking) { stopSpeech(); return; }
+        stopSpeech();
+        const msg = new SpeechSynthesisUtterance(text); 
+        msg.lang = 'it-IT'; msg.rate = 0.95; 
+        msg.onend = stopSpeech; msg.onerror = stopSpeech;
+        currentUtterance = msg; currentButton = btn; 
+        btn.classList.add('playing'); 
+        window.speechSynthesis.speak(msg);
+      });
+    });
+
+    function sendLocationWhatsApp(phone) {
+      if (!navigator.geolocation) { alert('GPS non supportato'); return; }
+      navigator.geolocation.getCurrentPosition(p => {
+        const msg = encodeURIComponent('SOS STUDENTE A ROMA: https://maps.google.com/?q=' + p.coords.latitude + ',' + p.coords.longitude);
+        window.location.href = 'https://wa.me/' + phone + '?text=' + msg;
+      });
+    }
+
+    // Meteo Live Roma
+    async function fetchExactWeather() {
+      try {
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=41.8919&longitude=12.5113&current_weather=true&hourly=apparent_temperature&timezone=auto`);
+        const data = await res.json();
+        if (data && data.current_weather) {
+          const temp = Math.round(data.current_weather.temperature);
+          document.getElementById('weather-temp-live').innerText = `${temp}°C`;
+          document.getElementById('weather-desc-live').innerText = 'Soleggiato';
+          document.getElementById('weather-feels-live').innerText = `Percepita ${temp}°`;
+          document.getElementById('weather-advice-live').innerText = 'Giornata ottima per camminare: scarpe comode e occhiali da sole!';
+        }
+      } catch (e) {
+        document.getElementById('weather-temp-live').innerText = '24°C';
+        document.getElementById('weather-desc-live').innerText = 'Sereno';
+        document.getElementById('weather-advice-live').innerText = 'Clima ideale per la passeggiata a Roma.';
+      }
+    }
+    fetchExactWeather();
+  </script>
+</body>
+</html>
